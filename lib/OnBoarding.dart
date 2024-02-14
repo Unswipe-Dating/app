@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
 
 
 // OnBoarding content Model
@@ -16,25 +18,25 @@ class OnBoard {
 // OnBoarding content list
 final List<OnBoard> demoData = [
   OnBoard(
-    image: "assets/images/onboarding_1.png",
+    image: "assets/images/onboarding_1.svg",
     title: "Run by you, for you",
     description:
     "This is a community led dating app that rewards responsible dating.",
   ),
   OnBoard(
-    image: "assets/images/onboarding_2.png",
+    image: "assets/images/onboarding_2.svg",
     title: "Verified by default",
     description:
     "If the profile is not verified, the profile is not displayed. Period.",
   ),
   OnBoard(
-    image: "assets/images/onboarding_3.png",
+    image: "assets/images/onboarding_3.svg",
     title: "Go Exclusive ",
     description:
     "We encourage one match at a time . No parallel conversations",
   ),
   OnBoard(
-    image: "assets/images/onboarding_4.png",
+    image: "assets/images/onboarding_4.svg",
     title: "Found the one?",
     description:
     "Signal your interest by giving up swiping on other profiles.",
@@ -181,7 +183,9 @@ class OnBoardContent extends StatelessWidget {
     return Column(
       children: [
         const Spacer(),
-        Image.asset(image),
+        SvgPicture.asset(
+          image
+        ),
         const Spacer(),
         const Spacer(),
 
