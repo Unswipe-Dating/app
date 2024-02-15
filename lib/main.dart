@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:unswipe/Login.dart';
 import 'package:unswipe/OnBoarding.dart';
 
 void main() {
@@ -83,7 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
         // in the middle of the parent.
         child:MaterialApp(
           debugShowCheckedModeBanner: false,
-          home: const OnBoardingScreen(),
+          home: const LoginScreen(),
           title: "UnSwipe",
           theme: ThemeData(
             primaryColor: Color(0xFF3E69FE), // Set the primary color

@@ -63,19 +63,19 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     // Initialize page controller
     _pageController = PageController(initialPage: 0);
     // Automatic scroll behaviour
-    _timer = Timer.periodic(const Duration(seconds: 5), (Timer timer) {
-      if (_pageIndex < 3) {
-        _pageIndex++;
-      } else {
-        _pageIndex = 0;
-      }
-
-      _pageController.animateToPage(
-        _pageIndex,
-        duration: const Duration(milliseconds: 350),
-        curve: Curves.easeIn,
-      );
-    });
+    // _timer = Timer.periodic(const Duration(seconds: 5), (Timer timer) {
+    //   if (_pageIndex < 3) {
+    //     _pageIndex++;
+    //   } else {
+    //     _pageIndex = 0;
+    //   }
+    //
+    //   _pageController.animateToPage(
+    //     _pageIndex,
+    //     duration: const Duration(milliseconds: 350),
+    //     curve: Curves.easeIn,
+    //   );
+    // });
   }
 
   @override
@@ -150,7 +150,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                   child: Text(
                     "Login / Registration",
                     style: TextStyle(
-                      fontFamily: "HappyMonkey",
+                      fontFamily: "Lato",
+                      fontWeight: FontWeight.w700,
                       color: Colors.white,
                       fontSize: 18,
                     ),
@@ -194,7 +195,8 @@ class OnBoardContent extends StatelessWidget {
           style: const TextStyle(
             color: Colors.black,
             fontSize: 20,
-            fontWeight: FontWeight.bold,
+            fontFamily:'Playfair',
+            fontWeight: FontWeight.w700
           ),
         ),
         const SizedBox(
@@ -206,7 +208,7 @@ class OnBoardContent extends StatelessWidget {
           style: const TextStyle(
             color: Colors.black,
             fontSize: 16,
-            fontWeight: FontWeight.normal,
+            fontFamily: 'Lato',
           ),
         ),
         const Spacer(),
