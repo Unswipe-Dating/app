@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -44,10 +42,12 @@ class MyForm extends StatefulWidget {
 class _MyFormState extends State<MyForm> {
   TextEditingController emailController = TextEditingController();
   TextEditingController otpController = TextEditingController();
+  late CustomButtonState buttonState;
 
+  bool isCodeRequested = false;
   bool isButtonEnabled = false;
   bool isOtpEnabled = false;
-
+  late String buttonText = buttonState.text;
   late Timer _timer;
   int _start = 90;
 
@@ -56,6 +56,7 @@ class _MyFormState extends State<MyForm> {
     super.initState();
 
     // Add listeners to the controllers to track changes in text fields
+    buttonState = CustomButtonState.code;
     emailController.addListener(validateFields);
     otpController.addListener(validateFields);
   }
@@ -67,7 +68,8 @@ class _MyFormState extends State<MyForm> {
 
     // Enable or disable the button based on the validation status
     setState(() {
-      isButtonEnabled = isEmailValid && isPasswordValid;
+      isButtonEnabled = isButtonEnabledState(isEmailValid,
+          isPasswordValid);
       isOtpEnabled = isEmailValid;
     });
   }
@@ -82,12 +84,45 @@ class _MyFormState extends State<MyForm> {
     return password.isNotEmpty && password.length >= 6;
   }
 
-  void onSentOtpClick(String email) {
-    // some action to perform
-    setState(() {
-    });
+  bool isButtonEnabledState(bool email, bool password) {
+     switch(buttonState) {
+       case CustomButtonState.loading:
+         return true; // we need to change it according to start api and update it on api response
+       case CustomButtonState.code:
+         return email;
+       case CustomButtonState.signup:
+         return email && password;
+       case CustomButtonState.resendCode:
+         return email && isCodeRequested;
+    }
   }
 
+
+
+  void onButtonClick(String email, String code, ) {
+    switch(buttonState) {
+      case CustomButtonState.loading:{
+
+      }
+      case CustomButtonState.code:{
+        buttonState = CustomButtonState.loading;
+        //some api code to request otp/code,
+        //update buttonState to code again
+        isCodeRequested = true;
+      }
+      case CustomButtonState.signup: {
+        // take to other page
+
+      }
+      case CustomButtonState.resendCode: {
+        //resend code api call
+
+      }
+    }
+
+    validateFields();
+
+  }
 
 
   void startTimer() {
@@ -121,6 +156,7 @@ class _MyFormState extends State<MyForm> {
     return Card(
       elevation: 10,
       color: Colors.white,
+      surfaceTintColor: Colors.white,
       margin: const EdgeInsets.all(16.0),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -149,19 +185,29 @@ class _MyFormState extends State<MyForm> {
                 titleText:'Email-ID',
                 hintText: 'Enter your email',
                 controller: emailController,
-                keyboardType: TextInputType.emailAddress
+                keyboardType: TextInputType.emailAddress,
             ),
             const SizedBox(height: 16.0),
             Opacity(
-              opacity: 1,
+              opacity: isOtpEnabled ? 1 : 0.4,
               child: RoundedTextInput(
                   titleText: 'Verification Code',
                   hintText: 'Enter verification code',
                   controller: otpController,
-                  keyboardType: TextInputType.visiblePassword
+                  keyboardType: TextInputType.visiblePassword,
+                  isEnabled: isOtpEnabled,
               ),
             ),
             const SizedBox(height: 4.0),
+            CustomButton(
+                text: buttonText,
+                onPressed:() {
+                  onButtonClick(emailController.text, otpController.text);
+                },
+                isEnabled: isButtonEnabled,
+            )
+
+            
           ],
         ),
       ),
@@ -174,6 +220,51 @@ class _MyFormState extends State<MyForm> {
     print('Email: ${emailController.text}');
     print('Password: ${otpController.text}');
   }
+
+}
+
+
+
+class CustomButton extends StatefulWidget {
+  final String text;
+  final VoidCallback? onPressed;
+  final bool isEnabled;
+
+  const CustomButton({super.key,
+    required this.text,
+    this.onPressed,
+    this.isEnabled = true});
+
+  @override
+  State<CustomButton> createState() => _CustomButtonState();
+}
+
+class _CustomButtonState extends State<CustomButton> {
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+
+      onPressed: widget.isEnabled ? widget.onPressed : null,
+        style: ElevatedButton.styleFrom(
+          foregroundColor: Colors.white, backgroundColor: Colors.black, // Text color
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(2.0), // Rounded corners
+          ),
+          minimumSize: Size.fromHeight(48)
+        ),
+      child: Text(
+          widget.text,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 24.0,
+            fontFamily:'Lato',
+            fontWeight: FontWeight.w600,
+          )
+      ),
+
+    );
+  }
 }
 
 
@@ -183,7 +274,6 @@ class RoundedTextInput extends StatefulWidget {
   final String hintText;
   final TextInputType keyboardType;
   final bool isEnabled;
-
   const RoundedTextInput({super.key,
     required this.titleText,
     required this.controller,
@@ -200,6 +290,12 @@ class RoundedTextInput extends StatefulWidget {
 class _RoundedTextFieldState extends State<RoundedTextInput> {
   final ValueNotifier<bool> _textFiledIsFocused = ValueNotifier(false);
   late final FocusNode focusNode = FocusNode();
+  String errorString = "";
+  void _setError(String errorString) {
+    setState(() {
+      this.errorString = errorString;
+    });
+  }
 
 
 
@@ -268,11 +364,54 @@ class _RoundedTextFieldState extends State<RoundedTextInput> {
 
             )
         ),
+        if (errorString != "")
+        IconTextWidget(iconData: Icons.error, text:  errorString)
       ],
     );
   }
 
 }
+
+class IconTextWidget extends StatelessWidget {
+  final IconData iconData;
+  final String text;
+
+  const IconTextWidget({super.key, required this.iconData, required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(iconData),
+        const SizedBox(width: 8), // Adjust the spacing between icon and text
+        Text(text),
+      ],
+    );
+  }
+}
+
+enum CustomButtonState {
+  code,
+  signup,
+  resendCode,
+  loading
+}
+
+extension CustomButtonStateText on CustomButtonState {
+  String get text {
+    switch (this) {
+      case CustomButtonState.code:
+        return "Send code";
+      case CustomButtonState.signup:
+        return "Signup/Login";
+      case CustomButtonState.resendCode:
+        return "Resend code";
+      case CustomButtonState.loading:
+        return "Loading...";
+    }
+  }
+}
+
 
 
 

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:unswipe/Login.dart';
-import 'package:unswipe/OnBoarding.dart';
 
 void main() {
   runApp(const MyApp());
@@ -87,7 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
           home: const LoginScreen(),
           title: "UnSwipe",
           theme: ThemeData(
-            primaryColor: Color(0xFF3E69FE), // Set the primary color
+            primaryColor: const Color(0xFF3E69FE), // Set the primary color
             appBarTheme: const AppBarTheme(
               color: Color(0xFF3E69FE), // Set the appbar background colo
             ),
