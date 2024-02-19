@@ -6,8 +6,7 @@ class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  State<StatefulWidget> createState()  => _LoginScreenState();
-
+  State<StatefulWidget> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
@@ -19,7 +18,6 @@ class _LoginScreenState extends State<LoginScreen> {
           Container(
             constraints: const BoxConstraints.expand(),
             child: SvgPicture.asset("assets/images/login_background.svg"),
-
           ),
           const Center(
             child: MyForm(),
@@ -28,9 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
-
 }
-
 
 class MyForm extends StatefulWidget {
   const MyForm({super.key});
@@ -47,9 +43,11 @@ class _MyFormState extends State<MyForm> {
   bool isCodeRequested = false;
   bool isButtonEnabled = false;
   bool isOtpEnabled = false;
-  late String buttonText = buttonState.text;
+  bool toShowTimer = false;
+  String emailError = "";
+  String codeError = "";
   late Timer _timer;
-  int _start = 90;
+  int _start = 9;
 
   @override
   void initState() {
@@ -58,6 +56,16 @@ class _MyFormState extends State<MyForm> {
     // Add listeners to the controllers to track changes in text fields
     buttonState = CustomButtonState.code;
     emailController.addListener(validateFields);
+    emailController.addListener(() {
+      setState(() {
+        emailError = "";
+      });
+    });
+    otpController.addListener((){
+      setState(() {
+        codeError = "";
+      });
+    });
     otpController.addListener(validateFields);
   }
 
@@ -68,9 +76,8 @@ class _MyFormState extends State<MyForm> {
 
     // Enable or disable the button based on the validation status
     setState(() {
-      isButtonEnabled = isButtonEnabledState(isEmailValid,
-          isPasswordValid);
-      isOtpEnabled = isEmailValid;
+      isButtonEnabled = isButtonEnabledState(isEmailValid, isPasswordValid);
+      isOtpEnabled = isEmailValid && isCodeRequested;
     });
   }
 
@@ -85,54 +92,59 @@ class _MyFormState extends State<MyForm> {
   }
 
   bool isButtonEnabledState(bool email, bool password) {
-     switch(buttonState) {
-       case CustomButtonState.loading:
-         return true; // we need to change it according to start api and update it on api response
-       case CustomButtonState.code:
-         return email;
-       case CustomButtonState.signup:
-         return email && password;
-       case CustomButtonState.resendCode:
-         return email && isCodeRequested;
+    switch (buttonState) {
+      case CustomButtonState.loading:
+        return true; // we need to change it according to start api and update it on api response
+      case CustomButtonState.code:
+        return email;
+      case CustomButtonState.signup:
+        return email && password && isCodeRequested;
     }
   }
 
-
-
-  void onButtonClick(String email, String code, ) {
-    switch(buttonState) {
+  void onButtonClick(
+    String email,
+    String code,
+  ) {
+    switch (buttonState) {
       case CustomButtonState.loading:{
+        //state when either api is called or timer is on.
 
       }
       case CustomButtonState.code:{
-        buttonState = CustomButtonState.loading;
-        //some api code to request otp/code,
-        //update buttonState to code again
-        isCodeRequested = true;
-      }
-      case CustomButtonState.signup: {
-        // take to other page
+          //buttonState = CustomButtonState.loading;
+          //some api code to request otp/code,
+          //update buttonState to code again
+          isCodeRequested = true;
+          startTimer();
+          buttonState = CustomButtonState.signup;
+        }
+      case CustomButtonState.signup:{
+        if(email != "abhitiwari472@gmail.com") {
+          emailError = "some error";
+        }
 
-      }
-      case CustomButtonState.resendCode: {
-        //resend code api call
+        if(code != "12345678") {
+          codeError = "some error";
+        }
 
-      }
+        }
     }
-
     validateFields();
 
   }
 
-
   void startTimer() {
-    const oneSec = Duration(seconds: 90);
+    const oneSec = Duration(seconds: 1);
+    toShowTimer = true;
     _timer = Timer.periodic(
       oneSec,
-          (Timer timer) {
+      (Timer timer) {
         if (_start == 0) {
           setState(() {
             timer.cancel();
+            toShowTimer = false;
+            _start = 9;
           });
         } else {
           setState(() {
@@ -147,8 +159,6 @@ class _MyFormState extends State<MyForm> {
   void dispose() {
     _timer.cancel();
     super.dispose();
-
-
   }
 
   @override
@@ -160,14 +170,14 @@ class _MyFormState extends State<MyForm> {
       margin: const EdgeInsets.all(16.0),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child:  Column(
+        child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             const Text(
               'Unswipe',
               style: TextStyle(
                 fontSize: 24.0,
-                fontFamily:'Playfair',
+                fontFamily: 'Playfair',
                 fontWeight: FontWeight.w700,
               ),
             ),
@@ -177,96 +187,87 @@ class _MyFormState extends State<MyForm> {
               style: TextStyle(
                   fontSize: 18.0,
                   fontFamily: 'Lato',
-                  fontWeight: FontWeight.w500
-              ),
+                  fontWeight: FontWeight.w500),
             ),
             const SizedBox(height: 16.0),
             RoundedTextInput(
-                titleText:'Email-ID',
-                hintText: 'Enter your email',
-                controller: emailController,
-                keyboardType: TextInputType.emailAddress,
+              titleText: 'E-mail ID',
+              hintText: 'Enter your email',
+              controller: emailController,
+              keyboardType: TextInputType.emailAddress,
+              errorString: emailError,
             ),
             const SizedBox(height: 16.0),
             Opacity(
               opacity: isOtpEnabled ? 1 : 0.4,
               child: RoundedTextInput(
-                  titleText: 'Verification Code',
-                  hintText: 'Enter verification code',
-                  controller: otpController,
-                  keyboardType: TextInputType.visiblePassword,
-                  isEnabled: isOtpEnabled,
+                titleText: 'Verification Code',
+                hintText: 'Enter verification code',
+                controller: otpController,
+                keyboardType: TextInputType.visiblePassword,
+                isEnabled: isOtpEnabled,
+                errorString: codeError,
               ),
             ),
-            const SizedBox(height: 4.0),
+            if (toShowTimer)
+              IconTextWidget(iconData: Icons.timer,
+                  text: 'Time left: $_start seconds',
+                  color: const Color.fromARGB(97, 97, 97, 1),
+              ),
+            const SizedBox(height: 16.0),
             CustomButton(
-                text: buttonText,
-                onPressed:() {
-                  onButtonClick(emailController.text, otpController.text);
-                },
-                isEnabled: isButtonEnabled,
-            )
-
-            
+              text: buttonState.text,
+              onPressed: () {
+                onButtonClick(emailController.text, otpController.text);
+              },
+              isEnabled: isButtonEnabled,
+            ),
+            const SizedBox(height: 8.0),
           ],
         ),
       ),
     );
   }
 
-
-  void _onSubmit() {
-    // Handle the submit logic here
-    print('Email: ${emailController.text}');
-    print('Password: ${otpController.text}');
-  }
-
 }
-
-
 
 class CustomButton extends StatefulWidget {
   final String text;
   final VoidCallback? onPressed;
   final bool isEnabled;
 
-  const CustomButton({super.key,
-    required this.text,
-    this.onPressed,
-    this.isEnabled = true});
+  const CustomButton(
+      {super.key, required this.text, this.onPressed, this.isEnabled = true});
 
   @override
   State<CustomButton> createState() => _CustomButtonState();
 }
 
 class _CustomButtonState extends State<CustomButton> {
-
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-
       onPressed: widget.isEnabled ? widget.onPressed : null,
-        style: ElevatedButton.styleFrom(
-          foregroundColor: Colors.white, backgroundColor: Colors.black, // Text color
+      style: ElevatedButton.styleFrom(
+          foregroundColor: Colors.white,
+          backgroundColor: Colors.black,
+          disabledBackgroundColor: Colors.black.withOpacity(0.6),
+          disabledForegroundColor: Colors.white.withOpacity(0.6),
+          // Text color
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(2.0), // Rounded corners
           ),
-          minimumSize: Size.fromHeight(48)
-        ),
-      child: Text(
-          widget.text,
+          minimumSize: const Size.fromHeight(48)),
+      child: Text(widget.text,
           style: const TextStyle(
             color: Colors.white,
-            fontSize: 24.0,
-            fontFamily:'Lato',
+            fontSize: 18.0,
+            fontFamily: 'Lato',
             fontWeight: FontWeight.w600,
-          )
-      ),
-
+          )),
     );
   }
 }
-
 
 class RoundedTextInput extends StatefulWidget {
   final String titleText;
@@ -274,14 +275,17 @@ class RoundedTextInput extends StatefulWidget {
   final String hintText;
   final TextInputType keyboardType;
   final bool isEnabled;
-  const RoundedTextInput({super.key,
+  final String errorString;
+
+  const RoundedTextInput({
+    super.key,
     required this.titleText,
     required this.controller,
     required this.hintText,
     this.keyboardType = TextInputType.text,
     this.isEnabled = true,
+    this.errorString = ""
   });
-
 
   @override
   State<RoundedTextInput> createState() => _RoundedTextFieldState();
@@ -290,12 +294,6 @@ class RoundedTextInput extends StatefulWidget {
 class _RoundedTextFieldState extends State<RoundedTextInput> {
   final ValueNotifier<bool> _textFiledIsFocused = ValueNotifier(false);
   late final FocusNode focusNode = FocusNode();
-  String errorString = "";
-  void _setError(String errorString) {
-    setState(() {
-      this.errorString = errorString;
-    });
-  }
 
 
 
@@ -306,7 +304,6 @@ class _RoundedTextFieldState extends State<RoundedTextInput> {
       _textFiledIsFocused.value = focusNode.hasFocus;
     });
   }
-
 
   @override
   void dispose() {
@@ -327,75 +324,86 @@ class _RoundedTextFieldState extends State<RoundedTextInput> {
                   color: Colors.black,
                   fontFamily: 'Lato',
                   fontWeight: FontWeight.w500,
-                  fontSize: 18.0
-              ),
+                  fontSize: 18.0),
               children: const [
                 TextSpan(
                     text: ' *',
                     style: TextStyle(
                         color: Colors.red,
                         fontWeight: FontWeight.w500,
-                        fontSize: 18
-                    )
-                )
-              ]
-          ),
+                        fontSize: 18))
+              ]),
         ),
         const SizedBox(height: 8.0),
         ValueListenableBuilder(
             valueListenable: _textFiledIsFocused,
             builder: (context, value, child) => Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12.0),
-                border: value ? Border.all(color: Colors.black): Border.all(color: Colors.transparent),
-                color: Colors.grey[200],
-              ),
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                enabled: widget.isEnabled,
-                focusNode: focusNode,
-                controller: widget.controller,
-                keyboardType: widget.keyboardType,
-                decoration: InputDecoration(
-                    hintText: widget.hintText,
-                    border:InputBorder.none
-                ),
-              ),
-
-            )
-        ),
-        if (errorString != "")
-        IconTextWidget(iconData: Icons.error, text:  errorString)
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12.0),
+                    border: value
+                        ? Border.all(color: Colors.black)
+                        : Border.all(color: Colors.transparent),
+                    color: Colors.grey[200],
+                  ),
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                    enabled: widget.isEnabled,
+                    focusNode: focusNode,
+                    controller: widget.controller,
+                    keyboardType: widget.keyboardType,
+                    decoration: InputDecoration(
+                        hintText: widget.hintText, border: InputBorder.none),
+                  ),
+                )),
+        if (widget.errorString != "")
+          IconTextWidget(iconData: Icons.error,
+              text: widget.errorString,
+              color: Colors.red,
+          )
       ],
     );
   }
-
 }
 
 class IconTextWidget extends StatelessWidget {
   final IconData iconData;
   final String text;
+  final Color color;
 
-  const IconTextWidget({super.key, required this.iconData, required this.text});
+  const IconTextWidget({super.key, required this.iconData,
+    required this.text, required this.color});
 
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Icon(iconData),
-        const SizedBox(width: 8), // Adjust the spacing between icon and text
-        Text(text),
+        const SizedBox(
+          height: 8,
+        ),
+         Icon(
+          iconData,
+          size: 14,
+          color: color,
+        ),
+        const SizedBox(
+          width: 4,
+        ),
+        Text(
+          text,
+          style: TextStyle(
+              fontSize: 14.0,
+              fontFamily: 'Lato',
+              fontWeight: FontWeight.w400,
+              color: color
+          ),
+        ),
       ],
     );
   }
 }
 
-enum CustomButtonState {
-  code,
-  signup,
-  resendCode,
-  loading
-}
+enum CustomButtonState { code, signup, loading }
 
 extension CustomButtonStateText on CustomButtonState {
   String get text {
@@ -404,14 +412,8 @@ extension CustomButtonStateText on CustomButtonState {
         return "Send code";
       case CustomButtonState.signup:
         return "Signup/Login";
-      case CustomButtonState.resendCode:
-        return "Resend code";
       case CustomButtonState.loading:
-        return "Loading...";
+        return "Resend code";
     }
   }
 }
-
-
-
-
