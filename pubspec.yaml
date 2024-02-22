@@ -66,6 +66,8 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - assets/images/
+    - assets/json/
+    - assets/images/profilePictures/
 
   fonts:
     - family: Playfair

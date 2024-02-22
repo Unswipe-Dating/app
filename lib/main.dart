@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:unswipe/Login.dart';
+import 'package:unswipe/SwipeInterface.dart';
 
 void main() {
   runApp(const MyApp());
@@ -83,7 +84,30 @@ class _MyHomePageState extends State<MyHomePage> {
         // in the middle of the parent.
         child:MaterialApp(
           debugShowCheckedModeBanner: false,
-          home: const LoginScreen(),
+          home: Material(
+            color: Colors.transparent,
+            child: SafeArea(
+              child: Container(
+                alignment: Alignment.center,
+                color: Colors.white,
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Container(
+                        height: 60.0,
+                        alignment: Alignment.bottomCenter,
+                        child: null),
+                    SwipeInterface(),
+                    Container(
+                        height: 60.0,
+                        alignment: Alignment.bottomCenter,
+                        child: null),
+                  ],
+                ),
+              ),
+            ),
+          ),
           title: "UnSwipe",
           theme: ThemeData(
             primaryColor: const Color(0xFF3E69FE), // Set the primary color
