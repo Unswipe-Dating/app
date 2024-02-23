@@ -15,21 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
+
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
@@ -57,19 +43,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
+  int _currentIndex = 0;
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -79,10 +53,26 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child:MaterialApp(
+      appBar: AppBar(
+        title: const Padding(
+          padding: EdgeInsets.all(8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Unswipe",
+                style: TextStyle(
+                  fontFamily: 'Playfair',
+                  fontWeight: FontWeight.w700,
+                  fontSize: 24,
+                ),
+              ),
+              Icon(Icons.notifications),
+            ],
+          ),
+        ),
+      ),
+      body: MaterialApp(
           debugShowCheckedModeBanner: false,
           home: Material(
             color: Colors.transparent,
@@ -90,19 +80,13 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Container(
                 alignment: Alignment.center,
                 color: Colors.white,
-                child: Column(
+                child: const Column(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Container(
-                        height: 60.0,
-                        alignment: Alignment.bottomCenter,
-                        child: null),
+                    SizedBox(height: 20.0,),
                     SwipeInterface(),
-                    Container(
-                        height: 60.0,
-                        alignment: Alignment.bottomCenter,
-                        child: null),
+                    SizedBox(height: 20.0,),
                   ],
                 ),
               ),
@@ -116,7 +100,38 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
         ),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      bottomNavigationBar: BottomNavigationBar(
+      currentIndex: _currentIndex,
+      onTap: (index) {
+        setState(() {
+          _currentIndex = index;
+        });
+      },
+      items: const [
+        BottomNavigationBarItem(
+          icon: Icon(Icons.person_search, color: Colors.grey,),
+          activeIcon: Icon(Icons.person_search, color: Colors.black,),
+          label: '',
+
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.favorite, color: Colors.grey,),
+          activeIcon: Icon(Icons.favorite, color: Colors.black,),
+          label: '',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.public, color: Colors.grey,),
+          activeIcon: Icon(Icons.public, color: Colors.black,),
+          label: '',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.person, color: Colors.grey,),
+          activeIcon: Icon(Icons.person, color: Colors.black,),
+          label: '',
+        ),
+      ],
+    ),
+      // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

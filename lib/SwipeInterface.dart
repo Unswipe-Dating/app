@@ -14,20 +14,7 @@ class SwipeInterface extends StatefulWidget {
 }
 
 class _SwipeInterfaceState extends State<SwipeInterface> {
-  List<Profile> profiles = <Profile>[
-    Profile(
-        id: "222",
-        userName: "Placeholder 1",
-        userAge: 99,
-        userDescription: "Placeholder 1 user description",
-        profileImageSrc: 'assets/profilepictures/placeholder.jpg'),
-    Profile(
-        id: "333",
-        userName: "Placeholder 2",
-        userAge: 99,
-        userDescription: "Placeholder 2 user description",
-        profileImageSrc: 'assets/profilepictures/placeholder.jpg'),
-  ];
+  late List<Profile> profiles;
 
   int stackCounter = 0;
   double swipeThreshold = 100.0;
@@ -85,6 +72,8 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
               userAge: profiles[stackCounter].userAge,
               userDescription: profiles[stackCounter].userDescription,
               profileImageSrc: profiles[stackCounter].profileImageSrc,
+              isVerified: profiles[stackCounter].isVerified,
+              pronouns: profiles[stackCounter].pronouns,
             ),
           ),
           childWhenDragging: SwipeCard(
@@ -93,6 +82,9 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
             userAge: profiles[stackCounter + 1].userAge,
             userDescription: profiles[stackCounter + 1].userDescription,
             profileImageSrc: profiles[stackCounter + 1].profileImageSrc,
+            isVerified: profiles[stackCounter + 1].isVerified,
+            pronouns: profiles[stackCounter+1].pronouns,
+
           ),
           child: SwipeCard(
             id: profiles[stackCounter].id,
@@ -100,6 +92,8 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
             userAge: profiles[stackCounter].userAge,
             userDescription: profiles[stackCounter].userDescription,
             profileImageSrc: profiles[stackCounter].profileImageSrc,
+            isVerified: profiles[stackCounter].isVerified,
+            pronouns: profiles[stackCounter].pronouns,
           ),
         ),
       ),
