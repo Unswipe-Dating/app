@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
+import 'package:unswipe/viewmodels/auth_view_model.dart';
 
 
 
@@ -45,7 +47,10 @@ final List<OnBoard> demoData = [
 
 // OnBoardingScreen
 class OnBoardingScreen extends StatefulWidget {
-  const OnBoardingScreen({super.key});
+  final VoidCallback onLogin;
+
+   const OnBoardingScreen({super.key,
+    required  this.onLogin});
 
   @override
   State<OnBoardingScreen> createState() => _OnBoardingScreenState();
@@ -57,30 +62,15 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   int _pageIndex = 0;
   Timer? _timer;
 
+
   @override
   void initState() {
     super.initState();
-    // Initialize page controller
     _pageController = PageController(initialPage: 0);
-    // Automatic scroll behaviour
-    // _timer = Timer.periodic(const Duration(seconds: 5), (Timer timer) {
-    //   if (_pageIndex < 3) {
-    //     _pageIndex++;
-    //   } else {
-    //     _pageIndex = 0;
-    //   }
-    //
-    //   _pageController.animateToPage(
-    //     _pageIndex,
-    //     duration: const Duration(milliseconds: 350),
-    //     curve: Curves.easeIn,
-    //   );
-    // });
   }
 
   @override
   void dispose() {
-    // Dispose everything
     _pageController.dispose();
     _timer!.cancel();
     super.dispose();
@@ -135,8 +125,14 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
             ),
             // Button area
             InkWell(
-              onTap: () {
-                print("Button clicked!");
+              onTap: () async {
+                final authViewModel = context.read<AuthViewModel>();
+                final result = await authViewModel.updateNew();
+                if (result == true) {
+                  widget.onLogin();
+                } else {
+                  authViewModel.logingIn = false;
+                }
               },
               child: Container(
                 margin: const EdgeInsets.only(bottom: 48),
@@ -167,7 +163,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
 }
 
 // OnBoarding area widget
-class OnBoardContent extends StatelessWidget {
+class OnBoardContent extends StatefulWidget {
   OnBoardContent({
     super.key,
     required this.image,
@@ -180,18 +176,23 @@ class OnBoardContent extends StatelessWidget {
   String description;
 
   @override
+  State<OnBoardContent> createState() => _OnBoardContentState();
+}
+
+class _OnBoardContentState extends State<OnBoardContent> {
+  @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         const Spacer(),
         SvgPicture.asset(
-          image
+          widget.image
         ),
         const Spacer(),
         const Spacer(),
 
         Text(
-          title,
+          widget.title,
           style: const TextStyle(
             color: Colors.black,
             fontSize: 20,
@@ -203,7 +204,7 @@ class OnBoardContent extends StatelessWidget {
           height: 16,
         ),
         Text(
-          description,
+          widget.description,
           textAlign: TextAlign.center,
           style: const TextStyle(
             color: Colors.black,

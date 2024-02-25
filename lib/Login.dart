@@ -1,9 +1,15 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:unswipe/viewmodels/auth_view_model.dart';
+import 'package:provider/provider.dart';
+
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  final VoidCallback onLogin;
+
+  const LoginScreen({super.key,
+    required this.onLogin});
 
   @override
   State<StatefulWidget> createState() => _LoginScreenState();
@@ -19,8 +25,8 @@ class _LoginScreenState extends State<LoginScreen> {
             constraints: const BoxConstraints.expand(),
             child: SvgPicture.asset("assets/images/login_background.svg"),
           ),
-          const Center(
-            child: MyForm(),
+           Center(
+            child: MyForm(onLogin: widget.onLogin),
           )
         ],
       ),
@@ -29,8 +35,10 @@ class _LoginScreenState extends State<LoginScreen> {
 }
 
 class MyForm extends StatefulWidget {
-  const MyForm({super.key});
+  final VoidCallback onLogin;
 
+  const MyForm({super.key,
+    required  this.onLogin});
   @override
   State<MyForm> createState() => _MyFormState();
 }
@@ -105,7 +113,7 @@ class _MyFormState extends State<MyForm> {
   void onButtonClick(
     String email,
     String code,
-  ) {
+  ) async {
     switch (buttonState) {
       case CustomButtonState.loading:{
         //state when either api is called or timer is on.
@@ -120,13 +128,26 @@ class _MyFormState extends State<MyForm> {
           buttonState = CustomButtonState.signup;
         }
       case CustomButtonState.signup:{
-        if(email != "abhitiwari472@gmail.com") {
+        if(email != "abc@xyz.com") {
           emailError = "some error";
         }
 
         if(code != "12345678") {
           codeError = "some error";
         }
+
+        if(email == "abc@xyz.com" && code == "12345678") {
+          final authViewModel = context.read<AuthViewModel>();
+          final result = await authViewModel.login();
+          if (result == true) {
+            widget.onLogin();
+          } else {
+            authViewModel.logingIn = false;
+          }
+
+        }
+
+
 
         }
     }

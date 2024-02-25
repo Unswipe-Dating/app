@@ -1,25 +1,46 @@
+import 'package:common/cache/preference.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:unswipe/Login.dart';
 import 'package:unswipe/SwipeInterface.dart';
+import 'package:unswipe/router/my_app_router_delegate_03.dart';
+import 'package:unswipe/viewmodels/auth_view_model.dart';
+
+import 'data/auth_repository.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
 
-  // This widget is the root of your application.
+class _MyAppState extends State<MyApp> {
+  late MyAppRouterDelegate delegate;
+  late AuthRepository authRepository;
+
+  @override
+  void initState() {
+    super.initState();
+    authRepository = AuthRepository(Preference());
+    delegate = MyAppRouterDelegate(authRepository);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<AuthViewModel>(
+          create: (_) => AuthViewModel(authRepository),
+        )
+      ],
+      child: MaterialApp(
+          home: Router(
+            routerDelegate: delegate,
+            backButtonDispatcher: RootBackButtonDispatcher(),
+          )),
     );
   }
 }
