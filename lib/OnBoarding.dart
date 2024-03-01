@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:unswipe/viewmodels/auth_view_model.dart';
+import 'package:unswipe/widgets/onBoarding/dot_inidcator.dart';
 
 
 
@@ -218,28 +219,3 @@ class _OnBoardContentState extends State<OnBoardContent> {
   }
 }
 
-// Dot indicator widget
-class DotIndicator extends StatelessWidget {
-  const DotIndicator({
-    this.isActive = false,
-    super.key,
-  });
-
-  final bool isActive;
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      height: 8,
-      width: isActive ? 24 : 8,
-      decoration: BoxDecoration(
-        color: isActive ? Colors.black : Colors.white,
-        border: isActive ? null : Border.all(color: Colors.black),
-        borderRadius: const BorderRadius.all(
-          Radius.circular(12),
-        ),
-      ),
-    );
-  }
-}
