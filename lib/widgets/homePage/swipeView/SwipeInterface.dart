@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'Profile.dart';
+import '../../../Profile.dart';
 import 'SwipeCard.dart';
 
 class SwipeInterface extends StatefulWidget {
@@ -18,6 +18,8 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
 
   int stackCounter = 0;
   double swipeThreshold = 100.0;
+  double swipeThreshold1 = 101.0;
+
 
   loadJsonData() async {
     String jsonData = await rootBundle.loadString('assets/json/profiles.json');
@@ -33,9 +35,9 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
     loadJsonData();
   }
 
-  void evaluateSwipe(dx) {            
+  void evaluateSwipe(dx) {
     if (dx > swipeThreshold) {
-      likeProfile();
+   //   likeProfile();
     } else if (dx < -swipeThreshold) {
       doNotLikeProfile();
     }
@@ -67,6 +69,7 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
             width: constraints.maxWidth,
             height: constraints.maxHeight,
             child: SwipeCard(
+              callback: likeProfile,
               id: profiles[stackCounter].id,
               userName: profiles[stackCounter].userName,
               userAge: profiles[stackCounter].userAge,
@@ -77,6 +80,7 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
             ),
           ),
           childWhenDragging: SwipeCard(
+            callback: () => {},
             id: profiles[stackCounter + 1].id,
             userName: profiles[stackCounter + 1].userName,
             userAge: profiles[stackCounter + 1].userAge,
@@ -87,6 +91,7 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
 
           ),
           child: SwipeCard(
+            callback: likeProfile,
             id: profiles[stackCounter].id,
             userName: profiles[stackCounter].userName,
             userAge: profiles[stackCounter].userAge,

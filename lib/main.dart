@@ -2,9 +2,9 @@ import 'package:common/cache/preference.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:unswipe/Login.dart';
-import 'package:unswipe/SwipeInterface.dart';
 import 'package:unswipe/router/my_app_router_delegate_03.dart';
 import 'package:unswipe/viewmodels/auth_view_model.dart';
+import 'package:unswipe/widgets/homePage/dart_swiper.dart';
 
 import 'data/auth_repository.dart';
 
@@ -107,7 +107,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   children: [
                     SizedBox(height: 20.0,),
                     SwipeInterface(),
-                    SizedBox(height: 20.0,),
                   ],
                 ),
               ),
