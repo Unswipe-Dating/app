@@ -1,4 +1,0 @@
-enum TabEnum {
-  books,
-  about,
-}
