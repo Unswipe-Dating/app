@@ -59,14 +59,14 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
     return Flexible(
       child: CardSwiper(
         allowedSwipeDirection: const AllowedSwipeDirection.only(
-            up: false, down: false, left: true, right: false),
+            up: false, down: false, left: false, right: false),
         threshold: 100,
         controller: controller,
         cardsCount: profiles.length,
         onSwipe: _onSwipe,
         onUndo: _onUndo,
         numberOfCardsDisplayed: 2,
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(0.0),
         cardBuilder: (
           context,
           index,
@@ -91,7 +91,6 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
     int? currentIndex,
     CardSwiperDirection direction,
   ) {
-    if (currentIndex!=null) cards[currentIndex].resetToZero();
     debugPrint(
       'The card $previousIndex was swiped to the ${direction.name}. Now the card $currentIndex is on top',
     );

@@ -10,25 +10,23 @@ import 'package:unswipe/widgets/homePage/swipeView/swipeViewCards/photo_card_sec
 import 'package:unswipe/widgets/homePage/swipeView/swipeViewCards/prompt_card.dart';
 import 'package:unswipe/widgets/homePage/swipeView/swipeViewCards/work_card.dart';
 
-class SwipeCard extends StatelessWidget {
+class SwipeCard extends StatefulWidget {
   final String id;
   final String userName;
   final int userAge;
   final String userDescription;
   final String profileImageSrc;
   final bool isVerified;
-  final Function swipeRightAction;
-  final Function swipeLeftAction;
+  final Function likeAction;
+  final Function dislikeAction;
 
   final String pronouns;
 
-   final _controller = ScrollController();
-
-   SwipeCard({
+  SwipeCard({
     Key? key,
-    required this.swipeRightAction,
-     required this.swipeLeftAction,
-     required this.id,
+    required this.likeAction,
+    required this.dislikeAction,
+    required this.id,
     required this.userName,
     required this.userAge,
     required this.userDescription,
@@ -38,14 +36,22 @@ class SwipeCard extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  State<SwipeCard> createState() => _SwipeCard();
 
+}
+
+class _SwipeCard extends State<SwipeCard> {
+
+  ScrollController controller = ScrollController();
+
+  @override
+  Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 0, top: 0, right: 0, bottom: 0),
       child: Stack(
         children: [
           SingleChildScrollView(
-            controller: _controller,
+            controller: controller,
             child: Container(
               color: Colors.grey[100],
               child: Column(
@@ -60,7 +66,10 @@ class SwipeCard extends StatelessWidget {
                           padding: EdgeInsets.all(10),
                           child: Image.network(
                             "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-                            height: MediaQuery.of(context).size.height * 0.6,
+                            height: MediaQuery
+                                .of(context)
+                                .size
+                                .height * 0.6,
                             width: double.infinity,
                             fit: BoxFit.cover,
                           ),
@@ -71,7 +80,8 @@ class SwipeCard extends StatelessWidget {
                             children: [
                               RichText(
                                 text: TextSpan(
-                                    text: "${userName.characters.first} , ",
+                                    text: "${widget.userName.characters
+                                        .first} , ",
                                     style: const TextStyle(
                                         color: Colors.black,
                                         fontFamily: 'Playfair',
@@ -79,7 +89,7 @@ class SwipeCard extends StatelessWidget {
                                         fontSize: 24.0),
                                     children: [
                                       TextSpan(
-                                          text: userAge.toString(),
+                                          text: widget.userAge.toString(),
                                           style: const TextStyle(
                                               color: Colors.black,
                                               fontFamily: 'Lato',
@@ -92,35 +102,14 @@ class SwipeCard extends StatelessWidget {
                               ),
                               Icon(
                                 Icons.verified,
-                                color: isVerified ? Colors.green : Colors.grey,
+                                color: widget.isVerified ? Colors.green : Colors
+                                    .grey,
                               ),
                             ],
                           ),
                         ),
                         const SizedBox(
-                          height: 16,
-                        ),
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: Padding(
-                            padding: EdgeInsets.all(8),
-                            child: Chip(
-                              padding: const EdgeInsets.all(8),
-                              side: const BorderSide(color: Colors.transparent),
-                              shape: const RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(20))),
-                              backgroundColor: Colors.grey[400],
-                              label: Text(
-                                pronouns,
-                                style: const TextStyle(
-                                    fontFamily: 'Lato',
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w400,
-                                    color: Colors.black),
-                              ),
-                            ),
-                          ),
+                          height: 84,
                         ),
                       ],
                     ),
@@ -151,7 +140,7 @@ class SwipeCard extends StatelessWidget {
                       color: 0xffCBDFFF,
                       question: "We have the Prompt question displayed here",
                       answer:
-                          "Let’s say we have a 300 character limit for the prompt answers. This is how it would look."),
+                      "Let’s say we have a 300 character limit for the prompt answers. This is how it would look."),
                   const SizedBox(
                     height: 16,
                   ),
@@ -164,7 +153,7 @@ class SwipeCard extends StatelessWidget {
                       color: 0xffFFD9D9,
                       question: "We have the Prompt question displayed here",
                       answer:
-                          "Let’s say we have a 300 character limit for the prompt answers. This is how it would look."),
+                      "Let’s say we have a 300 character limit for the prompt answers. This is how it would look."),
                   const SizedBox(
                     height: 16,
                   ),
@@ -180,7 +169,7 @@ class SwipeCard extends StatelessWidget {
                       color: 0xffFFD9D9,
                       question: "We have the Prompt question displayed here",
                       answer:
-                          "Let’s say we have a 300 character limit for the prompt answers. This is how it would look. Let’s say we have a 300 character limit for the prompt answers. This is how it would look.Let’s say we have a 300 character limit for the prompt answers. This is how it would look."),
+                      "Let’s say we have a 300 character limit for the prompt answers. This is how it would look. Let’s say we have a 300 character limit for the prompt answers. This is how it would look.Let’s say we have a 300 character limit for the prompt answers. This is how it would look."),
                   SizedBox(
                     height: 16,
                   ),
@@ -202,7 +191,7 @@ class SwipeCard extends StatelessWidget {
                       color: 0xffFFDEC6,
                       question: "We have the Prompt question displayed here",
                       answer:
-                          "Let’s say we have a 300 character limit for the prompt answers. This is how it would look."),
+                      "Let’s say we have a 300 character limit for the prompt answers. This is how it would look."),
                   const SizedBox(
                     height: 16,
                   ),
@@ -239,40 +228,48 @@ class SwipeCard extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.only(
-                left: 8.0, top: 0.0, right: 8.0, bottom: 32.0),
+                left: 8.0, top: 0.0, right: 8.0, bottom: 42.0),
             child: Align(
-              alignment: Alignment.bottomRight,
-              child: Row(
-                children: [
-                   FloatingActionButton(
-                      shape: const CircleBorder(),
-                      onPressed: () => swipeLeftAction,
-                      backgroundColor: Colors.white,
-                      child: const Icon(
-                          Icons.close
-                      )
-                  ),
-                  FloatingActionButton(
-                      shape: CircleBorder(),
-                      onPressed: () => swipeRightAction,
-                      backgroundColor: Colors.grey[200],
-                      child: const Icon(
+                alignment: Alignment.bottomCenter,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FloatingActionButton(
+                        shape: const CircleBorder(),
+                        onPressed: () {
+                          widget.dislikeAction();
+                          controller.jumpTo(0);
+                          },
+                        backgroundColor: Colors.white,
+                        child: const Icon(
+                            Icons.close
+                        )
+                    ),
+                    SizedBox(width: 8,),
+                    FloatingActionButton(
+                        shape: CircleBorder(),
+                        onPressed: () {
+                          widget.likeAction();
+                          controller.jumpTo(0);
+                        },
+                        backgroundColor: Colors.grey[200],
+                        child: const Icon(
                           Icons.favorite,
-                      )
-                  ),
-
-                  const FloatingActionButton(
-                      shape: CircleBorder(),
-                      onPressed: null,
-                      backgroundColor: Colors.black,
-                      child: Icon(
+                        )
+                    ),
+                    SizedBox(width: 8,),
+                    const FloatingActionButton(
+                        shape: CircleBorder(),
+                        onPressed: null,
+                        backgroundColor: Colors.black,
+                        child: Icon(
                           Icons.punch_clock,
-                        color: Colors.white,
-                      )
-                  ),
+                          color: Colors.white,
+                        )
+                    ),
 
-                ],
-              )
+                  ],
+                )
             ),
           ),
         ],
@@ -280,7 +277,5 @@ class SwipeCard extends StatelessWidget {
     );
   }
 
-  void resetToZero() {
-    _controller.jumpTo(0);
-  }
+
 }
