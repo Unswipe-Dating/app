@@ -1,23 +1,66 @@
-import 'package:common/cache/preference.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:unswipe/Login.dart';
 import 'package:unswipe/router/my_app_router_delegate_03.dart';
+import 'package:unswipe/src/core/helper/helper.dart';
+import 'package:unswipe/src/core/preference.dart';
+import 'package:unswipe/src/core/utils/injections.dart';
+import 'package:unswipe/src/shared/data/data_sources/app_shared_prefs.dart';
+import 'package:unswipe/src/shared/domain/entities/language_enum.dart';
 import 'package:unswipe/viewmodels/auth_view_model.dart';
 import 'package:unswipe/widgets/homePage/dart_swiper.dart';
 
 import 'data/auth_repository.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(App());
 }
 
-class MyApp extends StatefulWidget {
+class App extends StatefulWidget {
+  const App({Key? key}) : super(key: key);
+
   @override
-  _MyAppState createState() => _MyAppState();
+  _AppState createState() => _AppState();
+
+  static void setLocale(BuildContext context, LanguageEnum newLocale) {
+    _AppState state = context.findAncestorStateOfType()!;
+    state.setState(() {
+      state.locale = Locale(newLocale.name);
+    });
+    sl<AppSharedPrefs>().setLang(newLocale);
+  }
 }
 
-class _MyAppState extends State<MyApp> {
+final navigatorKey = GlobalKey<NavigatorState>();
+
+
+class AppNotifier extends ChangeNotifier {
+  late bool darkTheme;
+
+  AppNotifier() {
+    _initialise();
+  }
+
+  Future _initialise() async {
+    darkTheme = Helper.isDarkTheme();
+
+    notifyListeners();
+  }
+
+  void updateThemeTitle(bool newDarkTheme) {
+    darkTheme = newDarkTheme;
+    if (Helper.isDarkTheme()) {
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
+    } else {
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
+    }
+    notifyListeners();
+  }
+}
+
+class _AppState extends State<App> {
+  Locale locale = const Locale("en");
   late MyAppRouterDelegate delegate;
   late AuthRepository authRepository;
 

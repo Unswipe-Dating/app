@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-import 'package:common/cache/preference.dart';
+
+
+import '../src/core/preference.dart';
 
 const String _AUTH_KEY = 'AuthKey';
 const String _IS_NEW = 'IsNew';
