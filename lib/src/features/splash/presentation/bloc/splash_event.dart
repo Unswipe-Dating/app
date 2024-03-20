@@ -4,12 +4,19 @@ abstract class SplashEvent {
   const SplashEvent();
 }
 
-// On Fetching Articles Event
-class OnGettingSplashEvent extends SplashEvent {
-  final String text;
-  final int period;
-  final bool withLoading;
+class onLoadingEvent extends SplashEvent {
+  onLoadingEvent();
+}
 
-  OnGettingSplashEvent(this.text, this.period,
-      {this.withLoading = true});
+// On Fetching Articles Event
+class onFirstTimeUserEvent extends SplashEvent {
+  onFirstTimeUserEvent();
+}
+
+class onAuthenticatedUserEvent extends SplashEvent {
+  onAuthenticatedUserEvent();
+}
+
+class onSplashErrorEvent extends SplashEvent {
+  onSplashErrorEvent();
 }

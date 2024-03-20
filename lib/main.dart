@@ -11,7 +11,6 @@ import 'package:unswipe/src/core/translations/l10n.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:unswipe/router/my_app_router_delegate_03.dart';
 import 'package:unswipe/src/core/helper/helper.dart';
 import 'package:unswipe/src/core/preference.dart';
 import 'package:unswipe/src/core/utils/injections.dart';

@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 
 import '../../../../core/network/error/failures.dart';
 import '../../domain/entities/splash_params.dart';
@@ -13,31 +14,29 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
   // List of splash
 
   SplashBloc({required this.splashUseCase})
-      : super(LoadingGetSplashState()) {
-    on<OnGettingSplashEvent>(_onGettingSplashEvent);
+      : super(SplashState()) {
+    on<onAuthenticatedUserEvent>(_onGettingSplashEvent);
   }
 
 // Getting splash event
   _onGettingSplashEvent(
-      OnGettingSplashEvent event, Emitter<SplashState> emitter) async {
-    if (event.withLoading) {
-      emitter(LoadingGetSplashState());
-    }
+      onAuthenticatedUserEvent event, Emitter<SplashState> emitter) async {
 
     final result = await splashUseCase.call(
       SplashParams(
-        period: event.period,
+        period: 1,
       ),
     );
     result.fold((l) {
       if (l is CancelTokenFailure) {
-        emitter(LoadingGetSplashState());
+        emitter(SplashState().copyWith(status: SplashStatus.error));
       } else {
-        emitter(ErrorGetSplashState(l.errorMessage));
+        emitter(SplashState().copyWith(status: SplashStatus.error));
       }
     }, (r) {
       // Return list of splash with filtered by search text
-      emitter(SuccessGetSplashState());
+      emitter(SplashState().copyWith(status: SplashStatus.loaded));
+
     });
   }
 
