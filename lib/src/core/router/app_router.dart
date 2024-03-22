@@ -5,13 +5,14 @@ import 'package:unswipe/OnBoarding.dart';
 import 'package:unswipe/src/features/splash/presentation/pages/splash_page.dart';
 
 class AppRouter {
-  late final GoRouter router = GoRouter(
+  static final GoRouter _router = GoRouter(
     routes: <RouteBase>[
       GoRoute(
         name: 'splash',
         path: '/',
-        builder: (BuildContext context, GoRouterState state) {
-          return SplashPage();
+        builder: (BuildContext context,
+            GoRouterState state) {
+          return SplashScreen();
         },
       ),
       GoRoute(
@@ -24,4 +25,7 @@ class AppRouter {
 
     ],
   );
+
+  static GoRouter get router => _router;
+
 }

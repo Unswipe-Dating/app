@@ -93,8 +93,10 @@ class _AppState extends State<App> with WidgetsBindingObserver {
             builder: (context, child) {
               return MaterialApp.router(
                 title: 'Ny Times Articles App',
+                routeInformationProvider: AppRouter.router.routeInformationProvider,
+                routeInformationParser: AppRouter.router.routeInformationParser,
+                routerDelegate: AppRouter.router.routerDelegate,
                 scaffoldMessengerKey: snackBarKey,
-                routerConfig: AppRouter().router,
                 theme: Helper.isDarkTheme() ? darkAppTheme : appTheme,
                 debugShowCheckedModeBanner: false,
                 locale: locale,

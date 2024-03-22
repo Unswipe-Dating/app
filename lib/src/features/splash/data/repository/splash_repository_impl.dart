@@ -2,16 +2,17 @@
 
 import 'dart:ffi';
 
-import 'package:dartz/dartz.dart';
+import 'package:dart_either/dart_either.dart';
 import 'package:unswipe/src/core/network/error/exceptions.dart';
 import 'package:unswipe/src/core/network/error/failures.dart';
 import 'package:unswipe/src/core/preference.dart';
+import 'package:unswipe/src/features/splash/data/datasources/local/splash_shared_pref.dart';
 import 'package:unswipe/src/features/splash/domain/entities/splash_params.dart';
 import 'package:unswipe/src/features/splash/domain/repository/splash_repository.dart';
 
 
 class SplashRepositoryImpl extends AbstractSplashRepository {
-  final Preference pref;
+  final SplashSharedPref pref;
 
   SplashRepositoryImpl(
       this.pref

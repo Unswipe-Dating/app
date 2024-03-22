@@ -45,6 +45,13 @@ dependencies:
 
 
 
+
+
+
+
+
+
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6
@@ -54,12 +61,13 @@ dependencies:
   # To Store Data In Local Storage
   shared_preferences: ^2.2.2
 
+  rx_shared_preferences: ^3.1.0
+
   # Make Pages Responsive To All Devices
   flutter_screenutil: ^5.9.0
 
+  built_value: ^8.4.2
 
-  # Handle Success/Error State From Data Source
-  dartz: ^0.10.1
 
   # Dependency Injection
   get_it: ^7.6.4
@@ -117,6 +125,7 @@ dependencies:
   intl: ^0.18.1
 
   go_router: ^10.1.2
+  dart_either: ^1.0.0
 
 
 dev_dependencies:
@@ -124,7 +133,9 @@ dev_dependencies:
     sdk: flutter
   # To generate Localization File's
   build_runner: ^2.4.7
-  json_serializable: ^6.7.1
+  analyzer: ^5.2.0
+  flutter_lints: ^2.0.1
+  built_value: ^8.4.2
   # Localization config
   flutter_localizations:
     sdk: flutter

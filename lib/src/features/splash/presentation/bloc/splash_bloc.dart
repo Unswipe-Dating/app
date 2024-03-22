@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:unswipe/src/shared/domain/usecases/get_auth_state_stream_use_case.dart';
 
 import '../../../../core/network/error/failures.dart';
 import '../../domain/entities/splash_params.dart';
@@ -9,7 +10,7 @@ part 'splash_event.dart';
 part 'splash_state.dart';
 
 class SplashBloc extends Bloc<SplashEvent, SplashState> {
-  final SplashUseCase splashUseCase;
+  final GetAuthStateStreamUseCase splashUseCase;
 
   // List of splash
 
@@ -22,25 +23,20 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
   _onGettingSplashEvent(
       onAuthenticatedUserEvent event, Emitter<SplashState> emitter) async {
 
-    final result = await splashUseCase.call(
-      SplashParams(
-        period: 1,
-      ),
-    );
-    result.fold((l) {
-      if (l is CancelTokenFailure) {
-        emitter(SplashState().copyWith(status: SplashStatus.error));
-      } else {
-        emitter(SplashState().copyWith(status: SplashStatus.error));
-      }
-    }, (r) {
-      // Return list of splash with filtered by search text
-      emitter(SplashState().copyWith(status: SplashStatus.loaded));
-
+    splashUseCase.call().listen((event) {
+      event.fold(ifLeft: (l) {
+        if (l is CancelTokenFailure) {
+          emitter(SplashState().copyWith(status: SplashStatus.error));
+        } else {
+          emitter(SplashState().copyWith(status: SplashStatus.error));
+        }
+      },
+          ifRight: (r) {
+            emitter(SplashState().copyWith(status: SplashStatus.loaded));
+          });
     });
   }
 
-
-  // This function is called whenever the text field changes
+// This function is called whenever the text field changes
 
 }

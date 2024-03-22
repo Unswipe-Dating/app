@@ -1,4 +1,5 @@
-import 'package:dartz/dartz.dart';
+
+import 'package:dart_either/dart_either.dart';
 
 import '../../network/error/failures.dart';
 

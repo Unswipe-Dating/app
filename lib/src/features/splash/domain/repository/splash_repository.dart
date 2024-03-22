@@ -2,7 +2,7 @@
 
 import 'dart:ffi';
 
-import 'package:dartz/dartz.dart';
+import 'package:dart_either/dart_either.dart';
 import 'package:unswipe/src/core/network/error/failures.dart';
 import 'package:unswipe/src/features/splash/domain/entities/splash_params.dart';
 
