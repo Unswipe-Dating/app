@@ -7,6 +7,7 @@ import 'package:unswipe/src/features/splash/domain/usecases/splash_usecase.dart'
 import 'package:unswipe/src/features/splash/presentation/bloc/splash_bloc.dart';
 import 'package:unswipe/src/shared/domain/usecases/get_auth_state_stream_use_case.dart';
 import 'package:unswipe/src/shared/domain/usecases/get_onboarding_state_stream_use_case.dart';
+import 'package:unswipe/src/shared/domain/usecases/update_onboarding_state_stream_usecase.dart';
 
 import '../../../../../widgets/utils.dart';
 import '../../../../core/helper/helper.dart';
@@ -24,7 +25,8 @@ class SplashScreen extends StatelessWidget {
     return BlocProvider(
       create: (BuildContext context) => SplashBloc(
           splashUseCase: sl<GetAuthStateStreamUseCase>(),
-          onboardingStateStreamUseCase: sl<GetOnboardingStateStreamUseCase>()
+          onboardingStateStreamUseCase: sl<GetOnboardingStateStreamUseCase>(),
+          updateOnboardingStateStreamUseCase: sl<UpdateOnboardingStateStreamUseCase>()
       )
         ..add(onAuthenticatedUserEvent()),
       child: Container(

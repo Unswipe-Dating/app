@@ -8,6 +8,7 @@ import 'package:unswipe/src/shared/domain/repository/on_boarding_repository.dart
 import 'package:unswipe/src/shared/domain/repository/user_repository.dart';
 import 'package:unswipe/src/shared/domain/usecases/get_auth_state_stream_use_case.dart';
 import 'package:unswipe/src/shared/domain/usecases/get_onboarding_state_stream_use_case.dart';
+import 'package:unswipe/src/shared/domain/usecases/update_onboarding_state_stream_usecase.dart';
 
 import '../core/utils/injections.dart';
 import 'data/data_sources/app_shared_prefs.dart';
@@ -22,8 +23,10 @@ initAppInjections() {
 
   sl.registerFactory<OnBoardingRepository>(() => OnBoardingRepositoryImpl(sl<LocalDataSource>()));
 
-
   sl.registerFactory<GetAuthStateStreamUseCase>(() => GetAuthStateStreamUseCase(sl<UserRepository>()));
+
+  sl.registerFactory<UpdateOnboardingStateStreamUseCase>(() => UpdateOnboardingStateStreamUseCase(sl<OnBoardingRepository>()));
+
 
   sl.registerFactory<GetOnboardingStateStreamUseCase>(() => GetOnboardingStateStreamUseCase(sl<OnBoardingRepository>()));
 

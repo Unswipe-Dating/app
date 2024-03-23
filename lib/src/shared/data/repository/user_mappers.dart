@@ -51,6 +51,28 @@ abstract class _UserMappers {
     return AuthenticatedState((b) => b.userAndToken = userAndTokenBuilder);
   }
 
+  static OnBoardingState onBoardingEntityToDomainAuthState(
+      OnBoardingTokenEntity? entity) {
+    if (entity == null || !entity.token) {
+      return NotOnBoardedState();
+    }
+
+    final onBoardingTokenEntityBuilder = OnBoardingTokenEntityBuilder()
+      ..token = entity.token;
+
+    return OnBoardedState((b) => b.onBoardingEntity = onBoardingTokenEntityBuilder);
+  }
+
+  /// Response -> Entity
+  static OnBoardingTokenEntity userResponseToOnBoardingTokenEntity(
+      bool token,
+      ) {
+    return OnBoardingTokenEntity(
+            (b) => b
+          ..token = token
+    );
+  }
+
   /// Response -> Entity
   static UserAndTokenEntity userResponseToUserAndTokenEntity(
     String token,

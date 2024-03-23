@@ -128,6 +128,8 @@ dependencies:
 
   go_router: ^10.1.2
   dart_either: ^1.0.0
+  rxdart: ^0.27.7
+  rxdart_ext: ^0.2.7
 
 
 dev_dependencies:
@@ -139,6 +141,7 @@ dev_dependencies:
   built_value_generator: ^8.4.2
   flutter_lints: ^2.0.1
   built_value: ^8.4.2
+
   # Localization config
   flutter_localizations:
     sdk: flutter

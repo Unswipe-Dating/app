@@ -10,6 +10,7 @@ import '../../../../data/exception/remote_data_source_exception.dart';
 import '../../../core/app_error.dart';
 import '../../../core/cancellation_exception.dart';
 import '../../../core/local_data_source.dart';
+import '../../../core/utils/constant/on_boarding_token_entity.dart';
 import '../../../core/utils/constant/user_and_token_entity.dart';
 import '../../domain/entities/auth_state.dart';
 import '../../domain/repository/user_repository.dart';
@@ -22,16 +23,33 @@ class UserRepositoryImpl implements UserRepository {
   @override
   final Stream<Result<AuthenticationState>> authenticationState$;
 
+  @override
+  final Stream<Result<OnBoardingState>> onboardingState$;
+
+
+
+  @override
+  UnitResultSingle updateOnBoardingState() =>
+      _localDataSource.saveOnBoardingToken(
+          _OnBoardingMappers.userResponseToOnBoardingTokenEntity(true)
+      ).toEitherSingle(_OnBoardingMappers.errorToAppError).asUnit();
+
+
+
   UserRepositoryImpl(
     this._localDataSource,
   ) : authenticationState$ = _localDataSource.userAndToken$
             .map(_UserMappers.userAndTokenEntityToDomainAuthState)
-            .toEitherStream(_UserMappers.errorToAppError)
+            .toEitherStream(_UserMappers.errorToAppError),
+        onboardingState$ = _localDataSource.onBoardingToken$
+            .map(_OnBoardingMappers.onBoardingEntityToDomainAuthState)
+            .toEitherStream(_OnBoardingMappers.errorToAppError)
+
             {
     _init().ignore();
   }
 
-  
+
 
   // @override
   // UnitResultSingle login({

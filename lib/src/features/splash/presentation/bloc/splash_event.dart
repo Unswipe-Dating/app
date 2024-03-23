@@ -13,6 +13,10 @@ class onFirstTimeUserEvent extends SplashEvent {
   onFirstTimeUserEvent();
 }
 
+class onUpdateOnBoardingUserEvent extends SplashEvent {
+  onUpdateOnBoardingUserEvent();
+}
+
 class onAuthenticatedUserEvent extends SplashEvent {
   onAuthenticatedUserEvent();
 }

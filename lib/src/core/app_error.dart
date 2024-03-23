@@ -1,5 +1,6 @@
 import 'package:dart_either/dart_either.dart';
 import 'package:meta/meta.dart';
+import 'package:rxdart_ext/rxdart_ext.dart';
 import 'package:unswipe/src/core/utils/constant/unit.dart';
 
 import 'cancellation_exception.dart';
@@ -61,4 +62,10 @@ class AppCancellationError extends AppError {
 
 typedef Result<T> = Either<AppError, T>;
 typedef UnitResult = Result<Unit>;
-typedef UnitResultSingle = Stream<UnitResult>;
+typedef VoidResult = Result<void>;
+
+typedef UnitResultStream = Stream<UnitResult>;
+typedef UnitResultSingle = Single<UnitResult>;
+typedef VoidSingle = Single<void>;
+
+
