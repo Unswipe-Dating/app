@@ -9,6 +9,7 @@ abstract class AuthenticationState {
   const AuthenticationState();
 
   UserAndTokenEntity? get userAndToken;
+
 }
 
 abstract class AuthenticatedState

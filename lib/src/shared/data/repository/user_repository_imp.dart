@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dart_either/dart_either.dart';
 import 'package:flutter/foundation.dart';
 import 'package:tuple/tuple.dart';
+import 'package:unswipe/src/shared/domain/entities/onbaording_state/onboarding_state.dart';
 
 import '../../../../data/exception/local_data_source_exception.dart';
 import '../../../../data/exception/remote_data_source_exception.dart';
@@ -13,7 +14,7 @@ import '../../../core/utils/constant/user_and_token_entity.dart';
 import '../../domain/entities/auth_state.dart';
 import '../../domain/repository/user_repository.dart';
 
-part 'mappers.dart';
+part 'user_mappers.dart';
 
 class UserRepositoryImpl implements UserRepository {
   final LocalDataSource _localDataSource;
@@ -24,11 +25,13 @@ class UserRepositoryImpl implements UserRepository {
   UserRepositoryImpl(
     this._localDataSource,
   ) : authenticationState$ = _localDataSource.userAndToken$
-            .map(_Mappers.userAndTokenEntityToDomainAuthState)
-            .toEitherStream(_Mappers.errorToAppError)
+            .map(_UserMappers.userAndTokenEntityToDomainAuthState)
+            .toEitherStream(_UserMappers.errorToAppError)
             {
     _init().ignore();
   }
+
+  
 
   // @override
   // UnitResultSingle login({
@@ -185,7 +188,7 @@ class UserRepositoryImpl implements UserRepository {
 
       await _localDataSource
           .saveUserAndToken(
-            _Mappers.userResponseToUserAndTokenEntity(
+            _UserMappers.userResponseToUserAndTokenEntity(
               userAndToken.token,
             ),
           )
@@ -197,4 +200,5 @@ class UserRepositoryImpl implements UserRepository {
       await _localDataSource.removeUserAndToken().first;
     }
   }
+
 }

@@ -1,6 +1,6 @@
 part of 'user_repository_imp.dart';
 
-abstract class _Mappers {
+abstract class _UserMappers {
   ///
   /// Convert error to [Failure]
   ///
@@ -50,24 +50,6 @@ abstract class _Mappers {
 
     return AuthenticatedState((b) => b.userAndToken = userAndTokenBuilder);
   }
-
-  /// Entity -> Domain
-  // static UserBuilder userEntityToUserDomain(UserEntity userEntity) {
-  //   return UserBuilder()
-  //     ..name = userEntity.name
-  //     ..email = userEntity.email
-  //     ..createdAt = userEntity.createdAt
-  //     ..imageUrl = userEntity.imageUrl;
-  // }
-  //
-  // /// Response -> Entity
-  // static UserEntityBuilder userResponseToUserEntity(UserResponse userResponse) {
-  //   return UserEntityBuilder()
-  //     ..name = userResponse.name
-  //     ..email = userResponse.email
-  //     ..createdAt = userResponse.createdAt
-  //     ..imageUrl = userResponse.imageUrl;
-  // }
 
   /// Response -> Entity
   static UserAndTokenEntity userResponseToUserAndTokenEntity(

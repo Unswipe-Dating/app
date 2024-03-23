@@ -20,3 +20,4 @@ class onAuthenticatedUserEvent extends SplashEvent {
 class onSplashErrorEvent extends SplashEvent {
   onSplashErrorEvent();
 }
+

@@ -23,7 +23,7 @@ class _$UserAndTokenEntitySerializer
     final result = <Object?>[
       'token',
       serializers.serialize(object.token,
-          specifiedType: const FullType(String))
+          specifiedType: const FullType(String)),
     ];
 
     return result;
@@ -60,8 +60,7 @@ class _$UserAndTokenEntity extends UserAndTokenEntity {
           [void Function(UserAndTokenEntityBuilder)? updates]) =>
       (new UserAndTokenEntityBuilder()..update(updates))._build();
 
-  _$UserAndTokenEntity._({required this.token})
-      : super._() {
+  _$UserAndTokenEntity._({required this.token}) : super._() {
     BuiltValueNullFieldError.checkNotNull(
         token, r'UserAndTokenEntity', 'token');
   }
@@ -78,13 +77,15 @@ class _$UserAndTokenEntity extends UserAndTokenEntity {
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is UserAndTokenEntity &&
-        token == other.token;
+    return other is UserAndTokenEntity && token == other.token;
   }
 
   @override
   int get hashCode {
-    return $jf($jc(0, token.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, token.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
@@ -102,7 +103,6 @@ class UserAndTokenEntityBuilder
   String? _token;
   String? get token => _$this._token;
   set token(String? token) => _$this._token = token;
-
 
   UserAndTokenEntityBuilder();
 
@@ -130,25 +130,13 @@ class UserAndTokenEntityBuilder
   UserAndTokenEntity build() => _build();
 
   _$UserAndTokenEntity _build() {
-    _$UserAndTokenEntity _$result;
-    try {
-      _$result = _$v ??
-          new _$UserAndTokenEntity._(
-              token: BuiltValueNullFieldError.checkNotNull(
-                  token, r'UserAndTokenEntity', 'token'));
-    } catch (_) {
-      late String _$failedField;
-      try {
-        _$failedField = 'user';
-      } catch (e) {
-        throw new BuiltValueNestedFieldError(
-            r'UserAndTokenEntity', _$failedField, e.toString());
-      }
-      rethrow;
-    }
+    final _$result = _$v ??
+        new _$UserAndTokenEntity._(
+            token: BuiltValueNullFieldError.checkNotNull(
+                token, r'UserAndTokenEntity', 'token'));
     replace(_$result);
     return _$result;
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,deprecated_member_use_from_same_package,lines_longer_than_80_chars,no_leading_underscores_for_local_identifiers,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new,unnecessary_lambdas
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

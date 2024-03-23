@@ -1,4 +1,5 @@
 
+import 'package:unswipe/src/core/utils/constant/on_boarding_token_entity.dart';
 import 'package:unswipe/src/core/utils/constant/user_and_token_entity.dart';
 
 abstract class LocalDataSource {
@@ -14,6 +15,13 @@ abstract class LocalDataSource {
   /// Remove user and token from local storage.
   /// Throws [LocalDataSourceException] if removing is failed
   Stream<void> removeUserAndToken();
+
+
+  Stream<OnBoardingTokenEntity?> get onBoardingToken$;
+
+
+  Stream<void> saveOnBoardingToken(OnBoardingTokenEntity onBoardingTokenEntity);
+
 }
 
 abstract class Crypto {

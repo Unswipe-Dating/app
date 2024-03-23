@@ -22,6 +22,13 @@ class AppRouter {
           return LoginScreen(onLogin:(){});
         },
       ),
+      GoRoute(
+        name: 'onboarding',
+        path: '/onboarding',
+        builder: (BuildContext context, GoRouterState state) {
+          return OnBoardingScreen(onLogin:(){});
+        },
+      ),
 
     ],
   );

@@ -112,6 +112,8 @@ dependencies:
   # Web view
   webview_flutter: ^4.4.2
 
+  meta: ^1.12.0
+
   # Photo view to view image and control it
   photo_view: ^0.14.0
 
@@ -133,7 +135,8 @@ dev_dependencies:
     sdk: flutter
   # To generate Localization File's
   build_runner: ^2.4.7
-  analyzer: ^5.2.0
+  analyzer: ^6.4.1
+  built_value_generator: ^8.4.2
   flutter_lints: ^2.0.1
   built_value: ^8.4.2
   # Localization config
