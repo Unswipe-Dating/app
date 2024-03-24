@@ -13,28 +13,8 @@ import '../../../../../widgets/utils.dart';
 import '../../../../core/helper/helper.dart';
 import '../../../../core/utils/injections.dart';
 
-class SplashScreen extends StatefulWidget {
-
-  @override
-  State<SplashScreen> createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends State<SplashScreen> {
-  final SplashBloc _bloc = SplashBloc(
-      splashUseCase: sl<GetAuthStateStreamUseCase>(),
-      onboardingStateStreamUseCase: sl<GetOnboardingStateStreamUseCase>()
-  );
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _bloc.close();
-    super.dispose();
-  }
+class SplashScreen extends StatelessWidget {
+  const SplashScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -45,8 +25,10 @@ class _SplashScreenState extends State<SplashScreen> {
 
   BlocProvider<SplashBloc> _buildBody(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context) => _bloc
-        ..add(onAuthenticatedUserEvent()),
+      create: (BuildContext context) => SplashBloc(
+    splashUseCase: sl<GetAuthStateStreamUseCase>(),
+    onboardingStateStreamUseCase: sl<GetOnboardingStateStreamUseCase>()
+    )..add(onAuthenticatedUserEvent()),
       child: Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
@@ -80,6 +62,4 @@ class _SplashScreenState extends State<SplashScreen> {
       ),
     );
   }
-
-
 }

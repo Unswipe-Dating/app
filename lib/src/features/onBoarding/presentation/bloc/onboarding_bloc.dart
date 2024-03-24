@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:unswipe/src/shared/domain/usecases/update_onboarding_state_stream_usecase.dart';
@@ -13,6 +15,7 @@ class OnBoardingBloc extends Bloc<OnBoardingEvent, OnBoardState> {
   final UpdateOnboardingStateStreamUseCase updateOnboardingStateStreamUseCase;
 
   // List of splash
+  late StreamSubscription _subscription;
 
   OnBoardingBloc({
     required this.updateOnboardingStateStreamUseCase
@@ -23,25 +26,31 @@ class OnBoardingBloc extends Bloc<OnBoardingEvent, OnBoardState> {
   }
 
   _onUpdatingOnBoardingEvent(onUpdateOnBoardingUserEvent event,
-      Emitter<OnBoardState> emitter) {
+      Emitter<OnBoardState> emitter) async{
 
-    updateOnboardingStateStreamUseCase.call().listen((event) async {
+    _subscription = updateOnboardingStateStreamUseCase.call().listen((event) {
       event.fold(ifLeft: (l) {
         if (l is CancelTokenFailure) {
-          emitter(OnBoardState().copyWith(status: OnBoardStatus.error));
+          emitter(state.copyWith(status: OnBoardStatus.error));
         } else {
-          emitter(OnBoardState().copyWith(status: OnBoardStatus.error));
+          emitter(state.copyWith(status: OnBoardStatus.error));
         }
       },
           ifRight: (r) {
-              emitter(OnBoardState().copyWith(
+              emitter(state.copyWith(
                   status: OnBoardStatus.loaded,
                   isFirstTime: false,
                   isAuthenticated: false
               ));
 
-          });
+           });
     });
+  }
+
+  @override
+  Future<void> close() {
+    _subscription.cancel();
+    return super.close();
   }
 
 

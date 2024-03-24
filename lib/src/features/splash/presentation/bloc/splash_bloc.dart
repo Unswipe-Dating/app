@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:unswipe/src/core/app_error.dart';
 import 'package:unswipe/src/shared/domain/entities/auth_state.dart';
 import 'package:unswipe/src/shared/domain/entities/onbaording_state/onboarding_state.dart';
 import 'package:unswipe/src/shared/domain/usecases/get_auth_state_stream_use_case.dart';
@@ -13,6 +16,10 @@ part 'splash_state.dart';
 class SplashBloc extends Bloc<SplashEvent, SplashState> {
   final GetAuthStateStreamUseCase splashUseCase;
   final GetOnboardingStateStreamUseCase onboardingStateStreamUseCase;
+
+   late StreamSubscription _subscription;
+   late StreamSubscription _subscription1;
+
 
   // List of splash
 
@@ -28,23 +35,31 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
   _onGettingOnBoardingEvent(onFirstTimeUserEvent event,
       Emitter<SplashState> emitter) async {
 
-    onboardingStateStreamUseCase.call().listen((event) {
+    _subscription = onboardingStateStreamUseCase.call().listen((event) {
       event.fold(ifLeft: (l) {
         if (l is CancelTokenFailure) {
-          emitter(SplashState().copyWith(status: SplashStatus.error));
+          emitter(state.copyWith(status: SplashStatus.error));
         } else {
-          emitter(SplashState().copyWith(status: SplashStatus.error));
+          emitter(state.copyWith(status: SplashStatus.error));
         }
       },
           ifRight: (r) {
             if(r is NotOnBoardedState) {
-              emitter(SplashState().copyWith(status: SplashStatus.loaded,
+              emitter(state.copyWith(status: SplashStatus.loaded,
                   isFirstTime: true,
-                  isAuthenticated: false ));
+                  isAuthenticated: false,
+
+              ));
 
             } else {
-              emitter(SplashState().copyWith(status: SplashStatus.loaded,
-                  isFirstTime: false, isAuthenticated: false ));
+              if (!state.isBoardedAhead) {
+                emitter(state.copyWith(
+                  status: SplashStatus.loaded,
+                  isFirstTime: false,
+                  isAuthenticated: false,
+                  isBoardedAhead: true
+                ));
+              }
 
             }
           });
@@ -54,17 +69,17 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
 // Getting splash event
   _onGettingSplashEvent(onAuthenticatedUserEvent event, Emitter<SplashState> emitter) async {
 
-    splashUseCase.call().listen((event) {
+    _subscription1 = splashUseCase.call().listen((event) {
       event.fold(ifLeft: (l) {
         if (l is CancelTokenFailure) {
-          emitter(SplashState().copyWith(status: SplashStatus.error));
+          emitter(state.copyWith(status: SplashStatus.error));
         } else {
-          emitter(SplashState().copyWith(status: SplashStatus.error));
+          emitter(state.copyWith(status: SplashStatus.error));
         }
       },
           ifRight: (r) {
         if(r is AuthenticatedState) {
-          emitter(SplashState().copyWith(status: SplashStatus.loaded,
+          emitter(state.copyWith(status: SplashStatus.loaded,
               isAuthenticated: true,
               isFirstTime: false));
         } else {
@@ -73,6 +88,14 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
         });
     });
   }
+
+  @override
+  Future<void> close() {
+    _subscription.cancel();
+    _subscription1.cancel();
+    return super.close();
+  }
+
 
 // This function is called whenever the text field changes
 

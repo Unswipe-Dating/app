@@ -12,12 +12,9 @@ import 'package:unswipe/src/core/translations/l10n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:unswipe/src/core/helper/helper.dart';
-import 'package:unswipe/src/core/preference.dart';
 import 'package:unswipe/src/core/utils/injections.dart';
 import 'package:unswipe/src/shared/data/data_sources/app_shared_prefs.dart';
 import 'package:unswipe/src/shared/domain/entities/language_enum.dart';
-import 'package:unswipe/viewmodels/auth_view_model.dart';
-import 'package:unswipe/widgets/homePage/dart_swiper.dart';
 
 import 'data/auth_repository.dart';
 
@@ -28,6 +25,7 @@ void main() async {
 
   // Inject all dependencies
   await initInjections();
+
 
   runApp(DevicePreview(
     builder: (context) {

@@ -59,8 +59,6 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   late PageController _pageController;
   int _pageIndex = 0;
   Timer? _timer;
-  final OnBoardingBloc _bloc = OnBoardingBloc(
-  updateOnboardingStateStreamUseCase: sl<UpdateOnboardingStateStreamUseCase>());
 
   @override
   void initState() {
@@ -72,7 +70,6 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   void dispose() {
     _pageController.dispose();
     _timer!.cancel();
-    _bloc.close();
     super.dispose();
   }
 
@@ -80,10 +77,11 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocProvider(
-        create: (BuildContext context) => _bloc,
+        create: (BuildContext context) =>   OnBoardingBloc(
+      updateOnboardingStateStreamUseCase: sl<UpdateOnboardingStateStreamUseCase>()),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: BlocListener<OnBoardingBloc, OnBoardState>(
+          child: BlocConsumer<OnBoardingBloc, OnBoardState>(
             listener: (context, state) {
               if (state.status == OnBoardStatus.loaded) {
                 if (!state.isFirstTime) {
@@ -91,77 +89,79 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 }
               }
             },
-            child: Column(
-              children: [
-                // Carousel area
-                Expanded(
-                  child: PageView.builder(
-                    onPageChanged: (index) {
-                      setState(() {
-                        _pageIndex = index;
-                      });
-                    },
-                    itemCount: demoData.length,
-                    controller: _pageController,
-                    itemBuilder: (context, index) => OnBoardContent(
-                      title: demoData[index].title,
-                      description: demoData[index].description,
-                      image: demoData[index].image,
+            builder: (context, state) {
+              return Column(
+                children: [
+                  // Carousel area
+                  Expanded(
+                    child: PageView.builder(
+                      onPageChanged: (index) {
+                        setState(() {
+                          _pageIndex = index;
+                        });
+                      },
+                      itemCount: demoData.length,
+                      controller: _pageController,
+                      itemBuilder: (context, index) => OnBoardContent(
+                        title: demoData[index].title,
+                        description: demoData[index].description,
+                        image: demoData[index].image,
+                      ),
                     ),
                   ),
-                ),
-                // Indicator area
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 16.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ...List.generate(
-                        demoData.length,
-                        (index) => Padding(
-                          padding: const EdgeInsets.only(right: 4),
-                          child: DotIndicator(
-                            isActive: index == _pageIndex,
+                  // Indicator area
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ...List.generate(
+                          demoData.length,
+                              (index) => Padding(
+                            padding: const EdgeInsets.only(right: 4),
+                            child: DotIndicator(
+                              isActive: index == _pageIndex,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  // Privacy policy area
+                  // White space
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  // Button area
+                  InkWell(
+                    onTap: () {
+                      context.read<OnBoardingBloc>().add(onUpdateOnBoardingUserEvent());
+
+
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.only(bottom: 48),
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(1),
+                      ),
+                      child: const Center(
+                        child: Text(
+                          "Login / Registration",
+                          style: TextStyle(
+                            fontFamily: "Lato",
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                            fontSize: 18,
                           ),
                         ),
                       ),
-                    ],
-                  ),
-                ),
-                // Privacy policy area
-                // White space
-                const SizedBox(
-                  height: 16,
-                ),
-                // Button area
-                InkWell(
-                  onTap: () {
-                    _bloc.add(onUpdateOnBoardingUserEvent());
-
-
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.only(bottom: 48),
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(1),
-                    ),
-                    child: const Center(
-                      child: Text(
-                        "Login / Registration",
-                        style: TextStyle(
-                          fontFamily: "Lato",
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white,
-                          fontSize: 18,
-                        ),
-                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              );
+            },
           ),
         ),
       ),
@@ -178,9 +178,9 @@ class OnBoardContent extends StatefulWidget {
     required this.description,
   });
 
-  String image;
-  String title;
-  String description;
+  late final String image;
+  late final String title;
+  late final String description;
 
   @override
   State<OnBoardContent> createState() => _OnBoardContentState();
