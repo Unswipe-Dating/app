@@ -8,15 +8,12 @@ part of 'onboarding_state.dart';
 
 class _$OnBoardedState extends OnBoardedState {
   @override
-  final OnBoardingTokenEntity onBoardingEntity;
+  final bool? onBoardingEntity;
 
   factory _$OnBoardedState([void Function(OnBoardedStateBuilder)? updates]) =>
       (new OnBoardedStateBuilder()..update(updates))._build();
 
-  _$OnBoardedState._({required this.onBoardingEntity}) : super._() {
-    BuiltValueNullFieldError.checkNotNull(
-        onBoardingEntity, r'OnBoardedState', 'onBoardingEntity');
-  }
+  _$OnBoardedState._({this.onBoardingEntity}) : super._();
 
   @override
   OnBoardedState rebuild(void Function(OnBoardedStateBuilder) updates) =>
@@ -53,10 +50,9 @@ class OnBoardedStateBuilder
     implements Builder<OnBoardedState, OnBoardedStateBuilder> {
   _$OnBoardedState? _$v;
 
-  OnBoardingTokenEntityBuilder? _onBoardingEntity;
-  OnBoardingTokenEntityBuilder get onBoardingEntity =>
-      _$this._onBoardingEntity ??= new OnBoardingTokenEntityBuilder();
-  set onBoardingEntity(OnBoardingTokenEntityBuilder? onBoardingEntity) =>
+  bool? _onBoardingEntity;
+  bool? get onBoardingEntity => _$this._onBoardingEntity;
+  set onBoardingEntity(bool? onBoardingEntity) =>
       _$this._onBoardingEntity = onBoardingEntity;
 
   OnBoardedStateBuilder();
@@ -64,7 +60,7 @@ class OnBoardedStateBuilder
   OnBoardedStateBuilder get _$this {
     final $v = _$v;
     if ($v != null) {
-      _onBoardingEntity = $v.onBoardingEntity.toBuilder();
+      _onBoardingEntity = $v.onBoardingEntity;
       _$v = null;
     }
     return this;
@@ -85,21 +81,8 @@ class OnBoardedStateBuilder
   OnBoardedState build() => _build();
 
   _$OnBoardedState _build() {
-    _$OnBoardedState _$result;
-    try {
-      _$result = _$v ??
-          new _$OnBoardedState._(onBoardingEntity: onBoardingEntity.build());
-    } catch (_) {
-      late String _$failedField;
-      try {
-        _$failedField = 'onBoardingEntity';
-        onBoardingEntity.build();
-      } catch (e) {
-        throw new BuiltValueNestedFieldError(
-            r'OnBoardedState', _$failedField, e.toString());
-      }
-      rethrow;
-    }
+    final _$result =
+        _$v ?? new _$OnBoardedState._(onBoardingEntity: onBoardingEntity);
     replace(_$result);
     return _$result;
   }

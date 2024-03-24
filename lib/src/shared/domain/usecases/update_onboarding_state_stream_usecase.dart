@@ -1,8 +1,9 @@
+import 'package:unswipe/src/shared/domain/repository/user_repository.dart';
+
 import '../../../core/app_error.dart';
-import '../repository/on_boarding_repository.dart';
 
 class UpdateOnboardingStateStreamUseCase {
-  final OnBoardingRepository _onBoardingRepository;
+  final UserRepository _onBoardingRepository;
 
   const UpdateOnboardingStateStreamUseCase(this._onBoardingRepository);
 

@@ -3,12 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 import 'package:unswipe/src/core/utils/injections.dart';
-import 'package:unswipe/src/features/splash/presentation/bloc/splash_bloc.dart';
-import 'package:unswipe/src/shared/domain/usecases/get_auth_state_stream_use_case.dart';
-import 'package:unswipe/src/shared/domain/usecases/get_onboarding_state_stream_use_case.dart';
-import 'package:unswipe/viewmodels/auth_view_model.dart';
+import 'package:unswipe/src/features/onBoarding/presentation/bloc/onboarding_bloc.dart';
+import 'package:unswipe/src/shared/domain/entities/onbaording_state/onboarding_state.dart';
+import 'package:unswipe/src/shared/domain/usecases/update_onboarding_state_stream_usecase.dart';
 import 'package:unswipe/widgets/onBoarding/dot_inidcator.dart';
 
 // OnBoarding content Model
@@ -61,9 +59,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   late PageController _pageController;
   int _pageIndex = 0;
   Timer? _timer;
-  final SplashBloc _bloc = SplashBloc(
-  splashUseCase: sl<GetAuthStateStreamUseCase>(),
-  onboardingStateStreamUseCase: sl<GetOnboardingStateStreamUseCase>());
+  final OnBoardingBloc _bloc = OnBoardingBloc(
+  updateOnboardingStateStreamUseCase: sl<UpdateOnboardingStateStreamUseCase>());
 
   @override
   void initState() {
@@ -75,6 +72,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   void dispose() {
     _pageController.dispose();
     _timer!.cancel();
+    _bloc.close();
     super.dispose();
   }
 
@@ -85,11 +83,11 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
         create: (BuildContext context) => _bloc,
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: BlocListener<SplashBloc, SplashState>(
+          child: BlocListener<OnBoardingBloc, OnBoardState>(
             listener: (context, state) {
-              if (state.status == SplashStatus.loaded) {
+              if (state.status == OnBoardStatus.loaded) {
                 if (!state.isFirstTime) {
-                  context.goNamed('login');
+                  context.pushReplacementNamed('login');
                 }
               }
             },
@@ -138,7 +136,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 // Button area
                 InkWell(
                   onTap: () {
-                  //  _bloc.add(event)
+                    _bloc.add(onUpdateOnBoardingUserEvent());
 
 
                   },

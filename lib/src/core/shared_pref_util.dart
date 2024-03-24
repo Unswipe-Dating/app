@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:unswipe/data/exception/local_data_source_exception.dart';
 import 'package:rx_shared_preferences/rx_shared_preferences.dart';
 import 'package:rxdart_ext/rxdart_ext.dart';
-import 'package:unswipe/src/core/utils/constant/on_boarding_token_entity.dart';
 import 'package:unswipe/src/core/utils/constant/user_and_token_entity.dart';
 
 import 'local_data_source.dart';
@@ -55,28 +54,27 @@ class SharedPrefUtil implements LocalDataSource {
   FutureOr<String?> _toString(UserAndTokenEntity? entity) =>
       entity == null ? null : _crypto.encrypt(jsonEncode(entity));
 
-  FutureOr<OnBoardingTokenEntity?> _toOnBoardingEntity(dynamic jsonString) =>
+  //todo: find solution here
+  FutureOr<bool?> _toOnBoardingEntity(dynamic jsonString) =>
       jsonString == null
-          ? null
-          : _crypto
-              .decrypt(jsonString as String)
-              .then((s) => OnBoardingTokenEntity.fromJson(jsonDecode(s)));
+          ? false
+          : true;
 
-  FutureOr<String?> _toStringOnBoarding(OnBoardingTokenEntity? entity) =>
-      entity == null ? null : _crypto.encrypt(jsonEncode(entity));
+  FutureOr<String?> _toStringOnBoarding(bool? entity) =>
+      entity == null ? null : "true";
 
   @override
-  Stream<OnBoardingTokenEntity?> get onBoardingToken$ => _rxPrefs
-      .observe<OnBoardingTokenEntity>(_kOnBoardingTokenKey, _toOnBoardingEntity)
+  Stream<bool?> get onBoardingToken$ => _rxPrefs
+      .observe<bool>(_kOnBoardingTokenKey, _toOnBoardingEntity)
       .onErrorReturnWith((e, s) =>
           throw LocalDataSourceException('Cannot read user and token', e, s));
 
   @override
   Single<void> saveOnBoardingToken(
-          OnBoardingTokenEntity onBoardingTokenEntity) =>
+          bool? onBoardingTokenEntity) =>
       // TODO: implement saveOnBoardingToken
       Single.fromCallable(() => _rxPrefs
-          .write<OnBoardingTokenEntity>(
+          .write<bool>(
               _kOnBoardingTokenKey, onBoardingTokenEntity, _toStringOnBoarding)
           .onError<Object>((e, s) => throw LocalDataSourceException(
               'Cannot save user and token', e, s)));

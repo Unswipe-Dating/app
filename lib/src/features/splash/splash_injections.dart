@@ -11,6 +11,7 @@ initSplashInjections() {
   sl.registerSingleton<SplashSharedPref>(SplashSharedPref());
   sl.registerSingleton<AbstractSplashRepository>(SplashRepositoryImpl(sl()));
   sl.registerSingleton<SplashUseCase>(SplashUseCase(sl()));
+
   // sl.registerFactory<SplashBloc>(() => SplashBloc(
   //   splashUseCase: sl(),
   // ));

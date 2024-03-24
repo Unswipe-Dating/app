@@ -1,6 +1,6 @@
 part of 'user_repository_imp.dart';
 
-abstract class _UserMappers {
+abstract class _Mappers {
   ///
   /// Convert error to [Failure]
   ///
@@ -52,25 +52,19 @@ abstract class _UserMappers {
   }
 
   static OnBoardingState onBoardingEntityToDomainAuthState(
-      OnBoardingTokenEntity? entity) {
-    if (entity == null || !entity.token) {
+      bool? entity) {
+    if (entity == null || !entity) {
       return NotOnBoardedState();
     }
 
-    final onBoardingTokenEntityBuilder = OnBoardingTokenEntityBuilder()
-      ..token = entity.token;
-
-    return OnBoardedState((b) => b.onBoardingEntity = onBoardingTokenEntityBuilder);
+    return OnBoardedState();
   }
 
   /// Response -> Entity
-  static OnBoardingTokenEntity userResponseToOnBoardingTokenEntity(
-      bool token,
+  static bool? userResponseToOnBoardingTokenEntity(
+      bool? token,
       ) {
-    return OnBoardingTokenEntity(
-            (b) => b
-          ..token = token
-    );
+    return token;
   }
 
   /// Response -> Entity

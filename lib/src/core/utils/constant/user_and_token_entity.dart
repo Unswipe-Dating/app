@@ -23,4 +23,5 @@ abstract class UserAndTokenEntity
 
   Map<String, dynamic> toJson() =>
       serializers.serializeWith(serializer, this) as Map<String, dynamic>;
+
 }

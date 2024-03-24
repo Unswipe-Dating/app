@@ -13,7 +13,29 @@ import '../../../../../widgets/utils.dart';
 import '../../../../core/helper/helper.dart';
 import '../../../../core/utils/injections.dart';
 
-class SplashScreen extends StatelessWidget {
+class SplashScreen extends StatefulWidget {
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  final SplashBloc _bloc = SplashBloc(
+      splashUseCase: sl<GetAuthStateStreamUseCase>(),
+      onboardingStateStreamUseCase: sl<GetOnboardingStateStreamUseCase>()
+  );
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _bloc.close();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,11 +45,7 @@ class SplashScreen extends StatelessWidget {
 
   BlocProvider<SplashBloc> _buildBody(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context) => SplashBloc(
-          splashUseCase: sl<GetAuthStateStreamUseCase>(),
-          onboardingStateStreamUseCase: sl<GetOnboardingStateStreamUseCase>(),
-          updateOnboardingStateStreamUseCase: sl<UpdateOnboardingStateStreamUseCase>()
-      )
+      create: (BuildContext context) => _bloc
         ..add(onAuthenticatedUserEvent()),
       child: Container(
         height: MediaQuery.of(context).size.height,
@@ -37,9 +55,11 @@ class SplashScreen extends StatelessWidget {
       listener: (context, state) {
         if (state.status == SplashStatus.loaded) {
           if(state.isFirstTime) {
-            context.goNamed('onboarding');
-          } else if(state.isAuthenticated) {
+            context.pushReplacementNamed('onboarding');
+          } else if(!state.isAuthenticated) {
             context.goNamed('login');
+          } else {
+            context.goNamed('profile');
           }
         }
       },
@@ -60,4 +80,6 @@ class SplashScreen extends StatelessWidget {
       ),
     );
   }
+
+
 }
