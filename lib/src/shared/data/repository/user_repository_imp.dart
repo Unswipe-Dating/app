@@ -30,10 +30,10 @@ class UserRepositoryImpl implements UserRepository {
 
 
   @override
-  UnitResultSingle updateOnBoardingState() =>
+  VoidResultStream updateOnBoardingState() =>
       _localDataSource.saveOnBoardingToken(
           _Mappers.userResponseToOnBoardingTokenEntity(true)
-      ).toEitherSingle(_Mappers.errorToAppError).asUnit();
+      ).toEitherStream(_Mappers.errorToAppError);
 
 
 

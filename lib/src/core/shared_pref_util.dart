@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:unswipe/data/exception/local_data_source_exception.dart';
 import 'package:rx_shared_preferences/rx_shared_preferences.dart';
 import 'package:rxdart_ext/rxdart_ext.dart';
+import 'package:unswipe/src/core/app_error.dart';
 import 'package:unswipe/src/core/utils/constant/user_and_token_entity.dart';
 
 import 'local_data_source.dart';
@@ -70,12 +72,14 @@ class SharedPrefUtil implements LocalDataSource {
           throw LocalDataSourceException('Cannot read user and token', e, s));
 
   @override
-  Single<void> saveOnBoardingToken(
-          bool? onBoardingTokenEntity) =>
-      // TODO: implement saveOnBoardingToken
-      Single.fromCallable(() => _rxPrefs
-          .write<bool>(
-              _kOnBoardingTokenKey, onBoardingTokenEntity, _toStringOnBoarding)
-          .onError<Object>((e, s) => throw LocalDataSourceException(
-              'Cannot save user and token', e, s)));
+  Stream<void> saveOnBoardingToken(
+          bool? onBoardingTokenEntity) async* {
+    // TODO: implement saveOnBoardingToken
+    yield _rxPrefs
+        .write<bool>(
+        _kOnBoardingTokenKey, onBoardingTokenEntity, _toStringOnBoarding)
+        .onError<Object>((e, s) =>
+    throw LocalDataSourceException(
+        'Cannot save user and token', e, s));
+  }
 }

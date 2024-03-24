@@ -65,6 +65,8 @@ typedef UnitResult = Result<Unit>;
 typedef VoidResult = Result<void>;
 
 typedef UnitResultStream = Stream<UnitResult>;
+typedef VoidResultStream = Stream<VoidResult>;
+
 typedef UnitResultSingle = Single<UnitResult>;
 typedef VoidSingle = Single<void>;
 

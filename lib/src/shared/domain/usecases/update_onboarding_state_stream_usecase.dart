@@ -7,6 +7,6 @@ class UpdateOnboardingStateStreamUseCase {
 
   const UpdateOnboardingStateStreamUseCase(this._onBoardingRepository);
 
-  UnitResultSingle call() =>
+  VoidResultStream call() =>
       _onBoardingRepository.updateOnBoardingState();
 }

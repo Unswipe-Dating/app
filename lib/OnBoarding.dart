@@ -58,7 +58,6 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   // Variables
   late PageController _pageController;
   int _pageIndex = 0;
-  Timer? _timer;
 
   @override
   void initState() {
@@ -69,7 +68,6 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   @override
   void dispose() {
     _pageController.dispose();
-    _timer!.cancel();
     super.dispose();
   }
 

@@ -9,6 +9,6 @@ import '../entities/onbaording_state/onboarding_state.dart';
 abstract class UserRepository {
   Stream<Result<AuthenticationState>> get authenticationState$;
   Stream<Result<OnBoardingState>> get onboardingState$;
-  UnitResultSingle updateOnBoardingState();
+  VoidResultStream updateOnBoardingState();
 
 }

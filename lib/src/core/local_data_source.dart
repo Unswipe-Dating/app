@@ -1,5 +1,6 @@
 
 import 'package:rxdart_ext/rxdart_ext.dart';
+import 'package:unswipe/src/core/app_error.dart';
 import 'package:unswipe/src/core/utils/constant/user_and_token_entity.dart';
 
 abstract class LocalDataSource {
@@ -20,7 +21,7 @@ abstract class LocalDataSource {
   Stream<bool?> get onBoardingToken$;
 
 
-  Single<void> saveOnBoardingToken(bool? onBoardingTokenEntity);
+  Stream<void> saveOnBoardingToken(bool? onBoardingTokenEntity);
 
 }
 
