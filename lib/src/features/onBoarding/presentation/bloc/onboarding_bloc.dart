@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:unswipe/src/shared/domain/usecases/update_onboarding_state_stream_usecase.dart';
+import 'package:unswipe/src/features/onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart';
 
 import '../../../../core/network/error/failures.dart';
 

@@ -5,9 +5,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:unswipe/src/core/utils/injections.dart';
 import 'package:unswipe/src/features/onBoarding/presentation/bloc/onboarding_bloc.dart';
-import 'package:unswipe/src/shared/domain/entities/onbaording_state/onboarding_state.dart';
-import 'package:unswipe/src/shared/domain/usecases/update_onboarding_state_stream_usecase.dart';
+import 'package:unswipe/src/features/onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart';
 import 'package:unswipe/widgets/onBoarding/dot_inidcator.dart';
+
+import '../widgets/on_board_content.dart';
 
 // OnBoarding content Model
 class OnBoard {
@@ -132,8 +133,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                   ),
                   // Button area
                   InkWell(
-                    onTap: () {
-                      context.read<OnBoardingBloc>().add(onUpdateOnBoardingUserEvent());
+                    onTap: () async {
+                       context.read<OnBoardingBloc>().add(onUpdateOnBoardingUserEvent());
 
 
                     },
@@ -168,53 +169,4 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
 }
 
 // OnBoarding area widget
-class OnBoardContent extends StatefulWidget {
-  OnBoardContent({
-    super.key,
-    required this.image,
-    required this.title,
-    required this.description,
-  });
 
-  late final String image;
-  late final String title;
-  late final String description;
-
-  @override
-  State<OnBoardContent> createState() => _OnBoardContentState();
-}
-
-class _OnBoardContentState extends State<OnBoardContent> {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const Spacer(),
-        SvgPicture.asset(widget.image),
-        const Spacer(),
-        const Spacer(),
-        Text(
-          widget.title,
-          style: const TextStyle(
-              color: Colors.black,
-              fontSize: 20,
-              fontFamily: 'Playfair',
-              fontWeight: FontWeight.w700),
-        ),
-        const SizedBox(
-          height: 16,
-        ),
-        Text(
-          widget.description,
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            color: Colors.black,
-            fontSize: 16,
-            fontFamily: 'Lato',
-          ),
-        ),
-        const Spacer(),
-      ],
-    );
-  }
-}

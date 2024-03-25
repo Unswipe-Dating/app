@@ -1,17 +1,22 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:unswipe/src/features/login/domain/usecases/update_login_state_stream_usecase.dart';
+import 'package:unswipe/src/features/login/presentation/bloc/login_bloc.dart';
 import 'package:unswipe/viewmodels/auth_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:unswipe/widgets/login/icon_text.dart';
 import 'package:unswipe/widgets/login/rounded_text_field.dart';
 
+import '../../../../core/utils/injections.dart';
+import '../../../onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart';
+
 
 class LoginScreen extends StatefulWidget {
-  final VoidCallback onLogin;
 
-  const LoginScreen({super.key,
-    required this.onLogin});
+  const LoginScreen({super.key});
 
   @override
   State<StatefulWidget> createState() => _LoginScreenState();
@@ -22,26 +27,41 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Stack(
-        children: [
-          Container(
-            constraints: const BoxConstraints.expand(),
-            child: SvgPicture.asset("assets/images/login_background.svg"),
-          ),
-           Center(
-            child: MyForm(onLogin: widget.onLogin),
-          )
-        ],
-      ),
+      body: BlocProvider(
+        create: (BuildContext context) => LoginBloc(updateUserStateStreamUseCase: sl<UpdateUserStateStreamUseCase>()),
+        child: BlocConsumer<LoginBloc, LoginState>(
+          listener: (context, state) {
+            if (state.status == LoginStatus.loaded) {
+              if (state.token.isNotEmpty) {
+                context.pushReplacementNamed('profile');
+              }
+            }
+          },
+          builder: (context, state) {
+            return   Stack(
+              children: [
+                Container(
+                  constraints: const BoxConstraints.expand(),
+                  child: SvgPicture.asset("assets/images/login_background.svg"),
+                ),
+                Center(
+                  child: MyForm(),
+                )
+              ],
+            );
+          },
+        ),
+      )
+
+
+
     );
   }
 }
 
 class MyForm extends StatefulWidget {
-  final VoidCallback onLogin;
 
-  const MyForm({super.key,
-    required  this.onLogin});
+  const MyForm({super.key});
   @override
   State<MyForm> createState() => _MyFormState();
 }
@@ -140,13 +160,8 @@ class _MyFormState extends State<MyForm> {
         }
 
         if(email == "abc@xyz.com" && code == "12345678") {
-          final authViewModel = context.read<AuthViewModel>();
-          final result = await authViewModel.login();
-          if (result == true) {
-            widget.onLogin();
-          } else {
-            authViewModel.logingIn = false;
-          }
+          context.read<LoginBloc>().add(onLoginSuccess("token"));
+
 
         }
         }

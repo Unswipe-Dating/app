@@ -1,5 +1,5 @@
-import '../../../../main.dart';
-import '../../../core/translations/l10n.dart';
+import '../../../main.dart';
+import '../../core/translations/l10n.dart';
 
 enum LanguageEnum {
   ar, // Arabic

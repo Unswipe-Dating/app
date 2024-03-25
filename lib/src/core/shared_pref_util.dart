@@ -22,11 +22,10 @@ class SharedPrefUtil implements LocalDataSource {
 
   @override
   Stream<void> saveUserAndToken(UserAndTokenEntity userAndToken) async* {
-    await _rxPrefs
+    yield _rxPrefs
         .write<UserAndTokenEntity>(_kUserTokenKey, userAndToken, _toString)
         .onError<Object>((e, s) =>
             throw LocalDataSourceException('Cannot save user and token', e, s));
-    yield null;
   }
 
   @override

@@ -4,11 +4,11 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:unswipe/src/core/app_error.dart';
 import 'package:unswipe/src/shared/domain/entities/auth_state.dart';
-import 'package:unswipe/src/shared/domain/entities/onbaording_state/onboarding_state.dart';
 import 'package:unswipe/src/shared/domain/usecases/get_auth_state_stream_use_case.dart';
-import 'package:unswipe/src/shared/domain/usecases/get_onboarding_state_stream_use_case.dart';
+import 'package:unswipe/src/features/onBoarding/domain/usecases/get_onboarding_state_stream_use_case.dart';
 
 import '../../../../core/network/error/failures.dart';
+import '../../../onBoarding/domain/entities/onbaording_state/onboarding_state.dart';
 part 'splash_event.dart';
 
 part 'splash_state.dart';

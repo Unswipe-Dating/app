@@ -1,7 +1,7 @@
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../shared/data/data_sources/app_shared_prefs.dart';
-import '../../shared/domain/entities/language_enum.dart';
+import '../../shared/utils/language_enum.dart';
 import '../utils/constant/app_constants.dart';
 import '../utils/injections.dart';
 

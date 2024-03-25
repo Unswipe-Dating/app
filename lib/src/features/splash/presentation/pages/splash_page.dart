@@ -6,8 +6,8 @@ import 'package:go_router/go_router.dart';
 import 'package:unswipe/src/features/splash/domain/usecases/splash_usecase.dart';
 import 'package:unswipe/src/features/splash/presentation/bloc/splash_bloc.dart';
 import 'package:unswipe/src/shared/domain/usecases/get_auth_state_stream_use_case.dart';
-import 'package:unswipe/src/shared/domain/usecases/get_onboarding_state_stream_use_case.dart';
-import 'package:unswipe/src/shared/domain/usecases/update_onboarding_state_stream_usecase.dart';
+import 'package:unswipe/src/features/onBoarding/domain/usecases/get_onboarding_state_stream_use_case.dart';
+import 'package:unswipe/src/features/onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart';
 
 import '../../../../../widgets/utils.dart';
 import '../../../../core/helper/helper.dart';

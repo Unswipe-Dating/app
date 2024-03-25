@@ -1,7 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/utils/constant/local_storage_constants.dart';
-import '../../domain/entities/language_enum.dart';
+import '../../utils/language_enum.dart';
 
 class AppSharedPrefs {
   final SharedPreferences _preferences;

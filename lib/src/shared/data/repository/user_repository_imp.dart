@@ -2,10 +2,6 @@ import 'dart:io';
 
 import 'package:dart_either/dart_either.dart';
 import 'package:flutter/foundation.dart';
-import 'package:unswipe/src/core/utils/streams.dart';
-import 'package:unswipe/src/features/onBoarding/presentation/bloc/onboarding_bloc.dart';
-import 'package:unswipe/src/shared/domain/entities/onbaording_state/onboarding_state.dart';
-import 'package:rxdart_ext/rxdart_ext.dart';
 
 import '../../../../data/exception/local_data_source_exception.dart';
 import '../../../../data/exception/remote_data_source_exception.dart';
@@ -13,10 +9,11 @@ import '../../../core/app_error.dart';
 import '../../../core/cancellation_exception.dart';
 import '../../../core/local_data_source.dart';
 import '../../../core/utils/constant/user_and_token_entity.dart';
+import '../../../features/onBoarding/domain/entities/onbaording_state/onboarding_state.dart';
 import '../../domain/entities/auth_state.dart';
 import '../../domain/repository/user_repository.dart';
 
-part 'mappers.dart';
+part '../../utils/mappers.dart';
 
 class UserRepositoryImpl implements UserRepository {
   final LocalDataSource _localDataSource;
@@ -34,6 +31,15 @@ class UserRepositoryImpl implements UserRepository {
       _localDataSource.saveOnBoardingToken(
           _Mappers.userResponseToOnBoardingTokenEntity(true)
       ).toEitherStream(_Mappers.errorToAppError);
+
+  @override
+  VoidResultStream updateAuthenticationState(String token) =>
+      _localDataSource.saveUserAndToken(
+          _Mappers.userResponseToUserAndTokenEntity(
+            token,
+          )
+      ).toEitherStream(_Mappers.errorToAppError);
+
 
 
 
@@ -75,5 +81,7 @@ class UserRepositoryImpl implements UserRepository {
       await _localDataSource.removeUserAndToken().first;
     }
   }
+
+
 
 }

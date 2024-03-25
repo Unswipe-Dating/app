@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:unswipe/Login.dart';
-import 'package:unswipe/OnBoarding.dart';
+import 'package:unswipe/src/features/login/presentation/pages/Login.dart';
+import 'package:unswipe/src/features/onBoarding/presentation/pages/OnBoarding.dart';
 import 'package:unswipe/src/features/splash/presentation/pages/splash_page.dart';
 import 'package:unswipe/widgets/homePage/dart_swiper.dart';
 
@@ -20,7 +20,7 @@ class AppRouter {
         name: 'login',
         path: '/login',
         builder: (BuildContext context, GoRouterState state) {
-          return LoginScreen(onLogin:(){});
+          return LoginScreen();
         },
       ),
       GoRoute(

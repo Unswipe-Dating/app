@@ -1,4 +1,4 @@
-part of 'user_repository_imp.dart';
+part of '../data/repository/user_repository_imp.dart';
 
 abstract class _Mappers {
   ///

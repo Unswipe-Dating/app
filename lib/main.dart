@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:unswipe/Login.dart';
+import 'package:unswipe/src/features/login/presentation/pages/Login.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,7 +14,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:unswipe/src/core/helper/helper.dart';
 import 'package:unswipe/src/core/utils/injections.dart';
 import 'package:unswipe/src/shared/data/data_sources/app_shared_prefs.dart';
-import 'package:unswipe/src/shared/domain/entities/language_enum.dart';
+import 'package:unswipe/src/shared/utils/language_enum.dart';
 
 import 'data/auth_repository.dart';
 
