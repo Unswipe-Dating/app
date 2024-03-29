@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:unswipe/src/features/home/home.dart';
 import 'package:unswipe/src/features/login/presentation/pages/Login.dart';
 import 'package:unswipe/src/features/onBoarding/presentation/pages/OnBoarding.dart';
 import 'package:unswipe/src/features/splash/presentation/pages/splash_page.dart';
-import 'package:unswipe/widgets/homePage/dart_swiper.dart';
 
 class AppRouter {
   static final GoRouter _router = GoRouter(
@@ -34,7 +34,7 @@ class AppRouter {
         name: 'profile',
         path: '/profile',
         builder: (BuildContext context, GoRouterState state) {
-          return SwipeInterface();
+          return MyHomePage(title: "title");
         },
       ),
 

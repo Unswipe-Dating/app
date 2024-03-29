@@ -36,14 +36,12 @@ class SharedPrefUtil implements LocalDataSource {
       );
 
   @override
-  Stream<UserAndTokenEntity?> get userAndToken$ => _rxPrefs
+  Stream<UserAndTokenEntity?> get userAndToken$  =>
+    _rxPrefs
       .observe<UserAndTokenEntity>(_kUserTokenKey, _toEntity)
       .onErrorReturnWith((e, s) =>
-          throw LocalDataSourceException('Cannot read user and token', e, s));
+      throw LocalDataSourceException('Cannot read user and token', e, s));
 
-  //
-  // Encoder and Decoder
-  //
 
   FutureOr<UserAndTokenEntity?> _toEntity(dynamic jsonString) =>
       jsonString == null

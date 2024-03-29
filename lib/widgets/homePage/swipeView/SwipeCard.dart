@@ -235,6 +235,7 @@ class _SwipeCard extends State<SwipeCard> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     FloatingActionButton(
+                      heroTag: null,
                         shape: const CircleBorder(),
                         onPressed: () {
                           widget.dislikeAction();
@@ -247,6 +248,7 @@ class _SwipeCard extends State<SwipeCard> {
                     ),
                     SizedBox(width: 8,),
                     FloatingActionButton(
+                      heroTag: null,
                         shape: CircleBorder(),
                         onPressed: () {
                           widget.likeAction();
@@ -259,6 +261,7 @@ class _SwipeCard extends State<SwipeCard> {
                     ),
                     SizedBox(width: 8,),
                     const FloatingActionButton(
+                      heroTag: null,
                         shape: CircleBorder(),
                         onPressed: null,
                         backgroundColor: Colors.black,

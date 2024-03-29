@@ -8,9 +8,9 @@ import 'package:unswipe/src/features/splash/presentation/bloc/splash_bloc.dart';
 import '../../core/utils/injections.dart';
 
 initSplashInjections() {
-  sl.registerSingleton<SplashSharedPref>(SplashSharedPref());
-  sl.registerSingleton<AbstractSplashRepository>(SplashRepositoryImpl(sl()));
-  sl.registerSingleton<SplashUseCase>(SplashUseCase(sl()));
+  // sl.registerSingleton<SplashSharedPref>(SplashSharedPref());
+  // sl.registerSingleton<AbstractSplashRepository>(SplashRepositoryImpl(sl()));
+  // sl.registerSingleton<SplashUseCase>(SplashUseCase(sl()));
 
   // sl.registerFactory<SplashBloc>(() => SplashBloc(
   //   splashUseCase: sl(),

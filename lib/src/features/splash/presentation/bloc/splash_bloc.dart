@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:rxdart_ext/rxdart_ext.dart';
 import 'package:unswipe/src/core/app_error.dart';
 import 'package:unswipe/src/shared/domain/entities/auth_state.dart';
 import 'package:unswipe/src/shared/domain/usecases/get_auth_state_stream_use_case.dart';
@@ -15,27 +16,26 @@ part 'splash_state.dart';
 
 class SplashBloc extends Bloc<SplashEvent, SplashState> {
   final GetAuthStateStreamUseCase splashUseCase;
-  final GetOnboardingStateStreamUseCase onboardingStateStreamUseCase;
+ final GetOnboardingStateStreamUseCase onboardingStateStreamUseCase;
 
-   late StreamSubscription _subscription;
-   late StreamSubscription _subscription1;
+    StreamSubscription? subscription;
 
 
   // List of splash
 
   SplashBloc({required this.splashUseCase,
-    required this.onboardingStateStreamUseCase,
+   required this.onboardingStateStreamUseCase,
   })
       : super(SplashState()) {
     on<onAuthenticatedUserEvent>(_onGettingSplashEvent);
-    on<onFirstTimeUserEvent>(_onGettingOnBoardingEvent);
+   on<onFirstTimeUserEvent>(_onGettingOnBoardingEvent);
 
   }
 
   _onGettingOnBoardingEvent(onFirstTimeUserEvent event,
       Emitter<SplashState> emitter) async {
 
-    _subscription = onboardingStateStreamUseCase.call().listen((event) {
+    subscription = onboardingStateStreamUseCase.call().listen((event) {
       event.fold(ifLeft: (l) {
         if (l is CancelTokenFailure) {
           emitter(state.copyWith(status: SplashStatus.error));
@@ -69,7 +69,7 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
 // Getting splash event
   _onGettingSplashEvent(onAuthenticatedUserEvent event, Emitter<SplashState> emitter) async {
 
-    _subscription1 = splashUseCase.call().listen((event) {
+    await splashUseCase.call().forEach((event) {
       event.fold(ifLeft: (l) {
         if (l is CancelTokenFailure) {
           emitter(state.copyWith(status: SplashStatus.error));
@@ -79,7 +79,7 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
       },
           ifRight: (r) {
         if(r is AuthenticatedState) {
-          emitter(state.copyWith(status: SplashStatus.loaded,
+            emitter(state.copyWith(status: SplashStatus.loaded,
               isAuthenticated: true,
               isFirstTime: false));
         } else {
@@ -91,8 +91,7 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
 
   @override
   Future<void> close() {
-    _subscription.cancel();
-    _subscription1.cancel();
+    subscription?.cancel();
     return super.close();
   }
 

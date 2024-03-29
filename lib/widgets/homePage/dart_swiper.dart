@@ -17,8 +17,22 @@ class SwipeInterface extends StatefulWidget {
 }
 
 class _SwipeInterfaceState extends State<SwipeInterface> {
-  late List<Profile> profiles;
-  late List<SwipeCard> cards;
+  List<Profile> profiles = [Profile(id: "id",
+      userName: "userName",
+      userAge: 0,
+      userDescription: "userDescription",
+      profileImageSrc: "profileImageSrc",
+      isVerified: false,
+      pronouns:
+      "pronouns"),Profile(id: "id1",
+      userName: "userName1",
+      userAge: 0,
+      userDescription: "userDescription1",
+      profileImageSrc: "profileImageSrc1",
+      isVerified: false,
+      pronouns:
+      "pronouns1")];
+  List<SwipeCard> cards=[];
   final CardSwiperController controller = CardSwiperController();
 
   loadJsonData() async {
@@ -45,6 +59,18 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
   }
 
   _SwipeInterfaceState() {
+    cards = profiles.map((profile) =>  SwipeCard(
+      likeAction: swipeRightMethod,
+      dislikeAction: swipeLeftMethod,
+      id: profile.id,
+      userName: profile.userName,
+      userAge: profile.userAge,
+      userDescription: profile.userDescription,
+      profileImageSrc: profile.profileImageSrc,
+      isVerified: profile.isVerified,
+      pronouns: profile.pronouns,
+    ))
+        .toList();
     loadJsonData();
   }
 
@@ -72,8 +98,7 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
           index,
           horizontalThresholdPercentage,
           verticalThresholdPercentage,
-        ) =>
-            cards[index],
+        ) => cards[index],
       ),
     );
   }

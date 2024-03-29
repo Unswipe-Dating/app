@@ -49,6 +49,7 @@ class PromptCard extends StatelessWidget {
             ),
             const Align( alignment: Alignment.centerRight,
               child: FloatingActionButton(
+                heroTag: null,
               shape: CircleBorder(),
                 onPressed: null,
                 backgroundColor: Colors.white,

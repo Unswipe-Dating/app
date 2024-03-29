@@ -27,7 +27,7 @@ class SplashScreen extends StatelessWidget {
     return BlocProvider(
       create: (BuildContext context) => SplashBloc(
     splashUseCase: sl<GetAuthStateStreamUseCase>(),
-    onboardingStateStreamUseCase: sl<GetOnboardingStateStreamUseCase>()
+   onboardingStateStreamUseCase: sl<GetOnboardingStateStreamUseCase>()
     )..add(onAuthenticatedUserEvent()),
       child: Container(
         height: MediaQuery.of(context).size.height,

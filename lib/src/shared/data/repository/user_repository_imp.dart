@@ -53,34 +53,9 @@ class UserRepositoryImpl implements UserRepository {
             .toEitherStream(_Mappers.errorToAppError)
 
             {
-    _init().ignore();
   }
 
-  Future<void> _init() async {
-    const tag = '[USER_REPOSITORY] { init }';
 
-    try {
-      final userAndToken = await _localDataSource.userAndToken$.first;
-      debugPrint('$tag userAndToken local=$userAndToken');
-
-      if (userAndToken == null) {
-        return;
-      }
-
-      await _localDataSource
-          .saveUserAndToken(
-            _Mappers.userResponseToUserAndTokenEntity(
-              userAndToken.token,
-            ),
-          )
-          .first;
-    } on RemoteDataSourceException catch (e) {
-      debugPrint('$tag remote error=$e');
-    } on LocalDataSourceException catch (e) {
-      debugPrint('$tag local error=$e');
-      await _localDataSource.removeUserAndToken().first;
-    }
-  }
 
 
 
