@@ -8,6 +8,7 @@ import 'package:unswipe/src/features/onBoarding/presentation/bloc/onboarding_blo
 import 'package:unswipe/src/features/onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart';
 import 'package:unswipe/widgets/onBoarding/dot_inidcator.dart';
 
+import '../../../../core/router/app_router.dart';
 import '../widgets/on_board_content.dart';
 
 // OnBoarding content Model
@@ -84,7 +85,9 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
             listener: (context, state) {
               if (state.status == OnBoardStatus.loaded) {
                 if (!state.isFirstTime) {
-                  context.pushReplacementNamed('login');
+                  CustomNavigationHelper.router.push(
+                    CustomNavigationHelper.loginPath,
+                  );
                 }
               }
             },

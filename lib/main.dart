@@ -26,6 +26,7 @@ void main() async {
   // Inject all dependencies
   await initInjections();
 
+  CustomNavigationHelper.instance;
 
   runApp(DevicePreview(
     builder: (context) {
@@ -91,9 +92,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
             builder: (context, child) {
               return MaterialApp.router(
                 title: 'Ny Times Articles App',
-                routeInformationProvider: AppRouter.router.routeInformationProvider,
-                routeInformationParser: AppRouter.router.routeInformationParser,
-                routerDelegate: AppRouter.router.routerDelegate,
+                routerConfig: CustomNavigationHelper.router,
                 scaffoldMessengerKey: snackBarKey,
                 theme: Helper.isDarkTheme() ? darkAppTheme : appTheme,
                 debugShowCheckedModeBanner: false,

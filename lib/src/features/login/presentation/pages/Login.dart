@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:unswipe/widgets/login/icon_text.dart';
 import 'package:unswipe/widgets/login/rounded_text_field.dart';
 
+import '../../../../core/router/app_router.dart';
 import '../../../../core/utils/injections.dart';
 import '../../../onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart';
 
@@ -33,7 +34,9 @@ class _LoginScreenState extends State<LoginScreen> {
           listener: (context, state) {
             if (state.status == LoginStatus.loaded) {
               if (state.token.isNotEmpty) {
-                context.pushReplacementNamed('profile');
+                CustomNavigationHelper.router.push(
+                  CustomNavigationHelper.profilePath,
+                );
               }
             }
           },

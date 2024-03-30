@@ -486,6 +486,10 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
             label: 'search',
           ),
           BottomNavigationBarItem(
+            icon: Icon(Icons.commute),
+            label: 'community',
+          ),
+          BottomNavigationBarItem(
             icon: Icon(Icons.settings),
             label: 'settings',
           ),

@@ -11,6 +11,7 @@ import 'package:unswipe/src/features/onBoarding/domain/usecases/update_onboardin
 
 import '../../../../../widgets/utils.dart';
 import '../../../../core/helper/helper.dart';
+import '../../../../core/router/app_router.dart';
 import '../../../../core/utils/injections.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -37,11 +38,17 @@ class SplashScreen extends StatelessWidget {
       listener: (context, state) {
         if (state.status == SplashStatus.loaded) {
           if(state.isFirstTime) {
-            context.pushReplacementNamed('onboarding');
+            CustomNavigationHelper.router.push(
+              CustomNavigationHelper.onBoardingPath,
+            );
           } else if(!state.isAuthenticated) {
-            context.goNamed('login');
+            CustomNavigationHelper.router.push(
+              CustomNavigationHelper.loginPath,
+            );
           } else {
-            context.goNamed('profile');
+            CustomNavigationHelper.router.push(
+              CustomNavigationHelper.profilePath,
+            );
           }
         }
       },
