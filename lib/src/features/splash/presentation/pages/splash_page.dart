@@ -46,7 +46,7 @@ class SplashScreen extends StatelessWidget {
               CustomNavigationHelper.loginPath,
             );
           } else {
-            CustomNavigationHelper.router.push(
+            CustomNavigationHelper.router.go(
               CustomNavigationHelper.profilePath,
             );
           }

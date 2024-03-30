@@ -34,7 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
           listener: (context, state) {
             if (state.status == LoginStatus.loaded) {
               if (state.token.isNotEmpty) {
-                CustomNavigationHelper.router.push(
+                CustomNavigationHelper.router.go(
                   CustomNavigationHelper.profilePath,
                 );
               }

@@ -82,8 +82,7 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
 
   @override
   Widget build(BuildContext context) {
-    return Flexible(
-      child: CardSwiper(
+    return  CardSwiper(
         allowedSwipeDirection: const AllowedSwipeDirection.only(
             up: false, down: false, left: false, right: false),
         threshold: 100,
@@ -99,8 +98,8 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
           horizontalThresholdPercentage,
           verticalThresholdPercentage,
         ) => cards[index],
-      ),
-    );
+      );
+
   }
 
   void swipeRightMethod() {

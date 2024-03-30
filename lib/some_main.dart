@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:unswipe/widgets/homePage/dart_swiper.dart';
 
 main() {
   CustomNavigationHelper.instance;
@@ -68,7 +69,7 @@ class CustomNavigationHelper {
                 path: homePath,
                 pageBuilder: (context, GoRouterState state) {
                   return getPage(
-                    child: const HomePage(),
+                    child: const SwipeInterface(),
                     state: state,
                   );
                 },

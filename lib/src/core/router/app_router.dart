@@ -118,7 +118,7 @@ class CustomNavigationHelper {
             StatefulNavigationShell navigationShell,
             ) {
           return getPage(
-            child: BottomNavigationPage(
+            child: MyHomePage(
               child: navigationShell,
             ),
             state: state,

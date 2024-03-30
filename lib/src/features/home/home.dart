@@ -46,19 +46,8 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
         ),
-        body: Container(
-          alignment: Alignment.center,
-          color: Colors.white,
-          child: const Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              SizedBox(
-                height: 20.0,
-              ),
-              SwipeInterface(),
-            ],
-          ),
+        body: SafeArea(
+          child: widget.child,
         ),
         bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
