@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:unswipe/some_main.dart';
+import 'package:unswipe/src/features/chat/no_request_screen.dart';
 import 'package:unswipe/src/features/home/home.dart';
 import 'package:unswipe/src/features/hyperExclusiveMatch/hyper_exclusive_page.dart';
 import 'package:unswipe/src/features/login/presentation/pages/Login.dart';
 import 'package:unswipe/src/features/onBoarding/presentation/pages/OnBoarding.dart';
 import 'package:unswipe/src/features/splash/presentation/pages/splash_page.dart';
 import 'package:unswipe/widgets/homePage/dart_swiper.dart';
+
+import '../../features/chat/chat_request_screen.dart';
 
 class CustomNavigationHelper {
   static final CustomNavigationHelper _instance =
@@ -42,6 +45,8 @@ class CustomNavigationHelper {
 
   static const String profilePath = '/profile';
   static const String profilePathHyperEx = '/hyperex';
+  static const String chatRequestPath = '/chat/chatRequest';
+
 
   static const String chatPath = '/chat';
   static const String communityPath = '/community';
@@ -78,7 +83,16 @@ class CustomNavigationHelper {
                 path: chatPath,
                 pageBuilder: (context, state) {
                   return getPage(
-                    child: const SwipeInterface(),
+                    child: ChatRequestListPage(),
+                    state: state,
+                  );
+                },
+              ),
+              GoRoute(
+                path: chatRequestPath,
+                pageBuilder: (context, state) {
+                  return getPage(
+                    child: NoRequestScreen(),
                     state: state,
                   );
                 },
