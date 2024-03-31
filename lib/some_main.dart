@@ -69,7 +69,7 @@ class CustomNavigationHelper {
                 path: homePath,
                 pageBuilder: (context, GoRouterState state) {
                   return getPage(
-                    child: const SwipeInterface(),
+                    child: const HomePage(),
                     state: state,
                   );
                 },

@@ -50,7 +50,6 @@ class _MyHomePageState extends State<MyHomePage> {
           child: widget.child,
         ),
         bottomNavigationBar: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
           currentIndex: widget.child.currentIndex,
           onTap: (index) {
             widget.child.goBranch(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:unswipe/some_main.dart';
 import 'package:unswipe/src/features/home/home.dart';
+import 'package:unswipe/src/features/hyperExclusiveMatch/hyper_exclusive_page.dart';
 import 'package:unswipe/src/features/login/presentation/pages/Login.dart';
 import 'package:unswipe/src/features/onBoarding/presentation/pages/OnBoarding.dart';
 import 'package:unswipe/src/features/splash/presentation/pages/splash_page.dart';
@@ -40,6 +41,8 @@ class CustomNavigationHelper {
   static const String rootDetailPath = '/rootDetail';
 
   static const String profilePath = '/profile';
+  static const String profilePathHyperEx = '/hyperex';
+
   static const String chatPath = '/chat';
   static const String communityPath = '/community';
   static const String settingsPath = '/settings';
@@ -131,6 +134,16 @@ class CustomNavigationHelper {
         pageBuilder: (context, state) {
           return getPage(
             child: const SplashScreen(),
+            state: state,
+          );
+        },
+      ),
+      GoRoute(
+        parentNavigatorKey: parentNavigatorKey,
+        path: profilePathHyperEx,
+        pageBuilder: (context, state) {
+          return getPage(
+            child: HyperExclusiveRequestPage(),
             state: state,
           );
         },

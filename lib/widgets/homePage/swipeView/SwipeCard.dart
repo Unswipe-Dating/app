@@ -10,6 +10,8 @@ import 'package:unswipe/widgets/homePage/swipeView/swipeViewCards/photo_card_sec
 import 'package:unswipe/widgets/homePage/swipeView/swipeViewCards/prompt_card.dart';
 import 'package:unswipe/widgets/homePage/swipeView/swipeViewCards/work_card.dart';
 
+import '../../../src/core/router/app_router.dart';
+
 class SwipeCard extends StatefulWidget {
   final String id;
   final String userName;
@@ -241,9 +243,10 @@ class _SwipeCard extends State<SwipeCard> {
                           widget.dislikeAction();
                           controller.jumpTo(0);
                           },
-                        backgroundColor: Colors.white,
+                        backgroundColor: Colors.black,
                         child: const Icon(
-                            Icons.close
+                            Icons.close,
+                          color: Colors.white,
                         )
                     ),
                     SizedBox(width: 8,),
@@ -259,15 +262,19 @@ class _SwipeCard extends State<SwipeCard> {
                           Icons.favorite,
                         )
                     ),
-                    SizedBox(width: 8,),
-                    const FloatingActionButton(
+                    const SizedBox(width: 8,),
+                     FloatingActionButton(
                       heroTag: null,
-                        shape: CircleBorder(),
-                        onPressed: null,
-                        backgroundColor: Colors.black,
-                        child: Icon(
-                          Icons.punch_clock,
-                          color: Colors.white,
+                        shape: const CircleBorder(),
+                        onPressed: () {
+                          CustomNavigationHelper.router.push(
+                            CustomNavigationHelper.profilePathHyperEx,
+                          );
+                        },
+                        backgroundColor: Colors.grey[200],
+                        child: const ImageIcon(
+                          AssetImage("assets/images/locked_heart.png"),
+                          color: Colors.black,
                         )
                     ),
 
