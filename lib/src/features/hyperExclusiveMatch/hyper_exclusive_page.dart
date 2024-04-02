@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:unswipe/src/core/router/app_router.dart';
 
 class HyperExclusiveRequestPage extends StatelessWidget {
+  const HyperExclusiveRequestPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,7 +83,10 @@ class HyperExclusiveRequestPage extends StatelessWidget {
                 width: double.infinity,
                 child: Padding(padding: EdgeInsets.symmetric(horizontal: 20, vertical: 0,), child:
                 ElevatedButton(
-                  onPressed: () => print('Button pressed!'),
+                  onPressed: () {
+                    CustomNavigationHelper.router.pushReplacement(
+                        CustomNavigationHelper.profilePathHyperExLock);
+                  },
                   child: Text('Go Hyper exclusive',
                       style: const TextStyle(
                           color: Colors.white,

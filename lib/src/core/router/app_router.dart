@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:unswipe/some_main.dart';
 import 'package:unswipe/src/features/chat/no_request_screen.dart';
 import 'package:unswipe/src/features/home/home.dart';
+import 'package:unswipe/src/features/hyperExclusiveMatch/hyper_ex_request_lock_page.dart';
+
 import 'package:unswipe/src/features/hyperExclusiveMatch/hyper_exclusive_page.dart';
 import 'package:unswipe/src/features/login/presentation/pages/Login.dart';
 import 'package:unswipe/src/features/onBoarding/presentation/pages/OnBoarding.dart';
@@ -45,6 +47,8 @@ class CustomNavigationHelper {
 
   static const String profilePath = '/profile';
   static const String profilePathHyperEx = '/hyperex';
+  static const String profilePathHyperExLock = '/profile/hyperex';
+
   static const String chatRequestPath = '/chat/chatRequest';
 
 
@@ -70,6 +74,15 @@ class CustomNavigationHelper {
                 pageBuilder: (context, GoRouterState state) {
                   return getPage(
                     child: const SwipeInterface(),
+                    state: state,
+                  );
+                },
+              ),
+              GoRoute(
+                path: profilePathHyperExLock,
+                pageBuilder: (context, GoRouterState state) {
+                  return getPage(
+                    child: HyperExclusiveRequestLockScreen(),
                     state: state,
                   );
                 },
