@@ -19,7 +19,7 @@ class HyperExclusiveRequestLockScreen extends StatelessWidget {
               // Image with square aspect ratio
               AspectRatio(
                 aspectRatio: 1,
-                child: Image.asset('path/to/your/image.jpg'),
+                child: Image.asset('assets/images/profilePictures/profile_1.jpg'),
               ),
               SizedBox(height: 20),
 

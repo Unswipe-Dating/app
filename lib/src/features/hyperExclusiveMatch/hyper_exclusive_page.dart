@@ -18,12 +18,13 @@ class HyperExclusiveRequestPage extends StatelessWidget {
         ),
       ),
       body: Center(
-        child:  Column(
-            children: [
-              Container(
+        child: Column(
+          children: [
+            Container(
                 width: double.infinity,
                 color: const Color(0xFFFFCEAA),
-                child: Padding(padding: EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 0, horizontal: 16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -43,7 +44,8 @@ class HyperExclusiveRequestPage extends StatelessWidget {
                         textAlign: TextAlign.center,
                       ),
                       SizedBox(height: 10.0), // Add spacing
-                      GestureDetector( // Make text clickable
+                      GestureDetector(
+                        // Make text clickable
                         child: Text(
                           'Know more',
                           style: TextStyle(color: Colors.blue),
@@ -52,69 +54,69 @@ class HyperExclusiveRequestPage extends StatelessWidget {
                         onTap: () => print('Clicked!'), // Handle click event
                       ),
                       SizedBox(height: 10.0), // Add spacing
-
                     ],
                   ),
-                )
-              ),
-              SizedBox(height: 20,),
-               Expanded(child: Padding(padding: EdgeInsets.all(20),
-                 child: Column(
-                children: [
-                  Text(
-                    style: const TextStyle(
-                        color: Colors.black,
-                        fontFamily: 'lato',
-                        fontWeight: FontWeight.w700,
-                        fontSize: 20.0),
-                    'Hyper exclusive request for A expires in: ',
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 10.0), // Add spacing
-                  FixedSizeListViewPage(),
-
-                ],
-              ),
-
-              ),
-
-              ),
-              Container(
-                width: double.infinity,
-                child: Padding(padding: EdgeInsets.symmetric(horizontal: 20, vertical: 0,), child:
-                ElevatedButton(
-                  onPressed: () {
-                    CustomNavigationHelper.router.pushReplacement(
-                        CustomNavigationHelper.profilePathHyperExLock);
-                  },
-                  child: Text('Go Hyper exclusive',
+                )),
+            SizedBox(
+              height: 20,
+            ),
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.all(20),
+                child: Column(
+                  children: [
+                    Text(
                       style: const TextStyle(
-                          color: Colors.white,
+                          color: Colors.black,
                           fontFamily: 'lato',
-                          fontWeight: FontWeight.w500,
-                          fontSize: 18.0)),
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-                    padding: EdgeInsets.symmetric(vertical: 16, horizontal: 0),
-                    foregroundColor: Colors.white, backgroundColor: Colors.black, // Set button text color
-                  ),
+                          fontWeight: FontWeight.w700,
+                          fontSize: 20.0),
+                      'Hyper exclusive request for A expires in: ',
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: 10.0), // Add spacing
+                    FixedSizeListViewPage(),
+                  ],
                 ),
-                )
               ),
-
-              SizedBox(height: 20,),
-
-            ],
-          )
-
-
-
-          ,
+            ),
+            Container(
+                width: double.infinity,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 0,
+                  ),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      CustomNavigationHelper.router.pushReplacement(
+                          CustomNavigationHelper.profilePathHyperExLock);
+                    },
+                    child: Text('Go Hyper exclusive',
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'lato',
+                            fontWeight: FontWeight.w500,
+                            fontSize: 18.0)),
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.zero),
+                      padding:
+                          EdgeInsets.symmetric(vertical: 16, horizontal: 0),
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.black, // Set button text color
+                    ),
+                  ),
+                )),
+            SizedBox(
+              height: 20,
+            ),
+          ],
         ),
+      ),
     );
   }
 }
-
 
 class FixedSizeListViewPage extends StatefulWidget {
   @override
@@ -126,30 +128,33 @@ class _FixedSizeListViewPageState extends State<FixedSizeListViewPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-      child:
-      Container(
-          height: 200.0,
-      decoration: BoxDecoration(
-        color: Colors.grey[300],
-        borderRadius: BorderRadius.circular(8),
-      ),
-          child: Padding(padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-    child: ListView.builder(
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+      child: Container(
+        height: 200.0,
+        decoration: BoxDecoration(
+          color: Colors.grey[300],
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+          child: ListView.builder(
             itemCount: 10,
             itemBuilder: (context, index) {
               final isSelected = index == _selectedIndex;
-              return  DecoratedBox(
-                decoration: BoxDecoration(color: isSelected ?  Colors.black: null,
+              return DecoratedBox(
+                decoration: BoxDecoration(
+                  color: isSelected ? Colors.black : null,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: ListTile(
-                    title: Center (child: Text('Item ${index + 1}',
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'Playfair',
-                            fontWeight: FontWeight.w500,
-                            fontSize: 24.0)),
+                    title: Center(
+                      child: Text('Item ${index + 1}',
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Playfair',
+                              fontWeight: FontWeight.w500,
+                              fontSize: 24.0)),
                     ),
                     // Change background color on selection
                     onTap: () {
@@ -158,12 +163,11 @@ class _FixedSizeListViewPageState extends State<FixedSizeListViewPage> {
                             ? -1
                             : index; // Toggle selection if already selected, otherwise select
                       });
-                    }
-                ),
+                    }),
               );
             },
           ),
-      ),
+        ),
       ),
     );
   }
