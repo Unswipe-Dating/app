@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:unswipe/some_main.dart';
+import 'package:unswipe/src/features/chat/no_request_individual_screen.dart';
 import 'package:unswipe/src/features/chat/no_request_screen.dart';
+import 'package:unswipe/src/features/community/community_tab_page_check.dart';
 import 'package:unswipe/src/features/home/home.dart';
 import 'package:unswipe/src/features/hyperExclusiveMatch/hyper_ex_request_lock_page.dart';
 
@@ -119,7 +121,7 @@ class CustomNavigationHelper {
                 path: communityPath,
                 pageBuilder: (context, state) {
                   return getPage(
-                    child: const SwipeInterface(),
+                    child: RoundTabBarPage(),
                     state: state,
                   );
                 },
