@@ -3,6 +3,7 @@ import 'package:unswipe/src/core/tabs/colors_transform.dart';
 import 'package:unswipe/src/core/tabs/custom_indicator.dart';
 import 'package:unswipe/src/core/tabs/flutter_custom_tab_bar.dart';
 import 'package:unswipe/src/core/tabs/round_indicator.dart';
+import 'package:unswipe/src/features/community/statistics_community_page.dart';
 
 
 class RoundTabBarPage extends StatefulWidget {
@@ -14,7 +15,7 @@ class RoundTabBarPage extends StatefulWidget {
 
 class _RoundTabBarPageState extends State<RoundTabBarPage> {
   final int pageCount = 2;
-  late PageController _controller = PageController(initialPage: 1);
+  late PageController _controller = PageController(initialPage: 0);
   CustomTabBarController _tabBarController = CustomTabBarController();
 
   @override
@@ -33,7 +34,7 @@ class _RoundTabBarPageState extends State<RoundTabBarPage> {
                 alignment: Alignment.center,
                 constraints: BoxConstraints(minWidth: 60),
                 child: (Text(
-                  index == 1 ? 'Statistics' : 'Contribute',
+                  index == 0 ? 'Statistics' : 'Contribute',
                   style: TextStyle(
                       color: color,
                       fontFamily: 'lato',
@@ -73,13 +74,8 @@ class _RoundTabBarPageState extends State<RoundTabBarPage> {
                 controller: _controller,
                 itemCount: pageCount,
                 itemBuilder: (context, index) {
-                  return Icon(Icons.directions_car);
+                  return StatisticsCommunityPage();
                 })),
-        TextButton(
-            onPressed: () {
-              _tabBarController.animateToIndex(3);
-            },
-            child: Text('gogogo'))
       ],
     ),
     );
