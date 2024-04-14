@@ -9,9 +9,11 @@ class RoundedTextInput extends StatefulWidget {
   final TextInputType keyboardType;
   final bool isEnabled;
   final String errorString;
+  bool isCountryCode;
 
-  const RoundedTextInput({
+   RoundedTextInput({
     super.key,
+    this.isCountryCode = false,
     required this.titleText,
     required this.controller,
     required this.hintText,
@@ -58,14 +60,15 @@ class _RoundedTextFieldState extends State<RoundedTextInput> {
                   fontFamily: 'Lato',
                   fontWeight: FontWeight.w500,
                   fontSize: 18.0),
-              children: const [
+              children: [
                 TextSpan(
-                    text: ' *',
-                    style: TextStyle(
+                    text: widget.isCountryCode ? '':' *',
+                    style: const TextStyle(
                         color: Colors.red,
                         fontWeight: FontWeight.w500,
                         fontSize: 18))
-              ]),
+              ]
+          ),
         ),
         const SizedBox(height: 8.0),
         ValueListenableBuilder(
@@ -80,7 +83,7 @@ class _RoundedTextFieldState extends State<RoundedTextInput> {
               ),
               padding: const EdgeInsets.all(8.0),
               child: TextField(
-                enabled: widget.isEnabled,
+                enabled: widget.isEnabled && !widget.isCountryCode,
                 focusNode: focusNode,
                 controller: widget.controller,
                 keyboardType: widget.keyboardType,

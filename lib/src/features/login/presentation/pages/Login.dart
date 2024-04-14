@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:unswipe/src/features/login/domain/usecases/update_login_state_stream_usecase.dart';
 import 'package:unswipe/src/features/login/presentation/bloc/login_bloc.dart';
@@ -14,9 +14,7 @@ import '../../../../core/router/app_router.dart';
 import '../../../../core/utils/injections.dart';
 import '../../../onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart';
 
-
 class LoginScreen extends StatefulWidget {
-
   const LoginScreen({super.key});
 
   @override
@@ -26,56 +24,65 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: BlocProvider(
-        create: (BuildContext context) => LoginBloc(updateUserStateStreamUseCase: sl<UpdateUserStateStreamUseCase>()),
-        child: BlocConsumer<LoginBloc, LoginState>(
-          listener: (context, state) {
-            if (state.status == LoginStatus.loaded) {
-              if (state.token.isNotEmpty) {
-                CustomNavigationHelper.router.go(
-                  CustomNavigationHelper.profilePath,
-                );
-              }
-            }
-          },
-          builder: (context, state) {
-            return   Stack(
-              children: [
-                Container(
-                  constraints: const BoxConstraints.expand(),
-                  child: SvgPicture.asset("assets/images/login_background.svg"),
-                ),
-                Center(
-                  child: MyForm(),
-                )
-              ],
-            );
-          },
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      decoration: BoxDecoration(
+          image: DecorationImage(
+        image: AssetImage(
+          'assets/images/crowd_bkgd.jpg',
         ),
-      )
-
-
-
+        fit: BoxFit.fill,
+      )),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: BlocProvider(
+          create: (BuildContext context) => LoginBloc(
+              updateUserStateStreamUseCase: sl<UpdateUserStateStreamUseCase>()),
+          child: BlocConsumer<LoginBloc, LoginState>(
+            listener: (context, state) {
+              if (state.status == LoginStatus.loaded) {
+                if (state.token.isNotEmpty) {
+                  CustomNavigationHelper.router.go(
+                    CustomNavigationHelper.profilePath,
+                  );
+                }
+              }
+            },
+            builder: (context, state) {
+              return Stack(
+                children: [
+                  Center(
+                    child: MyForm(),
+                  )
+                ],
+              );
+            },
+          ),
+        ),
+      ),
     );
   }
 }
 
 class MyForm extends StatefulWidget {
-
   const MyForm({super.key});
+
   @override
   State<MyForm> createState() => _MyFormState();
 }
 
 class _MyFormState extends State<MyForm> {
-  TextEditingController emailController = TextEditingController();
+  TextEditingController contactController = TextEditingController();
+  TextEditingController codeController = TextEditingController();
+
   TextEditingController otpController = TextEditingController();
   late CustomButtonState buttonState;
 
   bool isCodeRequested = false;
   bool isButtonEnabled = false;
+  bool isResendEnabled = false;
+  bool isResendVisible = false;
   bool isOtpEnabled = false;
   bool toShowTimer = false;
   String emailError = "";
@@ -89,13 +96,14 @@ class _MyFormState extends State<MyForm> {
 
     // Add listeners to the controllers to track changes in text fields
     buttonState = CustomButtonState.code;
-    emailController.addListener(validateFields);
-    emailController.addListener(() {
+    codeController.text = "+91";
+    contactController.addListener(validateFields);
+    contactController.addListener(() {
       setState(() {
         emailError = "";
       });
     });
-    otpController.addListener((){
+    otpController.addListener(() {
       setState(() {
         codeError = "";
       });
@@ -105,19 +113,21 @@ class _MyFormState extends State<MyForm> {
 
   void validateFields() {
     // Validate email and password
-    bool isEmailValid = isValidEmail(emailController.text);
+    bool isEmailValid = isValidContact(contactController.text);
     bool isPasswordValid = isValidPassword(otpController.text);
 
     // Enable or disable the button based on the validation status
     setState(() {
+      isResendVisible = isCodeRequested;
+      isResendEnabled = !toShowTimer;
       isButtonEnabled = isButtonEnabledState(isEmailValid, isPasswordValid);
       isOtpEnabled = isEmailValid && isCodeRequested;
     });
   }
 
-  bool isValidEmail(String email) {
+  bool isValidContact(String contact) {
     // You can implement your own email validation logic here
-    return email.isNotEmpty && email.contains('@');
+    return contact.isNotEmpty && contact.length == 10;
   }
 
   bool isValidPassword(String password) {
@@ -141,39 +151,38 @@ class _MyFormState extends State<MyForm> {
     String code,
   ) async {
     switch (buttonState) {
-      case CustomButtonState.loading:{
-        //state when either api is called or timer is on.
-
-      }
-      case CustomButtonState.code:{
+      case CustomButtonState.loading:
+        {
+          //state when either api is called or timer is on.
+        }
+      case CustomButtonState.code:
+        {
           //buttonState = CustomButtonState.loading;
           //some api code to request otp/code,
           //update buttonState to code again
-          isCodeRequested = true;
           startTimer();
-          buttonState = CustomButtonState.signup;
         }
-      case CustomButtonState.signup:{
-        if(email != "abc@xyz.com") {
-          emailError = "some error";
-        }
+      case CustomButtonState.signup:
+        {
+          if (email != "abc@xyz.com") {
+            emailError = "some error";
+          }
 
-        if(code != "12345678") {
-          codeError = "some error";
-        }
+          if (code != "12345678") {
+            codeError = "some error";
+          }
 
-        if(email == "abc@xyz.com" && code == "12345678") {
-          context.read<LoginBloc>().add(onLoginSuccess("token"));
-
-
-        }
+          if (email == "abc@xyz.com" && code == "12345678") {
+            context.read<LoginBloc>().add(onLoginSuccess("token"));
+          }
         }
     }
     validateFields();
-
   }
 
   void startTimer() {
+    isCodeRequested = true;
+    buttonState = CustomButtonState.signup;
     const oneSec = Duration(seconds: 1);
     toShowTimer = true;
     _timer = Timer.periodic(
@@ -183,6 +192,7 @@ class _MyFormState extends State<MyForm> {
           setState(() {
             timer.cancel();
             toShowTimer = false;
+            isResendEnabled = true;
             _start = 9;
           });
         } else {
@@ -228,13 +238,35 @@ class _MyFormState extends State<MyForm> {
                   fontFamily: 'Lato',
                   fontWeight: FontWeight.w500),
             ),
-            const SizedBox(height: 16.0),
-            RoundedTextInput(
-              titleText: 'E-mail ID',
-              hintText: 'Enter your email',
-              controller: emailController,
-              keyboardType: TextInputType.emailAddress,
-              errorString: emailError,
+            const SizedBox(height: 20.0),
+            Row(
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: RoundedTextInput(
+                    isCountryCode: true,
+                    titleText: 'Code',
+                    hintText: '',
+                    controller: codeController,
+                    keyboardType: TextInputType.number,
+                    errorString: emailError,
+                  ),
+                ),
+                const SizedBox(
+                  width: 8,
+                ),
+                Expanded(
+                  flex: 8,
+                  child: RoundedTextInput(
+                    titleText: 'Phone Number',
+                    hintText: '10 digit no.',
+                    controller: contactController,
+                    keyboardType: const TextInputType.numberWithOptions(
+                        signed: false, decimal: false),
+                    errorString: emailError,
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 16.0),
             Opacity(
@@ -249,15 +281,27 @@ class _MyFormState extends State<MyForm> {
               ),
             ),
             if (toShowTimer)
-              IconTextWidget(iconData: Icons.timer,
-                  text: 'Time left: $_start seconds',
-                  color: const Color.fromARGB(97, 97, 97, 1),
+              IconTextWidget(
+                iconData: Icons.timer,
+                text: 'Time left: $_start seconds',
+                color: const Color.fromARGB(97, 97, 97, 1),
               ),
             const SizedBox(height: 16.0),
+            if (isResendVisible)
+              CustomButton(
+                  text: "Resend",
+                  onPressed: () {
+                    setState(() {
+                      isResendEnabled = false;
+                    });
+                    startTimer();
+                  },
+                  isEnabled: isResendEnabled),
+            const SizedBox(height: 8.0),
             CustomButton(
               text: buttonState.text,
               onPressed: () {
-                onButtonClick(emailController.text, otpController.text);
+                onButtonClick(contactController.text, otpController.text);
               },
               isEnabled: isButtonEnabled,
             ),
@@ -267,10 +311,9 @@ class _MyFormState extends State<MyForm> {
       ),
     );
   }
-
 }
 
-class CustomButton extends StatefulWidget  {
+class CustomButton extends StatefulWidget {
   final String text;
   final VoidCallback? onPressed;
   final bool isEnabled;
@@ -307,9 +350,6 @@ class _CustomButtonState extends State<CustomButton> {
     );
   }
 }
-
-
-
 
 enum CustomButtonState { code, signup, loading }
 
