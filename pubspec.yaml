@@ -42,6 +42,8 @@ dependencies:
   font_awesome_flutter: ^10.7.0
   bootstrap_icons: ^1.8.1
   flutter_card_swiper: ^7.0.0
+  path: ^1.9.0
+  injectable: ^2.4.1
 
 
 
@@ -91,9 +93,11 @@ dependencies:
   # BloC State Management
   flutter_bloc: ^8.1.3
 
-
+  google_sign_in: ^5.2.4
+  graphql_flutter: ^5.0.1
   # Json Annotation
   json_annotation: ^4.8.1
+  json_serializable: ^6.6.1
 
   # Code generation
   freezed: ^2.4.5
@@ -135,6 +139,7 @@ dependencies:
   dart_either: ^1.0.0
   rxdart: ^0.27.7
   rxdart_ext: ^0.2.7
+  loading_animation_widget: ^1.2.1
 
 
 dev_dependencies:
@@ -142,10 +147,12 @@ dev_dependencies:
     sdk: flutter
   # To generate Localization File's
   build_runner: ^2.4.7
+  injectable_generator: ^2.6.1
   analyzer: ^6.4.1
   built_value_generator: ^8.4.2
   flutter_lints: ^2.0.1
   built_value: ^8.4.2
+
 
   # Localization config
   flutter_localizations:

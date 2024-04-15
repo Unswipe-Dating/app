@@ -1,8 +1,10 @@
+import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/utils/constant/local_storage_constants.dart';
 import '../../utils/language_enum.dart';
 
+@Injectable()
 class AppSharedPrefs {
   final SharedPreferences _preferences;
 

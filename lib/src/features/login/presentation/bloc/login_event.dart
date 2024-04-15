@@ -9,3 +9,9 @@ class onLoginSuccess extends LogInEvent {
 
   onLoginSuccess(this.token);
 }
+
+class onOtpRequested extends LogInEvent {
+  final OtpParams params;
+
+  onOtpRequested(this.params);
+}

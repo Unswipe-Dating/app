@@ -13,25 +13,5 @@ import '../core/utils/injections.dart';
 import 'data/data_sources/app_shared_prefs.dart';
 
 initAppInjections() {
-  //todo: update to singletons
-  sl.registerFactory<AppSharedPrefs>(() => AppSharedPrefs(sl()));
-
-  sl.registerSingleton<LocalDataSource>(SharedPrefUtil(RxSharedPreferences.getInstance(), MethodChannelCryptoImpl()));
-
-  sl.registerSingleton<UserRepository>(UserRepositoryImpl(sl<LocalDataSource>()));
-
-  //sl.registerFactory<LocalDataSource>(() => SharedPrefUtil(RxSharedPreferences.getInstance(), MethodChannelCryptoImpl()));
-
-  // sl.registerFactory<UserRepository>(() => UserRepositoryImpl(sl<LocalDataSource>()));
-
-  sl.registerFactory<GetAuthStateStreamUseCase>(() => GetAuthStateStreamUseCase(sl<UserRepository>()));
-
-  sl.registerFactory<UpdateOnboardingStateStreamUseCase>(() => UpdateOnboardingStateStreamUseCase(sl<UserRepository>()));
-
-  sl.registerFactory<UpdateUserStateStreamUseCase>(() => UpdateUserStateStreamUseCase(sl<UserRepository>()));
-
-
-  sl.registerFactory<GetOnboardingStateStreamUseCase>(() => GetOnboardingStateStreamUseCase(sl<UserRepository>()));
-
 
 }

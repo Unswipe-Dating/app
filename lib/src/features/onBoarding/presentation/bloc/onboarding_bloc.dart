@@ -4,7 +4,8 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:unswipe/src/features/onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart';
 
-import '../../../../core/network/error/failures.dart';
+import '../../../../../data/api_response.dart';
+
 
 
 part 'onboarding_event.dart';

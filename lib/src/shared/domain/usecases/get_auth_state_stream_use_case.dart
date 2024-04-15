@@ -1,8 +1,11 @@
 
+import 'package:injectable/injectable.dart';
+
 import '../../../core/app_error.dart';
 import '../entities/auth_state.dart';
 import '../repository/user_repository.dart';
 
+@Injectable()
 class GetAuthStateStreamUseCase {
   final UserRepository _userRepository;
 

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dart_either/dart_either.dart';
 import 'package:flutter/foundation.dart';
+import 'package:injectable/injectable.dart';
 
 import '../../../../data/exception/local_data_source_exception.dart';
 import '../../../../data/exception/remote_data_source_exception.dart';
@@ -15,6 +16,7 @@ import '../../domain/repository/user_repository.dart';
 
 part '../../utils/mappers.dart';
 
+@Injectable(as: UserRepository)
 class UserRepositoryImpl implements UserRepository {
   final LocalDataSource _localDataSource;
 

@@ -1,9 +1,11 @@
 
 import 'package:flutter/services.dart';
+import 'package:injectable/injectable.dart';
 
 import '../../../../data/exception/local_data_source_exception.dart';
 import '../../local_data_source.dart';
 
+@Injectable(as: Crypto)
 class MethodChannelCryptoImpl implements Crypto {
   static const cryptoChannel = 'com.hoc.unswipe2/crypto';
   static const cryptoErrorCode = 'com.hoc.unswipe2/crypto_error';

@@ -2,10 +2,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:unswipe/src/features/login/domain/repository/login_repository.dart';
+import 'package:unswipe/src/features/login/domain/usecases/request_otp_use_case.dart';
 import 'package:unswipe/src/features/login/domain/usecases/update_login_state_stream_usecase.dart';
 import 'package:unswipe/src/features/login/presentation/bloc/login_bloc.dart';
-import 'package:unswipe/viewmodels/auth_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:unswipe/widgets/login/icon_text.dart';
 import 'package:unswipe/widgets/login/rounded_text_field.dart';
@@ -38,7 +41,9 @@ class _LoginScreenState extends State<LoginScreen> {
         backgroundColor: Colors.transparent,
         body: BlocProvider(
           create: (BuildContext context) => LoginBloc(
-              updateUserStateStreamUseCase: sl<UpdateUserStateStreamUseCase>()),
+              updateUserStateStreamUseCase:
+                  GetIt.I.get<UpdateUserStateStreamUseCase>(),
+              requestOtpUseCase: GetIt.I.get<RequestOtpUseCase>()),
           child: BlocConsumer<LoginBloc, LoginState>(
             listener: (context, state) {
               if (state.status == LoginStatus.loaded) {
@@ -53,7 +58,10 @@ class _LoginScreenState extends State<LoginScreen> {
               return Stack(
                 children: [
                   Center(
-                    child: MyForm(),
+                    child: MyForm(
+                      bloc: context.read<LoginBloc>(),
+                      state: state,
+                    ),
                   )
                 ],
               );
@@ -66,7 +74,14 @@ class _LoginScreenState extends State<LoginScreen> {
 }
 
 class MyForm extends StatefulWidget {
-  const MyForm({super.key});
+  final LoginBloc bloc;
+  final LoginState state;
+
+  const MyForm({
+    super.key,
+    required this.bloc,
+    required this.state,
+  });
 
   @override
   State<MyForm> createState() => _MyFormState();
@@ -97,6 +112,11 @@ class _MyFormState extends State<MyForm> {
     // Add listeners to the controllers to track changes in text fields
     buttonState = CustomButtonState.code;
     codeController.text = "+91";
+    if(widget.state.status == LoginStatus.loadingOTP
+    || widget.state.status == LoginStatus.loadingResend) {
+      startTimer();
+    }
+
     contactController.addListener(validateFields);
     contactController.addListener(() {
       setState(() {
@@ -152,15 +172,16 @@ class _MyFormState extends State<MyForm> {
   ) async {
     switch (buttonState) {
       case CustomButtonState.loading:
-        {
-          //state when either api is called or timer is on.
-        }
+        {}
       case CustomButtonState.code:
         {
           //buttonState = CustomButtonState.loading;
           //some api code to request otp/code,
           //update buttonState to code again
-          startTimer();
+          widget.bloc.add(onOtpRequested(
+              OtpParams(phone: contactController.text,
+                  id: contactController.text))
+          );
         }
       case CustomButtonState.signup:
         {
@@ -173,7 +194,7 @@ class _MyFormState extends State<MyForm> {
           }
 
           if (email == "abc@xyz.com" && code == "12345678") {
-            context.read<LoginBloc>().add(onLoginSuccess("token"));
+            widget.bloc.add(onLoginSuccess("token"));
           }
         }
     }
@@ -294,14 +315,17 @@ class _MyFormState extends State<MyForm> {
                     setState(() {
                       isResendEnabled = false;
                     });
-                    startTimer();
                   },
                   isEnabled: isResendEnabled),
             const SizedBox(height: 8.0),
             CustomButton(
               text: buttonState.text,
               onPressed: () {
-                onButtonClick(contactController.text, otpController.text);
+                  onButtonClick(contactController.text,
+                      otpController.text);
+
+
+
               },
               isEnabled: isButtonEnabled,
             ),
@@ -317,9 +341,15 @@ class CustomButton extends StatefulWidget {
   final String text;
   final VoidCallback? onPressed;
   final bool isEnabled;
+  final bool isLoading;
 
-  const CustomButton(
-      {super.key, required this.text, this.onPressed, this.isEnabled = true});
+  const CustomButton({
+    super.key,
+    required this.text,
+    this.onPressed,
+    this.isEnabled = true,
+    this.isLoading = false,
+  });
 
   @override
   State<CustomButton> createState() => _CustomButtonState();
@@ -340,13 +370,18 @@ class _CustomButtonState extends State<CustomButton> {
             borderRadius: BorderRadius.circular(2.0), // Rounded corners
           ),
           minimumSize: const Size.fromHeight(48)),
-      child: Text(widget.text,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 18.0,
-            fontFamily: 'Lato',
-            fontWeight: FontWeight.w600,
-          )),
+      child: widget.isLoading
+          ? LoadingAnimationWidget.prograssiveDots(
+              color: Colors.white,
+              size: 200,
+            )
+          : Text(widget.text,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 18.0,
+                fontFamily: 'Lato',
+                fontWeight: FontWeight.w600,
+              )),
     );
   }
 }
@@ -361,7 +396,7 @@ extension CustomButtonStateText on CustomButtonState {
       case CustomButtonState.signup:
         return "Signup/Login";
       case CustomButtonState.loading:
-        return "Resend code";
+        return "Loading ...";
     }
   }
 }

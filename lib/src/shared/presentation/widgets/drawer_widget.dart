@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../main.dart';
@@ -113,14 +114,14 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                 onChanged: (value) {
                   if (value) {
                     // Dark
-                    sl<AppSharedPrefs>().setDarkTheme(true);
+                   // GetIt.I.get<AppSharedPrefs>().setDarkTheme(true);
                   } else {
                     // Light
-                    sl<AppSharedPrefs>().setDarkTheme(false);
+                  //  GetIt.I.get<AppSharedPrefs>().setDarkTheme(false);
                   }
-                  Provider.of<AppNotifier>(context, listen: false)
-                      .updateThemeTitle(sl<AppSharedPrefs>().getIsDarkTheme());
-                  setState(() {});
+                  // Provider.of<AppNotifier>(context, listen: false)
+                  //     .updateThemeTitle(GetIt.I.get<AppSharedPrefs>().getIsDarkTheme());
+                  // setState(() {});
                 },
               ),
             ],

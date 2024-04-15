@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get_it/get_it.dart';
+import 'package:injectable/injectable.dart';
 import 'package:provider/provider.dart';
+import 'package:unswipe/src/core/utils/bootstrap.dart';
 import 'package:unswipe/src/features/login/presentation/pages/Login.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
@@ -16,27 +19,12 @@ import 'package:unswipe/src/core/utils/injections.dart';
 import 'package:unswipe/src/shared/data/data_sources/app_shared_prefs.dart';
 import 'package:unswipe/src/shared/utils/language_enum.dart';
 
-import 'data/auth_repository.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  await bootstrap(() =>  const App(), Environment.dev);
 
-  // Inject all dependencies
-  await initInjections();
-
-  CustomNavigationHelper.instance;
-
-  runApp(DevicePreview(
-    builder: (context) {
-      return const App();
-    },
-    enabled: false,
-  ));
-
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
 }
 
 class App extends StatefulWidget {
@@ -50,7 +38,7 @@ class App extends StatefulWidget {
     state.setState(() {
       state.locale = Locale(newLocale.name);
     });
-    sl<AppSharedPrefs>().setLang(newLocale);
+   // GetIt.I.get<AppSharedPrefs>().setLang(newLocale);
   }
 }
 

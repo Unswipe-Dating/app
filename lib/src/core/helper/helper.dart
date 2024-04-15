@@ -1,16 +1,16 @@
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_it/get_it.dart';
 
 import '../../shared/data/data_sources/app_shared_prefs.dart';
 import '../../shared/utils/language_enum.dart';
 import '../utils/constant/app_constants.dart';
-import '../utils/injections.dart';
 
 
 class Helper {
 
   static LanguageEnum getLang() {
     LanguageEnum? lang;
-    lang = sl<AppSharedPrefs>().getLang();
+   // lang = GetIt.I.get<AppSharedPrefs>().getLang();
     lang = lang ?? LanguageEnum.en;
     return lang;
   }
@@ -41,6 +41,7 @@ class Helper {
   }
 
   static bool isDarkTheme() {
-    return sl<AppSharedPrefs>().getIsDarkTheme();
+    return false;
+    // return GetIt.I.getAsync<AppSharedPrefs>().getIsDarkTheme();
   }
 }

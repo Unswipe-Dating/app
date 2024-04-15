@@ -13,8 +13,6 @@ class SplashState extends Equatable {
     this.isFirstTime = true,
     this.isAuthenticated = false,
     this.isBoardedAhead = false
-
-
   });
 
 

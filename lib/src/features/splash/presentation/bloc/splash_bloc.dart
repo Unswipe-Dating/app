@@ -2,16 +2,12 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:rxdart_ext/rxdart_ext.dart';
-import 'package:unswipe/src/core/app_error.dart';
 import 'package:unswipe/src/shared/domain/entities/auth_state.dart';
 import 'package:unswipe/src/shared/domain/usecases/get_auth_state_stream_use_case.dart';
 import 'package:unswipe/src/features/onBoarding/domain/usecases/get_onboarding_state_stream_use_case.dart';
-
-import '../../../../core/network/error/failures.dart';
+import '../../../../../data/api_response.dart';
 import '../../../onBoarding/domain/entities/onbaording_state/onboarding_state.dart';
 part 'splash_event.dart';
-
 part 'splash_state.dart';
 
 class SplashBloc extends Bloc<SplashEvent, SplashState> {
@@ -20,13 +16,10 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
 
     StreamSubscription? subscription;
 
-
-  // List of splash
-
   SplashBloc({required this.splashUseCase,
    required this.onboardingStateStreamUseCase,
   })
-      : super(SplashState()) {
+      : super(const SplashState()) {
     on<onAuthenticatedUserEvent>(_onGettingSplashEvent);
    on<onFirstTimeUserEvent>(_onGettingOnBoardingEvent);
 

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:injectable/injectable.dart';
 import 'package:unswipe/data/exception/local_data_source_exception.dart';
 import 'package:rx_shared_preferences/rx_shared_preferences.dart';
 import 'package:rxdart_ext/rxdart_ext.dart';
@@ -10,6 +11,7 @@ import 'package:unswipe/src/core/utils/constant/user_and_token_entity.dart';
 
 import 'local_data_source.dart';
 
+@Injectable(as: LocalDataSource)
 class SharedPrefUtil implements LocalDataSource {
   static const _kUserTokenKey = 'com.hoc.unswipe2_flutter.user_and_token';
   static const _kOnBoardingTokenKey =

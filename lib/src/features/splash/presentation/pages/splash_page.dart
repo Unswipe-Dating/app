@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:unswipe/src/features/splash/domain/usecases/splash_usecase.dart';
 import 'package:unswipe/src/features/splash/presentation/bloc/splash_bloc.dart';
@@ -27,8 +28,8 @@ class SplashScreen extends StatelessWidget {
   BlocProvider<SplashBloc> _buildBody(BuildContext context) {
     return BlocProvider(
       create: (BuildContext context) => SplashBloc(
-    splashUseCase: sl<GetAuthStateStreamUseCase>(),
-   onboardingStateStreamUseCase: sl<GetOnboardingStateStreamUseCase>()
+    splashUseCase: GetIt.I.get<GetAuthStateStreamUseCase>(),
+   onboardingStateStreamUseCase: GetIt.I.get<GetOnboardingStateStreamUseCase>()
     )..add(onAuthenticatedUserEvent()),
       child: Container(
         height: MediaQuery.of(context).size.height,
