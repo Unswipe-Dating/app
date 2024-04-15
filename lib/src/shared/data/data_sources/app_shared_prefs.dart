@@ -2,33 +2,30 @@ import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/utils/constant/local_storage_constants.dart';
-import '../../utils/language_enum.dart';
 
-@Injectable()
 class AppSharedPrefs {
-  final SharedPreferences _preferences;
 
-  AppSharedPrefs(this._preferences);
+  AppSharedPrefs._();
 
-  /// __________ Language __________ ///
-  LanguageEnum? getLang() {
-    String? data = _preferences.getString(lang);
-    if (data == null) {
-      return LanguageEnum.en;
-    }
-    return LanguageEnum.values.firstWhere((element) => element.local == data);
+  static final AppSharedPrefs _instance = AppSharedPrefs._();
+
+  factory AppSharedPrefs() {
+    return _instance;
+  }
+  final Future<SharedPreferences> _preferences = SharedPreferences.getInstance();
+
+
+  Future<bool> getIsDarkTheme({required bool defaultValue}) async {
+    return _preferences.then((SharedPreferences prefs) {
+      return prefs.getBool(theme) ?? defaultValue;
+    });
   }
 
-  void setLang(LanguageEnum language) {
-    _preferences.setString(lang, language.local);
+  Future<bool> setDarkTheme(bool value) async {
+    return _preferences.then((SharedPreferences prefs) {
+      prefs.setBool(theme, value);
+      return true;
+    });
   }
 
-  /// __________ Dark Theme __________ ///
-  bool getIsDarkTheme() {
-    return _preferences.getBool(theme) ?? false;
-  }
-
-  void setDarkTheme(bool isDark) {
-    _preferences.setBool(theme, isDark);
-  }
 }

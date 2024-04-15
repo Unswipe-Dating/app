@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:ffi';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -31,53 +32,44 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
   })
       : super(LoginState()) {
     on<onLoginSuccess>(_onLoginSuccess);
-    on<onOtpRequested>((event, emit) {
-      emit(state.copyWith(status: LoginStatus.loadingOTP));
-      requestOtpUseCase.perform(
-          (response){final responseData = response?.val;
-          if (responseData == null) {
-            emit(state.copyWith(status: LoginStatus.error));
-          } else {
-            if (responseData is api_response.Failure) {
-              emit(state.copyWith(status: LoginStatus.error));
-            } else if (responseData is api_response.Success) {
-              final characters = responseData as api_response.Success;
-              emit(state.copyWith(status: LoginStatus.loadedOtp));
-            }
-          } },
-          error,
-          (){
-            emit(state.copyWith(status: LoginStatus.loadedOtp));
-          },
-          OtpParams(phone: "", id: "")
+    on<onOtpRequested>(_onOtpRequested);
 
 
-      );
+
+  }
+
+  _onOtpRequested(onOtpRequested event,
+      Emitter<LoginState> emitter) async{
+
+    emitter(state.copyWith(status: LoginStatus.loadingOTP));
+    LoginStatus status = state.status;
+    await requestOtpUseCase.perform(
+      (response) async {
+        final responseData = response?.val;
+        if (responseData == null) {
+          status = LoginStatus.error;
+          // emitter(state.copyWith(status: LoginStatus.error));
+        } else {
+          if (responseData is api_response.Failure) {
+            // emitter(state.copyWith(status: LoginStatus.error));
+          } else if (responseData is api_response.Success) {
+            // emitter(state.copyWith(status: LoginStatus.loadedOtp));
+          }
+        }
+      },
+      (e) async {
+        // emitter(state.copyWith(status: LoginStatus.error));
+        },
+      (){
+
+      },
+      OtpParams(phone: "", id: "")
+
+    ).whenComplete(() {
+      emitter(state.copyWith(status: LoginStatus.loadedOtp));
     });
 
-
-
   }
-
-  /// Handle response data
-  void handleResponse(
-      GetOtpUseCaseResponse? response,
-      ) {
-
-  }
-
-  void complete(Emitter<LoginState> emitter) {
-    log('Fetching characters list is complete.');
-    emitter(state.copyWith(status: LoginStatus.loadedOtp));
-  }
-
-  void error(Object e) {
-    log('Error in fetching characters list');
-    if (e is Exception) {
-      log('Error in fetching characters list: $e');
-    }
-  }
-
 
   _onLoginSuccess(onLoginSuccess event,
       Emitter<LoginState> emitter) async{

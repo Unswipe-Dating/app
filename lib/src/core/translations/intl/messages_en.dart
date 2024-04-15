@@ -21,27 +21,5 @@ class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
   final messages = _notInlinedMessages(_notInlinedMessages);
-  static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
-        "arabic": MessageLookupByLibrary.simpleMessage("العربية"),
-        "article_details":
-            MessageLookupByLibrary.simpleMessage("Article Details"),
-        "dark_skin": MessageLookupByLibrary.simpleMessage("Dark Skin"),
-        "english": MessageLookupByLibrary.simpleMessage("English"),
-        "language": MessageLookupByLibrary.simpleMessage("Language"),
-        "light_skin": MessageLookupByLibrary.simpleMessage("Light Skin"),
-        "load_failed":
-            MessageLookupByLibrary.simpleMessage("Load failed! Click Retry!"),
-        "no_data": MessageLookupByLibrary.simpleMessage("No Data!"),
-        "ny_times_most_popular":
-            MessageLookupByLibrary.simpleMessage("NY Times Most Popular"),
-        "period": MessageLookupByLibrary.simpleMessage("Period"),
-        "pull_up_load": MessageLookupByLibrary.simpleMessage(" Pull Up Load"),
-        "release_to_load":
-            MessageLookupByLibrary.simpleMessage("Release To Load More"),
-        "required_field":
-            MessageLookupByLibrary.simpleMessage("Required Field"),
-        "search": MessageLookupByLibrary.simpleMessage("Search"),
-        "see_more": MessageLookupByLibrary.simpleMessage("See More"),
-        "server_error": MessageLookupByLibrary.simpleMessage("Server Error")
-      };
+  static Map<String, Function> _notInlinedMessages(_) => <String, Function>{};
 }

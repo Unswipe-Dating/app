@@ -13,11 +13,9 @@ import 'package:unswipe/src/core/styles/app_theme.dart';
 import 'package:unswipe/src/core/translations/l10n.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:unswipe/src/core/helper/helper.dart';
 import 'package:unswipe/src/core/utils/injections.dart';
 import 'package:unswipe/src/shared/data/data_sources/app_shared_prefs.dart';
-import 'package:unswipe/src/shared/utils/language_enum.dart';
 
 
 final navigatorKey = GlobalKey<NavigatorState>();
@@ -32,14 +30,6 @@ class App extends StatefulWidget {
 
   @override
   _AppState createState() => _AppState();
-
-  static void setLocale(BuildContext context, LanguageEnum newLocale) {
-    _AppState state = context.findAncestorStateOfType()!;
-    state.setState(() {
-      state.locale = Locale(newLocale.name);
-    });
-   // GetIt.I.get<AppSharedPrefs>().setLang(newLocale);
-  }
 }
 
 class _AppState extends State<App> with WidgetsBindingObserver {
@@ -52,13 +42,6 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     super.initState();
 
     WidgetsBinding.instance.addObserver(this);
-
-    if (mounted) {
-      LanguageEnum newLocale = Helper.getLang();
-      setState(() {
-        locale = Locale(newLocale.local);
-      });
-    }
   }
 
   @override
@@ -67,38 +50,22 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     super.dispose();
   }
 
+  /** Change Notifier helps with chaging everything on language change*/
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => AppNotifier(),
       child: Consumer<AppNotifier>(
         builder: (context, value, child) {
-          return ScreenUtilInit(
-            designSize: const Size(360, 690),
-            minTextAdapt: true,
-            splitScreenMode: true,
-            builder: (context, child) {
               return MaterialApp.router(
-                title: 'Ny Times Articles App',
                 routerConfig: CustomNavigationHelper.router,
                 scaffoldMessengerKey: snackBarKey,
-                theme: Helper.isDarkTheme() ? darkAppTheme : appTheme,
+                theme: appTheme,
                 debugShowCheckedModeBanner: false,
                 locale: locale,
                 builder: DevicePreview.appBuilder,
-                localizationsDelegates: const [
-                  S.delegate,
-                  GlobalMaterialLocalizations.delegate,
-                  GlobalWidgetsLocalizations.delegate,
-                  GlobalCupertinoLocalizations.delegate,
-                ],
-                supportedLocales: const [
-                  Locale("ar"),
-                  Locale("en"),
-                ],
               );
-            },
-          );
         },
       ),
     );
@@ -114,18 +81,9 @@ class AppNotifier extends ChangeNotifier {
   }
 
   Future _initialise() async {
-    darkTheme = Helper.isDarkTheme();
+    darkTheme = await Helper.isDarkTheme();
 
     notifyListeners();
   }
 
-  void updateThemeTitle(bool newDarkTheme) {
-    darkTheme = newDarkTheme;
-    if (Helper.isDarkTheme()) {
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
-    } else {
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
-    }
-    notifyListeners();
-  }
 }

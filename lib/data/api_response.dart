@@ -1,3 +1,5 @@
+import 'package:graphql_flutter/graphql_flutter.dart';
+
 abstract class ApiResponse<T> {}
 
 class Success<T> extends ApiResponse<T> {
@@ -11,6 +13,13 @@ class Failure<T> extends ApiResponse<T> {
 
 
   Failure({required this.error});
+}
+
+class OperationFailure<T> extends ApiResponse<T> {
+  OperationException? error;
+
+
+  OperationFailure({this.error});
 }
 
 class CancelTokenFailure<T> extends Failure<T> {

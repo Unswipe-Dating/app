@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // import 'package:google_fonts/google_fonts.dart';
 
@@ -37,9 +36,9 @@ final ThemeData appTheme = ThemeData(
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
       backgroundColor: AppColors.primaryColor,
-      padding: EdgeInsets.symmetric(horizontal: 50.w, vertical: 12.h),
+      padding: EdgeInsets.symmetric(horizontal: 50, vertical: 12),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.sp),
+        borderRadius: BorderRadius.circular(10),
       ),
     ),
   ),
@@ -48,17 +47,17 @@ final ThemeData appTheme = ThemeData(
   inputDecorationTheme: InputDecorationTheme(
       fillColor: AppColors.transparent,
       contentPadding: EdgeInsets.symmetric(
-        horizontal: 10.sp,
+        horizontal: 10,
       ),
       suffixIconColor: AppColors.black,
       border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.sp),
+          borderRadius: BorderRadius.circular(10),
           borderSide: const BorderSide(color: AppColors.white, width: 1)),
       enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.sp),
+          borderRadius: BorderRadius.circular(10),
           borderSide: const BorderSide(color: AppColors.white, width: 1)),
       focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.sp),
+          borderRadius: BorderRadius.circular(10),
           borderSide: const BorderSide(color: AppColors.white, width: 1)),
       errorMaxLines: 2),
 );
@@ -94,8 +93,8 @@ final ThemeData darkAppTheme = ThemeData(
     style: ElevatedButton.styleFrom(
       backgroundColor: AppColors.primaryColor,
       padding: EdgeInsets.symmetric(
-        horizontal: 50.w,
-        vertical: 12.h,
+        horizontal: 50,
+        vertical: 12,
       ),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
@@ -106,19 +105,19 @@ final ThemeData darkAppTheme = ThemeData(
       ColorScheme.fromSwatch().copyWith(secondary: AppColors.primaryColor),
   inputDecorationTheme: InputDecorationTheme(
     contentPadding: EdgeInsets.symmetric(
-      horizontal: 10.w,
+      horizontal: 10,
     ),
     filled: true,
     suffixIconColor: AppColors.white,
     fillColor: AppColors.transparent,
     border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(10.sp),
+        borderRadius: BorderRadius.circular(10),
         borderSide: const BorderSide(color: AppColors.lightGray, width: 1)),
     enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(10.sp),
+        borderRadius: BorderRadius.circular(10),
         borderSide: const BorderSide(color: AppColors.lightGray, width: 1)),
     focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(10.sp),
+        borderRadius: BorderRadius.circular(10),
         borderSide: const BorderSide(color: AppColors.lightGray, width: 1)),
     errorMaxLines: 2,
   ),

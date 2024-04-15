@@ -23,13 +23,14 @@ class OtpService {
 }
     ''';
 
+
     final response = await service.performMutation(query, variables: {
       "id": "+919994361298",
       "phone":"+919994361298"
     });
     log('$response');
 
-    if (response is Success) {
+    if (!response.hasException) {
       OtpResponse? info;
       try {
         info = OtpResponse.fromJson(
@@ -41,7 +42,7 @@ class OtpService {
       }
       return Success(data: info);
     } else {
-      return Failure(error: (response as Failure).error);
+      return OperationFailure(error: response.exception);
     }
   }
 }

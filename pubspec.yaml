@@ -67,7 +67,6 @@ dependencies:
   rx_shared_preferences: ^3.1.0
 
   # Make Pages Responsive To All Devices
-  flutter_screenutil: ^5.9.0
 
   built_value: ^8.4.2
 

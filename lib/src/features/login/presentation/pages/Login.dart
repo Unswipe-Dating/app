@@ -58,10 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
               return Stack(
                 children: [
                   Center(
-                    child: MyForm(
-                      bloc: context.read<LoginBloc>(),
-                      state: state,
-                    ),
+                    child: MyForm(),
                   )
                 ],
               );
@@ -74,13 +71,8 @@ class _LoginScreenState extends State<LoginScreen> {
 }
 
 class MyForm extends StatefulWidget {
-  final LoginBloc bloc;
-  final LoginState state;
-
   const MyForm({
     super.key,
-    required this.bloc,
-    required this.state,
   });
 
   @override
@@ -112,9 +104,21 @@ class _MyFormState extends State<MyForm> {
     // Add listeners to the controllers to track changes in text fields
     buttonState = CustomButtonState.code;
     codeController.text = "+91";
-    if(widget.state.status == LoginStatus.loadingOTP
-    || widget.state.status == LoginStatus.loadingResend) {
-      startTimer();
+    switch (context.read<LoginBloc>().state.status) {
+      case LoginStatus.loadingOTP:
+      case LoginStatus.loadingResend:
+        startTimer();
+        break;
+      case LoginStatus.loadedOtp:
+        break;
+      case LoginStatus.initial:
+        break;
+      case LoginStatus.loadedResend:
+        break;
+      case LoginStatus.loaded:
+        break;
+      case LoginStatus.error:
+        break;
     }
 
     contactController.addListener(validateFields);
@@ -178,10 +182,8 @@ class _MyFormState extends State<MyForm> {
           //buttonState = CustomButtonState.loading;
           //some api code to request otp/code,
           //update buttonState to code again
-          widget.bloc.add(onOtpRequested(
-              OtpParams(phone: contactController.text,
-                  id: contactController.text))
-          );
+          context.read<LoginBloc>().add(onOtpRequested(OtpParams(
+              phone: contactController.text, id: contactController.text)));
         }
       case CustomButtonState.signup:
         {
@@ -194,7 +196,7 @@ class _MyFormState extends State<MyForm> {
           }
 
           if (email == "abc@xyz.com" && code == "12345678") {
-            widget.bloc.add(onLoginSuccess("token"));
+            context.read<LoginBloc>().add(onLoginSuccess("token"));
           }
         }
     }
@@ -321,11 +323,7 @@ class _MyFormState extends State<MyForm> {
             CustomButton(
               text: buttonState.text,
               onPressed: () {
-                  onButtonClick(contactController.text,
-                      otpController.text);
-
-
-
+                onButtonClick(contactController.text, otpController.text);
               },
               isEnabled: isButtonEnabled,
             ),
@@ -341,14 +339,12 @@ class CustomButton extends StatefulWidget {
   final String text;
   final VoidCallback? onPressed;
   final bool isEnabled;
-  final bool isLoading;
 
   const CustomButton({
     super.key,
     required this.text,
     this.onPressed,
     this.isEnabled = true,
-    this.isLoading = false,
   });
 
   @override
@@ -370,10 +366,10 @@ class _CustomButtonState extends State<CustomButton> {
             borderRadius: BorderRadius.circular(2.0), // Rounded corners
           ),
           minimumSize: const Size.fromHeight(48)),
-      child: widget.isLoading
+      child: context.read<LoginBloc>().state.status == LoginStatus.loadingOTP
           ? LoadingAnimationWidget.prograssiveDots(
               color: Colors.white,
-              size: 200,
+              size: 32,
             )
           : Text(widget.text,
               style: const TextStyle(
