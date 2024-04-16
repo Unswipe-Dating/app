@@ -275,7 +275,6 @@ class _MyFormState extends State<MyForm> {
                     hintText: '',
                     controller: codeController,
                     keyboardType: TextInputType.number,
-                    errorString: emailError,
                   ),
                 ),
                 const SizedBox(

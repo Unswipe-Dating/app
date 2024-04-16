@@ -1,3 +1,4 @@
+import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 
 import 'icon_text.dart';
@@ -46,7 +47,18 @@ class _RoundedTextFieldState extends State<RoundedTextInput> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return GestureDetector(
+        onTap: widget.isCountryCode ? (){
+          showCountryPicker(
+            context: context,
+            showPhoneCode: true, // optional. Shows phone code before the country name.
+            onSelect: (Country country) {
+              widget.controller.text = "+${country.phoneCode}";
+            },
+          );
+
+        }: null,
+    child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         RichText(
@@ -103,7 +115,9 @@ class _RoundedTextFieldState extends State<RoundedTextInput> {
             text: widget.errorString,
             color: Colors.red,
           )
+
       ],
+    ),
     );
   }
 }
