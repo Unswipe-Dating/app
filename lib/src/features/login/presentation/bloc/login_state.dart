@@ -1,6 +1,15 @@
 part of 'login_bloc.dart';
 
-enum LoginStatus { initial, error, loadingOTP, loadedOtp, loadingResend, loadedResend, loaded   }
+enum LoginStatus { initial,
+  error,
+  loadingOTP,
+  loadedOtp,
+  loadingResend,
+  loadedResend,
+  loadingVerification,
+  verified,
+  loaded
+}
 
 class LoginState extends Equatable {
   final LoginStatus status;

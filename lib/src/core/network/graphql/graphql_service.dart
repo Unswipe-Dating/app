@@ -2,8 +2,8 @@ import 'dart:developer';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:injectable/injectable.dart';
 
-import '../../../../../../../data/api_response.dart';
-import '../exceptions/api_exception.dart';
+import '../../../../data/api_response.dart';
+import '../../../features/login/data/datasources/network/exceptions/api_exception.dart';
 
 @singleton
 class GraphQLService {

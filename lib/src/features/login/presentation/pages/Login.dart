@@ -8,6 +8,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:unswipe/src/features/login/domain/repository/login_repository.dart';
 import 'package:unswipe/src/features/login/domain/usecases/request_otp_use_case.dart';
 import 'package:unswipe/src/features/login/domain/usecases/update_login_state_stream_usecase.dart';
+import 'package:unswipe/src/features/login/domain/usecases/verify_otp_use_case.dart';
 import 'package:unswipe/src/features/login/presentation/bloc/login_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:unswipe/widgets/login/icon_text.dart';
@@ -43,7 +44,9 @@ class _LoginScreenState extends State<LoginScreen> {
           create: (BuildContext context) => LoginBloc(
               updateUserStateStreamUseCase:
                   GetIt.I.get<UpdateUserStateStreamUseCase>(),
-              requestOtpUseCase: GetIt.I.get<RequestOtpUseCase>()),
+              requestOtpUseCase: GetIt.I.get<RequestOtpUseCase>(),
+          verifyOtpUseCase: GetIt.I.get<VerifyOtpUseCase>()),
+
           child: BlocConsumer<LoginBloc, LoginState>(
             listener: (context, state) {
               if (state.status == LoginStatus.loaded) {
@@ -104,22 +107,6 @@ class _MyFormState extends State<MyForm> {
     // Add listeners to the controllers to track changes in text fields
     buttonState = CustomButtonState.code;
     codeController.text = "+91";
-    switch (context.read<LoginBloc>().state.status) {
-      case LoginStatus.loadingOTP:
-      case LoginStatus.loadingResend:
-       // startTimer();
-        break;
-      case LoginStatus.loadedOtp:
-        break;
-      case LoginStatus.initial:
-        break;
-      case LoginStatus.loadedResend:
-        break;
-      case LoginStatus.loaded:
-        break;
-      case LoginStatus.error:
-        break;
-    }
 
     contactController.addListener(validateFields);
     contactController.addListener(() {
@@ -142,7 +129,7 @@ class _MyFormState extends State<MyForm> {
 
     // Enable or disable the button based on the validation status
     setState(() {
-      isResendEnabled = !toShowTimer;
+      isResendEnabled = !toShowTimer && contactController.text.isEmpty;
       isButtonEnabled = isButtonEnabledState(isEmailValid, isPasswordValid);
       isOtpEnabled = isEmailValid && isCodeRequested;
     });
@@ -188,17 +175,13 @@ class _MyFormState extends State<MyForm> {
         }
       case CustomButtonState.signup:
         {
-          if (email != "9990445491") {
-            emailError = "some error";
-          }
 
-          if (code != "12345678") {
-            codeError = "some error";
-          }
+            context.read<LoginBloc>().add(
+                onOtpVerificationRequest(
+                    OtpParams(phone: contactController.text,
+                        id: contactController.text,
+                        otp: codeController.text)));
 
-          if (email == "9990445491" && code == "12345678") {
-            context.read<LoginBloc>().add(onLoginSuccess("token"));
-          }
         }
     }
     validateFields();
@@ -331,6 +314,9 @@ class _MyFormState extends State<MyForm> {
               text: buttonState.text,
               onPressed: () {
                 onButtonClick(contactController.text, otpController.text);
+                setState(() {
+                  isButtonEnabled = false;
+                });
               },
               isEnabled: isButtonEnabled,
               isLoading: context.watch<LoginBloc>().state.status == LoginStatus.loadingOTP

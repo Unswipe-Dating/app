@@ -4,9 +4,11 @@ import 'dart:ffi';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:unswipe/src/features/login/data/models/otp_response.dart';
+import 'package:unswipe/src/features/login/data/models/request_otp/otp_response.dart';
+import 'package:unswipe/src/features/login/data/models/verify_otp/verify_otp_response.dart';
 import 'package:unswipe/src/features/login/domain/repository/login_repository.dart';
 import 'package:unswipe/src/features/login/domain/usecases/request_otp_use_case.dart';
+import 'package:unswipe/src/features/login/domain/usecases/verify_otp_use_case.dart';
 import 'package:unswipe/src/features/onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart';
 
 import '../../../../../data/api_response.dart' as api_response;
@@ -21,6 +23,8 @@ part 'login_state.dart';
 class LoginBloc extends Bloc<LogInEvent, LoginState> {
   final UpdateUserStateStreamUseCase updateUserStateStreamUseCase;
   final RequestOtpUseCase requestOtpUseCase;
+  final VerifyOtpUseCase verifyOtpUseCase;
+
 
   // final
   // List of splash
@@ -28,12 +32,16 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
 
   LoginBloc({
     required this.updateUserStateStreamUseCase,
-    required this.requestOtpUseCase
+    required this.requestOtpUseCase,
+    required this.verifyOtpUseCase
+
   })
       : super(LoginState()) {
     on<onLoginSuccess>(_onLoginSuccess);
     on<onOtpRequested>(_onOtpRequested);
     on<onOtpResendRequested>(_onOtpResendRequested);
+    on<onOtpVerificationRequest>(_onOtpVerified);
+
 
 
 
@@ -112,6 +120,8 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
 
   }
 
+
+
   _onLoginSuccess(onLoginSuccess event,
       Emitter<LoginState> emitter) async{
 
@@ -142,4 +152,44 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
 
 // This function is called whenever the text field changes
 
+
+  _onOtpVerified(onOtpVerificationRequest event, Emitter<LoginState> emitter) async {
+
+
+    LoginStatus status = LoginStatus.loadingVerification;
+
+    emitter(state.copyWith(status: status, token: status.index));
+
+    verifyOtpUseCase.perform((response)  {
+      final responseData = response?.val;
+      if (responseData == null) {
+        status = LoginStatus.error;
+      } else {
+        if (responseData is api_response.Failure) {
+          status = LoginStatus.error;
+        } else if (responseData is api_response.Success) {
+
+          status = LoginStatus.verified;
+        }
+      }
+    },
+            (e) {
+          status = LoginStatus.error;
+        },
+            (){
+
+        },
+        OtpParams(phone: "", id: "", otp:"")
+
+    );
+
+    await Future.delayed(const Duration(seconds: 2), () {
+    });
+
+    await _onLoginSuccess(onLoginSuccess(""), emitter);
+    emitter(state.copyWith(status: status, token: status.index));
+
+
+
+  }
 }
