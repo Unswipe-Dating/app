@@ -9,18 +9,17 @@ class RoundedTextInput extends StatefulWidget {
   final TextInputType keyboardType;
   final bool isEnabled;
   final String errorString;
-  bool isCountryCode;
+  final bool isCountryCode;
 
-   RoundedTextInput({
-    super.key,
-    this.isCountryCode = false,
-    required this.titleText,
-    required this.controller,
-    required this.hintText,
-    this.keyboardType = TextInputType.text,
-    this.isEnabled = true,
-    this.errorString = ""
-  });
+  const RoundedTextInput(
+      {super.key,
+      this.isCountryCode = false,
+      required this.titleText,
+      required this.controller,
+      required this.hintText,
+      this.keyboardType = TextInputType.text,
+      this.isEnabled = true,
+      this.errorString = ""});
 
   @override
   State<RoundedTextInput> createState() => _RoundedTextFieldState();
@@ -29,8 +28,6 @@ class RoundedTextInput extends StatefulWidget {
 class _RoundedTextFieldState extends State<RoundedTextInput> {
   final ValueNotifier<bool> _textFiledIsFocused = ValueNotifier(false);
   late final FocusNode focusNode = FocusNode();
-
-
 
   @override
   void initState() {
@@ -62,37 +59,47 @@ class _RoundedTextFieldState extends State<RoundedTextInput> {
                   fontSize: 18.0),
               children: [
                 TextSpan(
-                    text: widget.isCountryCode ? '':' *',
+                    text: widget.isCountryCode ? '' : ' *',
                     style: const TextStyle(
+                        fontFamily: 'Lato',
                         color: Colors.red,
                         fontWeight: FontWeight.w500,
                         fontSize: 18))
-              ]
-          ),
+              ]),
         ),
         const SizedBox(height: 8.0),
         ValueListenableBuilder(
             valueListenable: _textFiledIsFocused,
             builder: (context, value, child) => Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12.0),
-                border: value
-                    ? Border.all(color: Colors.black)
-                    : Border.all(color: Colors.transparent),
-                color: Colors.grey[200],
-              ),
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                enabled: widget.isEnabled && !widget.isCountryCode,
-                focusNode: focusNode,
-                controller: widget.controller,
-                keyboardType: widget.keyboardType,
-                decoration: InputDecoration(
-                    hintText: widget.hintText, border: InputBorder.none),
-              ),
-            )),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12.0),
+                    border: value
+                        ? Border.all(color: Colors.black)
+                        : Border.all(color: Colors.transparent),
+                    color: Colors.grey[200],
+                  ),
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                    style: const TextStyle(
+                        fontFamily: 'Lato',
+                        fontWeight: FontWeight.w500,
+                        fontSize: 18),
+                    enabled: widget.isEnabled && !widget.isCountryCode,
+                    focusNode: focusNode,
+                    controller: widget.controller,
+                    keyboardType: widget.keyboardType,
+                    decoration: InputDecoration(
+                        hintText: widget.hintText,
+                        hintStyle: const TextStyle(
+                            fontFamily: 'Lato',
+                            fontWeight: FontWeight.w500,
+                            fontSize: 18),
+                        border: InputBorder.none),
+                  ),
+                )),
         if (widget.errorString != "")
-          IconTextWidget(iconData: Icons.error,
+          IconTextWidget(
+            iconData: Icons.error,
             text: widget.errorString,
             color: Colors.red,
           )

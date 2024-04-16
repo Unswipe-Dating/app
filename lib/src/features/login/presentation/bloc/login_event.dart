@@ -15,3 +15,9 @@ class onOtpRequested extends LogInEvent {
 
   onOtpRequested(this.params);
 }
+
+class onOtpResendRequested extends LogInEvent {
+  final OtpParams params;
+
+  onOtpResendRequested(this.params);
+}

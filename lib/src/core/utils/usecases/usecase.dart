@@ -113,7 +113,7 @@ abstract class UseCase<T, Params> {
   Future<Stream<T?>> buildUseCaseStream(Params? params);
 
   /// Subscribes to the [Observerable] with the [Observer] callback functions.
-  Future<void> perform(void onData(T? event)?, Function? onError, void onDone()?,
+  void perform(void onData(T? event)?, Function? onError, void onDone()?,
       [Params? params]) async {
     final StreamSubscription subscription = (await buildUseCaseStream(params))
         .listen(onData, onDone: onDone, onError: onError);

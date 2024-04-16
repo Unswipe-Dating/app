@@ -1,25 +1,25 @@
 part of 'login_bloc.dart';
 
-enum LoginStatus { initial, loadingOTP, loadedOtp, loadingResend, loadedResend,  loaded, error }
+enum LoginStatus { initial, error, loadingOTP, loadedOtp, loadingResend, loadedResend, loaded   }
 
 class LoginState extends Equatable {
   final LoginStatus status;
-  final String token;
+  final int token;
 
   const LoginState({
     this.status = LoginStatus.initial,
-    this.token = ""
+    this.token = 0,
 
   });
 
 
   LoginState copyWith({
     LoginStatus? status,
-    String? token
+    int? token
   }) {
     return LoginState(
       status: status ?? this.status,
-      token: token ?? this.token,
+      token: token==null ? this.token: token>this.token ? token: this.token,
     );
   }
 

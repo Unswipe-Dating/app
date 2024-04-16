@@ -33,7 +33,45 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
       : super(LoginState()) {
     on<onLoginSuccess>(_onLoginSuccess);
     on<onOtpRequested>(_onOtpRequested);
+    on<onOtpResendRequested>(_onOtpResendRequested);
 
+
+
+
+  }
+
+  _onOtpResendRequested(onOtpResendRequested event,
+      Emitter<LoginState> emitter) async{
+
+    LoginStatus status = LoginStatus.loadingResend;
+
+    emitter(state.copyWith(status: status, token: status.index));
+
+    requestOtpUseCase.perform((response)  {
+      final responseData = response?.val;
+      if (responseData == null) {
+        status = LoginStatus.error;
+      } else {
+        if (responseData is api_response.Failure) {
+          status = LoginStatus.error;
+        } else if (responseData is api_response.Success) {
+          status = LoginStatus.loadedResend;
+        }
+      }
+    },
+            (e) {
+          status = LoginStatus.error;
+        },
+            (){
+
+        },
+        OtpParams(phone: "", id: "")
+
+    );
+
+    await Future.delayed(const Duration(seconds: 2), () {
+    });
+    emitter(state.copyWith(status: status, token: status.index));
 
 
   }
@@ -41,33 +79,36 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
   _onOtpRequested(onOtpRequested event,
       Emitter<LoginState> emitter) async{
 
-    emitter(state.copyWith(status: LoginStatus.loadingOTP));
-    LoginStatus status = state.status;
-    await requestOtpUseCase.perform(
-      (response) async {
+    LoginStatus status = LoginStatus.loadingOTP;
+
+    emitter(state.copyWith(status: status, token: status.index));
+
+     requestOtpUseCase.perform((response)  {
         final responseData = response?.val;
         if (responseData == null) {
           status = LoginStatus.error;
-          // emitter(state.copyWith(status: LoginStatus.error));
         } else {
           if (responseData is api_response.Failure) {
-            // emitter(state.copyWith(status: LoginStatus.error));
+            status = LoginStatus.error;
           } else if (responseData is api_response.Success) {
-            // emitter(state.copyWith(status: LoginStatus.loadedOtp));
+            status = LoginStatus.loadedOtp;
           }
         }
       },
-      (e) async {
-        // emitter(state.copyWith(status: LoginStatus.error));
+      (e) {
+        status = LoginStatus.error;
         },
       (){
 
       },
       OtpParams(phone: "", id: "")
 
-    ).whenComplete(() {
-      emitter(state.copyWith(status: LoginStatus.loadedOtp));
-    });
+    );
+
+     await Future.delayed(const Duration(seconds: 2), () {
+        });
+    emitter(state.copyWith(status: status, token: status.index));
+
 
   }
 
@@ -85,7 +126,7 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
           ifRight: (r) {
               emitter(state.copyWith(
                   status: LoginStatus.loaded,
-                  token: "token"
+                  token: 25
               ));
 
            });

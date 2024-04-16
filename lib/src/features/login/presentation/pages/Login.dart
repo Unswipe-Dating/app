@@ -30,7 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
           image: DecorationImage(
         image: AssetImage(
           'assets/images/crowd_bkgd.jpg',
@@ -47,7 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
           child: BlocConsumer<LoginBloc, LoginState>(
             listener: (context, state) {
               if (state.status == LoginStatus.loaded) {
-                if (state.token.isNotEmpty) {
+                if (state.token == 25) {
                   CustomNavigationHelper.router.go(
                     CustomNavigationHelper.profilePath,
                   );
@@ -55,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
               }
             },
             builder: (context, state) {
-              return Stack(
+              return const Stack(
                 children: [
                   Center(
                     child: MyForm(),
@@ -107,7 +107,7 @@ class _MyFormState extends State<MyForm> {
     switch (context.read<LoginBloc>().state.status) {
       case LoginStatus.loadingOTP:
       case LoginStatus.loadingResend:
-        startTimer();
+       // startTimer();
         break;
       case LoginStatus.loadedOtp:
         break;
@@ -142,7 +142,6 @@ class _MyFormState extends State<MyForm> {
 
     // Enable or disable the button based on the validation status
     setState(() {
-      isResendVisible = isCodeRequested;
       isResendEnabled = !toShowTimer;
       isButtonEnabled = isButtonEnabledState(isEmailValid, isPasswordValid);
       isOtpEnabled = isEmailValid && isCodeRequested;
@@ -182,12 +181,14 @@ class _MyFormState extends State<MyForm> {
           //buttonState = CustomButtonState.loading;
           //some api code to request otp/code,
           //update buttonState to code again
+          buttonState = CustomButtonState.signup;
+          startTimer();
           context.read<LoginBloc>().add(onOtpRequested(OtpParams(
               phone: contactController.text, id: contactController.text)));
         }
       case CustomButtonState.signup:
         {
-          if (email != "abc@xyz.com") {
+          if (email != "9990445491") {
             emailError = "some error";
           }
 
@@ -195,7 +196,7 @@ class _MyFormState extends State<MyForm> {
             codeError = "some error";
           }
 
-          if (email == "abc@xyz.com" && code == "12345678") {
+          if (email == "9990445491" && code == "12345678") {
             context.read<LoginBloc>().add(onLoginSuccess("token"));
           }
         }
@@ -212,9 +213,11 @@ class _MyFormState extends State<MyForm> {
       oneSec,
       (Timer timer) {
         if (_start == 0) {
+
           setState(() {
             timer.cancel();
             toShowTimer = false;
+            isResendVisible = true;
             isResendEnabled = true;
             _start = 9;
           });
@@ -310,14 +313,19 @@ class _MyFormState extends State<MyForm> {
                 color: const Color.fromARGB(97, 97, 97, 1),
               ),
             const SizedBox(height: 16.0),
-            if (isResendVisible)
+            if (isResendVisible )
               CustomButton(
                   text: "Resend",
                   onPressed: () {
+
                     setState(() {
                       isResendEnabled = false;
+                      startTimer();
                     });
+                    context.read<LoginBloc>().add(onOtpResendRequested(OtpParams(
+                        phone: contactController.text, id: contactController.text)));
                   },
+                  isLoading: context.watch<LoginBloc>().state.status == LoginStatus.loadingResend,
                   isEnabled: isResendEnabled),
             const SizedBox(height: 8.0),
             CustomButton(
@@ -326,6 +334,7 @@ class _MyFormState extends State<MyForm> {
                 onButtonClick(contactController.text, otpController.text);
               },
               isEnabled: isButtonEnabled,
+              isLoading: context.watch<LoginBloc>().state.status == LoginStatus.loadingOTP
             ),
             const SizedBox(height: 8.0),
           ],
@@ -339,11 +348,13 @@ class CustomButton extends StatefulWidget {
   final String text;
   final VoidCallback? onPressed;
   final bool isEnabled;
+  final bool isLoading;
 
   const CustomButton({
     super.key,
     required this.text,
     this.onPressed,
+    this.isLoading = false,
     this.isEnabled = true,
   });
 
@@ -366,7 +377,7 @@ class _CustomButtonState extends State<CustomButton> {
             borderRadius: BorderRadius.circular(2.0), // Rounded corners
           ),
           minimumSize: const Size.fromHeight(48)),
-      child: context.read<LoginBloc>().state.status == LoginStatus.loadingOTP
+      child: widget.isLoading
           ? LoadingAnimationWidget.prograssiveDots(
               color: Colors.white,
               size: 32,
