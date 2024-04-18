@@ -1,14 +1,8 @@
-
-
 import 'dart:async';
 
-import 'package:dart_either/dart_either.dart';
-import 'package:unswipe/data/validations.dart';
 import 'package:unswipe/src/core/utils/usecases/usecase.dart';
 import 'package:unswipe/src/features/splash/domain/entities/splash_params.dart';
 import 'package:unswipe/src/features/splash/domain/repository/splash_repository.dart';
-import 'package:unswipe/src/features/splash/presentation/bloc/splash_bloc.dart';
-
 import '../../../../../data/api_response.dart';
 
 class SplashUseCase extends UseCase<GetSplashUseCaseResponse, SplashParams> {
@@ -27,7 +21,7 @@ class SplashUseCase extends UseCase<GetSplashUseCaseResponse, SplashParams> {
         controller.close();
       } else {
         logger.severe('param is null');
-        controller.addError(InvalidRequestException());
+        controller.addError(Exception());
       }
     } catch (e) {
       logger.severe('GetCharacterInfoUseCase failure: $e');

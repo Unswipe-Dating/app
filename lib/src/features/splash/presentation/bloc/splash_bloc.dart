@@ -88,7 +88,4 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
     return super.close();
   }
 
-
-// This function is called whenever the text field changes
-
 }

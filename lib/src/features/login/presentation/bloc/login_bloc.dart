@@ -36,7 +36,7 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
     required this.verifyOtpUseCase
 
   })
-      : super(LoginState()) {
+      : super(const LoginState()) {
     on<onLoginSuccess>(_onLoginSuccess);
     on<onOtpRequested>(_onOtpRequested);
     on<onOtpResendRequested>(_onOtpResendRequested);

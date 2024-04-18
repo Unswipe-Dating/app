@@ -6,7 +6,6 @@ import 'package:unswipe/src/features/login/domain/repository/login_repository.da
 import 'package:unswipe/src/features/login/presentation/bloc/login_bloc.dart';
 
 import '../../../../../data/api_response.dart';
-import '../../../../../data/validations.dart';
 import '../../../../core/utils/usecases/usecase.dart';
 
 @Injectable()
@@ -26,7 +25,7 @@ class RequestOtpUseCase extends UseCase<GetOtpUseCaseResponse, OtpParams> {
         controller.close();
       } else {
         logger.severe('param is null');
-        controller.addError(InvalidRequestException());
+        controller.addError(Exception());
       }
     } catch (e) {
       logger.severe('GetCharacterInfoUseCase failure: $e');
