@@ -15,6 +15,39 @@ class AppColors {
   static const transparent = Colors.transparent;
 }
 
+void showConfirmationDialog(
+  BuildContext context,
+  String message, {
+  required VoidCallback onAccept,
+  required VoidCallback onReject,
+}) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text("Confirmation"),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              onAccept();
+            },
+            child: const Text("Accept"),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              onReject();
+            },
+            child: const Text("Reject"),
+          ),
+        ],
+      );
+    },
+  );
+}
+
 enum InfoIcon { height, sunSign, workLocation, homeLocation }
 
 extension CustomInfoIcon on InfoIcon {
@@ -28,7 +61,6 @@ extension CustomInfoIcon on InfoIcon {
         return "assets/images/location_icon.svg";
       case InfoIcon.homeLocation:
         return "assets/images/home_icon.svg";
-
     }
   }
 }

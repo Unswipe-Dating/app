@@ -1,22 +1,17 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:get_it/get_it.dart';
-import 'package:go_router/go_router.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:unswipe/src/features/login/domain/repository/login_repository.dart';
 import 'package:unswipe/src/features/login/domain/usecases/request_otp_use_case.dart';
 import 'package:unswipe/src/features/login/domain/usecases/update_login_state_stream_usecase.dart';
 import 'package:unswipe/src/features/login/domain/usecases/verify_otp_use_case.dart';
 import 'package:unswipe/src/features/login/presentation/bloc/login_bloc.dart';
-import 'package:provider/provider.dart';
 import 'package:unswipe/widgets/login/icon_text.dart';
 import 'package:unswipe/widgets/login/rounded_text_field.dart';
 
 import '../../../../core/router/app_router.dart';
-import '../../../../core/utils/injections.dart';
-import '../../../onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});

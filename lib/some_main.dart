@@ -1,501 +1,230 @@
+// import 'package:flutter/material.dart';
+// import 'package:flutter_contacts/flutter_contacts.dart';
+//
+// void main() => runApp(FlutterContactsExample());
+//
+// class FlutterContactsExample extends StatefulWidget {
+//   @override
+//   _FlutterContactsExampleState createState() => _FlutterContactsExampleState();
+// }
+//
+// class _FlutterContactsExampleState extends State<FlutterContactsExample> {
+//   List<Contact>? _contacts;
+//   bool _permissionDenied = false;
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//     _fetchContacts();
+//   }
+//
+//   Future _fetchContacts() async {
+//     if (!await FlutterContacts.requestPermission(readonly: true)) {
+//       setState(() => _permissionDenied = true);
+//     } else {
+//       final contacts = await FlutterContacts.getContacts();
+//       setState(() => _contacts = contacts);
+//     }
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) => MaterialApp(
+//       home: Scaffold(
+//           appBar: AppBar(title: Text('flutter_contacts_example')),
+//           body: _body()));
+//
+//   Widget _body() {
+//     if (_permissionDenied) return Center(child: Text('Permission denied'));
+//     if (_contacts == null) return Center(child: CircularProgressIndicator());
+//     return ListView.builder(
+//         itemCount: _contacts!.length,
+//         itemBuilder: (context, i) => ListTile(
+//             title: Text(_contacts![i].displayName),
+//             onTap: () async {
+//               final fullContact =
+//               await FlutterContacts.getContact(_contacts![i].id);
+//               await Navigator.of(context).push(
+//                   MaterialPageRoute(builder: (_) => ContactPage(fullContact!)));
+//             }));
+//   }
+// }
+//
+// class ContactPage extends StatelessWidget {
+//   final Contact contact;
+//   ContactPage(this.contact);
+//
+//   @override
+//   Widget build(BuildContext context) => Scaffold(
+//       appBar: AppBar(title: Text(contact.displayName)),
+//       body: Column(children: [
+//         Text('First name: ${contact.name.first}'),
+//         Text('Last name: ${contact.name.last}'),
+//         Text(
+//             'Phone number: ${contact.phones.isNotEmpty ? contact.phones.first.number : '(none)'}'),
+//         Text(
+//             'Email address: ${contact.emails.isNotEmpty ? contact.emails.first.address : '(none)'}'),
+//       ]));
+// // }
+
+import 'dart:io';
+
+import 'package:baseflow_plugin_template/baseflow_plugin_template.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:unswipe/widgets/homePage/dart_swiper.dart';
+import 'package:permission_handler/permission_handler.dart';
 
-main() {
-  CustomNavigationHelper.instance;
-  runApp(const App());
+void main() {
+  runApp(BaseflowPluginExample(
+      pluginName: 'Permission Handler',
+      githubURL: 'https://github.com/Baseflow/flutter-permission-handler',
+      pubDevURL: 'https://pub.dev/packages/permission_handler',
+      pages: [PermissionHandlerWidget.createPage()]));
 }
 
-class App extends StatelessWidget {
-  const App({Key? key}) : super(key: key);
+///Defines the main theme color
+final MaterialColor themeMaterialColor =
+BaseflowPluginExample.createMaterialColor(
+    const Color.fromRGBO(48, 49, 60, 1));
+
+/// A Flutter application demonstrating the functionality of this plugin
+class PermissionHandlerWidget extends StatefulWidget {
+  /// Create a page containing the functionality of this plugin
+  static ExamplePage createPage() {
+    return ExamplePage(
+        Icons.location_on, (context) => PermissionHandlerWidget());
+  }
 
   @override
+  _PermissionHandlerWidgetState createState() =>
+      _PermissionHandlerWidgetState();
+}
+
+class _PermissionHandlerWidgetState extends State<PermissionHandlerWidget> {
+  @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      debugShowCheckedModeBanner: false,
-      routerConfig: CustomNavigationHelper.router,
+    return Center(
+      child: ListView(
+          children: Permission.values
+              .where((permission) {
+            if (Platform.isIOS) {
+              return permission != Permission.unknown &&
+                  permission != Permission.phone &&
+                  permission != Permission.sms &&
+                  permission != Permission.ignoreBatteryOptimizations &&
+                  permission != Permission.accessMediaLocation &&
+                  permission != Permission.activityRecognition &&
+                  permission != Permission.manageExternalStorage &&
+                  permission != Permission.systemAlertWindow &&
+                  permission != Permission.requestInstallPackages &&
+                  permission != Permission.accessNotificationPolicy &&
+                  permission != Permission.bluetoothScan &&
+                  permission != Permission.bluetoothAdvertise &&
+                  permission != Permission.bluetoothConnect &&
+                  permission != Permission.nearbyWifiDevices &&
+                  permission != Permission.videos &&
+                  permission != Permission.audio &&
+                  permission != Permission.scheduleExactAlarm &&
+                  permission != Permission.sensorsAlways;
+            } else {
+              return permission != Permission.unknown &&
+                  permission != Permission.mediaLibrary &&
+                  permission != Permission.photosAddOnly &&
+                  permission != Permission.reminders &&
+                  permission != Permission.bluetooth &&
+                  permission != Permission.appTrackingTransparency &&
+                  permission != Permission.criticalAlerts &&
+                  permission != Permission.assistant;
+            }
+          })
+              .map((permission) => PermissionWidget(permission))
+              .toList()),
     );
   }
 }
 
-class CustomNavigationHelper {
-  static final CustomNavigationHelper _instance =
-  CustomNavigationHelper._internal();
+/// Permission widget containing information about the passed [Permission]
+class PermissionWidget extends StatefulWidget {
+  /// Constructs a [PermissionWidget] for the supplied [Permission]
+  const PermissionWidget(this._permission);
 
-  static CustomNavigationHelper get instance => _instance;
+  final Permission _permission;
 
-  static late final GoRouter router;
+  @override
+  _PermissionState createState() => _PermissionState(_permission);
+}
 
-  static final GlobalKey<NavigatorState> parentNavigatorKey =
-  GlobalKey<NavigatorState>();
-  static final GlobalKey<NavigatorState> homeTabNavigatorKey =
-  GlobalKey<NavigatorState>();
-  static final GlobalKey<NavigatorState> searchTabNavigatorKey =
-  GlobalKey<NavigatorState>();
-  static final GlobalKey<NavigatorState> settingsTabNavigatorKey =
-  GlobalKey<NavigatorState>();
+class _PermissionState extends State<PermissionWidget> {
+  _PermissionState(this._permission);
 
-  BuildContext get context =>
-      router.routerDelegate.navigatorKey.currentContext!;
+  final Permission _permission;
+  PermissionStatus _permissionStatus = PermissionStatus.denied;
 
-  GoRouterDelegate get routerDelegate => router.routerDelegate;
+  @override
+  void initState() {
+    super.initState();
 
-  GoRouteInformationParser get routeInformationParser =>
-      router.routeInformationParser;
-
-  static const String signUpPath = '/signUp';
-  static const String signInPath = '/signIn';
-  static const String detailPath = '/detail';
-  static const String rootDetailPath = '/rootDetail';
-
-  static const String homePath = '/home';
-  static const String settingsPath = '/settings';
-  static const String searchPath = '/search';
-
-  factory CustomNavigationHelper() {
-    return _instance;
+    _listenForPermissionStatus();
   }
 
-  CustomNavigationHelper._internal() {
-    final routes = [
-      StatefulShellRoute.indexedStack(
-        parentNavigatorKey: parentNavigatorKey,
-        branches: [
-          StatefulShellBranch(
-            navigatorKey: homeTabNavigatorKey,
-            routes: [
-              GoRoute(
-                path: homePath,
-                pageBuilder: (context, GoRouterState state) {
-                  return getPage(
-                    child: const HomePage(),
-                    state: state,
-                  );
-                },
-              ),
-            ],
+  void _listenForPermissionStatus() async {
+    final status = await _permission.status;
+    setState(() => _permissionStatus = status);
+  }
+
+  Color getPermissionColor() {
+    switch (_permissionStatus) {
+      case PermissionStatus.denied:
+        return Colors.red;
+      case PermissionStatus.granted:
+        return Colors.green;
+      case PermissionStatus.limited:
+        return Colors.orange;
+      default:
+        return Colors.grey;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(
+        _permission.toString(),
+        style: Theme.of(context).textTheme.bodyLarge,
+      ),
+      subtitle: Text(
+        _permissionStatus.toString(),
+        style: TextStyle(color: getPermissionColor()),
+      ),
+      trailing: (_permission is PermissionWithService)
+          ? IconButton(
+          icon: const Icon(
+            Icons.info,
+            color: Colors.white,
           ),
-          StatefulShellBranch(
-            navigatorKey: searchTabNavigatorKey,
-            routes: [
-              GoRoute(
-                path: searchPath,
-                pageBuilder: (context, state) {
-                  return getPage(
-                    child: const SearchPage(),
-                    state: state,
-                  );
-                },
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            navigatorKey: settingsTabNavigatorKey,
-            routes: [
-              GoRoute(
-                path: settingsPath,
-                pageBuilder: (context, state) {
-                  return getPage(
-                    child: const SettingsPage(),
-                    state: state,
-                  );
-                },
-              ),
-            ],
-          ),
-        ],
-        pageBuilder: (
-            BuildContext context,
-            GoRouterState state,
-            StatefulNavigationShell navigationShell,
-            ) {
-          return getPage(
-            child: BottomNavigationPage(
-              child: navigationShell,
-            ),
-            state: state,
-          );
-        },
-      ),
-      GoRoute(
-        parentNavigatorKey: parentNavigatorKey,
-        path: signUpPath,
-        pageBuilder: (context, state) {
-          return getPage(
-            child: const SignUpPage(),
-            state: state,
-          );
-        },
-      ),
-      GoRoute(
-        parentNavigatorKey: parentNavigatorKey,
-        path: signInPath,
-        pageBuilder: (context, state) {
-          return getPage(
-            child: const SignInPage(),
-            state: state,
-          );
-        },
-      ),
-      GoRoute(
-        path: detailPath,
-        pageBuilder: (context, state) {
-          return getPage(
-            child: const DetailPage(),
-            state: state,
-          );
-        },
-      ),
-      GoRoute(
-        parentNavigatorKey: parentNavigatorKey,
-        path: rootDetailPath,
-        pageBuilder: (context, state) {
-          return getPage(
-            child: const DetailPage(),
-            state: state,
-          );
-        },
-      ),
-    ];
-
-    router = GoRouter(
-      navigatorKey: parentNavigatorKey,
-      initialLocation: signUpPath,
-      routes: routes,
+          onPressed: () {
+            checkServiceStatus(
+                context, _permission as PermissionWithService);
+          })
+          : null,
+      onTap: () {
+        requestPermission(_permission);
+      },
     );
   }
 
-  static Page getPage({
-    required Widget child,
-    required GoRouterState state,
-  }) {
-    return MaterialPage(
-      key: state.pageKey,
-      child: child,
-    );
+  void checkServiceStatus(
+      BuildContext context, PermissionWithService permission) async {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text((await permission.serviceStatus).toString()),
+    ));
   }
-}
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  Future<void> requestPermission(Permission permission) async {
+    final status = await permission.request();
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Home"),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                CustomNavigationHelper.router.push(
-                  CustomNavigationHelper.detailPath,
-                );
-              },
-              child: const Text('Push Detail'),
-            ),
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text(
-                'Using push method of router enable us to navigate in the current tab without losing the shell',
-                textAlign: TextAlign.center,
-              ),
-            ),
-
-            /// TODO continue
-            ElevatedButton(
-              onPressed: () {
-                CustomNavigationHelper.router.push(
-                  CustomNavigationHelper.rootDetailPath,
-                );
-              },
-              child: const Text('Push Detail From Root Navigator'),
-            ),
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text(
-                'Using push method of router enable us to navigate in the current tab without losing the shell',
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class DetailPage extends StatelessWidget {
-  const DetailPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Detail"),
-      ),
-    );
-  }
-}
-
-class SignUpPage extends StatelessWidget {
-  const SignUpPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("SignUp"),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                CustomNavigationHelper.router.push(
-                  CustomNavigationHelper.signInPath,
-                );
-              },
-              child: const Text('Push SignIn'),
-            ),
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text(
-                'Using push method of router enable us to go back functionality',
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class SignInPage extends StatelessWidget {
-  const SignInPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("SignIn"),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                CustomNavigationHelper.router.push(
-                  CustomNavigationHelper.homePath,
-                );
-              },
-              child: const Text('Push Home Page'),
-            ),
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text(
-                'Using push method of router enable us to push that page as standalone page instead of showing with Shell',
-                textAlign: TextAlign.center,
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                CustomNavigationHelper.router.go(
-                  CustomNavigationHelper.homePath,
-                );
-              },
-              child: const Text('Go Home Page'),
-            ),
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text(
-                'Instead if we use go method of router we will have the home page with the Shell',
-                textAlign: TextAlign.center,
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                CustomNavigationHelper.router.go(
-                  CustomNavigationHelper.searchPath,
-                );
-              },
-              child: const Text('Go Search Page'),
-            ),
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text(
-                'Or instead we can launch the bottom navigation page(with shell) for different tab with only changing the path',
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class SearchPage extends StatelessWidget {
-  const SearchPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Search"),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                CustomNavigationHelper.router.go(
-                    CustomNavigationHelper.homePath
-                );
-                CustomNavigationHelper.router.push(
-                    CustomNavigationHelper.detailPath
-                );
-              },
-              child: const Text('Go Home Tab -> Push Detail Page'),
-            ),
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text(
-                'It will change the tab without loosing the state',
-                textAlign: TextAlign.center,
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                CustomNavigationHelper.router.go(
-                  CustomNavigationHelper.settingsPath,
-                );
-              },
-              child: const Text('Go Settings Tab'),
-            ),
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text(
-                'Or instead we can launch the bottom navigation page(with shell) for different tab with only changing the path',
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class SettingsPage extends StatelessWidget {
-  const SettingsPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Settings"),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                CustomNavigationHelper.router.go(
-                  CustomNavigationHelper.signInPath,
-                );
-              },
-              child: const Text('Go SignIn Page'),
-            ),
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text(
-                'Or instead we can launch the bottom navigation page(with shell) for different tab with only changing the path',
-                textAlign: TextAlign.center,
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                CustomNavigationHelper.router.push(
-                  CustomNavigationHelper.signUpPath,
-                );
-              },
-              child: const Text('Push SignIn Page'),
-            ),
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text(
-                'Or instead we can launch the bottom navigation page(with shell) for different tab with only changing the path',
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class BottomNavigationPage extends StatefulWidget {
-  const BottomNavigationPage({
-    super.key,
-    required this.child,
-  });
-
-  final StatefulNavigationShell child;
-
-  @override
-  State<BottomNavigationPage> createState() => _BottomNavigationPageState();
-}
-
-class _BottomNavigationPageState extends State<BottomNavigationPage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Bottom Navigator Shell'),
-      ),
-      body: SafeArea(
-        child: widget.child,
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        currentIndex: widget.child.currentIndex,
-        onTap: (index) {
-          widget.child.goBranch(
-            index,
-            initialLocation: index == widget.child.currentIndex,
-          );
-          setState(() {});
-        },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'search',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.commute),
-            label: 'community',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'settings',
-          ),
-        ],
-      ),
-    );
+    setState(() {
+      print(status);
+      _permissionStatus = status;
+      print(_permissionStatus);
+    });
   }
 }

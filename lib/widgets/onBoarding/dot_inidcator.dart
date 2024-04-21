@@ -25,3 +25,32 @@ class DotIndicator extends StatelessWidget {
     );
   }
 }
+
+
+class FlatIndicator extends StatelessWidget {
+  const FlatIndicator({
+    this.isActive = false,
+    this.width = 24,
+    this.height = 8,
+    super.key,
+  });
+
+  final bool isActive;
+  final double width;
+  final double height;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      height: height,
+      width: width,
+      decoration: BoxDecoration(
+        color: isActive ? Colors.white : const Color(0x80FFFFFF),
+        borderRadius: const BorderRadius.all(
+          Radius.circular(12),
+        ),
+      ),
+    );
+  }
+}

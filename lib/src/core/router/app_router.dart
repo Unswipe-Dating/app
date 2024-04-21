@@ -81,10 +81,10 @@ class CustomNavigationHelper {
                 },
               ),
               GoRoute(
-                path: profilePathHyperExLock,
+                path:  profilePathHyperExLock,
                 pageBuilder: (context, GoRouterState state) {
                   return getPage(
-                    child: HyperExclusiveRequestLockScreen(),
+                    child: const HyperExclusiveRequestLockScreen(),
                     state: state,
                   );
                 },
@@ -98,7 +98,7 @@ class CustomNavigationHelper {
                 path: chatPath,
                 pageBuilder: (context, state) {
                   return getPage(
-                    child: ChatRequestListPage(),
+                    child: const ChatRequestListPage(),
                     state: state,
                   );
                 },
@@ -107,7 +107,7 @@ class CustomNavigationHelper {
                 path: chatRequestPath,
                 pageBuilder: (context, state) {
                   return getPage(
-                    child: NoRequestScreen(),
+                    child: const NoRequestScreen(),
                     state: state,
                   );
                 },
@@ -128,7 +128,6 @@ class CustomNavigationHelper {
               ),
             ],
           ),
-
           StatefulShellBranch(
             navigatorKey: settingsTabNavigatorKey,
             routes: [
@@ -171,8 +170,9 @@ class CustomNavigationHelper {
         parentNavigatorKey: parentNavigatorKey,
         path: profilePathHyperEx,
         pageBuilder: (context, state) {
+          String uri = state.extra as String;
           return getPage(
-            child: HyperExclusiveRequestPage(),
+            child: HyperExclusiveRequestPage(uri: uri),
             state: state,
           );
         },

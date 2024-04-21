@@ -4,7 +4,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
 import '../helper/helper.dart';
-import '../utils/constant/network_constant.dart';
 import '../utils/log/app_logger.dart';
 import 'logger_interceptor.dart';
 
@@ -13,11 +12,11 @@ class DioNetwork {
   static late Dio retryAPI;
 
   static void initDio() {
-    appAPI = Dio(baseOptions(apiUrl));
+    appAPI = Dio(baseOptions(""));
     appAPI.interceptors.add(loggerInterceptor());
     appAPI.interceptors.add(appQueuedInterceptorsWrapper());
 
-    retryAPI = Dio(baseOptions(apiUrl));
+    retryAPI = Dio(baseOptions(""));
     retryAPI.interceptors.add(loggerInterceptor());
     retryAPI.interceptors.add(interceptorsWrapper());
   }

@@ -1,16 +1,12 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:unswipe/widgets/homePage/expandable_fab.dart';
 import 'package:unswipe/widgets/homePage/swipeView/swipeViewCards/date_preference_card.dart';
 import 'package:unswipe/widgets/homePage/swipeView/swipeViewCards/interests_card.dart';
-import 'package:unswipe/widgets/homePage/swipeView/swipeViewCards/photo_card_secondary.dart';
 import 'package:unswipe/widgets/homePage/swipeView/swipeViewCards/prompt_card.dart';
+import 'package:unswipe/widgets/homePage/swipeView/swipeViewCards/swipe_image_card.dart';
 import 'package:unswipe/widgets/homePage/swipeView/swipeViewCards/work_card.dart';
 
 import '../../../src/core/router/app_router.dart';
+import '../../utils.dart';
 
 class SwipeCard extends StatefulWidget {
   final String id;
@@ -21,10 +17,9 @@ class SwipeCard extends StatefulWidget {
   final bool isVerified;
   final Function likeAction;
   final Function dislikeAction;
-
   final String pronouns;
 
-  SwipeCard({
+  const SwipeCard({
     Key? key,
     required this.likeAction,
     required this.dislikeAction,
@@ -45,11 +40,24 @@ class SwipeCard extends StatefulWidget {
 class _SwipeCard extends State<SwipeCard> {
 
   ScrollController controller = ScrollController();
+  static const imageUrls = [
+    "https://images.pexels.com/photos/220453/"
+        "pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+    "https://images.pexels.com/photos/220453/"
+        "pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+    "https://images.pexels.com/photos/220453/"
+        "pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 0, top: 0, right: 0, bottom: 0),
+      padding: const EdgeInsets.only(
+          left: 0,
+          top: 0,
+          right: 0,
+          bottom: 0
+      ),
       child: Stack(
         children: [
           SingleChildScrollView(
@@ -64,17 +72,9 @@ class _SwipeCard extends State<SwipeCard> {
                     surfaceTintColor: Colors.white,
                     child: Column(
                       children: [
-                        Padding(
+                        const Padding(
                           padding: EdgeInsets.all(10),
-                          child: Image.network(
-                            "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-                            height: MediaQuery
-                                .of(context)
-                                .size
-                                .height * 0.6,
-                            width: double.infinity,
-                            fit: BoxFit.cover,
-                          ),
+                          child: SwipeImageGallery(imageUrls: imageUrls,),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -123,7 +123,9 @@ class _SwipeCard extends State<SwipeCard> {
                   const SizedBox(
                     height: 16,
                   ),
-                  const InterestsCard(header: "Interests", chipLabels: [
+                  const InterestsCard(
+                      header: "Interests",
+                      chipLabels: [
                     "Outdoor",
                     "run",
                     "journal",
@@ -133,16 +135,12 @@ class _SwipeCard extends State<SwipeCard> {
                   const SizedBox(
                     height: 16,
                   ),
-                  const PhotoCardSecondary(
-                      chipLabels: ["5'4\"\"", "Capricorn"]),
-                  const SizedBox(
-                    height: 16,
-                  ),
                   const PromptCard(
                       color: 0xffCBDFFF,
                       question: "We have the Prompt question displayed here",
                       answer:
-                      "Let’s say we have a 300 character limit for the prompt answers. This is how it would look."),
+                      "Let’s say we have a 300 character limit for the prompt"
+                          " answers. This is how it would look."),
                   const SizedBox(
                     height: 16,
                   ),
@@ -155,7 +153,8 @@ class _SwipeCard extends State<SwipeCard> {
                       color: 0xffFFD9D9,
                       question: "We have the Prompt question displayed here",
                       answer:
-                      "Let’s say we have a 300 character limit for the prompt answers. This is how it would look."),
+                      "Let’s say we have a 300 character limit for the prompt "
+                          "answers. This is how it would look."),
                   const SizedBox(
                     height: 16,
                   ),
@@ -163,16 +162,17 @@ class _SwipeCard extends State<SwipeCard> {
                   const SizedBox(
                     height: 16,
                   ),
-                  const PhotoCardSecondary(chipLabels: ["Banglore", "Assam"]),
-                  SizedBox(
-                    height: 16,
-                  ),
                   const PromptCard(
                       color: 0xffFFD9D9,
                       question: "We have the Prompt question displayed here",
                       answer:
-                      "Let’s say we have a 300 character limit for the prompt answers. This is how it would look. Let’s say we have a 300 character limit for the prompt answers. This is how it would look.Let’s say we have a 300 character limit for the prompt answers. This is how it would look."),
-                  SizedBox(
+                      "Let’s say we have a 300 character limit for the prompt"
+                          " answers. This is how it would look. Let’s say we "
+                          "have a 300 character limit for the prompt answers. "
+                          "This is how it would look.Let’s say we have a 300 "
+                          "character limit for the prompt answers."
+                          " This is how it would look."),
+                  const SizedBox(
                     height: 16,
                   ),
                   const InterestsCard(
@@ -185,15 +185,12 @@ class _SwipeCard extends State<SwipeCard> {
                         "A little",
                         "Often"
                       ]),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  const PhotoCardSecondary(chipLabels: []),
                   const PromptCard(
                       color: 0xffFFDEC6,
                       question: "We have the Prompt question displayed here",
                       answer:
-                      "Let’s say we have a 300 character limit for the prompt answers. This is how it would look."),
+                      "Let’s say we have a 300 character limit for the prompt"
+                          " answers. This is how it would look."),
                   const SizedBox(
                     height: 16,
                   ),
@@ -206,10 +203,6 @@ class _SwipeCard extends State<SwipeCard> {
                         "Acts of service",
                         "Want'em"
                       ]),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  const PhotoCardSecondary(chipLabels: []),
                   const SizedBox(
                     height: 16,
                   ),
@@ -249,26 +242,16 @@ class _SwipeCard extends State<SwipeCard> {
                           color: Colors.white,
                         )
                     ),
-                    SizedBox(width: 8,),
-                    FloatingActionButton(
-                      heroTag: null,
-                        shape: CircleBorder(),
-                        onPressed: () {
-                          widget.likeAction();
-                          controller.jumpTo(0);
-                        },
-                        backgroundColor: Colors.grey[200],
-                        child: const Icon(
-                          Icons.favorite,
-                        )
-                    ),
                     const SizedBox(width: 8,),
                      FloatingActionButton(
                       heroTag: null,
                         shape: const CircleBorder(),
                         onPressed: () {
-                          CustomNavigationHelper.router.push(
-                            CustomNavigationHelper.profilePathHyperEx,
+                          showConfirmationDialog(
+                            context,
+                            message,
+                            onAccept: handleAccept,
+                            onReject: handleReject,
                           );
                         },
                         backgroundColor: Colors.grey[200],
@@ -287,5 +270,18 @@ class _SwipeCard extends State<SwipeCard> {
     );
   }
 
+  String message = "Are you sure you want to proceed?";
+
+  void handleAccept() {
+    CustomNavigationHelper.router.push(
+      CustomNavigationHelper.profilePathHyperEx,
+      extra: imageUrls[0]
+    );
+  }
+
+  void handleReject() {
+    print("User rejected");
+    // Perform actions on reject
+  }
 
 }
