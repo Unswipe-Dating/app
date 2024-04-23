@@ -11,6 +11,7 @@ import 'package:unswipe/src/features/hyperExclusiveMatch/hyper_exclusive_page.da
 import 'package:unswipe/src/features/login/presentation/pages/Login.dart';
 import 'package:unswipe/src/features/onBoarding/presentation/pages/OnBoarding.dart';
 import 'package:unswipe/src/features/splash/presentation/pages/splash_page.dart';
+import 'package:unswipe/src/features/userOnboarding/contact_block_init_screen.dart';
 import 'package:unswipe/widgets/homePage/dart_swiper.dart';
 
 import '../../features/chat/chat_request_screen.dart';
@@ -50,6 +51,9 @@ class CustomNavigationHelper {
   static const String profilePath = '/profile';
   static const String profilePathHyperEx = '/hyperex';
   static const String profilePathHyperExLock = '/profile/hyperex';
+
+  static const String blockContactPermissionPath = '/permission';
+  static const String blockContactPath = '/contact';
 
   static const String chatRequestPath = '/chat/chatRequest';
 
@@ -152,6 +156,27 @@ class CustomNavigationHelper {
             child: MyHomePage(
               child: navigationShell,
             ),
+            state: state,
+          );
+        },
+      ),
+      GoRoute(
+        parentNavigatorKey: parentNavigatorKey,
+        path: blockContactPermissionPath,
+        pageBuilder: (context, state) {
+          return getPage(
+            child: const BlockContactInitPage(),
+            state: state,
+          );
+        },
+      ),
+
+      GoRoute(
+        parentNavigatorKey: parentNavigatorKey,
+        path: blockContactPath,
+        pageBuilder: (context, state) {
+          return getPage(
+            child: const BlockContactInitPage(),
             state: state,
           );
         },

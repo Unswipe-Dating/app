@@ -27,7 +27,7 @@ class ChatRequestListPage extends StatelessWidget {
                       child: Text("View all requests",
                           style: const TextStyle(
                               color: Colors.black,
-                              fontFamily: 'lato',
+                              fontFamily: 'Lato',
                               fontWeight: FontWeight.w300,
                               fontSize: 18.0)),
                       style: ElevatedButton.styleFrom(
@@ -61,7 +61,7 @@ class ChatRequestListPage extends StatelessWidget {
                       child: Text("View all requests",
                           style: const TextStyle(
                               color: Colors.black,
-                              fontFamily: 'lato',
+                              fontFamily: 'Lato',
                               fontWeight: FontWeight.w300,
                               fontSize: 18.0)),
                       style: ElevatedButton.styleFrom(

@@ -43,7 +43,7 @@ class HyperExclusiveRequestPage extends StatelessWidget {
             "  You can get out of this if A declines your request or after",
             style: TextStyle(
                 color: Colors.black,
-                fontFamily: 'lato',
+                fontFamily: 'Lato',
                 fontWeight: FontWeight.w500,
                 fontSize: 14.0),
           ),
@@ -73,7 +73,7 @@ class HyperExclusiveRequestPage extends StatelessWidget {
         "I feel it",
         style: TextStyle(
             color: Colors.black,
-            fontFamily: 'lato',
+            fontFamily: 'Lato',
             fontWeight: FontWeight.w600,
             fontSize: 12.0),
       ),

@@ -27,7 +27,7 @@ class StatEarningsCard extends StatelessWidget {
                 Text(
                   "Total earnings from the app",
                   style: TextStyle(
-                    fontFamily: 'lato',
+                    fontFamily: 'Lato',
                     fontWeight: FontWeight.w700,
                     color: Colors.black,
                     fontSize: 20.0,
@@ -56,7 +56,7 @@ class StatEarningsCard extends StatelessWidget {
                             Text(
                               "Lifetime",
                               style: TextStyle(
-                                fontFamily: 'lato',
+                                fontFamily: 'Lato',
                                 fontWeight: FontWeight.w400,
                                 color: Colors.black,
                                 fontSize: 14.0,
@@ -66,7 +66,7 @@ class StatEarningsCard extends StatelessWidget {
                             Text(
                               "USD 120 k",
                               style: TextStyle(
-                                fontFamily: 'lato',
+                                fontFamily: 'Lato',
                                 fontWeight: FontWeight.w800,
                                 color: Colors.black,
                                 fontSize: 15.0,
@@ -92,7 +92,7 @@ class StatEarningsCard extends StatelessWidget {
                           Text(
                             "Last 24 hrs",
                             style: TextStyle(
-                              fontFamily: 'lato',
+                              fontFamily: 'Lato',
                               fontWeight: FontWeight.w400,
                               color: Colors.black,
                               fontSize: 14.0,
@@ -102,7 +102,7 @@ class StatEarningsCard extends StatelessWidget {
                           Text(
                             "USD 120 k",
                             style: TextStyle(
-                              fontFamily: 'lato',
+                              fontFamily: 'Lato',
                               fontWeight: FontWeight.w800,
                               color: Colors.black,
                               fontSize: 15.0,

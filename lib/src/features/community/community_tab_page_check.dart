@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:unswipe/src/core/tabs/colors_transform.dart';
-import 'package:unswipe/src/core/tabs/custom_indicator.dart';
-import 'package:unswipe/src/core/tabs/flutter_custom_tab_bar.dart';
-import 'package:unswipe/src/core/tabs/round_indicator.dart';
 import 'package:unswipe/src/features/community/statistics_community_page.dart';
 
 
@@ -14,37 +10,12 @@ class RoundTabBarPage extends StatefulWidget {
 }
 
 class _RoundTabBarPageState extends State<RoundTabBarPage> {
-  final int pageCount = 2;
-  late PageController _controller = PageController(initialPage: 0);
-  CustomTabBarController _tabBarController = CustomTabBarController();
 
   @override
   void initState() {
     super.initState();
   }
 
-  Widget getTabbarChild(BuildContext context, int index) {
-    return TabBarItem(
-        transform: ColorsTransform(
-            highlightColor: Colors.white,
-            normalColor: Colors.black,
-            builder: (context, color) {
-              return Container(
-                padding: EdgeInsets.fromLTRB(10, 2, 10, 2),
-                alignment: Alignment.center,
-                constraints: BoxConstraints(minWidth: 60),
-                child: (Text(
-                  index == 0 ? 'Statistics' : 'Contribute',
-                  style: TextStyle(
-                      color: color,
-                      fontFamily: 'lato',
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14.0)
-                )),
-              );
-            }),
-        index: index);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,30 +23,35 @@ class _RoundTabBarPageState extends State<RoundTabBarPage> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SizedBox(height: 16,),
-        CustomTabBar(
-          width: MediaQuery.of(context).size.width * 0.65,
-          pinned: true,
-          tabBarController: _tabBarController,
-          height: 50,
-          itemCount: pageCount,
-          builder: getTabbarChild,
-          indicator: RoundIndicator(
+        TabBar(
+          tabAlignment: TabAlignment.center,
+          labelColor: Colors.white,
+          unselectedLabelColor: Colors.black,
+          isScrollable: true,
+          padding: const EdgeInsets.all(16),
+          labelPadding: const EdgeInsets.symmetric(horizontal: 32, vertical: 4),
+          indicatorSize: TabBarIndicatorSize.tab,
+          indicator: BoxDecoration(
             color: Colors.black,
-            top: 2.5,
-            bottom: 2.5,
-            left: 2.5,
-            right: 2.5,
-            radius: BorderRadius.circular(25),
+            borderRadius: BorderRadius.circular(32),
           ),
-          pageController: _controller,
+          tabs: const [
+            Tab(
+              text: "Statistics",
+            ),
+            Tab(
+              text: "Contribute",
+            ),
+          ],
         ),
-        Expanded(
-            child: PageView.builder(
-                controller: _controller,
-                itemCount: pageCount,
-                itemBuilder: (context, index) {
-                  return StatisticsCommunityPage();
-                })),
+        const Expanded(
+          child: TabBarView(
+            children: [
+              StatisticsCommunityPage(),
+              StatisticsCommunityPage(),
+            ],
+          ),
+        )
       ],
     ),
     );

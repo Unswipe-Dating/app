@@ -26,7 +26,7 @@ class NoRequestScreen extends StatelessWidget {
             Center(child:Text("We will notify you as soon as you receive a request",
                 style: const TextStyle(
                     color: Colors.black,
-                    fontFamily: 'lato',
+                    fontFamily: 'Lato',
                     fontWeight: FontWeight.w500,
                     fontSize: 18.0))
             ),

@@ -25,7 +25,7 @@ class NoRequestIndividualScreen extends StatelessWidget {
             Center(child:Text("You will be able to chat with A once they accept your request.",
                 style: const TextStyle(
                     color: Colors.black,
-                    fontFamily: 'lato',
+                    fontFamily: 'Lato',
                     fontWeight: FontWeight.w700,
                     fontSize: 18.0))
             ),

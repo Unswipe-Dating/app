@@ -47,7 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
               if (state.status == LoginStatus.loaded) {
                 if (state.token == 25) {
                   CustomNavigationHelper.router.go(
-                    CustomNavigationHelper.profilePath,
+                    CustomNavigationHelper.blockContactPermissionPath,
                   );
                 }
               }
@@ -160,9 +160,6 @@ class _MyFormState extends State<MyForm> {
         {}
       case CustomButtonState.code:
         {
-          //buttonState = CustomButtonState.loading;
-          //some api code to request otp/code,
-          //update buttonState to code again
           buttonState = CustomButtonState.signup;
           startTimer();
           context.read<LoginBloc>().add(onOtpRequested(OtpParams(
