@@ -11,7 +11,7 @@ import 'package:unswipe/src/features/hyperExclusiveMatch/hyper_exclusive_page.da
 import 'package:unswipe/src/features/login/presentation/pages/Login.dart';
 import 'package:unswipe/src/features/onBoarding/presentation/pages/OnBoarding.dart';
 import 'package:unswipe/src/features/splash/presentation/pages/splash_page.dart';
-import 'package:unswipe/src/features/userOnboarding/contact_block_init_screen.dart';
+import 'package:unswipe/src/features/userOnboarding/contact_block/contact_block_init_screen.dart';
 import 'package:unswipe/widgets/homePage/dart_swiper.dart';
 
 import '../../features/chat/chat_request_screen.dart';
