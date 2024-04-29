@@ -163,7 +163,8 @@ class _MyFormState extends State<MyForm> {
           buttonState = CustomButtonState.signup;
           startTimer();
           context.read<LoginBloc>().add(onOtpRequested(OtpParams(
-              phone: contactController.text, id: contactController.text)));
+              phone: "${codeController.text}${contactController.text}",
+              id: "${codeController.text}${contactController.text}")));
         }
       case CustomButtonState.signup:
         {

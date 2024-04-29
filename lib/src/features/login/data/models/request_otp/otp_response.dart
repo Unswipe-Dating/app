@@ -4,12 +4,12 @@ part 'otp_response.g.dart';
 
 @JsonSerializable()
 class OtpResponse {
-  OtpResponse(this.requestOTP);
+  OtpResponse(this.orderId);
 
   factory OtpResponse.fromJson(Map<String, dynamic> json) =>
       _$OtpResponseFromJson(json);
 
-  String requestOTP;
+  String orderId;
 
   Map<String, dynamic> toJson() => _$OtpResponseToJson(this);
 }

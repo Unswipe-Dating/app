@@ -16,10 +16,12 @@ class OtpParams {
   late final String phone;
   late final String id;
   late final String otp;
+  late final String otpOrderId;
+
   OtpParams({
     required this.phone,
     required this.id,
-     this.otp = ""
-
+     this.otp = "",
+    this.otpOrderId = ""
   });
 }

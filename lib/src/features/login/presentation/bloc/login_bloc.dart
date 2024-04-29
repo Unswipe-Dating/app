@@ -24,6 +24,7 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
   final UpdateUserStateStreamUseCase updateUserStateStreamUseCase;
   final RequestOtpUseCase requestOtpUseCase;
   final VerifyOtpUseCase verifyOtpUseCase;
+  String otpId = "";
 
 
   // final
@@ -64,6 +65,8 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
           status = LoginStatus.error;
         } else if (responseData is api_response.Success) {
           status = LoginStatus.loadedResend;
+          otpId = (responseData as api_response.Success).data;
+
         }
       }
     },
@@ -100,6 +103,7 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
             status = LoginStatus.error;
           } else if (responseData is api_response.Success) {
             status = LoginStatus.loadedOtp;
+            otpId = (responseData as api_response.Success).data;
           }
         }
       },
@@ -109,7 +113,7 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
       (){
 
       },
-      OtpParams(phone: "", id: "")
+      event.params
 
     );
 
@@ -179,7 +183,10 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
             (){
 
         },
-        OtpParams(phone: "", id: "", otp:"")
+        OtpParams(phone: event.params.phone,
+            id: event.params.id,
+            otp:event.params.otp,
+            otpOrderId: otpId)
 
     );
 

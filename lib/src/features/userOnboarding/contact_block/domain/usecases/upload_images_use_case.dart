@@ -43,7 +43,7 @@ class UploadImageUseCase extends UseCase<GetUploadImagesResponse, Object> {
 }
 
 class GetUploadImagesResponse {
-  final ApiResponse<UploadImageResponse> val;
+  final ApiResponse<String> val;
 
   GetUploadImagesResponse(this.val);
 }

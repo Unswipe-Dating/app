@@ -26,8 +26,8 @@ class OtpService {
 
 
     final response = await service.performMutation(query, variables: {
-      "id": "+919994361298",
-      "phone":"+919994361298"
+      "id": params.phone,
+      "phone":params.phone
     });
     log('$response');
 
@@ -51,11 +51,12 @@ class OtpService {
       OtpParams params,
       ) async {
     const query = '''
-     mutation ValidateOTP(\$id: String!,\$phone: String!, \$otp: String!) {
+     mutation ValidateOTP(\$id: String!,\$phone: String!, \$otp: String!, \$otpOrderId) {
   validateOTP(data: {
     id: \$id,
     phone: \$phone,
-    otp: \$otp
+    otp: \$otp,
+    otpOrderId: \$otpOrderId
   }) {
     accessToken
     refreshToken
@@ -66,9 +67,10 @@ class OtpService {
 
     final response = await service.performMutation(query, variables: {
 
-        "id": "+919994361298",
-        "phone":"+919994361298",
-        "otp": "893736222"
+        "id": params.phone,
+        "phone":params.phone,
+        "otp": params.otp,
+        "otpOrderId": params.otpOrderId
 
     });
     log('$response');

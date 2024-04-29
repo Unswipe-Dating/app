@@ -8,7 +8,7 @@ import '../../../features/login/data/datasources/network/exceptions/api_exceptio
 @singleton
 class GraphQLService {
   GraphQLService() {
-    final link = HttpLink('https://api.unswipe.xyz/graphql');
+    final link = HttpLink('https://unswipe-backend-production.up.railway.app/graphql');
     _graphQLClient = GraphQLClient(link: link, cache: GraphQLCache());
   }
 

@@ -17,13 +17,8 @@ class UserOnboardingService {
   Future<ApiResponse<OtpResponse>> requestOtp(
     OtpParams params,
   ) async {
-    final query = '''
-      mutation RequestOTP(\$id: String!,\$phone: String!) {
-  requestOTP(data: {
-    id: \$id,
-    phone: \$phone,
-  })
-}
+    final query = '''{"query":"mutation UploadProfilePhotos(\$files:[Upload!]!) 
+    {\n  uploadProfilePhotos(data: { files: \$files })\n}"}
     ''';
 
 

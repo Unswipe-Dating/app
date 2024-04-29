@@ -7,6 +7,7 @@ import 'package:unswipe/src/features/login/data/models/verify_otp/verify_otp_res
 import 'package:unswipe/src/features/login/domain/repository/login_repository.dart';
 import 'package:unswipe/src/features/userOnboarding/contact_block/data/models/block_contact/block_contact_response.dart';
 import 'package:unswipe/src/features/userOnboarding/contact_block/data/models/upload_image_response/upload_image_response.dart';
+import 'package:unswipe/src/features/userOnboarding/contact_block/domain/entities/create_user_request.dart';
 
 import '../../domain/repository/on_boarding_user_repository.dart';
 import '../datasources/network/service/user_onboarding_service.dart';
@@ -27,8 +28,14 @@ class UserOnboardingRepositoryImpl implements UserOnboardingRepository {
   }
 
   @override
-  Future<ApiResponse<UploadImageResponse>> uploadImages() {
+  Future<ApiResponse<String>> uploadImages() {
     // TODO: implement uploadImages
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<ApiResponse<String>> createUser(CreateUserRequest request) {
+    // TODO: implement createUser
     throw UnimplementedError();
   }
 
