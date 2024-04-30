@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
-import '../../../widgets/login/rounded_text_field.dart';
-import '../../core/router/app_router.dart';
+import '../../../../../widgets/login/rounded_text_field.dart';
+import '../../../../core/router/app_router.dart';
 
 class GenderUpdateScreen extends StatefulWidget {
   const GenderUpdateScreen({super.key});
@@ -34,8 +34,32 @@ class _GenderUpdateScreenState extends State<GenderUpdateScreen> {
             padding: EdgeInsets.symmetric(horizontal: 24),
             child: Column(
               children: [
-                LinearProgressIndicator(
-                  value: 0.22, // Set the progress to 10%
+                const Row(
+                  children: [
+                    Expanded(
+                        flex: 9,
+                        child: LinearProgressIndicator(
+                          color: Colors.black,
+
+                          value: 0.48, // Set the progress to 10%
+                        )
+                    ),
+                    SizedBox(
+                      width: 8,
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Text(
+                        textAlign: TextAlign.start,
+                        '48%',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontFamily: 'Lato',
+                            fontWeight: FontWeight.w700,
+                            fontSize: 14.0),
+                      ),
+                    ),
+                  ],
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -75,6 +99,12 @@ class _GenderUpdateScreenState extends State<GenderUpdateScreen> {
                         leading: Radio<SingingCharacter>(
                           value: SingingCharacter.Man,
                           groupValue: _character,
+                          fillColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+                            if (states.contains(MaterialState.disabled)) {
+                              return Colors.black.withOpacity(.32);
+                            }
+                            return Colors.black;
+                          }),
                           onChanged: (SingingCharacter? value) {
                             setState(() {
                               _character = value;
@@ -94,6 +124,12 @@ class _GenderUpdateScreenState extends State<GenderUpdateScreen> {
                         leading: Radio<SingingCharacter>(
                           value: SingingCharacter.Woman,
                           groupValue: _character,
+                          fillColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+                            if (states.contains(MaterialState.disabled)) {
+                              return Colors.black.withOpacity(.32);
+                            }
+                            return Colors.black;
+                          }),
                           onChanged: (SingingCharacter? value) {
                             setState(() {
                               _character = value;
@@ -113,6 +149,12 @@ class _GenderUpdateScreenState extends State<GenderUpdateScreen> {
                         leading: Radio<SingingCharacter>(
                           value: SingingCharacter.Nonbinary,
                           groupValue: _character,
+                          fillColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+                            if (states.contains(MaterialState.disabled)) {
+                              return Colors.black.withOpacity(.32);
+                            }
+                            return Colors.black;
+                          }),
                           onChanged: (SingingCharacter? value) {
                             setState(() {
                               _character = value;

@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
-import '../../../widgets/login/rounded_text_field.dart';
-import '../../core/router/app_router.dart';
+import '../../../../../widgets/login/rounded_text_field.dart';
+import '../../../../core/router/app_router.dart';
 
 class InterestsUpdateScreen extends StatefulWidget {
   const InterestsUpdateScreen({super.key});
@@ -113,8 +113,32 @@ class _InterestsUpdateScreenState extends State<InterestsUpdateScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Column(
               children: [
-                const LinearProgressIndicator(
-                  value: 0.22, // Set the progress to 10%
+                const Row(
+                  children: [
+                    Expanded(
+                        flex: 9,
+                        child: LinearProgressIndicator(
+                          color: Colors.black,
+
+                          value: 0.87, // Set the progress to 10%
+                        )
+                    ),
+                    SizedBox(
+                      width: 8,
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Text(
+                        textAlign: TextAlign.start,
+                        '87%',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontFamily: 'Lato',
+                            fontWeight: FontWeight.w700,
+                            fontSize: 14.0),
+                      ),
+                    ),
+                  ],
                 ),
                 const Padding(
                   padding: EdgeInsets.all(8.0),

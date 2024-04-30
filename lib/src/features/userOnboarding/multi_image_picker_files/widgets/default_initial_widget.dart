@@ -22,7 +22,6 @@ class DefaultInitialWidget extends StatelessWidget {
       ),
       height: 160,
       clipBehavior: Clip.hardEdge,
-      width: double.infinity,
       child: InkWell(
         borderRadius: BorderRadius.circular(4),
         onTap: pickerView.controller.pickImages,

@@ -11,18 +11,18 @@ import 'package:unswipe/src/features/hyperExclusiveMatch/hyper_exclusive_page.da
 import 'package:unswipe/src/features/login/presentation/pages/Login.dart';
 import 'package:unswipe/src/features/onBoarding/presentation/pages/OnBoarding.dart';
 import 'package:unswipe/src/features/splash/presentation/pages/splash_page.dart';
-import 'package:unswipe/src/features/userOnboarding/dob_update_screen.dart';
-import 'package:unswipe/src/features/userOnboarding/gender_picker_screen.dart';
-import 'package:unswipe/src/features/userOnboarding/interest_picker_screen.dart';
-import 'package:unswipe/src/features/userOnboarding/multi_image_picker_screen.dart';
-import 'package:unswipe/src/features/userOnboarding/name_update_screen.dart';
-import 'package:unswipe/src/features/userOnboarding/partner_gender_picker_screen.dart';
+import 'package:unswipe/src/features/userOnboarding/presentation/profile_update/dob_update_screen.dart';
+import 'package:unswipe/src/features/userOnboarding/presentation/profile_update/gender_picker_screen.dart';
+import 'package:unswipe/src/features/userOnboarding/presentation/profile_update/interest_picker_screen.dart';
+import 'package:unswipe/src/features/userOnboarding/presentation/image_upload/multi_image_picker_screen.dart';
+import 'package:unswipe/src/features/userOnboarding/presentation/profile_update/partner_gender_picker_screen.dart';
 import 'package:unswipe/src/features/userOnboarding/presentation/contact_block/pages/contact_block_init_screen.dart';
 import 'package:unswipe/src/features/userOnboarding/presentation/contact_block/pages/contact_block_screen.dart';
-import 'package:unswipe/src/features/userOnboarding/pronoun_picker_screen.dart';
+import 'package:unswipe/src/features/userOnboarding/presentation/profile_update/pronoun_picker_screen.dart';
 import 'package:unswipe/widgets/homePage/dart_swiper.dart';
 
 import '../../features/chat/chat_request_screen.dart';
+import '../../features/userOnboarding/presentation/profile_update/name_update_screen.dart';
 
 class CustomNavigationHelper {
   static final CustomNavigationHelper _instance =

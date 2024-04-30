@@ -3,8 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../widgets/login/rounded_text_field.dart';
-import '../../core/router/app_router.dart';
+import '../../../../../widgets/login/rounded_text_field.dart';
+import '../../../../core/router/app_router.dart';
+
 
 
 
@@ -44,16 +45,39 @@ class _NameUpdateScreenState extends State<NameUpdateScreen> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(title: Text(""),),
+        appBar: AppBar(title: const Text(""),),
         body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24),
+          padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Column(
             children: [
-              LinearProgressIndicator(
-                value: 0.22, // Set the progress to 10%
+              const Row(
+                children: [
+                  Expanded(
+                    flex: 9,
+                    child: LinearProgressIndicator(
+                      color: Colors.black,
+                      value: 0.22, // Set the progress to 10%
+                    )
+                  ),
+                  SizedBox(
+                    width: 8,
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Text(
+                      textAlign: TextAlign.start,
+                      '22%',
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontFamily: 'Lato',
+                          fontWeight: FontWeight.w700,
+                          fontSize: 14.0),
+                    ),
+                  ),
+                ],
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
                 child: Text(
                   textAlign: TextAlign.start,
                   'Your Name ?',
@@ -64,8 +88,8 @@ class _NameUpdateScreenState extends State<NameUpdateScreen> {
                       fontSize: 24.0),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
                 child: Text(
                   "This will be shown on your profile. You can't change this later.",
                   style: TextStyle(
@@ -115,7 +139,7 @@ class _NameUpdateScreenState extends State<NameUpdateScreen> {
 
 
               Padding(
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 child: ElevatedButton(
                   onPressed: isButtonEnabled ? () {
 
