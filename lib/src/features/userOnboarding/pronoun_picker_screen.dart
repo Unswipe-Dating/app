@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import '../../../widgets/login/rounded_text_field.dart';
+import '../../core/router/app_router.dart';
 
 class PronounUpdateScreen extends StatefulWidget {
   const PronounUpdateScreen({super.key});
@@ -151,7 +152,11 @@ class _PronounUpdateScreenState extends State<PronounUpdateScreen> {
                 Padding(
                   padding: EdgeInsets.all(16),
                   child: ElevatedButton(
-                    onPressed: isButtonEnabled ? () {} : null,
+                    onPressed: isButtonEnabled ? () {
+                      CustomNavigationHelper.router.push(
+                        CustomNavigationHelper.onboardingPartnerGenderPath,);
+
+                    } : null,
                     style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
                         backgroundColor: Colors.black,

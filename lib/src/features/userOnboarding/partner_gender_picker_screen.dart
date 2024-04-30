@@ -155,7 +155,7 @@ class _PartnerGenderUpdateScreenState extends State<PartnerGenderUpdateScreen> {
                     onPressed: isButtonEnabled ? () {
 
                       CustomNavigationHelper.router.push(
-                        CustomNavigationHelper.onboardingPronounPath,);
+                        CustomNavigationHelper.onboardingInterestPath,);
                     } : null,
                     style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,

@@ -13,8 +13,10 @@ import 'package:unswipe/src/features/onBoarding/presentation/pages/OnBoarding.da
 import 'package:unswipe/src/features/splash/presentation/pages/splash_page.dart';
 import 'package:unswipe/src/features/userOnboarding/dob_update_screen.dart';
 import 'package:unswipe/src/features/userOnboarding/gender_picker_screen.dart';
+import 'package:unswipe/src/features/userOnboarding/interest_picker_screen.dart';
 import 'package:unswipe/src/features/userOnboarding/multi_image_picker_screen.dart';
 import 'package:unswipe/src/features/userOnboarding/name_update_screen.dart';
+import 'package:unswipe/src/features/userOnboarding/partner_gender_picker_screen.dart';
 import 'package:unswipe/src/features/userOnboarding/presentation/contact_block/pages/contact_block_init_screen.dart';
 import 'package:unswipe/src/features/userOnboarding/presentation/contact_block/pages/contact_block_screen.dart';
 import 'package:unswipe/src/features/userOnboarding/pronoun_picker_screen.dart';
@@ -65,6 +67,8 @@ class CustomNavigationHelper {
   static const String onboardingDOBPath = '/onboardDOB';
   static const String onboardingGenderPath = '/onboardGender';
   static const String onboardingPronounPath = '/onboardPronoun';
+  static const String onboardingPartnerGenderPath = '/onboardPartnerGender';
+  static const String onboardingInterestPath = '/onboardInterest';
 
 
 
@@ -243,6 +247,26 @@ class CustomNavigationHelper {
         pageBuilder: (context, state) {
           return getPage(
             child: const PronounUpdateScreen(),
+            state: state,
+          );
+        },
+      ),
+      GoRoute(
+        parentNavigatorKey: parentNavigatorKey,
+        path: onboardingPartnerGenderPath,
+        pageBuilder: (context, state) {
+          return getPage(
+            child: const PartnerGenderUpdateScreen(),
+            state: state,
+          );
+        },
+      ),
+      GoRoute(
+        parentNavigatorKey: parentNavigatorKey,
+        path: onboardingInterestPath,
+        pageBuilder: (context, state) {
+          return getPage(
+            child: const InterestsUpdateScreen(),
             state: state,
           );
         },
