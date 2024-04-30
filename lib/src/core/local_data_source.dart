@@ -2,6 +2,7 @@
 import 'package:rxdart_ext/rxdart_ext.dart';
 import 'package:unswipe/src/core/app_error.dart';
 import 'package:unswipe/src/core/utils/constant/user_and_token_entity.dart';
+import 'package:unswipe/src/features/onBoarding/domain/entities/onbaording_state/onboarding_state.dart';
 
 abstract class LocalDataSource {
   /// Returns a single-subscription stream that emits [UserAndTokenEntity] or null
@@ -18,10 +19,10 @@ abstract class LocalDataSource {
   Stream<void> removeUserAndToken();
 
 
-  Stream<bool?> get onBoardingToken$;
+  Stream<OnBoardingStatus?> get onBoardingToken$;
 
 
-  Stream<void> saveOnBoardingToken(bool? onBoardingTokenEntity);
+  Stream<void> saveOnBoardingToken(OnBoardingStatus? onBoardingTokenEntity);
 
 }
 

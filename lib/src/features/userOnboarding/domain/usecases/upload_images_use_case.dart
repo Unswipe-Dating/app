@@ -3,10 +3,10 @@
 import 'dart:async';
 
 import 'package:injectable/injectable.dart';
-import 'package:unswipe/src/features/userOnboarding/contact_block/data/models/upload_image_response/upload_image_response.dart';
+import 'package:unswipe/src/features/userOnboarding/data/models/upload_image_response/upload_image_response.dart';
 
 import '../../../../../../data/api_response.dart';
-import '../../../../../core/utils/usecases/usecase.dart';
+import '../../../../core/utils/usecases/usecase.dart';
 import '../repository/on_boarding_user_repository.dart';
 
 

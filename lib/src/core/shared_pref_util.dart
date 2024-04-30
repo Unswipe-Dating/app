@@ -8,6 +8,7 @@ import 'package:rx_shared_preferences/rx_shared_preferences.dart';
 import 'package:rxdart_ext/rxdart_ext.dart';
 import 'package:unswipe/src/core/app_error.dart';
 import 'package:unswipe/src/core/utils/constant/user_and_token_entity.dart';
+import 'package:unswipe/src/features/onBoarding/domain/entities/onbaording_state/onboarding_state.dart';
 
 import 'local_data_source.dart';
 
@@ -56,26 +57,26 @@ class SharedPrefUtil implements LocalDataSource {
       entity == null ? null : _crypto.encrypt(jsonEncode(entity));
 
   //todo: find solution here
-  FutureOr<bool?> _toOnBoardingEntity(dynamic jsonString) =>
+  FutureOr<OnBoardingStatus?> _toOnBoardingEntity(dynamic jsonString) =>
       jsonString == null
-          ? false
-          : true;
+          ? null
+          : OnBoardingStatus.values[jsonString];
 
-  FutureOr<String?> _toStringOnBoarding(bool? entity) =>
-      entity == null ? null : "true";
+  FutureOr<String?> _toStringOnBoarding(OnBoardingStatus? entity) =>
+      entity?.name;
 
   @override
-  Stream<bool?> get onBoardingToken$ => _rxPrefs
-      .observe<bool>(_kOnBoardingTokenKey, _toOnBoardingEntity)
+  Stream<OnBoardingStatus?> get onBoardingToken$ => _rxPrefs
+      .observe<OnBoardingStatus>(_kOnBoardingTokenKey, _toOnBoardingEntity)
       .onErrorReturnWith((e, s) =>
           throw LocalDataSourceException('Cannot read user and token', e, s));
 
   @override
   Stream<void> saveOnBoardingToken(
-          bool? onBoardingTokenEntity) async* {
+      OnBoardingStatus? onBoardingTokenEntity) async* {
     // TODO: implement saveOnBoardingToken
     yield _rxPrefs
-        .write<bool>(
+        .write<OnBoardingStatus>(
         _kOnBoardingTokenKey, onBoardingTokenEntity, _toStringOnBoarding)
         .onError<Object>((e, s) =>
     throw LocalDataSourceException(

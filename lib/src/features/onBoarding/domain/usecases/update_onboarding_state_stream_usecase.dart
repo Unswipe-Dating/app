@@ -1,4 +1,5 @@
 import 'package:injectable/injectable.dart';
+import 'package:unswipe/src/features/onBoarding/domain/entities/onbaording_state/onboarding_state.dart';
 import 'package:unswipe/src/shared/domain/repository/user_repository.dart';
 
 import '../../../../core/app_error.dart';
@@ -9,6 +10,6 @@ class UpdateOnboardingStateStreamUseCase {
 
   const UpdateOnboardingStateStreamUseCase(this._onBoardingRepository);
 
-  VoidResultStream call() =>
-      _onBoardingRepository.updateOnBoardingState();
+  VoidResultStream call(OnBoardingStatus status) =>
+      _onBoardingRepository.updateOnBoardingState(status);
 }

@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'package:injectable/injectable.dart';
-import 'package:unswipe/src/features/userOnboarding/contact_block/data/models/block_contact/block_contact_response.dart';
-import 'package:unswipe/src/features/userOnboarding/contact_block/domain/entities/create_user_request.dart';
-import 'package:unswipe/src/features/userOnboarding/contact_block/domain/repository/on_boarding_user_repository.dart';
+import 'package:unswipe/src/features/userOnboarding/data/models/block_contact/block_contact_response.dart';
+import 'package:unswipe/src/features/userOnboarding/domain/entities/create_user_request.dart';
+import 'package:unswipe/src/features/userOnboarding/domain/repository/on_boarding_user_repository.dart';
 
 import '../../../../../../data/api_response.dart';
-import '../../../../../core/utils/usecases/usecase.dart';
+import '../../../../core/utils/usecases/usecase.dart';
 
 
 

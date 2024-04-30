@@ -54,6 +54,7 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
                 ));
               }
 
+
             }
           });
     });

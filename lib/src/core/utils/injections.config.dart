@@ -15,30 +15,30 @@ import 'package:rx_shared_preferences/rx_shared_preferences.dart' as _i3;
 import '../../features/login/data/datasources/network/service/otp_service.dart'
     as _i7;
 import '../../features/login/data/repository/login_repository_impl.dart'
-    as _i16;
-import '../../features/login/domain/repository/login_repository.dart' as _i15;
-import '../../features/login/domain/usecases/request_otp_use_case.dart' as _i17;
+    as _i13;
+import '../../features/login/domain/repository/login_repository.dart' as _i12;
+import '../../features/login/domain/usecases/request_otp_use_case.dart' as _i14;
 import '../../features/login/domain/usecases/update_login_state_stream_usecase.dart'
     as _i21;
-import '../../features/login/domain/usecases/verify_otp_use_case.dart' as _i18;
+import '../../features/login/domain/usecases/verify_otp_use_case.dart' as _i15;
 import '../../features/onBoarding/domain/usecases/get_onboarding_state_stream_use_case.dart'
     as _i23;
 import '../../features/onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart'
     as _i24;
-import '../../features/userOnboarding/contact_block/data/datasources/network/service/user_onboarding_service.dart'
+import '../../features/userOnboarding/data/datasources/network/service/user_onboarding_service.dart'
     as _i8;
-import '../../features/userOnboarding/contact_block/data/repository/on_boarding_user_repository_impl.dart'
+import '../../features/userOnboarding/data/repository/on_boarding_user_repository_impl.dart'
     as _i11;
-import '../../features/userOnboarding/contact_block/domain/repository/on_boarding_user_repository.dart'
+import '../../features/userOnboarding/domain/repository/on_boarding_user_repository.dart'
     as _i10;
-import '../../features/userOnboarding/contact_block/domain/usecases/block_contact_usecase.dart'
-    as _i12;
-import '../../features/userOnboarding/contact_block/domain/usecases/create_user_use_case.dart'
-    as _i14;
-import '../../features/userOnboarding/contact_block/domain/usecases/upload_images_use_case.dart'
-    as _i13;
-import '../../shared/data/repository/user_repository_imp.dart' as _i20;
-import '../../shared/domain/repository/user_repository.dart' as _i19;
+import '../../features/userOnboarding/domain/usecases/block_contact_usecase.dart'
+    as _i18;
+import '../../features/userOnboarding/domain/usecases/create_user_use_case.dart'
+    as _i19;
+import '../../features/userOnboarding/domain/usecases/upload_images_use_case.dart'
+    as _i20;
+import '../../shared/data/repository/user_repository_imp.dart' as _i17;
+import '../../shared/domain/repository/user_repository.dart' as _i16;
 import '../../shared/domain/usecases/get_auth_state_stream_use_case.dart'
     as _i22;
 import '../local_data_source.dart' as _i5;
@@ -72,28 +72,28 @@ extension GetItInjectableX on _i1.GetIt {
         ));
     gh.factory<_i10.UserOnboardingRepository>(() =>
         _i11.UserOnboardingRepositoryImpl(gh<_i8.UserOnboardingService>()));
-    gh.factory<_i12.BlockContactUseCase>(
-        () => _i12.BlockContactUseCase(gh<_i10.UserOnboardingRepository>()));
-    gh.factory<_i13.UploadImageUseCase>(
-        () => _i13.UploadImageUseCase(gh<_i10.UserOnboardingRepository>()));
-    gh.factory<_i14.CreateUserUseCase>(
-        () => _i14.CreateUserUseCase(gh<_i10.UserOnboardingRepository>()));
-    gh.factory<_i15.LoginRepository>(
-        () => _i16.LoginRepositoryImpl(gh<_i7.OtpService>()));
-    gh.factory<_i17.RequestOtpUseCase>(
-        () => _i17.RequestOtpUseCase(gh<_i15.LoginRepository>()));
-    gh.factory<_i18.VerifyOtpUseCase>(
-        () => _i18.VerifyOtpUseCase(gh<_i15.LoginRepository>()));
-    gh.factory<_i19.UserRepository>(
-        () => _i20.UserRepositoryImpl(gh<_i5.LocalDataSource>()));
+    gh.factory<_i12.LoginRepository>(
+        () => _i13.LoginRepositoryImpl(gh<_i7.OtpService>()));
+    gh.factory<_i14.RequestOtpUseCase>(
+        () => _i14.RequestOtpUseCase(gh<_i12.LoginRepository>()));
+    gh.factory<_i15.VerifyOtpUseCase>(
+        () => _i15.VerifyOtpUseCase(gh<_i12.LoginRepository>()));
+    gh.factory<_i16.UserRepository>(
+        () => _i17.UserRepositoryImpl(gh<_i5.LocalDataSource>()));
+    gh.factory<_i18.BlockContactUseCase>(
+        () => _i18.BlockContactUseCase(gh<_i10.UserOnboardingRepository>()));
+    gh.factory<_i19.CreateUserUseCase>(
+        () => _i19.CreateUserUseCase(gh<_i10.UserOnboardingRepository>()));
+    gh.factory<_i20.UploadImageUseCase>(
+        () => _i20.UploadImageUseCase(gh<_i10.UserOnboardingRepository>()));
     gh.factory<_i21.UpdateUserStateStreamUseCase>(
-        () => _i21.UpdateUserStateStreamUseCase(gh<_i19.UserRepository>()));
+        () => _i21.UpdateUserStateStreamUseCase(gh<_i16.UserRepository>()));
     gh.factory<_i22.GetAuthStateStreamUseCase>(
-        () => _i22.GetAuthStateStreamUseCase(gh<_i19.UserRepository>()));
+        () => _i22.GetAuthStateStreamUseCase(gh<_i16.UserRepository>()));
     gh.factory<_i23.GetOnboardingStateStreamUseCase>(
-        () => _i23.GetOnboardingStateStreamUseCase(gh<_i19.UserRepository>()));
+        () => _i23.GetOnboardingStateStreamUseCase(gh<_i16.UserRepository>()));
     gh.factory<_i24.UpdateOnboardingStateStreamUseCase>(() =>
-        _i24.UpdateOnboardingStateStreamUseCase(gh<_i19.UserRepository>()));
+        _i24.UpdateOnboardingStateStreamUseCase(gh<_i16.UserRepository>()));
     return this;
   }
 }

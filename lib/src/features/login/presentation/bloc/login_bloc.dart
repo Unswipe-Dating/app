@@ -76,7 +76,7 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
             (){
 
         },
-        OtpParams(phone: "", id: "")
+        event.params
 
     );
 
@@ -129,7 +129,7 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
   _onLoginSuccess(onLoginSuccess event,
       Emitter<LoginState> emitter) async{
 
-    _subscription = updateUserStateStreamUseCase.call().listen((event) {
+    _subscription = updateUserStateStreamUseCase.call(event.token).listen((event) {
       event.fold(ifLeft: (l) {
         if (l is CancelTokenFailure) {
           emitter(state.copyWith(status: LoginStatus.error));
@@ -161,6 +161,7 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
 
 
     LoginStatus status = LoginStatus.loadingVerification;
+    String token = "";
 
     emitter(state.copyWith(status: status, token: status.index));
 
@@ -172,8 +173,10 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
         if (responseData is api_response.Failure) {
           status = LoginStatus.error;
         } else if (responseData is api_response.Success) {
-
           status = LoginStatus.verified;
+          token = (responseData as api_response.Success).data;
+
+
         }
       }
     },
@@ -193,7 +196,7 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
     await Future.delayed(const Duration(seconds: 2), () {
     });
 
-    await _onLoginSuccess(onLoginSuccess(""), emitter);
+    await _onLoginSuccess(onLoginSuccess(token), emitter);
     emitter(state.copyWith(status: status, token: status.index));
 
 

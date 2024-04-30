@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:unswipe/src/features/login/domain/repository/login_repository.dart';
 import 'package:unswipe/src/features/login/domain/usecases/request_otp_use_case.dart';
 import 'package:unswipe/src/features/login/domain/usecases/update_login_state_stream_usecase.dart';
@@ -21,6 +22,19 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+
+  _selectScreen() async {
+    if (await Permission.contacts.isGranted) {
+      CustomNavigationHelper.router.go(
+        CustomNavigationHelper.blockContactPath,
+      );
+    } else {
+      CustomNavigationHelper.router.go(
+          CustomNavigationHelper.blockContactPermissionPath,);
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -46,9 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
             listener: (context, state) {
               if (state.status == LoginStatus.loaded) {
                 if (state.token == 25) {
-                  CustomNavigationHelper.router.go(
-                    CustomNavigationHelper.blockContactPermissionPath,
-                  );
+                  _selectScreen();
                 }
               }
             },

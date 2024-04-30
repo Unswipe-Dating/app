@@ -71,7 +71,7 @@ class _RoundedTextFieldState extends State<RoundedTextInput> {
                   fontSize: 18.0),
               children: [
                 TextSpan(
-                    text: widget.isCountryCode ? '' : ' *',
+                    text: widget.isCountryCode || widget.titleText.isEmpty ? '' : ' *',
                     style: const TextStyle(
                         fontFamily: 'Lato',
                         color: Colors.red,

@@ -2,16 +2,15 @@ import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tuple/tuple.dart';
-void main() {
-  runApp(MyApp());
-}
 
-class MyApp extends StatefulWidget {
+import '../../../../../core/router/app_router.dart';
+
+class BlockContactScreen extends StatefulWidget {
   @override
-  _MyAppState createState() => _MyAppState();
+  _BlockContactState createState() => _BlockContactState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _BlockContactState extends State<BlockContactScreen> {
   // This list stores the selected state of each item (initially all false)
   Map<int, bool> _selectedContact = Map();
 
@@ -154,7 +153,9 @@ class _MyAppState extends State<MyApp> {
                 padding: EdgeInsets.all(32),
                 child: ElevatedButton(
                   onPressed: () {
-
+                    CustomNavigationHelper.router.push(
+                      CustomNavigationHelper.uploadImagePath,
+                    );
 
 
                   },

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
+import '../../core/router/app_router.dart';
 import 'multi_image_picker_files/multi_image_picker_controller.dart';
 import 'multi_image_picker_files/multi_image_picker_view.dart';
 import 'multi_image_picker_files/picker.dart';
@@ -21,6 +22,7 @@ class _ProfileImagePickerScreenState extends State<ProfileImagePickerScreen> {
         return await pickImagesUsingImagePicker(allowMultiple);
       });
 
+
   var request = [];
 
 
@@ -32,113 +34,95 @@ class _ProfileImagePickerScreenState extends State<ProfileImagePickerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        LinearProgressIndicator(
-          value: 0.1, // Set the progress to 10%
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text('This is some text'),
-        ),
-        Padding(
-          padding: EdgeInsets.all(32),
-          child: ElevatedButton(
-            onPressed: () {
-
-
-
-            },
-            style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: Colors.blueAccent,
-                disabledBackgroundColor: Colors.black.withOpacity(0.6),
-                disabledForegroundColor: Colors.white.withOpacity(0.6),
-                shape: RoundedRectangleBorder(
-                  borderRadius:
-                  BorderRadius.circular(2.0), // Rounded corners
-                ),
-                minimumSize:
-                const Size.fromHeight(48) // Set button text color
-            ),
-            child: const Text(
-              'You need to upload at least 3 photos',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontFamily: 'Lato',
-                  fontWeight: FontWeight.w600,
-                  fontSize: 18.0),
-            ),
-          ),
-        ),
-        Expanded(
-          child: Container(
-              child: MultiImagePickerView(
-                controller: controller,
-                padding: const EdgeInsets.all(10),
-              ) // Set a background color
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.all(32),
-          child: ElevatedButton(
-            onPressed: () {
-
-              final images = controller.images; // return Iterable<ImageFile>
-              for (final image in images) {
-                if (image.hasPath)
-                  request.add(File(image.path!));
-                else
-                  request.add(File.fromRawPath(image.bytes!));
-              }
-
-
-
-            },
-            style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: Colors.grey[200],
-                disabledBackgroundColor: Colors.black.withOpacity(0.6),
-                disabledForegroundColor: Colors.white.withOpacity(0.6),
-                shape: RoundedRectangleBorder(
-                  borderRadius:
-                  BorderRadius.circular(2.0), // Rounded corners
-                ),
-                minimumSize:
-                const Size.fromHeight(48) // Set button text color
-            ),
-            child: const Text(
-              'Photo guidelines',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontFamily: 'Lato',
-                  fontWeight: FontWeight.w600,
-                  fontSize: 18.0),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-
-
-
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: Text('Progress Example'),
+          appBar: AppBar(title: Text(""),),
+          body: Column(
+            children: [
+              LinearProgressIndicator(
+                value: 0.1, // Set the progress to 10%
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  'Add 6 photos',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontFamily: 'Playfair',
+                      fontWeight: FontWeight.w700,
+                      fontSize: 22.0),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(32),
+                child: ElevatedButton(
+                  onPressed: () {
+
+
+
+                  },
+                  style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.blueAccent,
+                      disabledBackgroundColor: Colors.black.withOpacity(0.6),
+                      disabledForegroundColor: Colors.white.withOpacity(0.6),
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                        BorderRadius.circular(8.0), // Rounded corners
+                      ),
+                      minimumSize:
+                      const Size.fromHeight(48) // Set button text color
+                  ),
+                  child: const Text(
+                    'You need to upload at least 3 photos',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'Lato',
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18.0),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                    child: MultiImagePickerView(
+                      controller: controller,
+                      padding: const EdgeInsets.all(10),
+                    ) // Set a background color
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(32),
+                child: ElevatedButton(
+                  onPressed: () {
+                    CustomNavigationHelper.router.push(
+                        CustomNavigationHelper.onboardingNamePath,);
+                  },
+                  style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.black,
+                      disabledBackgroundColor: Colors.black.withOpacity(0.6),
+                      disabledForegroundColor: Colors.white.withOpacity(0.6),
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                        BorderRadius.circular(2.0), // Rounded corners
+                      ),
+                      minimumSize:
+                      const Size.fromHeight(48) // Set button text color
+                  ),
+                  child: const Text(
+                    'Upload',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'Lato',
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18.0),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
-        body: ProfileImagePickerScreen(),
-      ),
     );
   }
 }

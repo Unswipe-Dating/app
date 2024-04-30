@@ -52,17 +52,20 @@ abstract class _Mappers {
   }
 
   static OnBoardingState onBoardingEntityToDomainAuthState(
-      bool? entity) {
-    if (entity == null || !entity) {
-      return NotOnBoardedState();
+      OnBoardingStatus? entity) {
+    switch(entity) {
+      case null: return NotOnBoardedState();
+      case OnBoardingStatus.none: return NotOnBoardedState();
+      case OnBoardingStatus.init: return OnBoardedState();
+      case OnBoardingStatus.contact: return ListBlockedState();
+      case OnBoardingStatus.images: return ImageUploadedState();
+      case OnBoardingStatus.profile: return ProfileUpdatedState();
     }
-
-    return OnBoardedState();
   }
 
   /// Response -> Entity
-  static bool? userResponseToOnBoardingTokenEntity(
-      bool? token,
+  static OnBoardingStatus? userResponseToOnBoardingTokenEntity(
+      OnBoardingStatus? token,
       ) {
     return token;
   }

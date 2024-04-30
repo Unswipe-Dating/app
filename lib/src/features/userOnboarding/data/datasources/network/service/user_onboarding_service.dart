@@ -5,7 +5,7 @@ import 'package:unswipe/src/features/login/data/models/verify_otp/verify_otp_res
 import 'package:unswipe/src/features/login/domain/repository/login_repository.dart';
 
 import '../../../../../../../../data/api_response.dart';
-import '../../../../../../../core/network/graphql/graphql_service.dart';
+import '../../../../../../core/network/graphql/graphql_service.dart';
 
 
 @injectable

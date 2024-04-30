@@ -20,7 +20,9 @@ class OtpService {
   requestOTP(data: {
     id: \$id,
     phone: \$phone,
-  })
+  }) {
+  orderId
+  }
 }
     ''';
 

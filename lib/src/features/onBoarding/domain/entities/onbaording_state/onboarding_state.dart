@@ -2,11 +2,20 @@ import 'package:built_value/built_value.dart';
 import 'package:meta/meta.dart';
 part 'onboarding_state.g.dart';
 
+enum OnBoardingStatus  {
+  none,
+  init,
+  contact,
+  images,
+  profile
+
+}
+
 @immutable
 abstract class OnBoardingState {
   const OnBoardingState();
 
-  bool? get onBoardingEntity;
+  OnBoardingStatus? get onBoardingEntity;
 
 }
 
@@ -15,7 +24,7 @@ abstract class OnBoardedState
         Built<OnBoardedState, OnBoardedStateBuilder>,
         OnBoardingState {
   @override
-  bool? get onBoardingEntity;
+  OnBoardingStatus? get onBoardingEntity;
 
   OnBoardedState._();
 
@@ -29,7 +38,7 @@ abstract class NotOnBoardedState
         Built<NotOnBoardedState, NotOnBoardedStateBuilder>,
         OnBoardingState {
   @override
-  bool? get onBoardingEntity => null;
+  OnBoardingStatus? get onBoardingEntity => null;
 
   NotOnBoardedState._();
 
@@ -37,3 +46,47 @@ abstract class NotOnBoardedState
       [void Function(NotOnBoardedStateBuilder) updates]) =
   _$NotOnBoardedState;
 }
+
+abstract class ListBlockedState
+    implements
+        Built<ListBlockedState, ListBlockedStateBuilder>,
+        OnBoardingState {
+  @override
+  OnBoardingStatus? get onBoardingEntity => null;
+
+  ListBlockedState._();
+
+  factory ListBlockedState(
+      [void Function(ListBlockedStateBuilder) updates]) =
+  _$ListBlockedState;
+}
+
+abstract class ImageUploadedState
+    implements
+        Built<ImageUploadedState, ImageUploadedStateBuilder>,
+        OnBoardingState {
+  @override
+  OnBoardingStatus? get onBoardingEntity => null;
+
+  ImageUploadedState._();
+
+  factory ImageUploadedState(
+      [void Function(ImageUploadedStateBuilder) updates]) =
+  _$ImageUploadedState;
+}
+
+abstract class ProfileUpdatedState
+    implements
+        Built<ProfileUpdatedState, ProfileUpdatedStateBuilder>,
+        OnBoardingState {
+  @override
+  OnBoardingStatus? get onBoardingEntity => null;
+
+  ProfileUpdatedState._();
+
+  factory ProfileUpdatedState(
+      [void Function(ProfileUpdatedStateBuilder) updates]) =
+  _$ProfileUpdatedState;
+}
+
+

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:unswipe/src/features/splash/domain/usecases/splash_usecase.dart';
 import 'package:unswipe/src/features/splash/presentation/bloc/splash_bloc.dart';
 import 'package:unswipe/src/shared/domain/usecases/get_auth_state_stream_use_case.dart';
@@ -17,6 +18,17 @@ import '../../../../core/utils/injections.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
+
+  _selectScreen() async {
+    if (await Permission.contacts.isGranted) {
+      CustomNavigationHelper.router.go(
+        CustomNavigationHelper.blockContactPath,
+      );
+    } else {
+      CustomNavigationHelper.router.go(
+        CustomNavigationHelper.blockContactPermissionPath,);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,9 +59,7 @@ class SplashScreen extends StatelessWidget {
               CustomNavigationHelper.loginPath,
             );
           } else {
-            CustomNavigationHelper.router.go(
-              CustomNavigationHelper.profilePath,
-            );
+           _selectScreen();
           }
         }
       },

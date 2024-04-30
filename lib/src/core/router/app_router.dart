@@ -11,7 +11,13 @@ import 'package:unswipe/src/features/hyperExclusiveMatch/hyper_exclusive_page.da
 import 'package:unswipe/src/features/login/presentation/pages/Login.dart';
 import 'package:unswipe/src/features/onBoarding/presentation/pages/OnBoarding.dart';
 import 'package:unswipe/src/features/splash/presentation/pages/splash_page.dart';
-import 'package:unswipe/src/features/userOnboarding/contact_block/contact_block_init_screen.dart';
+import 'package:unswipe/src/features/userOnboarding/dob_update_screen.dart';
+import 'package:unswipe/src/features/userOnboarding/gender_picker_screen.dart';
+import 'package:unswipe/src/features/userOnboarding/multi_image_picker_screen.dart';
+import 'package:unswipe/src/features/userOnboarding/name_update_screen.dart';
+import 'package:unswipe/src/features/userOnboarding/presentation/contact_block/pages/contact_block_init_screen.dart';
+import 'package:unswipe/src/features/userOnboarding/presentation/contact_block/pages/contact_block_screen.dart';
+import 'package:unswipe/src/features/userOnboarding/pronoun_picker_screen.dart';
 import 'package:unswipe/widgets/homePage/dart_swiper.dart';
 
 import '../../features/chat/chat_request_screen.dart';
@@ -54,6 +60,15 @@ class CustomNavigationHelper {
 
   static const String blockContactPermissionPath = '/permission';
   static const String blockContactPath = '/contact';
+  static const String uploadImagePath = '/uploadImage';
+  static const String onboardingNamePath = '/onboardName';
+  static const String onboardingDOBPath = '/onboardDOB';
+  static const String onboardingGenderPath = '/onboardGender';
+  static const String onboardingPronounPath = '/onboardPronoun';
+
+
+
+
 
   static const String chatRequestPath = '/chat/chatRequest';
 
@@ -176,7 +191,58 @@ class CustomNavigationHelper {
         path: blockContactPath,
         pageBuilder: (context, state) {
           return getPage(
-            child: const BlockContactInitPage(),
+            child: BlockContactScreen(),
+            state: state,
+          );
+        },
+      ),
+
+      GoRoute(
+        parentNavigatorKey: parentNavigatorKey,
+        path: uploadImagePath,
+        pageBuilder: (context, state) {
+          return getPage(
+            child: const ProfileImagePickerScreen(),
+            state: state,
+          );
+        },
+      ),
+      GoRoute(
+        parentNavigatorKey: parentNavigatorKey,
+        path: onboardingNamePath,
+        pageBuilder: (context, state) {
+          return getPage(
+            child: const NameUpdateScreen(),
+            state: state,
+          );
+        },
+      ),
+      GoRoute(
+        parentNavigatorKey: parentNavigatorKey,
+        path: onboardingDOBPath,
+        pageBuilder: (context, state) {
+          return getPage(
+            child: const DOBUpdateScreen(),
+            state: state,
+          );
+        },
+      ),
+      GoRoute(
+        parentNavigatorKey: parentNavigatorKey,
+        path: onboardingGenderPath,
+        pageBuilder: (context, state) {
+          return getPage(
+            child: const GenderUpdateScreen(),
+            state: state,
+          );
+        },
+      ),
+      GoRoute(
+        parentNavigatorKey: parentNavigatorKey,
+        path: onboardingPronounPath,
+        pageBuilder: (context, state) {
+          return getPage(
+            child: const PronounUpdateScreen(),
             state: state,
           );
         },

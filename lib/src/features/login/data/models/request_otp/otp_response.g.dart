@@ -7,10 +7,10 @@ part of 'otp_response.dart';
 // **************************************************************************
 
 OtpResponse _$OtpResponseFromJson(Map<String, dynamic> json) => OtpResponse(
-      json['orderId'] as String,
+      RequestOtp.fromJson(json['requestOTP'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$OtpResponseToJson(OtpResponse instance) =>
     <String, dynamic>{
-      'orderId': instance.orderId,
+      'requestOTP': instance.requestOTP,
     };

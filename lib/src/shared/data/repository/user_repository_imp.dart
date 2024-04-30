@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dart_either/dart_either.dart';
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:unswipe/src/features/userOnboarding/presentation/contact_block/bloc/contact_bloc.dart';
 
 import '../../../../data/exception/local_data_source_exception.dart';
 import '../../../../data/exception/remote_data_source_exception.dart';
@@ -29,9 +30,9 @@ class UserRepositoryImpl implements UserRepository {
 
 
   @override
-  VoidResultStream updateOnBoardingState() =>
+  VoidResultStream updateOnBoardingState(OnBoardingStatus status) =>
       _localDataSource.saveOnBoardingToken(
-          _Mappers.userResponseToOnBoardingTokenEntity(true)
+          _Mappers.userResponseToOnBoardingTokenEntity(status)
       ).toEitherStream(_Mappers.errorToAppError);
 
   @override

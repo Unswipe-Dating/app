@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:unswipe/src/features/onBoarding/domain/entities/onbaording_state/onboarding_state.dart';
 import 'package:unswipe/src/features/onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart';
 
 import '../../../../../data/api_response.dart';
@@ -29,7 +30,7 @@ class OnBoardingBloc extends Bloc<OnBoardingEvent, OnBoardState> {
   _onUpdatingOnBoardingEvent(onUpdateOnBoardingUserEvent event,
       Emitter<OnBoardState> emitter) async{
 
-    _subscription = updateOnboardingStateStreamUseCase.call().listen((event) {
+    _subscription = updateOnboardingStateStreamUseCase.call(OnBoardingStatus.init).listen((event) {
       event.fold(ifLeft: (l) {
         if (l is CancelTokenFailure) {
           emitter(state.copyWith(status: OnBoardStatus.error));
@@ -38,13 +39,16 @@ class OnBoardingBloc extends Bloc<OnBoardingEvent, OnBoardState> {
         }
       },
           ifRight: (r) {
+
               emitter(state.copyWith(
                   status: OnBoardStatus.loaded,
                   isFirstTime: false,
                   isAuthenticated: false
               ));
 
-           });
+           }
+
+           );
     });
   }
 
