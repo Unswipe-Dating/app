@@ -147,12 +147,101 @@ class NotOnBoardedStateBuilder
   }
 }
 
+class _$AuthenticatedStateOnBoarded extends AuthenticatedStateOnBoarded {
+  @override
+  final OnBoardingStatus? onBoardingEntity;
+
+  factory _$AuthenticatedStateOnBoarded(
+          [void Function(AuthenticatedStateOnBoardedBuilder)? updates]) =>
+      (new AuthenticatedStateOnBoardedBuilder()..update(updates))._build();
+
+  _$AuthenticatedStateOnBoarded._({this.onBoardingEntity}) : super._();
+
+  @override
+  AuthenticatedStateOnBoarded rebuild(
+          void Function(AuthenticatedStateOnBoardedBuilder) updates) =>
+      (toBuilder()..update(updates)).build();
+
+  @override
+  AuthenticatedStateOnBoardedBuilder toBuilder() =>
+      new AuthenticatedStateOnBoardedBuilder()..replace(this);
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(other, this)) return true;
+    return other is AuthenticatedStateOnBoarded &&
+        onBoardingEntity == other.onBoardingEntity;
+  }
+
+  @override
+  int get hashCode {
+    var _$hash = 0;
+    _$hash = $jc(_$hash, onBoardingEntity.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
+  }
+
+  @override
+  String toString() {
+    return (newBuiltValueToStringHelper(r'AuthenticatedStateOnBoarded')
+          ..add('onBoardingEntity', onBoardingEntity))
+        .toString();
+  }
+}
+
+class AuthenticatedStateOnBoardedBuilder
+    implements
+        Builder<AuthenticatedStateOnBoarded,
+            AuthenticatedStateOnBoardedBuilder> {
+  _$AuthenticatedStateOnBoarded? _$v;
+
+  OnBoardingStatus? _onBoardingEntity;
+  OnBoardingStatus? get onBoardingEntity => _$this._onBoardingEntity;
+  set onBoardingEntity(OnBoardingStatus? onBoardingEntity) =>
+      _$this._onBoardingEntity = onBoardingEntity;
+
+  AuthenticatedStateOnBoardedBuilder();
+
+  AuthenticatedStateOnBoardedBuilder get _$this {
+    final $v = _$v;
+    if ($v != null) {
+      _onBoardingEntity = $v.onBoardingEntity;
+      _$v = null;
+    }
+    return this;
+  }
+
+  @override
+  void replace(AuthenticatedStateOnBoarded other) {
+    ArgumentError.checkNotNull(other, 'other');
+    _$v = other as _$AuthenticatedStateOnBoarded;
+  }
+
+  @override
+  void update(void Function(AuthenticatedStateOnBoardedBuilder)? updates) {
+    if (updates != null) updates(this);
+  }
+
+  @override
+  AuthenticatedStateOnBoarded build() => _build();
+
+  _$AuthenticatedStateOnBoarded _build() {
+    final _$result = _$v ??
+        new _$AuthenticatedStateOnBoarded._(onBoardingEntity: onBoardingEntity);
+    replace(_$result);
+    return _$result;
+  }
+}
+
 class _$ListBlockedState extends ListBlockedState {
+  @override
+  final OnBoardingStatus? onBoardingEntity;
+
   factory _$ListBlockedState(
           [void Function(ListBlockedStateBuilder)? updates]) =>
       (new ListBlockedStateBuilder()..update(updates))._build();
 
-  _$ListBlockedState._() : super._();
+  _$ListBlockedState._({this.onBoardingEntity}) : super._();
 
   @override
   ListBlockedState rebuild(void Function(ListBlockedStateBuilder) updates) =>
@@ -165,17 +254,23 @@ class _$ListBlockedState extends ListBlockedState {
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is ListBlockedState;
+    return other is ListBlockedState &&
+        onBoardingEntity == other.onBoardingEntity;
   }
 
   @override
   int get hashCode {
-    return 601249005;
+    var _$hash = 0;
+    _$hash = $jc(_$hash, onBoardingEntity.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return newBuiltValueToStringHelper(r'ListBlockedState').toString();
+    return (newBuiltValueToStringHelper(r'ListBlockedState')
+          ..add('onBoardingEntity', onBoardingEntity))
+        .toString();
   }
 }
 
@@ -183,7 +278,21 @@ class ListBlockedStateBuilder
     implements Builder<ListBlockedState, ListBlockedStateBuilder> {
   _$ListBlockedState? _$v;
 
+  OnBoardingStatus? _onBoardingEntity;
+  OnBoardingStatus? get onBoardingEntity => _$this._onBoardingEntity;
+  set onBoardingEntity(OnBoardingStatus? onBoardingEntity) =>
+      _$this._onBoardingEntity = onBoardingEntity;
+
   ListBlockedStateBuilder();
+
+  ListBlockedStateBuilder get _$this {
+    final $v = _$v;
+    if ($v != null) {
+      _onBoardingEntity = $v.onBoardingEntity;
+      _$v = null;
+    }
+    return this;
+  }
 
   @override
   void replace(ListBlockedState other) {
@@ -200,18 +309,22 @@ class ListBlockedStateBuilder
   ListBlockedState build() => _build();
 
   _$ListBlockedState _build() {
-    final _$result = _$v ?? new _$ListBlockedState._();
+    final _$result =
+        _$v ?? new _$ListBlockedState._(onBoardingEntity: onBoardingEntity);
     replace(_$result);
     return _$result;
   }
 }
 
 class _$ImageUploadedState extends ImageUploadedState {
+  @override
+  final OnBoardingStatus? onBoardingEntity;
+
   factory _$ImageUploadedState(
           [void Function(ImageUploadedStateBuilder)? updates]) =>
       (new ImageUploadedStateBuilder()..update(updates))._build();
 
-  _$ImageUploadedState._() : super._();
+  _$ImageUploadedState._({this.onBoardingEntity}) : super._();
 
   @override
   ImageUploadedState rebuild(
@@ -225,17 +338,23 @@ class _$ImageUploadedState extends ImageUploadedState {
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is ImageUploadedState;
+    return other is ImageUploadedState &&
+        onBoardingEntity == other.onBoardingEntity;
   }
 
   @override
   int get hashCode {
-    return 14843143;
+    var _$hash = 0;
+    _$hash = $jc(_$hash, onBoardingEntity.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return newBuiltValueToStringHelper(r'ImageUploadedState').toString();
+    return (newBuiltValueToStringHelper(r'ImageUploadedState')
+          ..add('onBoardingEntity', onBoardingEntity))
+        .toString();
   }
 }
 
@@ -243,7 +362,21 @@ class ImageUploadedStateBuilder
     implements Builder<ImageUploadedState, ImageUploadedStateBuilder> {
   _$ImageUploadedState? _$v;
 
+  OnBoardingStatus? _onBoardingEntity;
+  OnBoardingStatus? get onBoardingEntity => _$this._onBoardingEntity;
+  set onBoardingEntity(OnBoardingStatus? onBoardingEntity) =>
+      _$this._onBoardingEntity = onBoardingEntity;
+
   ImageUploadedStateBuilder();
+
+  ImageUploadedStateBuilder get _$this {
+    final $v = _$v;
+    if ($v != null) {
+      _onBoardingEntity = $v.onBoardingEntity;
+      _$v = null;
+    }
+    return this;
+  }
 
   @override
   void replace(ImageUploadedState other) {
@@ -260,18 +393,22 @@ class ImageUploadedStateBuilder
   ImageUploadedState build() => _build();
 
   _$ImageUploadedState _build() {
-    final _$result = _$v ?? new _$ImageUploadedState._();
+    final _$result =
+        _$v ?? new _$ImageUploadedState._(onBoardingEntity: onBoardingEntity);
     replace(_$result);
     return _$result;
   }
 }
 
 class _$ProfileUpdatedState extends ProfileUpdatedState {
+  @override
+  final OnBoardingStatus? onBoardingEntity;
+
   factory _$ProfileUpdatedState(
           [void Function(ProfileUpdatedStateBuilder)? updates]) =>
       (new ProfileUpdatedStateBuilder()..update(updates))._build();
 
-  _$ProfileUpdatedState._() : super._();
+  _$ProfileUpdatedState._({this.onBoardingEntity}) : super._();
 
   @override
   ProfileUpdatedState rebuild(
@@ -285,17 +422,23 @@ class _$ProfileUpdatedState extends ProfileUpdatedState {
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is ProfileUpdatedState;
+    return other is ProfileUpdatedState &&
+        onBoardingEntity == other.onBoardingEntity;
   }
 
   @override
   int get hashCode {
-    return 402905560;
+    var _$hash = 0;
+    _$hash = $jc(_$hash, onBoardingEntity.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return newBuiltValueToStringHelper(r'ProfileUpdatedState').toString();
+    return (newBuiltValueToStringHelper(r'ProfileUpdatedState')
+          ..add('onBoardingEntity', onBoardingEntity))
+        .toString();
   }
 }
 
@@ -303,7 +446,21 @@ class ProfileUpdatedStateBuilder
     implements Builder<ProfileUpdatedState, ProfileUpdatedStateBuilder> {
   _$ProfileUpdatedState? _$v;
 
+  OnBoardingStatus? _onBoardingEntity;
+  OnBoardingStatus? get onBoardingEntity => _$this._onBoardingEntity;
+  set onBoardingEntity(OnBoardingStatus? onBoardingEntity) =>
+      _$this._onBoardingEntity = onBoardingEntity;
+
   ProfileUpdatedStateBuilder();
+
+  ProfileUpdatedStateBuilder get _$this {
+    final $v = _$v;
+    if ($v != null) {
+      _onBoardingEntity = $v.onBoardingEntity;
+      _$v = null;
+    }
+    return this;
+  }
 
   @override
   void replace(ProfileUpdatedState other) {
@@ -320,7 +477,8 @@ class ProfileUpdatedStateBuilder
   ProfileUpdatedState build() => _build();
 
   _$ProfileUpdatedState _build() {
-    final _$result = _$v ?? new _$ProfileUpdatedState._();
+    final _$result =
+        _$v ?? new _$ProfileUpdatedState._(onBoardingEntity: onBoardingEntity);
     replace(_$result);
     return _$result;
   }

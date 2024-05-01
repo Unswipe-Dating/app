@@ -13,6 +13,9 @@ import 'package:unswipe/src/features/onBoarding/domain/usecases/update_onboardin
 
 import '../../../../../data/api_response.dart' as api_response;
 import '../../../../../data/api_response.dart';
+import '../../../onBoarding/domain/entities/onbaording_state/onboarding_state.dart';
+import '../../../onBoarding/domain/usecases/get_onboarding_state_stream_use_case.dart';
+import '../../../onBoarding/presentation/bloc/onboarding_bloc.dart';
 import '../../domain/usecases/update_login_state_stream_usecase.dart';
 
 
@@ -21,6 +24,7 @@ part 'login_state.dart';
 
 
 class LoginBloc extends Bloc<LogInEvent, LoginState> {
+  final UpdateOnboardingStateStreamUseCase updateOnboardingStateStreamUseCase;
   final UpdateUserStateStreamUseCase updateUserStateStreamUseCase;
   final RequestOtpUseCase requestOtpUseCase;
   final VerifyOtpUseCase verifyOtpUseCase;
@@ -30,15 +34,17 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
   // final
   // List of splash
   late StreamSubscription _subscription;
+  late StreamSubscription _subscriptionOnBoarding;
+
 
   LoginBloc({
     required this.updateUserStateStreamUseCase,
     required this.requestOtpUseCase,
-    required this.verifyOtpUseCase
+    required this.verifyOtpUseCase,
+    required this.updateOnboardingStateStreamUseCase
 
   })
       : super(const LoginState()) {
-    on<onLoginSuccess>(_onLoginSuccess);
     on<onOtpRequested>(_onOtpRequested);
     on<onOtpResendRequested>(_onOtpResendRequested);
     on<onOtpVerificationRequest>(_onOtpVerified);
@@ -127,29 +133,30 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
 
 
   _onLoginSuccess(onLoginSuccess event,
-      Emitter<LoginState> emitter) async{
+      Emitter<LoginState> emitter, LoginStatus status) async{
+
 
     _subscription = updateUserStateStreamUseCase.call(event.token).listen((event) {
       event.fold(ifLeft: (l) {
         if (l is CancelTokenFailure) {
-          emitter(state.copyWith(status: LoginStatus.error));
+          status = LoginStatus.error;
         } else {
-          emitter(state.copyWith(status: LoginStatus.error));
+          status = LoginStatus.error;
         }
       },
           ifRight: (r) {
-              emitter(state.copyWith(
-                  status: LoginStatus.loaded,
-                  token: 25
-              ));
+        status = LoginStatus.loaded;
 
-           });
+
+          });
     });
+
   }
 
   @override
   Future<void> close() {
     _subscription.cancel();
+    _subscriptionOnBoarding.cancel();
     return super.close();
   }
 
@@ -196,10 +203,32 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
     await Future.delayed(const Duration(seconds: 2), () {
     });
 
-    await _onLoginSuccess(onLoginSuccess(token), emitter);
+    await _onLoginSuccess(onLoginSuccess(token), emitter, status);
+    await _onUpdatingOnBoardingEvent(emitter, status);
     emitter(state.copyWith(status: status, token: status.index));
 
-
-
   }
+
+  _onUpdatingOnBoardingEvent(
+      Emitter<LoginState> emitter, LoginStatus status) async{
+
+    _subscriptionOnBoarding = updateOnboardingStateStreamUseCase.call(OnBoardingStatus.profile).listen((event) {
+      event.fold(ifLeft: (l) {
+        if (l is CancelTokenFailure) {
+          status = LoginStatus.error;
+        } else {
+          status = LoginStatus.error;
+
+        }
+      },
+          ifRight: (r) {
+            status = LoginStatus.loaded;
+
+          }
+
+      );
+    });
+  }
+
+
 }

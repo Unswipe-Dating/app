@@ -5,6 +5,7 @@ part 'onboarding_state.g.dart';
 enum OnBoardingStatus  {
   none,
   init,
+  otp,
   contact,
   images,
   profile
@@ -47,12 +48,26 @@ abstract class NotOnBoardedState
   _$NotOnBoardedState;
 }
 
+abstract class AuthenticatedStateOnBoarded
+    implements
+        Built<AuthenticatedStateOnBoarded, AuthenticatedStateOnBoardedBuilder>,
+        OnBoardingState {
+  @override
+  OnBoardingStatus? get onBoardingEntity;
+
+  AuthenticatedStateOnBoarded._();
+
+  factory AuthenticatedStateOnBoarded(
+      [void Function(AuthenticatedStateOnBoardedBuilder) updates]) =
+  _$AuthenticatedStateOnBoarded;
+}
+
 abstract class ListBlockedState
     implements
         Built<ListBlockedState, ListBlockedStateBuilder>,
         OnBoardingState {
   @override
-  OnBoardingStatus? get onBoardingEntity => null;
+  OnBoardingStatus? get onBoardingEntity;
 
   ListBlockedState._();
 
@@ -66,7 +81,7 @@ abstract class ImageUploadedState
         Built<ImageUploadedState, ImageUploadedStateBuilder>,
         OnBoardingState {
   @override
-  OnBoardingStatus? get onBoardingEntity => null;
+  OnBoardingStatus? get onBoardingEntity;
 
   ImageUploadedState._();
 
@@ -80,7 +95,7 @@ abstract class ProfileUpdatedState
         Built<ProfileUpdatedState, ProfileUpdatedStateBuilder>,
         OnBoardingState {
   @override
-  OnBoardingStatus? get onBoardingEntity => null;
+  OnBoardingStatus? get onBoardingEntity;
 
   ProfileUpdatedState._();
 

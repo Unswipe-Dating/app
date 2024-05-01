@@ -11,16 +11,14 @@ part 'splash_event.dart';
 part 'splash_state.dart';
 
 class SplashBloc extends Bloc<SplashEvent, SplashState> {
-  final GetAuthStateStreamUseCase splashUseCase;
  final GetOnboardingStateStreamUseCase onboardingStateStreamUseCase;
 
     StreamSubscription? subscription;
 
-  SplashBloc({required this.splashUseCase,
+  SplashBloc({
    required this.onboardingStateStreamUseCase,
   })
       : super(const SplashState()) {
-    on<onAuthenticatedUserEvent>(_onGettingSplashEvent);
    on<onFirstTimeUserEvent>(_onGettingOnBoardingEvent);
 
   }
@@ -28,60 +26,56 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
   _onGettingOnBoardingEvent(onFirstTimeUserEvent event,
       Emitter<SplashState> emitter) async {
 
+    SplashState newState= const SplashState();
     subscription = onboardingStateStreamUseCase.call().listen((event) {
       event.fold(ifLeft: (l) {
         if (l is CancelTokenFailure) {
-          emitter(state.copyWith(status: SplashStatus.error));
+          newState = state.copyWith(status: SplashStatus.error);
         } else {
-          emitter(state.copyWith(status: SplashStatus.error));
+          newState = state.copyWith(status: SplashStatus.error);
         }
       },
           ifRight: (r) {
             if(r is NotOnBoardedState) {
-              emitter(state.copyWith(status: SplashStatus.loaded,
+              newState = state.copyWith(status: SplashStatus.loaded,
                   isFirstTime: true,
                   isAuthenticated: false,
 
-              ));
+              );
 
-            } else {
+            } else if(r is ProfileUpdatedState) {
+              newState = state.copyWith(status: SplashStatus.loaded,
+                isFirstTime: false,
+                isAuthenticated: true,
+                isBoardedAhead: true,
+                isUserJourneyComplete: true,
+
+              );
+            }
+            else {
               if (!state.isBoardedAhead) {
-                emitter(state.copyWith(
+                newState = state.copyWith(
                   status: SplashStatus.loaded,
                   isFirstTime: false,
                   isAuthenticated: false,
                   isBoardedAhead: true
-                ));
+                );
               }
 
 
             }
-          });
+          }
+          );
     });
+
+    await Future.delayed(const Duration(seconds: 2), () {
+    });
+
+    emitter(newState);
+
   }
 
 // Getting splash event
-  _onGettingSplashEvent(onAuthenticatedUserEvent event, Emitter<SplashState> emitter) async {
-
-    await splashUseCase.call().forEach((event) {
-      event.fold(ifLeft: (l) {
-        if (l is CancelTokenFailure) {
-          emitter(state.copyWith(status: SplashStatus.error));
-        } else {
-          emitter(state.copyWith(status: SplashStatus.error));
-        }
-      },
-          ifRight: (r) {
-        if(r is AuthenticatedState) {
-            emitter(state.copyWith(status: SplashStatus.loaded,
-              isAuthenticated: true,
-              isFirstTime: false));
-        } else {
-          add(onFirstTimeUserEvent());
-        }
-        });
-    });
-  }
 
   @override
   Future<void> close() {

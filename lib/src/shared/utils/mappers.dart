@@ -55,6 +55,7 @@ abstract class _Mappers {
       OnBoardingStatus? entity) {
     switch(entity) {
       case null: return NotOnBoardedState();
+      case OnBoardingStatus.otp: return AuthenticatedStateOnBoarded();
       case OnBoardingStatus.none: return NotOnBoardedState();
       case OnBoardingStatus.init: return OnBoardedState();
       case OnBoardingStatus.contact: return ListBlockedState();

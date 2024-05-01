@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -26,7 +25,8 @@ class SplashScreen extends StatelessWidget {
       );
     } else {
       CustomNavigationHelper.router.go(
-        CustomNavigationHelper.blockContactPermissionPath,);
+        CustomNavigationHelper.blockContactPermissionPath,
+      );
     }
   }
 
@@ -40,43 +40,47 @@ class SplashScreen extends StatelessWidget {
   BlocProvider<SplashBloc> _buildBody(BuildContext context) {
     return BlocProvider(
       create: (BuildContext context) => SplashBloc(
-    splashUseCase: GetIt.I.get<GetAuthStateStreamUseCase>(),
-   onboardingStateStreamUseCase: GetIt.I.get<GetOnboardingStateStreamUseCase>()
-    )..add(onAuthenticatedUserEvent()),
+          onboardingStateStreamUseCase:
+              GetIt.I.get<GetOnboardingStateStreamUseCase>())
+        ..add(onFirstTimeUserEvent()),
       child: Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
         color: Colors.orange,
         child: BlocListener<SplashBloc, SplashState>(
-      listener: (context, state) {
-        if (state.status == SplashStatus.loaded) {
-          if(state.isFirstTime) {
-            CustomNavigationHelper.router.push(
-              CustomNavigationHelper.onBoardingPath,
-            );
-          } else if(!state.isAuthenticated) {
-            CustomNavigationHelper.router.push(
-              CustomNavigationHelper.loginPath,
-            );
-          } else {
-           _selectScreen();
-          }
-        }
-      },
-        // Here I have used BlocBuilder, but instead you can also use BlocListner as well.
-        child: Scaffold(
-          backgroundColor: Colors.black,
-
-          body: Center(
-            child: Image.asset(
+          listener: (context, state) {
+            if (state.status == SplashStatus.loaded) {
+              if (state.isFirstTime) {
+                CustomNavigationHelper.router.push(
+                  CustomNavigationHelper.onBoardingPath,
+                );
+              } else if (!state.isAuthenticated) {
+                CustomNavigationHelper.router.push(
+                  CustomNavigationHelper.loginPath,
+                );
+              } else {
+                if (state.isUserJourneyComplete) {
+                  CustomNavigationHelper.router.push(
+                    CustomNavigationHelper.profilePath,
+                  );
+                } else {
+                  _selectScreen();
+                }
+              }
+            }
+          },
+          // Here I have used BlocBuilder, but instead you can also use BlocListner as well.
+          child: Scaffold(
+            backgroundColor: Colors.black,
+            body: Center(
+                child: Image.asset(
               Helper.getImagePath("logo.png"),
               height: 100,
               width: 100,
               fit: BoxFit.contain,
-            )
+            )),
           ),
         ),
-      ),
       ),
     );
   }

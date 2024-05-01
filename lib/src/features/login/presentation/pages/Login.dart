@@ -9,6 +9,8 @@ import 'package:unswipe/src/features/login/domain/usecases/request_otp_use_case.
 import 'package:unswipe/src/features/login/domain/usecases/update_login_state_stream_usecase.dart';
 import 'package:unswipe/src/features/login/domain/usecases/verify_otp_use_case.dart';
 import 'package:unswipe/src/features/login/presentation/bloc/login_bloc.dart';
+import 'package:unswipe/src/features/onBoarding/domain/usecases/get_onboarding_state_stream_use_case.dart';
+import 'package:unswipe/src/features/onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart';
 import 'package:unswipe/widgets/login/icon_text.dart';
 import 'package:unswipe/widgets/login/rounded_text_field.dart';
 
@@ -54,7 +56,9 @@ class _LoginScreenState extends State<LoginScreen> {
               updateUserStateStreamUseCase:
                   GetIt.I.get<UpdateUserStateStreamUseCase>(),
               requestOtpUseCase: GetIt.I.get<RequestOtpUseCase>(),
-          verifyOtpUseCase: GetIt.I.get<VerifyOtpUseCase>()),
+          verifyOtpUseCase: GetIt.I.get<VerifyOtpUseCase>(),
+            updateOnboardingStateStreamUseCase: GetIt.I.get<UpdateOnboardingStateStreamUseCase>(),
+          ),
 
           child: BlocConsumer<LoginBloc, LoginState>(
             listener: (context, state) {
@@ -180,7 +184,6 @@ class _MyFormState extends State<MyForm> {
         }
       case CustomButtonState.signup:
         {
-
             context.read<LoginBloc>().add(
                 onOtpVerificationRequest(
                     OtpParams(phone: contactController.text,

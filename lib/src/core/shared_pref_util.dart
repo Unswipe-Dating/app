@@ -60,7 +60,7 @@ class SharedPrefUtil implements LocalDataSource {
   FutureOr<OnBoardingStatus?> _toOnBoardingEntity(dynamic jsonString) =>
       jsonString == null
           ? null
-          : OnBoardingStatus.values[jsonString];
+          : OnBoardingStatus.values.byName(jsonString);
 
   FutureOr<String?> _toStringOnBoarding(OnBoardingStatus? entity) =>
       entity?.name;
