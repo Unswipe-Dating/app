@@ -53,7 +53,7 @@ class OtpService {
       OtpParams params,
       ) async {
     const query = '''
-     mutation ValidateOTP(\$id: String!,\$phone: String!, \$otp: String!, \$otpOrderId) {
+     mutation ValidateOTP(\$id: String!,\$phone: String!, \$otp: String!, \$otpOrderId: String!) {
   validateOTP(data: {
     id: \$id,
     phone: \$phone,

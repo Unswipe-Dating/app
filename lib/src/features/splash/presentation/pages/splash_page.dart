@@ -51,16 +51,16 @@ class SplashScreen extends StatelessWidget {
           listener: (context, state) {
             if (state.status == SplashStatus.loaded) {
               if (state.isFirstTime) {
-                CustomNavigationHelper.router.push(
+                CustomNavigationHelper.router.go(
                   CustomNavigationHelper.onBoardingPath,
                 );
               } else if (!state.isAuthenticated) {
-                CustomNavigationHelper.router.push(
+                CustomNavigationHelper.router.go(
                   CustomNavigationHelper.loginPath,
                 );
               } else {
                 if (state.isUserJourneyComplete) {
-                  CustomNavigationHelper.router.push(
+                  CustomNavigationHelper.router.go(
                     CustomNavigationHelper.profilePath,
                   );
                 } else {

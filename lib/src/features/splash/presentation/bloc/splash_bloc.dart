@@ -68,7 +68,7 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
           );
     });
 
-    await Future.delayed(const Duration(seconds: 2), () {
+    await Future.delayed(const Duration(seconds: 1), () {
     });
 
     emitter(newState);

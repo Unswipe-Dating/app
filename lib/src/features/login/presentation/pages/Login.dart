@@ -63,9 +63,8 @@ class _LoginScreenState extends State<LoginScreen> {
           child: BlocConsumer<LoginBloc, LoginState>(
             listener: (context, state) {
               if (state.status == LoginStatus.loaded) {
-                if (state.token == 25) {
                   _selectScreen();
-                }
+
               }
             },
             builder: (context, state) {
@@ -186,9 +185,9 @@ class _MyFormState extends State<MyForm> {
         {
             context.read<LoginBloc>().add(
                 onOtpVerificationRequest(
-                    OtpParams(phone: contactController.text,
-                        id: contactController.text,
-                        otp: codeController.text)));
+                    OtpParams(phone: "${codeController.text}${contactController.text}",
+                        id: "${codeController.text}${contactController.text}",
+                        otp: otpController.text)));
 
         }
     }
