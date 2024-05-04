@@ -107,7 +107,7 @@ class _MyFormState extends State<MyForm> {
   bool toShowTimer = false;
   String emailError = "";
   String codeError = "";
-  late Timer _timer;
+  Timer? timer;
   int _start = 9;
 
   @override
@@ -199,7 +199,7 @@ class _MyFormState extends State<MyForm> {
     buttonState = CustomButtonState.signup;
     const oneSec = Duration(seconds: 1);
     toShowTimer = true;
-    _timer = Timer.periodic(
+    timer = Timer.periodic(
       oneSec,
       (Timer timer) {
         if (_start == 0) {
@@ -222,7 +222,7 @@ class _MyFormState extends State<MyForm> {
 
   @override
   void dispose() {
-    _timer.cancel();
+    timer?.cancel();
     super.dispose();
   }
 

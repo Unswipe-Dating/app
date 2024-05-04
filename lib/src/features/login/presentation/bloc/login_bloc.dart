@@ -32,8 +32,8 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
 
   // final
   // List of splash
-  late StreamSubscription _subscription;
-  late StreamSubscription _subscriptionOnBoarding;
+   StreamSubscription? subscription;
+   StreamSubscription? subscriptionOnBoarding;
 
   LoginBloc(
       {required this.updateUserStateStreamUseCase,
@@ -101,7 +101,7 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
 
   Future<LoginStatus>_onLoginSuccess(onLoginSuccess event) async {
     LoginStatus status = LoginStatus.verified;
-    _subscription =
+    subscription =
         updateUserStateStreamUseCase.call(event.token).listen((event) {
       event.fold(ifLeft: (l) {
         if (l is CancelTokenFailure) {
@@ -117,8 +117,8 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
 
   @override
   Future<void> close() {
-    _subscription.cancel();
-    _subscriptionOnBoarding.cancel();
+    subscription?.cancel();
+    subscriptionOnBoarding?.cancel();
     return super.close();
   }
 
@@ -167,7 +167,7 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
 
   Future<LoginStatus> _onUpdatingOnBoardingEvent() async {
     LoginStatus status = LoginStatus.verified;
-    _subscriptionOnBoarding = updateOnboardingStateStreamUseCase
+    subscriptionOnBoarding = updateOnboardingStateStreamUseCase
         .call(OnBoardingStatus.profile)
         .listen((event) {
       event.fold(ifLeft: (l) {

@@ -16,6 +16,7 @@ import '../widgets/on_board_content.dart';
 class OnBoard {
   final String image, title, description;
 
+
   OnBoard({
     required this.image,
     required this.title,
@@ -61,11 +62,18 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   // Variables
   late PageController _pageController;
   int _pageIndex = 0;
+  final _image = const AssetImage('assets/images/crowd_bkgd.jpg');
+
 
   @override
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: 0);
+  }
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    precacheImage(_image, context);
   }
 
   @override
@@ -137,8 +145,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                   ),
                   // Button area
                   InkWell(
-                    onTap: () async {
-                       context.read<OnBoardingBloc>().add(onUpdateOnBoardingUserEvent());
+                    onTap: () {
+                      context.read<OnBoardingBloc>().add(onUpdateOnBoardingUserEvent());
 
 
                     },
