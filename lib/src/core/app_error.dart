@@ -63,6 +63,7 @@ class AppCancellationError extends AppError {
 typedef Result<T> = Either<AppError, T>;
 typedef UnitResult = Result<Unit>;
 typedef VoidResult = Result<void>;
+typedef TResultStream<T> = Stream<Result<T>>;
 
 typedef UnitResultStream = Stream<UnitResult>;
 typedef VoidResultStream = Stream<VoidResult>;

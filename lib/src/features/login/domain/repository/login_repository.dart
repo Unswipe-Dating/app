@@ -1,13 +1,16 @@
 import 'dart:async';
 
+import 'package:unswipe/src/core/app_error.dart';
 import 'package:unswipe/src/features/login/data/models/verify_otp/verify_otp_response.dart';
+import 'package:unswipe/src/features/login/domain/usecases/verify_otp_use_case.dart';
 
 import '../../../../../data/api_response.dart';
 import '../../data/models/request_otp/otp_response.dart';
+import '../usecases/request_otp_use_case.dart';
 
 abstract class LoginRepository {
-  Future<ApiResponse<OtpResponse>> requestOtp(OtpParams otpParams);
-  Future<ApiResponse<VerifyOtpResponse>> verifyOtp(OtpParams otpParams);
+  TResultStream<GetOtpUseCaseResponse>requestOtp(OtpParams otpParams);
+  TResultStream<VerifyOtpUseCaseResponse> verifyOtp(OtpParams otpParams);
 
 
 }
