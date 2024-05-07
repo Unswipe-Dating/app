@@ -68,7 +68,8 @@ class _LoginScreenState extends State<LoginScreen> {
               }
             },
             builder: (context, state) {
-              return const Stack(
+              return state.status == LoginStatus.loadingVerification
+                  ? const Center(child: CircularProgressIndicator()): const Stack(
                 children: [
                   Center(
                     child: MyForm(),
@@ -233,7 +234,7 @@ class _MyFormState extends State<MyForm> {
       color: Colors.white,
       surfaceTintColor: Colors.white,
       margin: const EdgeInsets.all(16.0),
-      child: Padding(
+      child:  Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,

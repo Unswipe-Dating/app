@@ -10,17 +10,12 @@ import '../../../../onBoarding/domain/usecases/update_onboarding_state_stream_us
 import '../../../../onBoarding/presentation/bloc/onboarding_bloc.dart';
 
 
-
-part 'contact_block_event.dart';
-part 'contact_block_state.dart';
-
-
-class ContactBloc extends Bloc<OnBoardingEvent, OnBoardState> {
+class ImageUploadBloc extends Bloc<OnBoardingEvent, OnBoardState> {
   final UpdateOnboardingStateStreamUseCase updateOnboardingStateStreamUseCase;
 
   // List of splash
 
-  ContactBloc({
+  ImageUploadBloc({
     required this.updateOnboardingStateStreamUseCase
   })
       : super(OnBoardState()) {
@@ -33,9 +28,10 @@ class ContactBloc extends Bloc<OnBoardingEvent, OnBoardState> {
 
     emitter(state.copyWith(status: OnBoardStatus.loading));
 
+    await Future.delayed(const Duration(seconds: 3));
     await emitter.forEach(
         updateOnboardingStateStreamUseCase
-            .call(OnBoardingStatus.images), onData: (event) {
+            .call(OnBoardingStatus.update), onData: (event) {
       return event.fold(ifLeft: (l) {
         if (l is CancelTokenFailure) {
           return state.copyWith(status: OnBoardStatus.error);
@@ -43,8 +39,8 @@ class ContactBloc extends Bloc<OnBoardingEvent, OnBoardState> {
           return state.copyWith(status: OnBoardStatus.error);
         }
       },
-      ifRight: (r) {
-        return state.copyWith(status: OnBoardStatus.loaded);}
+          ifRight: (r) {
+            return state.copyWith(status: OnBoardStatus.loaded);}
       );
 
     }, onError: (error, stacktrace) {

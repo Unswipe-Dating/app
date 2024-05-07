@@ -400,6 +400,90 @@ class ImageUploadedStateBuilder
   }
 }
 
+class _$ProfileUpdateState extends ProfileUpdateState {
+  @override
+  final OnBoardingStatus? onBoardingEntity;
+
+  factory _$ProfileUpdateState(
+          [void Function(ProfileUpdateStateBuilder)? updates]) =>
+      (new ProfileUpdateStateBuilder()..update(updates))._build();
+
+  _$ProfileUpdateState._({this.onBoardingEntity}) : super._();
+
+  @override
+  ProfileUpdateState rebuild(
+          void Function(ProfileUpdateStateBuilder) updates) =>
+      (toBuilder()..update(updates)).build();
+
+  @override
+  ProfileUpdateStateBuilder toBuilder() =>
+      new ProfileUpdateStateBuilder()..replace(this);
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(other, this)) return true;
+    return other is ProfileUpdateState &&
+        onBoardingEntity == other.onBoardingEntity;
+  }
+
+  @override
+  int get hashCode {
+    var _$hash = 0;
+    _$hash = $jc(_$hash, onBoardingEntity.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
+  }
+
+  @override
+  String toString() {
+    return (newBuiltValueToStringHelper(r'ProfileUpdateState')
+          ..add('onBoardingEntity', onBoardingEntity))
+        .toString();
+  }
+}
+
+class ProfileUpdateStateBuilder
+    implements Builder<ProfileUpdateState, ProfileUpdateStateBuilder> {
+  _$ProfileUpdateState? _$v;
+
+  OnBoardingStatus? _onBoardingEntity;
+  OnBoardingStatus? get onBoardingEntity => _$this._onBoardingEntity;
+  set onBoardingEntity(OnBoardingStatus? onBoardingEntity) =>
+      _$this._onBoardingEntity = onBoardingEntity;
+
+  ProfileUpdateStateBuilder();
+
+  ProfileUpdateStateBuilder get _$this {
+    final $v = _$v;
+    if ($v != null) {
+      _onBoardingEntity = $v.onBoardingEntity;
+      _$v = null;
+    }
+    return this;
+  }
+
+  @override
+  void replace(ProfileUpdateState other) {
+    ArgumentError.checkNotNull(other, 'other');
+    _$v = other as _$ProfileUpdateState;
+  }
+
+  @override
+  void update(void Function(ProfileUpdateStateBuilder)? updates) {
+    if (updates != null) updates(this);
+  }
+
+  @override
+  ProfileUpdateState build() => _build();
+
+  _$ProfileUpdateState _build() {
+    final _$result =
+        _$v ?? new _$ProfileUpdateState._(onBoardingEntity: onBoardingEntity);
+    replace(_$result);
+    return _$result;
+  }
+}
+
 class _$ProfileUpdatedState extends ProfileUpdatedState {
   @override
   final OnBoardingStatus? onBoardingEntity;

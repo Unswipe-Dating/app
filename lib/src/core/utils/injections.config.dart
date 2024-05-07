@@ -17,10 +17,10 @@ import '../../features/login/data/datasources/network/service/otp_service.dart'
 import '../../features/login/data/repository/login_repository_impl.dart'
     as _i13;
 import '../../features/login/domain/repository/login_repository.dart' as _i12;
-import '../../features/login/domain/usecases/request_otp_use_case.dart' as _i14;
+import '../../features/login/domain/usecases/request_otp_use_case.dart' as _i21;
 import '../../features/login/domain/usecases/update_login_state_stream_usecase.dart'
-    as _i21;
-import '../../features/login/domain/usecases/verify_otp_use_case.dart' as _i15;
+    as _i19;
+import '../../features/login/domain/usecases/verify_otp_use_case.dart' as _i22;
 import '../../features/onBoarding/domain/usecases/get_onboarding_state_stream_use_case.dart'
     as _i23;
 import '../../features/onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart'
@@ -32,15 +32,15 @@ import '../../features/userOnboarding/data/repository/on_boarding_user_repositor
 import '../../features/userOnboarding/domain/repository/on_boarding_user_repository.dart'
     as _i10;
 import '../../features/userOnboarding/domain/usecases/block_contact_usecase.dart'
-    as _i18;
+    as _i16;
 import '../../features/userOnboarding/domain/usecases/create_user_use_case.dart'
-    as _i19;
+    as _i17;
 import '../../features/userOnboarding/domain/usecases/upload_images_use_case.dart'
-    as _i20;
-import '../../shared/data/repository/user_repository_imp.dart' as _i17;
-import '../../shared/domain/repository/user_repository.dart' as _i16;
+    as _i18;
+import '../../shared/data/repository/user_repository_imp.dart' as _i15;
+import '../../shared/domain/repository/user_repository.dart' as _i14;
 import '../../shared/domain/usecases/get_auth_state_stream_use_case.dart'
-    as _i22;
+    as _i20;
 import '../local_data_source.dart' as _i5;
 import '../network/graphql/graphql_service.dart' as _i4;
 import '../shared_pref_util.dart' as _i9;
@@ -74,26 +74,26 @@ extension GetItInjectableX on _i1.GetIt {
         _i11.UserOnboardingRepositoryImpl(gh<_i8.UserOnboardingService>()));
     gh.factory<_i12.LoginRepository>(
         () => _i13.LoginRepositoryImpl(gh<_i7.OtpService>()));
-    gh.factory<_i14.RequestOtpUseCase>(
-        () => _i14.RequestOtpUseCase(gh<_i12.LoginRepository>()));
-    gh.factory<_i15.VerifyOtpUseCase>(
-        () => _i15.VerifyOtpUseCase(gh<_i12.LoginRepository>()));
-    gh.factory<_i16.UserRepository>(
-        () => _i17.UserRepositoryImpl(gh<_i5.LocalDataSource>()));
-    gh.factory<_i18.BlockContactUseCase>(
-        () => _i18.BlockContactUseCase(gh<_i10.UserOnboardingRepository>()));
-    gh.factory<_i19.CreateUserUseCase>(
-        () => _i19.CreateUserUseCase(gh<_i10.UserOnboardingRepository>()));
-    gh.factory<_i20.UploadImageUseCase>(
-        () => _i20.UploadImageUseCase(gh<_i10.UserOnboardingRepository>()));
-    gh.factory<_i21.UpdateUserStateStreamUseCase>(
-        () => _i21.UpdateUserStateStreamUseCase(gh<_i16.UserRepository>()));
-    gh.factory<_i22.GetAuthStateStreamUseCase>(
-        () => _i22.GetAuthStateStreamUseCase(gh<_i16.UserRepository>()));
+    gh.factory<_i14.UserRepository>(
+        () => _i15.UserRepositoryImpl(gh<_i5.LocalDataSource>()));
+    gh.factory<_i16.BlockContactUseCase>(
+        () => _i16.BlockContactUseCase(gh<_i10.UserOnboardingRepository>()));
+    gh.factory<_i17.CreateUserUseCase>(
+        () => _i17.CreateUserUseCase(gh<_i10.UserOnboardingRepository>()));
+    gh.factory<_i18.UploadImageUseCase>(
+        () => _i18.UploadImageUseCase(gh<_i10.UserOnboardingRepository>()));
+    gh.factory<_i19.UpdateUserStateStreamUseCase>(
+        () => _i19.UpdateUserStateStreamUseCase(gh<_i14.UserRepository>()));
+    gh.factory<_i20.GetAuthStateStreamUseCase>(
+        () => _i20.GetAuthStateStreamUseCase(gh<_i14.UserRepository>()));
+    gh.factory<_i21.RequestOtpUseCase>(
+        () => _i21.RequestOtpUseCase(gh<_i12.LoginRepository>()));
+    gh.factory<_i22.VerifyOtpUseCase>(
+        () => _i22.VerifyOtpUseCase(gh<_i12.LoginRepository>()));
     gh.factory<_i23.GetOnboardingStateStreamUseCase>(
-        () => _i23.GetOnboardingStateStreamUseCase(gh<_i16.UserRepository>()));
+        () => _i23.GetOnboardingStateStreamUseCase(gh<_i14.UserRepository>()));
     gh.factory<_i24.UpdateOnboardingStateStreamUseCase>(() =>
-        _i24.UpdateOnboardingStateStreamUseCase(gh<_i16.UserRepository>()));
+        _i24.UpdateOnboardingStateStreamUseCase(gh<_i14.UserRepository>()));
     return this;
   }
 }

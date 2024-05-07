@@ -60,6 +60,7 @@ abstract class _Mappers {
       case OnBoardingStatus.init: return OnBoardedState();
       case OnBoardingStatus.contact: return ListBlockedState();
       case OnBoardingStatus.images: return ImageUploadedState();
+      case OnBoardingStatus.update: return ProfileUpdateState();
       case OnBoardingStatus.profile: return ProfileUpdatedState();
     }
   }

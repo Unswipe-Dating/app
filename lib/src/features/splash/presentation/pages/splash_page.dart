@@ -63,7 +63,22 @@ class SplashScreen extends StatelessWidget {
                   CustomNavigationHelper.router.go(
                     CustomNavigationHelper.profilePath,
                   );
-                } else {
+                }
+                else if (state.isImageUploaded) {
+                  CustomNavigationHelper.router.go(
+                    CustomNavigationHelper.uploadImagePath,
+                  );
+                }
+                else if (state.isContactsBlocked) {
+                  _selectScreen();
+                }
+                else if (state.isProfileUpdated) {
+                  CustomNavigationHelper.router.go(
+                    CustomNavigationHelper.onboardingNamePath,
+                  );
+                }
+
+                else {
                   _selectScreen();
                 }
               }

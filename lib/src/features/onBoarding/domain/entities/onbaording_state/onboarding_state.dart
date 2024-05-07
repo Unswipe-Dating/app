@@ -8,7 +8,8 @@ enum OnBoardingStatus  {
   otp,
   contact,
   images,
-  profile
+  profile,
+  update
 
 }
 
@@ -88,6 +89,20 @@ abstract class ImageUploadedState
   factory ImageUploadedState(
       [void Function(ImageUploadedStateBuilder) updates]) =
   _$ImageUploadedState;
+}
+
+abstract class ProfileUpdateState
+    implements
+        Built<ProfileUpdateState, ProfileUpdateStateBuilder>,
+        OnBoardingState {
+  @override
+  OnBoardingStatus? get onBoardingEntity;
+
+  ProfileUpdateState._();
+
+  factory ProfileUpdateState(
+      [void Function(ProfileUpdateStateBuilder) updates]) =
+  _$ProfileUpdateState;
 }
 
 abstract class ProfileUpdatedState

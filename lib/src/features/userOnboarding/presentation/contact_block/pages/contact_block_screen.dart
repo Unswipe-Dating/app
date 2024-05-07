@@ -1,7 +1,12 @@
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tuple/tuple.dart';
+import 'package:unswipe/src/features/onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart';
+import 'package:unswipe/src/features/onBoarding/presentation/bloc/onboarding_bloc.dart';
+import 'package:unswipe/src/features/userOnboarding/presentation/contact_block/bloc/contact_bloc.dart';
 
 import '../../../../../core/router/app_router.dart';
 
@@ -21,17 +26,18 @@ class _BlockContactState extends State<BlockContactScreen> {
 
   _selectContact() async {
     if (await Permission.contacts.request().isGranted) {
-      contact =
-      await ContactsService.getContacts(withThumbnails: false);
+      contact = await ContactsService.getContacts(withThumbnails: false);
       for (var element in contact) {
-        String s1 = element.displayName??"";
+        String s1 = element.displayName ?? "";
         String s2 = "";
-        element.phones?.forEach((element) {s2+= "\n ${element.label} : ${element.value}\n";});
+        element.phones?.forEach((element) {
+          s2 += "\n ${element.label} : ${element.value}\n";
+        });
         stringContacts.add(Tuple2(s1, s2));
       }
-      _selectedContact = contact.asMap().map((key, value) => MapEntry(key, false));
-      setState(() {
-      });
+      _selectedContact =
+          contact.asMap().map((key, value) => MapEntry(key, false));
+      setState(() {});
     } else {
 //todo: when user is never ready to give permission.
     }
@@ -41,8 +47,8 @@ class _BlockContactState extends State<BlockContactScreen> {
   void initState() {
     _selectContact();
     super.initState();
-
   }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -58,130 +64,156 @@ class _BlockContactState extends State<BlockContactScreen> {
                     fontWeight: FontWeight.w700,
                     fontSize: 22.0)),
             leading: IconButton(
-              icon: Icon(Icons.close, color: Colors.grey[700],),
+              icon: Icon(
+                Icons.close,
+                color: Colors.grey[700],
+              ),
               onPressed: () => Navigator.pop(context),
             ),
             actions: [
               IconButton(
-                icon: Icon(Icons.add, color: Colors.grey[700],),
+                icon: Icon(
+                  Icons.add,
+                  color: Colors.grey[700],
+                ),
                 onPressed: () => print('Add button pressed'),
               ),
             ],
           ),
-          body: contact.isEmpty ? const Center(child:CircularProgressIndicator()) : Column(
-            children: [
-              const Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Text('You can choose to hide your profile visibility for the people in your contact list.',
-                    style: TextStyle(
-                    color: Colors.black,
-                    fontFamily: 'Lato',
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16.0)),
-              ),
-              TabBar(
-                tabAlignment: TabAlignment.center,
-                labelColor: Colors.white,
-                unselectedLabelColor: Colors.black,
-                isScrollable: true,
-                padding: const EdgeInsets.all(16),
-                labelPadding: const EdgeInsets.symmetric(horizontal: 32, vertical: 4),
-                indicatorSize: TabBarIndicatorSize.tab,
-                indicator: BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(32),
-                ),
-                tabs: const [
-                  Tab(
-                    text: "Your Contacts",
-                  ),
-                  Tab(
-                    text: "Blocked Contacts",
-                  ),
-                ],
-              ),
-              Expanded(
-                child: TabBarView(
-                  children: [
-                    ListView.builder(
-                      itemCount: stringContacts.length,
-                      itemBuilder: (context, index) {
-                        return CheckboxListTile(
-                          title: RichText(
-                            text: TextSpan(
-                                text: stringContacts[index].item1,
-                                style: const TextStyle(
+          body: BlocProvider(
+            create: (BuildContext context) => ContactBloc(
+                updateOnboardingStateStreamUseCase:
+                    GetIt.I.get<UpdateOnboardingStateStreamUseCase>()),
+            child: BlocConsumer<ContactBloc, OnBoardState>(
+              listener: (context, state) {
+                if (state.status == OnBoardStatus.loaded) {
+                  CustomNavigationHelper.router.push(
+                    CustomNavigationHelper.uploadImagePath,
+                  );
+                }
+              },
+              builder: (context, state) {
+                return contact.isEmpty || state.status == OnBoardStatus.loading
+                    ? const Center(child: CircularProgressIndicator())
+                    : Column(
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: Text(
+                                'You can choose to hide your profile visibility for the people in your contact list.',
+                                style: TextStyle(
                                     color: Colors.black,
                                     fontFamily: 'Lato',
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 16.0),
-                                children: [
-                                  TextSpan(
-                                      text: stringContacts[index].item2,
-                                      style: TextStyle(
-                                          color: Colors.grey[800],
-                                          fontFamily: 'Lato',
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 14))
-                                ]),
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16.0)),
                           ),
-                          value: _selectedContact[index],
-                          // Set checkbox value from state
-                          onChanged: (val) =>
-                          setState(() {
-                            _selectedContact.update(index, (value) =>  val ?? false);
-                          })
-                               // Update state on change
-                        );
-                      },
-                    ),
-                    ListView.builder(
-                      itemCount: 10,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          title: Text('Item ${index + 1}'),
-                          selected: true,
-                          // Set selected based on state
-                          onTap: () => {}, // Handle tap
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(32),
-                child: ElevatedButton(
-                  onPressed: () {
-                    CustomNavigationHelper.router.push(
-                      CustomNavigationHelper.uploadImagePath,
-                    );
-
-
-                  },
-                  style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: Colors.black,
-                      disabledBackgroundColor: Colors.black.withOpacity(0.6),
-                      disabledForegroundColor: Colors.white.withOpacity(0.6),
-                      shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(2.0), // Rounded corners
-                      ),
-                      minimumSize:
-                          const Size.fromHeight(48) // Set button text color
-                      ),
-                  child: const Text(
-                    'Import Contacts',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'Lato',
-                        fontWeight: FontWeight.w600,
-                        fontSize: 18.0),
-                  ),
-                ),
-              )
-            ],
+                          TabBar(
+                            tabAlignment: TabAlignment.center,
+                            labelColor: Colors.white,
+                            unselectedLabelColor: Colors.black,
+                            isScrollable: true,
+                            padding: const EdgeInsets.all(16),
+                            labelPadding: const EdgeInsets.symmetric(
+                                horizontal: 32, vertical: 4),
+                            indicatorSize: TabBarIndicatorSize.tab,
+                            indicator: BoxDecoration(
+                              color: Colors.black,
+                              borderRadius: BorderRadius.circular(32),
+                            ),
+                            tabs: const [
+                              Tab(
+                                text: "Your Contacts",
+                              ),
+                              Tab(
+                                text: "Blocked Contacts",
+                              ),
+                            ],
+                          ),
+                          Expanded(
+                            child: TabBarView(
+                              children: [
+                                ListView.builder(
+                                  itemCount: stringContacts.length,
+                                  itemBuilder: (context, index) {
+                                    return CheckboxListTile(
+                                        title: RichText(
+                                          text: TextSpan(
+                                              text: stringContacts[index].item1,
+                                              style: const TextStyle(
+                                                  color: Colors.black,
+                                                  fontFamily: 'Lato',
+                                                  fontWeight: FontWeight.w700,
+                                                  fontSize: 16.0),
+                                              children: [
+                                                TextSpan(
+                                                    text: stringContacts[index]
+                                                        .item2,
+                                                    style: TextStyle(
+                                                        color: Colors.grey[800],
+                                                        fontFamily: 'Lato',
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        fontSize: 14))
+                                              ]),
+                                        ),
+                                        value: _selectedContact[index],
+                                        // Set checkbox value from state
+                                        onChanged: (val) => setState(() {
+                                              _selectedContact.update(index,
+                                                  (value) => val ?? false);
+                                            })
+                                        // Update state on change
+                                        );
+                                  },
+                                ),
+                                ListView.builder(
+                                  itemCount: 10,
+                                  itemBuilder: (context, index) {
+                                    return ListTile(
+                                      title: Text('Item ${index + 1}'),
+                                      selected: true,
+                                      // Set selected based on state
+                                      onTap: () => {}, // Handle tap
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(32),
+                            child: ElevatedButton(
+                              onPressed: () {
+                                context.read<ContactBloc>().add(onUpdateOnBoardingUserEvent());
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  foregroundColor: Colors.white,
+                                  backgroundColor: Colors.black,
+                                  disabledBackgroundColor:
+                                      Colors.black.withOpacity(0.6),
+                                  disabledForegroundColor:
+                                      Colors.white.withOpacity(0.6),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        2.0), // Rounded corners
+                                  ),
+                                  minimumSize: const Size.fromHeight(
+                                      48) // Set button text color
+                                  ),
+                              child: const Text(
+                                'Import Contacts',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: 'Lato',
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 18.0),
+                              ),
+                            ),
+                          )
+                        ],
+                      );
+              },
+            ),
           ),
         ),
       ),

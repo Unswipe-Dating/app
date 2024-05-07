@@ -161,7 +161,7 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
   Future<LoginStatus> _onUpdatingOnBoardingEvent() async {
     LoginStatus status = LoginStatus.verified;
     subscriptionOnBoarding = updateOnboardingStateStreamUseCase
-        .call(OnBoardingStatus.profile)
+        .call(OnBoardingStatus.contact)
         .listen((event) {
       event.fold(ifLeft: (l) {
         if (l is CancelTokenFailure) {

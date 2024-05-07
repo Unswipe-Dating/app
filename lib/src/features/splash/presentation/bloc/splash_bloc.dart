@@ -47,7 +47,38 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
             isBoardedAhead: true,
             isUserJourneyComplete: true,
           );
-        } else {
+        }  else if (r is ListBlockedState) {
+          return state.copyWith(
+            status: SplashStatus.loaded,
+            isFirstTime: false,
+            isAuthenticated: true,
+            isBoardedAhead: true,
+            isUserJourneyComplete: false,
+            isContactsBlocked: true,
+          );
+        }  else if (r is ImageUploadedState) {
+          return state.copyWith(
+            status: SplashStatus.loaded,
+            isFirstTime: false,
+            isAuthenticated: true,
+            isBoardedAhead: true,
+            isUserJourneyComplete: false,
+            isImageUploaded: true,
+          );
+        }
+
+        else if (r is ProfileUpdateState) {
+          return state.copyWith(
+            status: SplashStatus.loaded,
+            isFirstTime: false,
+            isAuthenticated: true,
+            isBoardedAhead: true,
+            isUserJourneyComplete: false,
+            isProfileUpdated: true,
+          );
+        }
+
+        else {
             return state.copyWith(
                 status: SplashStatus.loaded,
                 isFirstTime: false,
