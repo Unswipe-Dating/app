@@ -10,14 +10,29 @@ import '../../../../core/utils/usecases/usecase.dart';
 
 @Injectable()
 class VerifyOtpUseCase {
+
+
   final LoginRepository _repository;
 
-
-
-  TResultStream<VerifyOtpUseCaseResponse> call(OtpParams params) =>
-      _repository.verifyOtp(params);
-
   VerifyOtpUseCase(this._repository);
+
+
+  Future<Stream<VerifyOtpUseCaseResponse>> buildUseCaseStream(OtpParams? params) async {
+    final controller = StreamController<VerifyOtpUseCaseResponse>();
+    try{
+      if(params != null) {
+        final result = await _repository.verifyOtp(params);
+        controller.add(VerifyOtpUseCaseResponse(result));
+        controller.close();
+      } else {
+        controller.addError(Exception());
+      }
+    } catch (e) {
+      controller.addError(e);
+    }
+
+    return controller.stream;
+  }
 
 }
 

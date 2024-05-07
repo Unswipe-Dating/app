@@ -50,9 +50,9 @@ class _BlockContactState extends State<BlockContactScreen> {
         length: 2,
         child: Scaffold(
           appBar: AppBar(
-            title: Text('Block Contacts',
+            title: const Text('Block Contacts',
                 textAlign: TextAlign.center,
-                style: const TextStyle(
+                style: TextStyle(
                     color: Colors.black,
                     fontFamily: 'Playfair',
                     fontWeight: FontWeight.w700,
@@ -84,8 +84,8 @@ class _BlockContactState extends State<BlockContactScreen> {
                 labelColor: Colors.white,
                 unselectedLabelColor: Colors.black,
                 isScrollable: true,
-                padding: EdgeInsets.all(16),
-                labelPadding: EdgeInsets.symmetric(horizontal: 32, vertical: 4),
+                padding: const EdgeInsets.all(16),
+                labelPadding: const EdgeInsets.symmetric(horizontal: 32, vertical: 4),
                 indicatorSize: TabBarIndicatorSize.tab,
                 indicator: BoxDecoration(
                   color: Colors.black,
@@ -150,7 +150,7 @@ class _BlockContactState extends State<BlockContactScreen> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.all(32),
+                padding: const EdgeInsets.all(32),
                 child: ElevatedButton(
                   onPressed: () {
                     CustomNavigationHelper.router.push(

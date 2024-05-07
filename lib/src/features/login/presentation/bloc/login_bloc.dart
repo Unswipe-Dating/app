@@ -15,8 +15,6 @@ import 'package:unswipe/src/features/onBoarding/domain/usecases/update_onboardin
 import '../../../../../data/api_response.dart' as api_response;
 import '../../../../../data/api_response.dart';
 import '../../../onBoarding/domain/entities/onbaording_state/onboarding_state.dart';
-import '../../../onBoarding/domain/usecases/get_onboarding_state_stream_use_case.dart';
-import '../../../onBoarding/presentation/bloc/onboarding_bloc.dart';
 import '../../domain/usecases/update_login_state_stream_usecase.dart';
 
 part 'login_event.dart';
@@ -32,8 +30,8 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
 
   // final
   // List of splash
-   StreamSubscription? subscription;
-   StreamSubscription? subscriptionOnBoarding;
+  StreamSubscription? subscription;
+  StreamSubscription? subscriptionOnBoarding;
 
   LoginBloc(
       {required this.updateUserStateStreamUseCase,
@@ -48,72 +46,69 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
 
   _onOtpResendRequested(
       onOtpResendRequested event, Emitter<LoginState> emitter) async {
-    await emitter.forEach(requestOtpUseCase.call(event.params), onData: (event) {
-      return event.fold(ifLeft: (l) {
-        if (l is CancelTokenFailure) {
-          return state.copyWith(status: LoginStatus.error);
-        } else {
-          return state.copyWith(status: LoginStatus.error);
-        }
-      }, ifRight: (response) {
-        final responseData = response.val;
-          if (responseData is api_response.Failure) {
-            return state.copyWith(status: LoginStatus.error);
-          } else if (responseData is api_response.OperationFailure) {
-            return state.copyWith(status: LoginStatus.error);
-          }
-          else if (responseData is api_response.Success) {
-            otpId = (responseData as api_response.Success).data;
-            return state.copyWith(status: LoginStatus.loadedResend, token: state.token);
-          } else {
-            return state.copyWith(status: LoginStatus.error);
-          }
-      });
-  });
+    emitter(state.copyWith(
+        status: LoginStatus.loadingResend,
+        token: LoginStatus.loadingResend.index));
+
+    Stream<GetOtpUseCaseResponse> stream =
+        await requestOtpUseCase.buildUseCaseStream(event.params);
+
+    await emitter.forEach(stream, onData: (response) {
+      final responseData = response.val;
+      if (responseData is api_response.Failure) {
+        return state.copyWith(status: LoginStatus.error);
+      } else if (responseData is api_response.OperationFailure) {
+        return state.copyWith(status: LoginStatus.error);
+      } else if (responseData is api_response.Success) {
+        otpId = (((responseData as api_response.Success).data) as OtpResponse)
+            .requestOTP
+            .orderId;
+        return state.copyWith(
+            status: LoginStatus.loadedResend, token: state.token);
+      } else {
+        return state.copyWith(status: LoginStatus.error);
+      }
+    });
   }
 
   _onOtpRequested(onOtpRequested event, Emitter<LoginState> emitter) async {
+    emitter(state.copyWith(
+        status: LoginStatus.loadingOTP, token: LoginStatus.loadingOTP.index));
 
-    await emitter.forEach(requestOtpUseCase.call(event.params), onData: (event) {
-      return event.fold(ifLeft: (l) {
-        if (l is CancelTokenFailure) {
-          return state.copyWith(status: LoginStatus.error);
-        } else {
-          return state.copyWith(status: LoginStatus.error);
-        }
-      }, ifRight: (response) {
-        final responseData = response.val;
-        if (responseData is api_response.Failure) {
-          return state.copyWith(status: LoginStatus.error);
-        } else if (responseData is api_response.OperationFailure) {
-          return state.copyWith(status: LoginStatus.error);
-        }
-        else if (responseData is api_response.Success) {
-          otpId = (((responseData as api_response.Success).data) as OtpResponse)
-              .requestOTP
-              .orderId;
-          return state.copyWith(status: LoginStatus.loadedOtp, token: state.token);
-        } else {
-          return state.copyWith(status: LoginStatus.error);
-        }
-      });
+    Stream<GetOtpUseCaseResponse> stream =
+        await requestOtpUseCase.buildUseCaseStream(event.params);
+
+    await emitter.forEach(stream, onData: (response) {
+      final responseData = response.val;
+      if (responseData is api_response.Failure) {
+        return state.copyWith(status: LoginStatus.error);
+      } else if (responseData is api_response.OperationFailure) {
+        return state.copyWith(status: LoginStatus.error);
+      } else if (responseData is api_response.Success) {
+        otpId = (((responseData as api_response.Success).data) as OtpResponse)
+            .requestOTP
+            .orderId;
+        return state.copyWith(
+            status: LoginStatus.loadedOtp, token: state.token);
+      } else {
+        return state.copyWith(status: LoginStatus.error);
+      }
     });
   }
 
-  Future<LoginStatus>_onLoginSuccess(onLoginSuccess event) async {
+  Future<LoginStatus> _onLoginSuccess(onLoginSuccess event) async {
     LoginStatus status = LoginStatus.verified;
     subscription =
         updateUserStateStreamUseCase.call(event.token).listen((event) {
-      event.fold(ifLeft: (l) {
-        if (l is CancelTokenFailure) {
-        } else {
-        }
-      }, ifRight: (r) {
-      });
+      event.fold(
+          ifLeft: (l) {
+            if (l is CancelTokenFailure) {
+            } else {}
+          },
+          ifRight: (r) {});
     });
 
     return status;
-
   }
 
   @override
@@ -132,35 +127,30 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
 
     emitter(state.copyWith(status: status, token: status.index));
 
-    verifyOtpUseCase.call(OtpParams(
-        phone: event.params.phone,
-        id: event.params.id,
-        otp: event.params.otp,
-        otpOrderId: otpId)).listen((event) {
-        return event.fold(ifLeft: (l) {
-          if (l is CancelTokenFailure) {
-            status = LoginStatus.error;
-          } else {
-            status = LoginStatus.error;
-          }
-        }, ifRight: (response) {
-          final responseData = response.val;
-          if (responseData is api_response.Failure) {
-            status = LoginStatus.error;
-          } else if (responseData is api_response.OperationFailure) {
-            status = LoginStatus.error;
-          }
-          else if (responseData is api_response.Success) {
-      status = LoginStatus.verified;
-      token = (((responseData as api_response.Success).data)
-      as VerifyOtpResponse)
-          .validateOTP
-          .accessToken;
-          } else {
-            status = LoginStatus.error;
-          }
-        });
-      });
+    Stream<VerifyOtpUseCaseResponse> stream =
+        await verifyOtpUseCase.buildUseCaseStream(OtpParams(
+            phone: event.params.phone,
+            id: event.params.id,
+            otp: event.params.otp,
+            otpOrderId: otpId));
+
+    stream.listen((response) {
+      final responseData = response.val;
+      if (responseData is api_response.Failure) {
+        status = LoginStatus.error;
+      } else if (responseData is api_response.OperationFailure) {
+        status = LoginStatus.error;
+      } else if (responseData is api_response.Success) {
+        status = LoginStatus.verified;
+        token =
+            (((responseData as api_response.Success).data) as VerifyOtpResponse)
+                .validateOTP
+                .accessToken;
+      } else {
+        status = LoginStatus.error;
+      }
+    });
+    await Future.delayed(const Duration(seconds: 2), () {});
     if (status == LoginStatus.verified) {
       await _onLoginSuccess(onLoginSuccess(token));
       status = await _onUpdatingOnBoardingEvent();
@@ -169,19 +159,18 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
   }
 
   Future<LoginStatus> _onUpdatingOnBoardingEvent() async {
-
     LoginStatus status = LoginStatus.verified;
     subscriptionOnBoarding = updateOnboardingStateStreamUseCase
         .call(OnBoardingStatus.profile)
         .listen((event) {
       event.fold(ifLeft: (l) {
         if (l is CancelTokenFailure) {
-          status =  LoginStatus.error;
+          status = LoginStatus.error;
         } else {
-          status =  LoginStatus.error;
+          status = LoginStatus.error;
         }
       }, ifRight: (r) {
-        status =  LoginStatus.loaded;
+        status = LoginStatus.loaded;
       });
     });
 

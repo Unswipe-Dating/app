@@ -13,12 +13,25 @@ import '../../../../core/utils/usecases/usecase.dart';
 class RequestOtpUseCase {
   final LoginRepository _repository;
 
-
-
-  TResultStream<GetOtpUseCaseResponse> call(OtpParams params) =>
-      _repository.requestOtp(params);
-
   RequestOtpUseCase(this._repository);
+
+
+  Future<Stream<GetOtpUseCaseResponse>> buildUseCaseStream(OtpParams? params) async {
+    final controller = StreamController<GetOtpUseCaseResponse>();
+    try{
+      if(params != null) {
+        final result = await _repository.requestOtp(params);
+        controller.add(GetOtpUseCaseResponse(result));
+        controller.close();
+      } else {
+        controller.addError(Exception());
+      }
+    } catch (e) {
+      controller.addError(e);
+    }
+
+    return controller.stream;
+  }
 
 }
 
