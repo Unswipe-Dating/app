@@ -19,11 +19,11 @@ class ImageUploadBloc extends Bloc<OnBoardingEvent, OnBoardState> {
     required this.updateOnboardingStateStreamUseCase
   })
       : super(OnBoardState()) {
-    on<onUpdateOnBoardingUserEvent>(_onUpdatingOnBoardingEvent);
+    on<OnUpdateOnBoardingUserEvent>(_onUpdatingOnBoardingEvent);
 
   }
 
-  _onUpdatingOnBoardingEvent(onUpdateOnBoardingUserEvent event,
+  _onUpdatingOnBoardingEvent(OnUpdateOnBoardingUserEvent event,
       Emitter<OnBoardState> emitter) async{
 
     emitter(state.copyWith(status: OnBoardStatus.loading));

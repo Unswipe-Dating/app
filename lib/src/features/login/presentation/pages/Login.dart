@@ -178,14 +178,14 @@ class _MyFormState extends State<MyForm> {
         {
           buttonState = CustomButtonState.signup;
           startTimer();
-          context.read<LoginBloc>().add(onOtpRequested(OtpParams(
+          context.read<LoginBloc>().add(OnOtpRequested(OtpParams(
               phone: "${codeController.text}${contactController.text}",
               id: "${codeController.text}${contactController.text}")));
         }
       case CustomButtonState.signup:
         {
             context.read<LoginBloc>().add(
-                onOtpVerificationRequest(
+                OnOtpVerificationRequest(
                     OtpParams(phone: "${codeController.text}${contactController.text}",
                         id: "${codeController.text}${contactController.text}",
                         otp: otpController.text)));
@@ -312,7 +312,7 @@ class _MyFormState extends State<MyForm> {
                       isResendEnabled = false;
                       startTimer();
                     });
-                    context.read<LoginBloc>().add(onOtpResendRequested(OtpParams(
+                    context.read<LoginBloc>().add(OnOtpResendRequested(OtpParams(
                         phone: contactController.text, id: contactController.text)));
                   },
                   isLoading: context.watch<LoginBloc>().state.status == LoginStatus.loadingResend,

@@ -4,26 +4,27 @@ abstract class LogInEvent {
   const LogInEvent();
 }
 
-class onLoginSuccess extends LogInEvent {
+class OnLoginSuccess extends LogInEvent {
   final String token;
+  final String id;
 
-  onLoginSuccess(this.token);
+  OnLoginSuccess(this.token, this.id);
 }
 
-class onOtpRequested extends LogInEvent {
+class OnOtpRequested extends LogInEvent {
   final OtpParams params;
 
-  onOtpRequested(this.params);
+  OnOtpRequested(this.params);
 }
 
-class onOtpResendRequested extends LogInEvent {
+class OnOtpResendRequested extends LogInEvent {
   final OtpParams params;
 
-  onOtpResendRequested(this.params);
+  OnOtpResendRequested(this.params);
 }
 
-class onOtpVerificationRequest extends LogInEvent {
+class OnOtpVerificationRequest extends LogInEvent {
   final OtpParams params;
 
-  onOtpVerificationRequest(this.params);
+  OnOtpVerificationRequest(this.params);
 }

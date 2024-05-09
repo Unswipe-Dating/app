@@ -4,6 +4,6 @@ abstract class OnBoardingEvent {
   const OnBoardingEvent();
 }
 
-class onUpdateOnBoardingUserEvent extends OnBoardingEvent {
-  onUpdateOnBoardingUserEvent();
+class OnUpdateOnBoardingUserEvent extends OnBoardingEvent {
+  OnUpdateOnBoardingUserEvent();
 }

@@ -23,11 +23,11 @@ class OnBoardingBloc extends Bloc<OnBoardingEvent, OnBoardState> {
     required this.updateOnboardingStateStreamUseCase
   })
       : super(OnBoardState()) {
-    on<onUpdateOnBoardingUserEvent>(_onUpdatingOnBoardingEvent);
+    on<OnUpdateOnBoardingUserEvent>(_onUpdatingOnBoardingEvent);
 
   }
 
-  _onUpdatingOnBoardingEvent(onUpdateOnBoardingUserEvent event,
+  _onUpdatingOnBoardingEvent(OnUpdateOnBoardingUserEvent event,
       Emitter<OnBoardState> emitter) async{
 
     _subscription = updateOnboardingStateStreamUseCase.call(OnBoardingStatus.init).listen((event) {

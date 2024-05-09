@@ -11,7 +11,6 @@ import '../../../onBoarding/presentation/bloc/onboarding_bloc.dart';
 import '../../multi_image_picker_files/multi_image_picker_controller.dart';
 import '../../multi_image_picker_files/multi_image_picker_view.dart';
 import '../../multi_image_picker_files/picker.dart';
-import '../contact_block/bloc/contact_bloc.dart';
 
 class ProfileImagePickerScreen extends StatefulWidget {
   const ProfileImagePickerScreen({super.key});
@@ -191,7 +190,7 @@ class _ProfileImagePickerScreenState extends State<ProfileImagePickerScreen> {
                     child: ElevatedButton(
                       onPressed: isButtonEnabled
                           ? () {
-                        context.read<ImageUploadBloc>().add(onUpdateOnBoardingUserEvent());
+                        context.read<ImageUploadBloc>().add(OnUpdateOnBoardingUserEvent());
 
                             }
                           : null,

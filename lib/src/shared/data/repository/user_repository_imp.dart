@@ -3,8 +3,6 @@ import 'dart:io';
 import 'package:dart_either/dart_either.dart';
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
-import 'package:unswipe/src/features/userOnboarding/presentation/contact_block/bloc/contact_bloc.dart';
-
 import '../../../../data/exception/local_data_source_exception.dart';
 import '../../../../data/exception/remote_data_source_exception.dart';
 import '../../../core/app_error.dart';
@@ -36,10 +34,10 @@ class UserRepositoryImpl implements UserRepository {
       ).toEitherStream(_Mappers.errorToAppError);
 
   @override
-  VoidResultStream updateAuthenticationState(String token) =>
+  VoidResultStream updateAuthenticationState(String token, String id) =>
       _localDataSource.saveUserAndToken(
           _Mappers.userResponseToUserAndTokenEntity(
-            token,
+            token, id
           )
       ).toEitherStream(_Mappers.errorToAppError);
 

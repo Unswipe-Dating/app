@@ -24,6 +24,8 @@ class _$UserAndTokenEntitySerializer
       'token',
       serializers.serialize(object.token,
           specifiedType: const FullType(String)),
+      'id',
+      serializers.serialize(object.id, specifiedType: const FullType(String)),
     ];
 
     return result;
@@ -45,6 +47,10 @@ class _$UserAndTokenEntitySerializer
           result.token = serializers.deserialize(value,
               specifiedType: const FullType(String))! as String;
           break;
+        case 'id':
+          result.id = serializers.deserialize(value,
+              specifiedType: const FullType(String))! as String;
+          break;
       }
     }
 
@@ -55,14 +61,17 @@ class _$UserAndTokenEntitySerializer
 class _$UserAndTokenEntity extends UserAndTokenEntity {
   @override
   final String token;
+  @override
+  final String id;
 
   factory _$UserAndTokenEntity(
           [void Function(UserAndTokenEntityBuilder)? updates]) =>
       (new UserAndTokenEntityBuilder()..update(updates))._build();
 
-  _$UserAndTokenEntity._({required this.token}) : super._() {
+  _$UserAndTokenEntity._({required this.token, required this.id}) : super._() {
     BuiltValueNullFieldError.checkNotNull(
         token, r'UserAndTokenEntity', 'token');
+    BuiltValueNullFieldError.checkNotNull(id, r'UserAndTokenEntity', 'id');
   }
 
   @override
@@ -77,13 +86,16 @@ class _$UserAndTokenEntity extends UserAndTokenEntity {
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is UserAndTokenEntity && token == other.token;
+    return other is UserAndTokenEntity &&
+        token == other.token &&
+        id == other.id;
   }
 
   @override
   int get hashCode {
     var _$hash = 0;
     _$hash = $jc(_$hash, token.hashCode);
+    _$hash = $jc(_$hash, id.hashCode);
     _$hash = $jf(_$hash);
     return _$hash;
   }
@@ -91,7 +103,8 @@ class _$UserAndTokenEntity extends UserAndTokenEntity {
   @override
   String toString() {
     return (newBuiltValueToStringHelper(r'UserAndTokenEntity')
-          ..add('token', token))
+          ..add('token', token)
+          ..add('id', id))
         .toString();
   }
 }
@@ -104,12 +117,17 @@ class UserAndTokenEntityBuilder
   String? get token => _$this._token;
   set token(String? token) => _$this._token = token;
 
+  String? _id;
+  String? get id => _$this._id;
+  set id(String? id) => _$this._id = id;
+
   UserAndTokenEntityBuilder();
 
   UserAndTokenEntityBuilder get _$this {
     final $v = _$v;
     if ($v != null) {
       _token = $v.token;
+      _id = $v.id;
       _$v = null;
     }
     return this;
@@ -133,7 +151,9 @@ class UserAndTokenEntityBuilder
     final _$result = _$v ??
         new _$UserAndTokenEntity._(
             token: BuiltValueNullFieldError.checkNotNull(
-                token, r'UserAndTokenEntity', 'token'));
+                token, r'UserAndTokenEntity', 'token'),
+            id: BuiltValueNullFieldError.checkNotNull(
+                id, r'UserAndTokenEntity', 'id'));
     replace(_$result);
     return _$result;
   }

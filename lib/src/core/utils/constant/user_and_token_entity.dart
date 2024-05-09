@@ -6,8 +6,8 @@ part 'user_and_token_entity.g.dart';
 
 abstract class UserAndTokenEntity
     implements Built<UserAndTokenEntity, UserAndTokenEntityBuilder> {
-  @BuiltValueField(wireName: 'token')
   String get token;
+  String get id;
 
   static Serializer<UserAndTokenEntity> get serializer =>
       _$userAndTokenEntitySerializer;

@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,9 +8,13 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:tuple/tuple.dart';
 import 'package:unswipe/src/features/onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart';
 import 'package:unswipe/src/features/onBoarding/presentation/bloc/onboarding_bloc.dart';
-import 'package:unswipe/src/features/userOnboarding/presentation/contact_block/bloc/contact_bloc.dart';
+import 'package:unswipe/src/features/userOnboarding/contact_block/domain/repository/contact_block_repository.dart';
+import 'package:unswipe/src/features/userOnboarding/contact_block/domain/usecase/contact_bloc_usecase.dart';
+import 'package:unswipe/src/features/userOnboarding/contact_block/presentation/bloc/contact_block_state.dart';
+import 'package:unswipe/src/shared/domain/usecases/get_auth_state_stream_use_case.dart';
 
 import '../../../../../core/router/app_router.dart';
+import '../bloc/contact_bloc.dart';
 
 class BlockContactScreen extends StatefulWidget {
   @override
@@ -17,7 +23,7 @@ class BlockContactScreen extends StatefulWidget {
 
 class _BlockContactState extends State<BlockContactScreen> {
   // This list stores the selected state of each item (initially all false)
-  Map<int, bool> _selectedContact = Map();
+  Map<int, bool> _selectedContact = HashMap();
 
   List<Contact> contact = [];
   List<Tuple2<String, String>> stringContacts = [];
@@ -83,10 +89,13 @@ class _BlockContactState extends State<BlockContactScreen> {
           body: BlocProvider(
             create: (BuildContext context) => ContactBloc(
                 updateOnboardingStateStreamUseCase:
-                    GetIt.I.get<UpdateOnboardingStateStreamUseCase>()),
-            child: BlocConsumer<ContactBloc, OnBoardState>(
+                    GetIt.I.get<UpdateOnboardingStateStreamUseCase>(),
+                updateBlockedContactsUseCase: GetIt.I.get<ContactBlockUseCase>(),
+              getAuthStateStreamUseCase: GetIt.I.get<GetAuthStateStreamUseCase>()
+            ),
+            child: BlocConsumer<ContactBloc, ContactBlockState>(
               listener: (context, state) {
-                if (state.status == OnBoardStatus.loaded) {
+                if (state.status == ContactBlockStatus.loaded) {
                   CustomNavigationHelper.router.push(
                     CustomNavigationHelper.uploadImagePath,
                   );
@@ -173,7 +182,9 @@ class _BlockContactState extends State<BlockContactScreen> {
                                       title: Text('Item ${index + 1}'),
                                       selected: true,
                                       // Set selected based on state
-                                      onTap: () => {}, // Handle tap
+                                      onTap: () => {
+
+                                      }, // Handle tap
                                     );
                                   },
                                 ),
@@ -184,7 +195,10 @@ class _BlockContactState extends State<BlockContactScreen> {
                             padding: const EdgeInsets.all(32),
                             child: ElevatedButton(
                               onPressed: () {
-                                context.read<ContactBloc>().add(onUpdateOnBoardingUserEvent());
+                                context.read<ContactBloc>()
+                                    .add(OnContactBlockRequested(
+                                    BlockContactDataParams(phones: getContactList())
+                                ));
                               },
                               style: ElevatedButton.styleFrom(
                                   foregroundColor: Colors.white,
@@ -219,4 +233,17 @@ class _BlockContactState extends State<BlockContactScreen> {
       ),
     );
   }
+
+ List<String> getContactList() {
+
+    List<String> newList = [];
+    _selectedContact.forEach((key, value) {
+      if(value) {
+        contact[key].phones?.forEach((element) {
+          if( element.value != null) newList.add(element.value!); });
+      }
+    });
+    return newList;
+
+ }
 }

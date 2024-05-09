@@ -4,11 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:unswipe/src/features/onBoarding/presentation/bloc/onboarding_bloc.dart';
+import 'package:unswipe/src/features/userOnboarding/contact_block/presentation/bloc/contact_block_state.dart';
 
 import '../../../../../widgets/login/rounded_text_field.dart';
 import '../../../../core/router/app_router.dart';
+import '../../../../shared/domain/usecases/get_auth_state_stream_use_case.dart';
 import '../../../onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart';
-import '../contact_block/bloc/contact_bloc.dart';
+import '../../contact_block/domain/usecase/contact_bloc_usecase.dart';
+import '../../contact_block/presentation/bloc/contact_bloc.dart';
 
 class InterestsUpdateScreen extends StatefulWidget {
   const InterestsUpdateScreen({super.key});
@@ -116,8 +119,11 @@ class _InterestsUpdateScreenState extends State<InterestsUpdateScreen> {
         body: BlocProvider(
           create: (BuildContext context) => ContactBloc(
               updateOnboardingStateStreamUseCase:
-                  GetIt.I.get<UpdateOnboardingStateStreamUseCase>()),
-          child: BlocConsumer<ContactBloc, OnBoardState>(
+              GetIt.I.get<UpdateOnboardingStateStreamUseCase>(),
+              updateBlockedContactsUseCase: GetIt.I.get<ContactBlockUseCase>(),
+              getAuthStateStreamUseCase: GetIt.I.get<GetAuthStateStreamUseCase>()
+          ),
+          child: BlocConsumer<ContactBloc, ContactBlockState>(
             listener: (context, state) {
               if (state.status == OnBoardStatus.loaded) {
                 CustomNavigationHelper.router.go(
@@ -430,7 +436,7 @@ class _InterestsUpdateScreenState extends State<InterestsUpdateScreen> {
                       child: ElevatedButton(
                         onPressed: isButtonEnabled
                             ? () {
-                          context.read<ContactBloc>().add(onUpdateOnBoardingUserEvent());
+                        //  context.read<ContactBloc>().add(OnUpdateOnBoardingUserEvent());
 
                         }
                             : null,

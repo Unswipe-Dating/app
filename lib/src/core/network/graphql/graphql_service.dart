@@ -41,7 +41,8 @@ class GraphQLService {
   }
 
   Future<QueryResult> performMutation(
-    String query, {
+    String query,
+      {
     required Map<String, dynamic> variables,
   }) async {
     final options = MutationOptions(document: gql(query), variables: variables);
@@ -52,4 +53,26 @@ class GraphQLService {
 
     return result;
   }
+
+  Future<QueryResult> performMutationWithHeader(
+      String token,
+      String query,
+      {
+        required Map<String, dynamic> variables,
+      }) async {
+    final options = MutationOptions(document: gql(query), variables: variables);
+     var link =  HttpLink('https://unswipe-backend-production.up.railway.app/graphql',
+        defaultHeaders: {
+          'Content-Type': 'application/json',
+          'Accept-Charset': 'utf-8',
+          'Authorization': 'Bearer $token',
+        });
+    final result = await GraphQLClient(link: link, cache: GraphQLCache()).mutate(options);
+
+    log(result.toString());
+
+    return result;
+  }
+
+
 }

@@ -146,7 +146,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                   // Button area
                   InkWell(
                     onTap: () {
-                      context.read<OnBoardingBloc>().add(onUpdateOnBoardingUserEvent());
+                      context.read<OnBoardingBloc>().add(OnUpdateOnBoardingUserEvent());
 
 
                     },

@@ -39,13 +39,13 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
       required this.verifyOtpUseCase,
       required this.updateOnboardingStateStreamUseCase})
       : super(const LoginState()) {
-    on<onOtpRequested>(_onOtpRequested);
-    on<onOtpResendRequested>(_onOtpResendRequested);
-    on<onOtpVerificationRequest>(_onOtpVerified);
+    on<OnOtpRequested>(_onOtpRequested);
+    on<OnOtpResendRequested>(_onOtpResendRequested);
+    on<OnOtpVerificationRequest>(_onOtpVerified);
   }
 
   _onOtpResendRequested(
-      onOtpResendRequested event, Emitter<LoginState> emitter) async {
+      OnOtpResendRequested event, Emitter<LoginState> emitter) async {
     emitter(state.copyWith(
         status: LoginStatus.loadingResend,
         token: LoginStatus.loadingResend.index));
@@ -71,7 +71,7 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
     });
   }
 
-  _onOtpRequested(onOtpRequested event, Emitter<LoginState> emitter) async {
+  _onOtpRequested(OnOtpRequested event, Emitter<LoginState> emitter) async {
     emitter(state.copyWith(
         status: LoginStatus.loadingOTP, token: LoginStatus.loadingOTP.index));
 
@@ -96,10 +96,10 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
     });
   }
 
-  Future<LoginStatus> _onLoginSuccess(onLoginSuccess event) async {
+  Future<LoginStatus> _onLoginSuccess(OnLoginSuccess event) async {
     LoginStatus status = LoginStatus.verified;
     subscription =
-        updateUserStateStreamUseCase.call(event.token).listen((event) {
+        updateUserStateStreamUseCase.call(event.token, event.id).listen((event) {
       event.fold(
           ifLeft: (l) {
             if (l is CancelTokenFailure) {
@@ -121,7 +121,7 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
 // This function is called whenever the text field changes
 
   _onOtpVerified(
-      onOtpVerificationRequest event, Emitter<LoginState> emitter) async {
+      OnOtpVerificationRequest event, Emitter<LoginState> emitter) async {
     LoginStatus status = LoginStatus.loadingVerification;
     String token = "";
 
@@ -152,7 +152,7 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
     });
     await Future.delayed(const Duration(seconds: 2), () {});
     if (status == LoginStatus.verified) {
-      await _onLoginSuccess(onLoginSuccess(token));
+      await _onLoginSuccess(OnLoginSuccess(token, event.params.id));
       status = await _onUpdatingOnBoardingEvent();
     }
     emitter(state.copyWith(status: status, token: status.index));
