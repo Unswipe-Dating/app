@@ -60,10 +60,10 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
                       up: false, down: false, left: false, right: false),
                   threshold: 100,
                   controller: controller,
-                  cardsCount: state.responseProfileSwipe?.browseProfiles.length ?? 0,
+                  cardsCount: cards.length,
                   onSwipe: _onSwipe,
                   onUndo: _onUndo,
-                  numberOfCardsDisplayed: 2,
+                  numberOfCardsDisplayed: cards.length > 1 ? 2: 1,
                   padding: const EdgeInsets.all(0.0),
                   cardBuilder: (
                     context,
