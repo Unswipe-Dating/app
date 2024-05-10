@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:unswipe/src/features/userOnboarding/contact_block/data/model/response_contact_block.dart';
 import 'package:unswipe/src/features/userOnboarding/contact_block/domain/repository/contact_block_repository.dart';
 import 'package:unswipe/src/shared/domain/entities/auth_state.dart';
@@ -11,7 +12,7 @@ import '../../../../onBoarding/domain/entities/onbaording_state/onboarding_state
 import '../../../../onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart';
 import '../../../../onBoarding/presentation/bloc/onboarding_bloc.dart';
 import '../../domain/usecase/contact_bloc_usecase.dart';
-import 'contact_block_state.dart';
+part 'contact_block_state.dart';
 part 'contact_block_event.dart';
 
 class ContactBloc extends Bloc<ContactBlockEvent, ContactBlockState> {

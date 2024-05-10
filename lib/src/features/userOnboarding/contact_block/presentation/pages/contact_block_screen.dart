@@ -10,7 +10,6 @@ import 'package:unswipe/src/features/onBoarding/domain/usecases/update_onboardin
 import 'package:unswipe/src/features/onBoarding/presentation/bloc/onboarding_bloc.dart';
 import 'package:unswipe/src/features/userOnboarding/contact_block/domain/repository/contact_block_repository.dart';
 import 'package:unswipe/src/features/userOnboarding/contact_block/domain/usecase/contact_bloc_usecase.dart';
-import 'package:unswipe/src/features/userOnboarding/contact_block/presentation/bloc/contact_block_state.dart';
 import 'package:unswipe/src/shared/domain/usecases/get_auth_state_stream_use_case.dart';
 
 import '../../../../../core/router/app_router.dart';
@@ -102,7 +101,7 @@ class _BlockContactState extends State<BlockContactScreen> {
                 }
               },
               builder: (context, state) {
-                return contact.isEmpty || state.status == OnBoardStatus.loading
+                return contact.isEmpty || state.status == ContactBlockStatus.loading
                     ? const Center(child: CircularProgressIndicator())
                     : Column(
                         children: [

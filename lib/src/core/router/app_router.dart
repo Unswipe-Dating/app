@@ -17,7 +17,7 @@ import 'package:unswipe/src/features/userOnboarding/presentation/profile_update/
 import 'package:unswipe/src/features/userOnboarding/presentation/image_upload/multi_image_picker_screen.dart';
 import 'package:unswipe/src/features/userOnboarding/presentation/profile_update/partner_gender_picker_screen.dart';
 import 'package:unswipe/src/features/userOnboarding/presentation/profile_update/pronoun_picker_screen.dart';
-import 'package:unswipe/widgets/homePage/dart_swiper.dart';
+import 'package:unswipe/src/features/userProfile/presentation/pages/profile_view_page.dart';
 
 import '../../features/chat/chat_request_screen.dart';
 import '../../features/userOnboarding/contact_block/presentation/pages/contact_block_init_screen.dart';

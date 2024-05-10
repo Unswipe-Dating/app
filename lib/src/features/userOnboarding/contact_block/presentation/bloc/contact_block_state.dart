@@ -1,4 +1,5 @@
-import 'package:equatable/equatable.dart';
+part of 'contact_bloc.dart';
+
 
 enum ContactBlockStatus { initial, fetchedToken, loading, loaded, error }
 

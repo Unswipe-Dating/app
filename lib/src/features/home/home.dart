@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../widgets/homePage/dart_swiper.dart';
+import '../userProfile/presentation/pages/profile_view_page.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.child});
