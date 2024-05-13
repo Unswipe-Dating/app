@@ -2,7 +2,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:unswipe/src/features/userProfile/data/model/response_profile_interests.dart';
 
-import '../../../userOnboarding/domain/entities/interests_request.dart';
 
 part 'response_profile_list.g.dart';
 

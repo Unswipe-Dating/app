@@ -6,7 +6,6 @@ import 'package:unswipe/src/features/login/domain/repository/login_repository.da
 import 'package:unswipe/src/features/login/presentation/bloc/login_bloc.dart';
 import 'package:unswipe/src/features/userOnboarding/contact_block/data/model/response_contact_block.dart';
 import 'package:unswipe/src/features/userOnboarding/contact_block/domain/repository/contact_block_repository.dart';
-import 'package:unswipe/src/features/userOnboarding/domain/usecases/block_contact_usecase.dart';
 
 import '../../../../../../data/api_response.dart';
 import '../../data/model/response_profile_list.dart';
