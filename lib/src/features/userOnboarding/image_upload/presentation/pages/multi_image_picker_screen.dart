@@ -3,10 +3,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:unswipe/src/features/userOnboarding/image_upload/domain/usecase/image_upload_usecase.dart';
+import 'package:unswipe/src/shared/domain/usecases/get_auth_state_stream_use_case.dart';
 
 import '../../../../../core/router/app_router.dart';
 import '../../../../onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart';
-import '../../../../onBoarding/presentation/bloc/onboarding_bloc.dart';
 import '../bloc/image_upload_bloc.dart';
 import '../widgets/multi_image_picker_files/multi_image_picker_controller.dart';
 import '../widgets/multi_image_picker_files/multi_image_picker_view.dart';
@@ -55,16 +56,19 @@ class _ProfileImagePickerScreenState extends State<ProfileImagePickerScreen> {
         body: BlocProvider(
           create: (BuildContext context) => ImageUploadBloc(
               updateOnboardingStateStreamUseCase:
-                  GetIt.I.get<UpdateOnboardingStateStreamUseCase>()),
-          child: BlocConsumer<ImageUploadBloc, OnBoardState>(
+                  GetIt.I.get<UpdateOnboardingStateStreamUseCase>(),
+              getAuthStateStreamUseCase: GetIt.I.get<GetAuthStateStreamUseCase>(),
+              imageUploadUseCase: GetIt.I.get<ImageUploadUseCase>()
+          ),
+          child: BlocConsumer<ImageUploadBloc, ImageUploadState>(
               listener: (context, state) {
-            if (state.status == OnBoardStatus.loaded) {
+            if (state.status == ImageUploadStatus.loaded) {
               CustomNavigationHelper.router.push(
                 CustomNavigationHelper.onboardingNamePath,
               );
             }
           }, builder: (context, state) {
-            return state.status == OnBoardStatus.loading
+            return state.status == ImageUploadStatus.loading
                 ? const Center(child: CircularProgressIndicator())
                 : Padding(
               padding: EdgeInsets.symmetric(horizontal: 24),
@@ -190,7 +194,7 @@ class _ProfileImagePickerScreenState extends State<ProfileImagePickerScreen> {
                     child: ElevatedButton(
                       onPressed: isButtonEnabled
                           ? () {
-                        context.read<ImageUploadBloc>().add(OnUpdateOnBoardingUserEvent());
+                        context.read<ImageUploadBloc>().add(OnImageUploadRequested(controller.images.toList()));
 
                             }
                           : null,

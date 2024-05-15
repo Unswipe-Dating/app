@@ -1,4 +1,6 @@
 import 'dart:developer';
+import "package:http/http.dart";
+
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:injectable/injectable.dart';
 import 'package:unswipe/src/features/login/data/models/request_otp/otp_response.dart';
@@ -15,19 +17,21 @@ class ImageUploadService {
 
   final GraphQLService service;
 
-  Future<ApiResponse<ResponseContactBlock>> blockContacts(String token,
-      ImageUploadParams params,
-      ) async {
+  Future<ApiResponse<ResponseContactBlock>> blockContacts(
+    String token,
+    List<MultipartFile> files,
+  ) async {
     final query = '''
-     mutation BlockUsers(\$id: String!, \$data: BlockUserInput!) {
-  blockUsers(id: \$id, data: \$data)
-}
+   mutation UploadProfilePhotos(\$files:[Upload!]!) {
+     uploadProfilePhotos(data: {
+      files: \$files 
+      })
+     }
     ''';
 
-
-    final response = await service.performMutationWithHeader(token, query, variables: {
-      "id": params.id,
-      "data": {"phones" : params.data.phones},
+    final response =
+        await service.performMutationWithHeader(token, query, variables: {
+      "files": files,
     });
     log('$response');
 
@@ -46,5 +50,4 @@ class ImageUploadService {
       return OperationFailure(error: response.exception);
     }
   }
-
 }

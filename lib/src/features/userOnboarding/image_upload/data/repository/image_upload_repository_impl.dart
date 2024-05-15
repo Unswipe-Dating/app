@@ -1,5 +1,6 @@
 
 
+import 'package:http/http.dart';
 import 'package:injectable/injectable.dart';
 import 'package:unswipe/data/api_response.dart';
 import 'package:unswipe/src/features/login/data/models/request_otp/otp_response.dart';
@@ -23,7 +24,7 @@ class ImageUploadRepositoryImpl implements ImageUploadRepository {
       this.services,
       );
   @override
-  Future<ApiResponse<ResponseImageUpload>> blockContacts(String token, ImageUploadParams params) async {
+  Future<ApiResponse<ResponseImageUpload>> uploadImages(String token, List<MultipartFile> params) async {
     final response = await services.blockContacts(token, params);
     if (response is Success) {
       try {

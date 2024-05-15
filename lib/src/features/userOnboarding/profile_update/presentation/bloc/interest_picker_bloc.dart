@@ -4,11 +4,13 @@ import 'dart:ffi';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:http/http.dart';
 
 import '../../../../../../../data/api_response.dart';
 import '../../../../onBoarding/domain/entities/onbaording_state/onboarding_state.dart';
 import '../../../../onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart';
 import '../../../../onBoarding/presentation/bloc/onboarding_bloc.dart';
+import '../../../image_upload/presentation/widgets/multi_image_picker_files/image_file.dart';
 
 
 class InterestPickerBloc extends Bloc<OnBoardingEvent, OnBoardState> {
@@ -50,6 +52,8 @@ class InterestPickerBloc extends Bloc<OnBoardingEvent, OnBoardState> {
     });
 
   }
+
+
 
 
 // This function is called whenever the text field changes

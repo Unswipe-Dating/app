@@ -26,8 +26,7 @@ class UpdateUserService {
 
 
     final response = await service.performMutationWithHeader(token, query, variables: {
-      "id": params.id,
-      "data": {"phones" : params.data.phones},
+
     });
     log('$response');
 
@@ -48,3 +47,4 @@ class UpdateUserService {
   }
 
 }
+

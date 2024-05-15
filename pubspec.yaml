@@ -78,9 +78,11 @@ dependencies:
   # Being able to compare objects in Dart
   equatable: ^2.0.5
 
-  # Fetch Data From Api
-  dio: ^5.4.0
+  mime: ^1.0.5
 
+  # Fetch Data From Api
+  http: any
+  http_parser: ^4.0.2
   # Logging Interceptor
   logging: ^1.2.0
 

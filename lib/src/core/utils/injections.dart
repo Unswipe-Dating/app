@@ -5,7 +5,6 @@ import 'package:unswipe/src/core/utils/injections.config.dart';
 
 import '../../features/splash/splash_injections.dart';
 import '../../shared/app_injections.dart';
-import '../network/dio_network.dart';
 import 'log/app_logger.dart';
 
 

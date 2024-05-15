@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:unswipe/some_main.dart';
 import 'package:unswipe/src/features/chat/no_request_individual_screen.dart';
 import 'package:unswipe/src/features/chat/no_request_screen.dart';
 import 'package:unswipe/src/features/community/community_tab_page_check.dart';
@@ -11,18 +10,18 @@ import 'package:unswipe/src/features/hyperExclusiveMatch/hyper_exclusive_page.da
 import 'package:unswipe/src/features/login/presentation/pages/Login.dart';
 import 'package:unswipe/src/features/onBoarding/presentation/pages/OnBoarding.dart';
 import 'package:unswipe/src/features/splash/presentation/pages/splash_page.dart';
-import 'package:unswipe/src/features/userOnboarding/presentation/profile_update/dob_update_screen.dart';
-import 'package:unswipe/src/features/userOnboarding/presentation/profile_update/gender_picker_screen.dart';
-import 'package:unswipe/src/features/userOnboarding/presentation/profile_update/interest_picker_screen.dart';
-import 'package:unswipe/src/features/userOnboarding/presentation/image_upload/multi_image_picker_screen.dart';
-import 'package:unswipe/src/features/userOnboarding/presentation/profile_update/partner_gender_picker_screen.dart';
-import 'package:unswipe/src/features/userOnboarding/presentation/profile_update/pronoun_picker_screen.dart';
 import 'package:unswipe/src/features/userProfile/presentation/pages/profile_view_page.dart';
 
 import '../../features/chat/chat_request_screen.dart';
 import '../../features/userOnboarding/contact_block/presentation/pages/contact_block_init_screen.dart';
 import '../../features/userOnboarding/contact_block/presentation/pages/contact_block_screen.dart';
-import '../../features/userOnboarding/presentation/profile_update/name_update_screen.dart';
+import '../../features/userOnboarding/image_upload/presentation/pages/multi_image_picker_screen.dart';
+import '../../features/userOnboarding/profile_update/presentation/pages/dob_update_screen.dart';
+import '../../features/userOnboarding/profile_update/presentation/pages/gender_picker_screen.dart';
+import '../../features/userOnboarding/profile_update/presentation/pages/interest_picker_screen.dart';
+import '../../features/userOnboarding/profile_update/presentation/pages/name_update_screen.dart';
+import '../../features/userOnboarding/profile_update/presentation/pages/partner_gender_picker_screen.dart';
+import '../../features/userOnboarding/profile_update/presentation/pages/pronoun_picker_screen.dart';
 
 class CustomNavigationHelper {
   static final CustomNavigationHelper _instance =

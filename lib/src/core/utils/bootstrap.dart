@@ -10,7 +10,6 @@ import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../network/dio_network.dart';
 import '../router/app_router.dart';
 import 'app_bloc_observer.dart';
 import 'injections.dart';
