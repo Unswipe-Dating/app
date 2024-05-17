@@ -6,23 +6,22 @@ import 'package:unswipe/src/features/userOnboarding/profile_update/domain/reposi
 
 import '../../../../../../data/api_response.dart';
 import '../../../../../core/utils/usecases/usecase.dart';
-import '../../data/models/create_profile_response.dart';
 
 
 
 @Injectable()
-class CreateProfileUseCase {
+class UpdateProfileUseCase {
   final UpdateProfileRepository repository;
 
-  CreateProfileUseCase(this.repository);
+  UpdateProfileUseCase(this.repository);
 
-  Future<Stream<GetCreateUserResponse>> buildUseCaseStream(String token,
+  Future<Stream<GetUpdateUserResponse>> buildUseCaseStream(String token,
       UpdateProfileParams? params) async {
-    final controller = StreamController<GetCreateUserResponse>();
+    final controller = StreamController<GetUpdateUserResponse>();
     try{
       if(params != null) {
-        final result = await repository.createUser(token, params);
-        controller.add(GetCreateUserResponse(result));
+        final result = await repository.updateUser(token, params);
+        controller.add(GetUpdateUserResponse(result));
         controller.close();
       } else {
         controller.addError(Exception());
@@ -38,8 +37,9 @@ class CreateProfileUseCase {
 
 }
 
-class GetCreateUserResponse {
-  final ApiResponse<CreateProfileResponse> val;
+class GetUpdateUserResponse {
+  final ApiResponse<UpdateProfileResponse> val;
 
-  GetCreateUserResponse(this.val);
+  GetUpdateUserResponse(this.val);
 }
+

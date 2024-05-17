@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:unswipe/src/features/userOnboarding/profile_update/data/models/update_profile_param_and_response.dart';
+import 'package:unswipe/src/features/userOnboarding/profile_update/data/models/update_profile_response.dart';
 import 'package:unswipe/src/features/userOnboarding/profile_update/domain/repository/update_profile_repository.dart';
 
 import '../../../../../../widgets/login/rounded_text_field.dart';
@@ -223,7 +223,7 @@ class _DOBUpdateScreenState extends State<DOBUpdateScreen> {
 
   String? getDOB(String yearText, String monthText, String dateText) {
 
-    return "{$yearText-$monthText-$dateText}";
+    return "$yearText-$monthText-$dateText";
   }
 
 

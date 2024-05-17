@@ -8,6 +8,7 @@ abstract class UserAndTokenEntity
     implements Built<UserAndTokenEntity, UserAndTokenEntityBuilder> {
   String get token;
   String get id;
+  bool? get flag;
 
   static Serializer<UserAndTokenEntity> get serializer =>
       _$userAndTokenEntitySerializer;

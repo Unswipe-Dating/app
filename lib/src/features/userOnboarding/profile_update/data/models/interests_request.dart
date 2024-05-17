@@ -1,4 +1,4 @@
-part of 'update_profile_param_and_response.dart';
+part of 'update_profile_response.dart';
 
 @JsonSerializable()
 class Interests {

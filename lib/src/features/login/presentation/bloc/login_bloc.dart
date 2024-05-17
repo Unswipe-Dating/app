@@ -106,7 +106,7 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
     LoginStatus status = LoginStatus.verified;
     subscription =
         updateUserStateStreamUseCase.call(event.token,
-            event.id).listen((
+            event.id, event.flag).listen((
             event) {
           event.fold(
               ifLeft: (l) {
@@ -162,7 +162,7 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
     });
     await Future.delayed(const Duration(seconds: 2), () {});
     if (status == LoginStatus.verified) {
-      await _onLoginSuccess(OnLoginSuccess(token, event.params.id));
+      await _onLoginSuccess(OnLoginSuccess(token, event.params.id, profile != null));
       intermediateState = await _onUpdatingOnBoardingEvent(profile);
       status = intermediateState.status;
     }

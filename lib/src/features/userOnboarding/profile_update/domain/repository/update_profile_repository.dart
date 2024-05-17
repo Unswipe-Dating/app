@@ -1,11 +1,14 @@
 import 'dart:async';
 
-import 'package:unswipe/src/features/userOnboarding/profile_update/data/models/update_profile_param_and_response.dart';
+import 'package:unswipe/src/features/userOnboarding/profile_update/data/models/update_profile_response.dart';
 
 import '../../../../../../data/api_response.dart';
+import '../../data/models/create_profile_response.dart';
 
 abstract class UpdateProfileRepository {
-  Future<ApiResponse<UpdateProfileParamAndResponse>> upsertUser(String token, UpdateProfileParams request);
+  Future<ApiResponse<UpdateProfileResponse>> updateUser(String token, UpdateProfileParams request);
+  Future<ApiResponse<CreateProfileResponse>> createUser(String token, UpdateProfileParams request);
+
 }
 
 

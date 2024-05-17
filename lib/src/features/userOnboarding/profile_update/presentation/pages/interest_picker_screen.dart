@@ -3,8 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:unswipe/src/features/userOnboarding/profile_update/data/models/update_profile_param_and_response.dart';
+import 'package:unswipe/src/features/userOnboarding/profile_update/data/models/update_profile_response.dart';
 import 'package:unswipe/src/features/userOnboarding/profile_update/domain/usecases/create_user_use_case.dart';
+import 'package:unswipe/src/features/userOnboarding/profile_update/domain/usecases/update_user_use_case.dart';
 import 'package:unswipe/src/shared/domain/usecases/get_auth_state_stream_use_case.dart';
 
 import '../../../../../core/router/app_router.dart';
@@ -122,6 +123,9 @@ class _InterestsUpdateScreenState extends State<InterestsUpdateScreen> {
               GetIt.I.get<UpdateOnboardingStateStreamUseCase>(),
             getAuthStateStreamUseCase: GetIt.I.get<GetAuthStateStreamUseCase>(),
             updateProfileUseCase: GetIt.I.get<UpdateProfileUseCase>(),
+            createProfileUseCase: GetIt.I.get<CreateProfileUseCase>(),
+
+
           ),
           child: BlocConsumer<UpdateProfileBloc, UpdateProfileState>(
             listener: (context, state) {

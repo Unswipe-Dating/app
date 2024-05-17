@@ -10,7 +10,7 @@ import 'package:unswipe/src/features/hyperExclusiveMatch/hyper_exclusive_page.da
 import 'package:unswipe/src/features/login/presentation/pages/Login.dart';
 import 'package:unswipe/src/features/onBoarding/presentation/pages/OnBoarding.dart';
 import 'package:unswipe/src/features/splash/presentation/pages/splash_page.dart';
-import 'package:unswipe/src/features/userOnboarding/profile_update/data/models/update_profile_param_and_response.dart';
+import 'package:unswipe/src/features/userOnboarding/profile_update/data/models/update_profile_response.dart';
 import 'package:unswipe/src/features/userOnboarding/profile_update/domain/repository/update_profile_repository.dart';
 import 'package:unswipe/src/features/userProfile/presentation/pages/profile_view_page.dart';
 

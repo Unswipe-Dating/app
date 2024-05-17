@@ -34,10 +34,10 @@ class UserRepositoryImpl implements UserRepository {
       ).toEitherStream(_Mappers.errorToAppError);
 
   @override
-  VoidResultStream updateAuthenticationState(String token, String id) =>
+  VoidResultStream updateAuthenticationState(String token, String id, bool flag) =>
       _localDataSource.saveUserAndToken(
           _Mappers.userResponseToUserAndTokenEntity(
-            token, id
+            token, id, flag
           )
       ).toEitherStream(_Mappers.errorToAppError);
 

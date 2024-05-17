@@ -11,6 +11,6 @@ class UpdateUserStateStreamUseCase {
 
   const UpdateUserStateStreamUseCase(this._userRepository);
 
-  VoidResultStream call(String token, String id) =>
-      _userRepository.updateAuthenticationState(token, id);
+  VoidResultStream call(String token, String id, bool flag) =>
+      _userRepository.updateAuthenticationState(token, id, flag);
 }

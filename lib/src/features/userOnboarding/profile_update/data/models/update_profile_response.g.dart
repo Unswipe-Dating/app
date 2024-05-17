@@ -1,21 +1,21 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'update_profile_param_and_response.dart';
+part of 'update_profile_response.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-UpdateProfileParamAndResponse _$UpdateProfileParamAndResponseFromJson(
+UpdateProfileResponse _$UpdateProfileResponseFromJson(
         Map<String, dynamic> json) =>
-    UpdateProfileParamAndResponse(
-      UpsertProfile.fromJson(json['upsertProfile'] as Map<String, dynamic>),
+    UpdateProfileResponse(
+      UpsertProfile.fromJson(json['updateProfile'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$UpdateProfileParamAndResponseToJson(
-        UpdateProfileParamAndResponse instance) =>
+Map<String, dynamic> _$UpdateProfileResponseToJson(
+        UpdateProfileResponse instance) =>
     <String, dynamic>{
-      'upsertProfile': instance.upsertProfile,
+      'updateProfile': instance.updateProfile,
     };
 
 UpsertProfile _$UpsertProfileFromJson(Map<String, dynamic> json) =>
@@ -32,6 +32,12 @@ UpsertProfile _$UpsertProfileFromJson(Map<String, dynamic> json) =>
       json['name'] as String?,
       json['pronouns'] as String?,
       json['showTruncatedName'] as bool?,
+      json['homeTown'] as String?,
+      json['height'] as String?,
+      (json['locationCoordinates'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+      json['zodiac'] as String?,
     );
 
 Map<String, dynamic> _$UpsertProfileToJson(UpsertProfile instance) =>
@@ -46,6 +52,10 @@ Map<String, dynamic> _$UpsertProfileToJson(UpsertProfile instance) =>
       'name': instance.name,
       'pronouns': instance.pronouns,
       'showTruncatedName': instance.showTruncatedName,
+      'homeTown': instance.homeTown,
+      'height': instance.height,
+      'locationCoordinates': instance.locationCoordinates,
+      'zodiac': instance.zodiac,
     };
 
 Interests _$InterestsFromJson(Map<String, dynamic> json) => Interests(

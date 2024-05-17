@@ -23,10 +23,16 @@ class OnUpdateOnBoardingUserEvent extends UpdateProfileEvent {
   OnUpdateOnBoardingUserEvent();
 }
 
-class OnRequestApiCall extends UpdateProfileEvent {
+class OnRequestApiCallUpdate extends UpdateProfileEvent {
   final UpdateProfileParams params;
   final String id;
   final String token;
-  OnRequestApiCall(this.params, this.token, this.id);
+  OnRequestApiCallUpdate(this.params, this.token, this.id);
 }
 
+class OnRequestApiCallCreate extends UpdateProfileEvent {
+  final UpdateProfileParams params;
+  final String id;
+  final String token;
+  OnRequestApiCallCreate(this.params, this.token, this.id);
+}

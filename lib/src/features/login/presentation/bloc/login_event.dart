@@ -7,8 +7,9 @@ abstract class LogInEvent {
 class OnLoginSuccess extends LogInEvent {
   final String token;
   final String id;
+  final bool flag;
 
-  OnLoginSuccess(this.token, this.id);
+  OnLoginSuccess(this.token, this.id, this.flag);
 }
 
 class OnOtpRequested extends LogInEvent {
