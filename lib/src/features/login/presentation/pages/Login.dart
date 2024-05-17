@@ -6,9 +6,11 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:unswipe/src/features/login/domain/repository/login_repository.dart';
 import 'package:unswipe/src/features/login/domain/usecases/request_otp_use_case.dart';
+import 'package:unswipe/src/features/login/domain/usecases/signup_login_usecase.dart';
 import 'package:unswipe/src/features/login/domain/usecases/update_login_state_stream_usecase.dart';
 import 'package:unswipe/src/features/login/domain/usecases/verify_otp_use_case.dart';
 import 'package:unswipe/src/features/login/presentation/bloc/login_bloc.dart';
+import 'package:unswipe/src/features/onBoarding/domain/entities/onbaording_state/onboarding_state.dart';
 import 'package:unswipe/src/features/onBoarding/domain/usecases/get_onboarding_state_stream_use_case.dart';
 import 'package:unswipe/src/features/onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart';
 import 'package:unswipe/widgets/login/icon_text.dart';
@@ -58,12 +60,19 @@ class _LoginScreenState extends State<LoginScreen> {
               requestOtpUseCase: GetIt.I.get<RequestOtpUseCase>(),
           verifyOtpUseCase: GetIt.I.get<VerifyOtpUseCase>(),
             updateOnboardingStateStreamUseCase: GetIt.I.get<UpdateOnboardingStateStreamUseCase>(),
+            signUpUseCase: GetIt.I.get<SignUpUseCase>()
           ),
 
           child: BlocConsumer<LoginBloc, LoginState>(
             listener: (context, state) {
               if (state.status == LoginStatus.loaded) {
+                if(state.onBoardingStatus == OnBoardingStatus.profile) {
+                  CustomNavigationHelper.router.go(
+                    CustomNavigationHelper.profilePath,
+                  );
+                } else {
                   _selectScreen();
+                }
 
               }
             },

@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:unswipe/src/features/userOnboarding/profile_update/data/models/update_profile_param_and_response.dart';
+import 'package:unswipe/src/features/userOnboarding/profile_update/domain/repository/update_profile_repository.dart';
 
 import '../../../../../../widgets/login/rounded_text_field.dart';
 import '../../../../../core/router/app_router.dart';
@@ -9,7 +11,8 @@ import '../../../../../core/router/app_router.dart';
 
 
 class DOBUpdateScreen extends StatefulWidget {
-  const DOBUpdateScreen({super.key});
+  final UpdateProfileParams? params;
+  const DOBUpdateScreen({super.key, this.params});
 
   @override
   _DOBUpdateScreenState createState() => _DOBUpdateScreenState();
@@ -177,9 +180,15 @@ class _DOBUpdateScreenState extends State<DOBUpdateScreen> {
                   padding: EdgeInsets.all(16),
                   child: ElevatedButton(
                     onPressed: isButtonEnabled ? () {
+                      widget.params?.dob = getDOB(yearController.text,
+                          monthController.text,
+                          dateController.text
+                      );
 
                       CustomNavigationHelper.router.push(
-                        CustomNavigationHelper.onboardingGenderPath,);
+                        CustomNavigationHelper.onboardingGenderPath,
+                          extra: UpdateProfileParams().getUpdatedParams(widget.params)
+                      );
 
 
                     } : null,
@@ -210,6 +219,11 @@ class _DOBUpdateScreenState extends State<DOBUpdateScreen> {
             ,)
       ),
     );
+  }
+
+  String? getDOB(String yearText, String monthText, String dateText) {
+
+    return "{$yearText-$monthText-$dateText}";
   }
 
 

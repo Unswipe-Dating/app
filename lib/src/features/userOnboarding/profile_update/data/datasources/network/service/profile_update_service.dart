@@ -7,7 +7,7 @@ import 'package:unswipe/src/features/userOnboarding/profile_update/data/models/u
 
 import '../../../../../../../../data/api_response.dart';
 import '../../../../../../../core/network/graphql/graphql_service.dart';
-
+import '../../../../domain/repository/update_profile_repository.dart';
 
 @injectable
 class UpdateUserService {
@@ -15,19 +15,50 @@ class UpdateUserService {
 
   final GraphQLService service;
 
-  Future<ApiResponse<UpdateProfileParamAndResponse>> upsertUser(String token,
-      UpdateProfileParamAndResponse params,
-      ) async {
-    final query = '''
-     mutation BlockUsers(\$id: String!, \$data: BlockUserInput!) {
-  blockUsers(id: \$id, data: \$data)
+  Future<ApiResponse<UpdateProfileParamAndResponse>> upsertUser(
+    String token,
+      UpdateProfileParams params,
+  ) async {
+    const query = '''
+    mutation UpsertProfile(
+  \$userId: String!
+  \$completed: Boolean,
+  \$datingPreference: DatingPreference,
+  \$dob: String,
+  \$gender: DatingPreference,
+  \$id: String,
+  \$interests: String,
+  \$name: String,
+  \$pronouns: String,
+  \$showTruncatedName: Boolean){
+  upsertProfile(data: {
+    id: \$id,
+    completed: \$completed,
+    datingPreference: \$datingPreference,
+    dob: \$dob,
+    gender: \$gender,
+    interests: \$interests,
+    name: \$name,
+    pronouns: \$pronouns,
+    showTruncatedName: \$showTruncatedName,
+    userId: \$userId
+  }) {
+    userId
+    completed
+    datingPreference
+    dob
+    gender
+    id
+    interests
+    name
+    pronouns
+    showTruncatedName
+  }
 }
-    ''';
+''';
 
-
-    final response = await service.performMutationWithHeader(token, query, variables: {
-
-    });
+    final response =
+        await service.performMutationWithHeader(token, query, variables: {});
     log('$response');
 
     if (!response.hasException) {
@@ -45,6 +76,4 @@ class UpdateUserService {
       return OperationFailure(error: response.exception);
     }
   }
-
 }
-

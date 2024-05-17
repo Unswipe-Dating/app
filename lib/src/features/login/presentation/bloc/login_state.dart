@@ -13,29 +13,31 @@ enum LoginStatus { initial,
 
 class LoginState extends Equatable {
   final LoginStatus status;
-  final int token;
+  final OnBoardingStatus onBoardingStatus;
 
   const LoginState({
     this.status = LoginStatus.initial,
-    this.token = 0,
+    this.onBoardingStatus = OnBoardingStatus.contact,
 
   });
 
 
   LoginState copyWith({
     LoginStatus? status,
-    int? token
+    int? token,
+    OnBoardingStatus? onBoardingStatus,
   }) {
     return LoginState(
       status: status ?? this.status,
-      token: token==null ? this.token: token>this.token ? token: this.token,
+      onBoardingStatus: onBoardingStatus ?? this.onBoardingStatus,
+
     );
   }
 
   @override
   List<Object?> get props => [
     status,
-    token,
+    onBoardingStatus,
   ];
 }
 

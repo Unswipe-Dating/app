@@ -7,6 +7,7 @@ import 'package:unswipe/src/features/login/data/models/request_otp/otp_response.
 import 'package:unswipe/src/features/login/data/models/verify_otp/verify_otp_response.dart';
 import 'package:unswipe/src/features/login/domain/repository/login_repository.dart';
 import 'package:unswipe/src/features/userOnboarding/contact_block/data/model/response_contact_block.dart';
+import 'package:unswipe/src/features/userOnboarding/image_upload/data/model/response_image_upload.dart';
 import '../../../../../../../data/api_response.dart';
 import '../../../../../../core/network/graphql/graphql_service.dart';
 import '../../../domain/repository/image_upload_repository.dart';
@@ -17,7 +18,7 @@ class ImageUploadService {
 
   final GraphQLService service;
 
-  Future<ApiResponse<ResponseContactBlock>> blockContacts(
+  Future<ApiResponse<ResponseImageUpload>> blockContacts(
     String token,
     List<MultipartFile> files,
   ) async {
@@ -30,15 +31,15 @@ class ImageUploadService {
     ''';
 
     final response =
-        await service.performMutationWithHeader(token, query, variables: {
+        await service.performMutationWithHeaderForUpload(token, query, variables: {
       "files": files,
     });
     log('$response');
 
     if (!response.hasException) {
-      ResponseContactBlock? info;
+      ResponseImageUpload? info;
       try {
-        info = ResponseContactBlock.fromJson(
+        info = ResponseImageUpload.fromJson(
           response.data as Map<String, dynamic>,
         );
       } on Exception catch (e) {

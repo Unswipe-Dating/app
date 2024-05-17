@@ -3,13 +3,18 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:unswipe/src/features/onBoarding/presentation/bloc/onboarding_bloc.dart';
+import 'package:unswipe/src/features/userOnboarding/profile_update/data/models/update_profile_param_and_response.dart';
+import 'package:unswipe/src/features/userOnboarding/profile_update/domain/usecases/create_user_use_case.dart';
+import 'package:unswipe/src/shared/domain/usecases/get_auth_state_stream_use_case.dart';
 
 import '../../../../../core/router/app_router.dart';
 import '../../../../onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart';
-import '../bloc/interest_picker_bloc.dart';
+import '../../domain/repository/update_profile_repository.dart';
+import '../bloc/profile_update_bloc.dart';
 class InterestsUpdateScreen extends StatefulWidget {
-  const InterestsUpdateScreen({super.key});
+  final UpdateProfileParams? params;
+
+  const InterestsUpdateScreen({super.key, this.params});
 
   @override
   _InterestsUpdateScreenState createState() => _InterestsUpdateScreenState();
@@ -112,13 +117,15 @@ class _InterestsUpdateScreenState extends State<InterestsUpdateScreen> {
           title: const Text(""),
         ),
         body: BlocProvider(
-          create: (BuildContext context) => InterestPickerBloc(
+          create: (BuildContext context) => UpdateProfileBloc(
               updateOnboardingStateStreamUseCase:
               GetIt.I.get<UpdateOnboardingStateStreamUseCase>(),
+            getAuthStateStreamUseCase: GetIt.I.get<GetAuthStateStreamUseCase>(),
+            updateProfileUseCase: GetIt.I.get<UpdateProfileUseCase>(),
           ),
-          child: BlocConsumer<InterestPickerBloc, OnBoardState>(
+          child: BlocConsumer<UpdateProfileBloc, UpdateProfileState>(
             listener: (context, state) {
-              if (state.status == OnBoardStatus.loaded) {
+              if (state.status == UpdateProfileStatus.loaded) {
                 CustomNavigationHelper.router.go(
                   CustomNavigationHelper.profilePath,
                 );
@@ -429,7 +436,13 @@ class _InterestsUpdateScreenState extends State<InterestsUpdateScreen> {
                       child: ElevatedButton(
                         onPressed: isButtonEnabled
                             ? () {
-                          context.read<InterestPickerBloc>().add(OnUpdateOnBoardingUserEvent());
+                          widget.params?.interests = Interests(weekendListString,
+                              petsListString,
+                              selfCareListString,
+                              foodNDrinkListString,
+                              sportsListString);
+                          context.read<UpdateProfileBloc>().add(
+                              OnUpdateProfileRequested(widget.params ?? UpdateProfileParams()));
 
                         }
                             : null,

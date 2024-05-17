@@ -28,3 +28,9 @@ class OnOtpVerificationRequest extends LogInEvent {
 
   OnOtpVerificationRequest(this.params);
 }
+
+class OnSignupRequest extends LogInEvent {
+  final OtpParams params;
+
+  OnSignupRequest(this.params);
+}

@@ -3,10 +3,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import '../../../../../core/router/app_router.dart';
+import '../../domain/repository/update_profile_repository.dart';
 
 
 class PronounUpdateScreen extends StatefulWidget {
-  const PronounUpdateScreen({super.key});
+  final UpdateProfileParams? params;
+  const PronounUpdateScreen({super.key, this.params});
 
   @override
   _PronounUpdateScreenState createState() => _PronounUpdateScreenState();
@@ -195,8 +197,12 @@ class _PronounUpdateScreenState extends State<PronounUpdateScreen> {
                   padding: EdgeInsets.all(16),
                   child: ElevatedButton(
                     onPressed: isButtonEnabled ? () {
+                      widget.params?.pronouns = _character?.name;
                       CustomNavigationHelper.router.push(
-                        CustomNavigationHelper.onboardingPartnerGenderPath,);
+                        CustomNavigationHelper.onboardingPartnerGenderPath,
+                          extra: UpdateProfileParams().getUpdatedParams(widget.params)
+
+                      );
 
                     } : null,
                     style: ElevatedButton.styleFrom(

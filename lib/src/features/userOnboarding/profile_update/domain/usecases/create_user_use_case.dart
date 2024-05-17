@@ -16,7 +16,7 @@ class UpdateProfileUseCase {
   UpdateProfileUseCase(this.repository);
 
   Future<Stream<GetUpsertUserResponse>> buildUseCaseStream(String token,
-      UpdateProfileParamAndResponse? params) async {
+      UpdateProfileParams? params) async {
     final controller = StreamController<GetUpsertUserResponse>();
     try{
       if(params != null) {

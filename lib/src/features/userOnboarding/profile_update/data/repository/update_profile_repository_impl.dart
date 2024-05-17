@@ -21,7 +21,7 @@ class UpdateProfileRepositoryImpl implements UpdateProfileRepository {
       );
 
   @override
-  Future<ApiResponse<UpdateProfileParamAndResponse>> upsertUser(String token, UpdateProfileParamAndResponse params) async {
+  Future<ApiResponse<UpdateProfileParamAndResponse>> upsertUser(String token, UpdateProfileParams params) async {
     final response = await services.upsertUser(token, params);
     if (response is Success) {
       try {

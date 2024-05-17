@@ -1,22 +1,24 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:unswipe/src/features/userOnboarding/profile_update/domain/repository/update_profile_repository.dart';
 
 import '../../../../../core/router/app_router.dart';
 
 
 class GenderUpdateScreen extends StatefulWidget {
-  const GenderUpdateScreen({super.key});
+  final UpdateProfileParams? params;
+  const GenderUpdateScreen({super.key, this.params});
 
   @override
   _GenderUpdateScreenState createState() => _GenderUpdateScreenState();
 }
 
-enum SingingCharacter { Man, Woman, Nonbinary }
+enum SingingCharacter { Men, Women, Nonbinary }
 
 class _GenderUpdateScreenState extends State<GenderUpdateScreen> {
   bool isButtonEnabled = true;
-  SingingCharacter? _character = SingingCharacter.Man;
+  SingingCharacter? _character = SingingCharacter.Men;
 
   @override
   void dispose() {
@@ -61,8 +63,8 @@ class _GenderUpdateScreenState extends State<GenderUpdateScreen> {
                     ),
                   ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
                   child: Text(
                     textAlign: TextAlign.start,
                     'Which gender do you associate yourself with ?',
@@ -73,8 +75,8 @@ class _GenderUpdateScreenState extends State<GenderUpdateScreen> {
                         fontSize: 24.0),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
                   child: Text(
                     "This will be shown on your profile. You can change this later.",
                     style: TextStyle(
@@ -97,7 +99,7 @@ class _GenderUpdateScreenState extends State<GenderUpdateScreen> {
                               fontSize: 18.0),
                         ),
                         leading: Radio<SingingCharacter>(
-                          value: SingingCharacter.Man,
+                          value: SingingCharacter.Men,
                           groupValue: _character,
                           fillColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
                             if (states.contains(MaterialState.disabled)) {
@@ -122,7 +124,7 @@ class _GenderUpdateScreenState extends State<GenderUpdateScreen> {
                               fontSize: 18.0),
                         ),
                         leading: Radio<SingingCharacter>(
-                          value: SingingCharacter.Woman,
+                          value: SingingCharacter.Women,
                           groupValue: _character,
                           fillColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
                             if (states.contains(MaterialState.disabled)) {
@@ -169,8 +171,11 @@ class _GenderUpdateScreenState extends State<GenderUpdateScreen> {
                   padding: EdgeInsets.all(16),
                   child: ElevatedButton(
                     onPressed: isButtonEnabled ? () {
+                      widget.params?.gender = _character?.name;
                       CustomNavigationHelper.router.push(
-                        CustomNavigationHelper.onboardingPronounPath,);
+                        CustomNavigationHelper.onboardingPronounPath,
+                          extra: UpdateProfileParams().getUpdatedParams(widget.params)
+                      );
                     } : null,
                     style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,

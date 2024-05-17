@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:injectable/injectable.dart';
 import 'package:unswipe/src/features/login/data/models/request_otp/otp_response.dart';
+import 'package:unswipe/src/features/login/data/models/signupOrLogin/signup_response.dart';
 import 'package:unswipe/src/features/login/data/models/verify_otp/verify_otp_response.dart';
 import 'package:unswipe/src/features/login/domain/repository/login_repository.dart';
 import '../../../../../../../data/api_response.dart';
@@ -92,4 +93,51 @@ class OtpService {
       return OperationFailure(error: response.exception);
     }
   }
+
+
+Future<ApiResponse<SignUpResponse>> signupOrLogin(
+    OtpParams params,
+    ) async {
+  const query = '''
+   mutation Signup(\$id: String!,\$phone: String!) {
+  signup(data: {
+    id: \$id,
+    phone: \$phone
+  }) {
+    accessToken
+    refreshToken
+    user {
+        id
+        profile {
+            id
+        }
+    }
+  }
+}
+    ''';
+
+
+  final response = await service.performMutation(query, variables: {
+
+    "id": params.phone,
+    "phone":params.phone,
+
+  });
+  log('$response');
+
+  if (!response.hasException) {
+    SignUpResponse? info;
+    try {
+      info = SignUpResponse.fromJson(
+        response.data as Map<String, dynamic>,
+      );
+    } on Exception catch (e) {
+      log('error', error: e);
+      return Failure(error: Exception(e));
+    }
+    return Success(data: info);
+  } else {
+    return OperationFailure(error: response.exception);
+  }
+}
 }

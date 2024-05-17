@@ -3,10 +3,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import '../../../../../core/router/app_router.dart';
+import '../../domain/repository/update_profile_repository.dart';
 
 
 class PartnerGenderUpdateScreen extends StatefulWidget {
-  const PartnerGenderUpdateScreen({super.key});
+  final UpdateProfileParams? params;
+  const PartnerGenderUpdateScreen({super.key, this.params});
 
   @override
   _PartnerGenderUpdateScreenState createState() => _PartnerGenderUpdateScreenState();
@@ -195,9 +197,11 @@ class _PartnerGenderUpdateScreenState extends State<PartnerGenderUpdateScreen> {
                   padding: EdgeInsets.all(16),
                   child: ElevatedButton(
                     onPressed: isButtonEnabled ? () {
-
+                      widget.params?.gender = _character?.name;
                       CustomNavigationHelper.router.push(
-                        CustomNavigationHelper.onboardingInterestPath,);
+                        CustomNavigationHelper.onboardingInterestPath,
+                          extra: UpdateProfileParams().getUpdatedParams(widget.params)
+                      );
                     } : null,
                     style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
