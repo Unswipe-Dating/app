@@ -8,7 +8,6 @@ import 'package:unswipe/src/features/userOnboarding/contact_block/data/model/res
 import '../../../../../../../data/api_response.dart';
 import '../../../../../core/network/graphql/graphql_service.dart';
 import '../../../domain/repository/profile_swipe_repository.dart';
-import '../../model/response_profile_list.dart';
 import '../../model/response_profile_swipe.dart';
 
 @injectable
@@ -20,21 +19,28 @@ class ProfileSwipeService {
   Future<ApiResponse<ResponseProfileSwipe>> getProfiles(String token,
       ProfileSwipeParams params,
       ) async {
-    final query = '''query BrowseProfiles(\$data: UserIdPaginatedArgs!) {
+    final query = '''
+    query BrowseProfiles(\$data: UserIdPaginatedArgs!) {
     browseProfiles(data: \$data){
-        id
-        userId
-        name
-        interests
-        photoURLs
+        profiles {
+            id
+            userId
+            name
+            interests
+            photoURLs
+            location
+        }
+        hasNext
+        nextCursor
     }
-}''';
+}
+''';
 
 
 
 
     final response = await service.performMutationWithHeader(token, query, variables: {
-      "data": {"userId" :params.userId, "page_size": 3},
+      "data": {"userId" :params.userId, "page_size": 10},
     });
     log('$response');
 

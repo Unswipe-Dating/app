@@ -115,7 +115,7 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
 
   void updateProfiles(ResponseProfileSwipe responseProfileSwipe) {
 
-    cards = responseProfileSwipe.browseProfiles.map((profile) => SwipeCard(
+    cards = responseProfileSwipe.browseProfiles.profiles.map((profile) => SwipeCard(
       likeAction: swipeRightMethod,
       dislikeAction: swipeLeftMethod,
       id: profile.id,

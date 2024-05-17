@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:unswipe/src/features/userProfile/data/model/response_profile_list.dart';
 
 import '../../data/model/response_profile_swipe.dart';
 

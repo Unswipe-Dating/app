@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:unswipe/src/features/userOnboarding/contact_block/data/model/response_contact_block.dart';
 import 'package:unswipe/src/features/userOnboarding/contact_block/domain/repository/contact_block_repository.dart';
-import 'package:unswipe/src/features/userProfile/data/model/response_profile_list.dart';
 import 'package:unswipe/src/shared/domain/entities/auth_state.dart';
 
 import '../../../../../../data/api_response.dart' as api_response;

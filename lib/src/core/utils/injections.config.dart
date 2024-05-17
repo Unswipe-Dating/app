@@ -18,10 +18,10 @@ import '../../features/login/data/repository/login_repository_impl.dart'
     as _i23;
 import '../../features/login/domain/repository/login_repository.dart' as _i22;
 import '../../features/login/domain/usecases/request_otp_use_case.dart' as _i30;
-import '../../features/login/domain/usecases/signup_login_usecase.dart' as _i32;
+import '../../features/login/domain/usecases/signup_login_usecase.dart' as _i31;
 import '../../features/login/domain/usecases/update_login_state_stream_usecase.dart'
     as _i27;
-import '../../features/login/domain/usecases/verify_otp_use_case.dart' as _i31;
+import '../../features/login/domain/usecases/verify_otp_use_case.dart' as _i32;
 import '../../features/onBoarding/domain/usecases/get_onboarding_state_stream_use_case.dart'
     as _i33;
 import '../../features/onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart'
@@ -123,10 +123,10 @@ extension GetItInjectableX on _i1.GetIt {
         () => _i29.ContactBlockUseCase(gh<_i19.ContactBlockRepository>()));
     gh.factory<_i30.RequestOtpUseCase>(
         () => _i30.RequestOtpUseCase(gh<_i22.LoginRepository>()));
-    gh.factory<_i31.VerifyOtpUseCase>(
-        () => _i31.VerifyOtpUseCase(gh<_i22.LoginRepository>()));
-    gh.factory<_i32.SignUpUseCase>(
-        () => _i32.SignUpUseCase(gh<_i22.LoginRepository>()));
+    gh.factory<_i31.SignUpUseCase>(
+        () => _i31.SignUpUseCase(gh<_i22.LoginRepository>()));
+    gh.factory<_i32.VerifyOtpUseCase>(
+        () => _i32.VerifyOtpUseCase(gh<_i22.LoginRepository>()));
     gh.factory<_i33.GetOnboardingStateStreamUseCase>(
         () => _i33.GetOnboardingStateStreamUseCase(gh<_i25.UserRepository>()));
     gh.factory<_i34.UpdateOnboardingStateStreamUseCase>(() =>

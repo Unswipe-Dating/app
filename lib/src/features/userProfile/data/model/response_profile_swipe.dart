@@ -1,10 +1,11 @@
 
 import 'package:json_annotation/json_annotation.dart';
-import 'package:unswipe/src/features/userProfile/data/model/response_profile_interests.dart';
-import 'package:unswipe/src/features/userProfile/data/model/response_profile_list.dart';
-
+import '../../../userOnboarding/profile_update/data/models/update_profile_response.dart';
 
 part 'response_profile_swipe.g.dart';
+part 'response_profile_swipe_browse.dart';
+part 'response_profile_list.dart';
+part 'response_profile_swipe_interests.dart';
 
 
 @JsonSerializable()
@@ -14,7 +15,7 @@ class ResponseProfileSwipe {
   factory ResponseProfileSwipe.fromJson(Map<String, dynamic> json) =>
       _$ResponseProfileSwipeFromJson(json);
 
-  List<ResponseProfileList> browseProfiles;
+  ResponseProfileSwipeBrowse browseProfiles;
 
   Map<String, dynamic> toJson() => _$ResponseProfileSwipeToJson(this);
 }
