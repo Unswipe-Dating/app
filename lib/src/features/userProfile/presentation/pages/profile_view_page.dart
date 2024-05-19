@@ -5,12 +5,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'package:get_it/get_it.dart';
-import 'package:unswipe/src/features/userProfile/data/model/response_profile_swipe.dart';
 import 'package:unswipe/src/features/userProfile/presentation/widgets/SwipeCard.dart';
 
 import '../../../../../Profile.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../shared/domain/usecases/get_auth_state_stream_use_case.dart';
+import '../../data/model/get_profile/response_profile_swipe.dart';
 import '../../domain/usecase/profile_swap_usecase.dart';
 import '../bloc/profile_swipe_bloc.dart';
 import '../bloc/profile_swipe_state.dart';

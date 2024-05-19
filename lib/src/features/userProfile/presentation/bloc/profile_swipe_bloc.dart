@@ -7,7 +7,7 @@ import '../../../../../../data/api_response.dart' as api_response;
 
 import '../../../../../../data/api_response.dart';
 import '../../../../shared/domain/usecases/get_auth_state_stream_use_case.dart';
-import '../../data/model/response_profile_swipe.dart';
+import '../../data/model/get_profile/response_profile_swipe.dart';
 import '../../domain/repository/profile_swipe_repository.dart';
 import '../../domain/usecase/profile_swap_usecase.dart';
 import 'profile_swipe_state.dart';
@@ -75,7 +75,8 @@ class ProfileSwipeBloc extends Bloc<ProfileSwipeEvent, ProfileSwipeState> {
           },
           ifRight: (r) {
 
-            if(r.userAndToken?.token != null && r.userAndToken?.id != null)  {
+            if(r.userAndToken?.token != null
+                && r.userAndToken?.id != null)  {
               add(OnRequestApiCall(
                   r.userAndToken!.token,
                   r.userAndToken!.id)

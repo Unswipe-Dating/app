@@ -10,7 +10,7 @@ import 'package:unswipe/src/features/userOnboarding/contact_block/data/model/res
 
 import '../../domain/repository/profile_swipe_repository.dart';
 import '../datasources/network/profile_swipe_service.dart';
-import '../model/response_profile_swipe.dart';
+import '../model/get_profile/response_profile_swipe.dart';
 
 
 @Injectable(as: ProfileSwipeRepository)

@@ -138,7 +138,7 @@ class UpdateProfileBloc extends Bloc<UpdateProfileEvent, UpdateProfileState> {
           ifRight: (r) {
 
             if(r.userAndToken?.token != null && r.userAndToken?.id != null)  {
-              if(r.userAndToken?.flag == true) {
+              if(r.userAndToken?.userId != null) {
                 add(OnRequestApiCallUpdate(event.params,
                     r.userAndToken!.token,
                     r.userAndToken!.id)

@@ -1,5 +1,5 @@
 import '../../../../../../data/api_response.dart';
-import '../../data/model/response_profile_swipe.dart';
+import '../../data/model/get_profile/response_profile_swipe.dart';
 
 abstract class ProfileSwipeRepository {
   Future<ApiResponse<ResponseProfileSwipe>> getProfiles(String token,
@@ -9,10 +9,14 @@ abstract class ProfileSwipeRepository {
 }
 
 class ProfileSwipeParams {
-  late final String userId;
+  final String? id;
+  final String? userId;
+  final String? matchUserId;
 
 
   ProfileSwipeParams({
-    required this.userId,
+    this.id,
+    this.userId,
+    this.matchUserId,
   });
 }

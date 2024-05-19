@@ -8,7 +8,7 @@ import 'package:unswipe/src/features/userOnboarding/contact_block/data/model/res
 import 'package:unswipe/src/features/userOnboarding/contact_block/domain/repository/contact_block_repository.dart';
 
 import '../../../../../../data/api_response.dart';
-import '../../data/model/response_profile_swipe.dart';
+import '../../data/model/get_profile/response_profile_swipe.dart';
 import '../repository/profile_swipe_repository.dart';
 
 

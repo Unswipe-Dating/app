@@ -1,6 +1,5 @@
 
 import 'package:json_annotation/json_annotation.dart';
-import '../../../userOnboarding/profile_update/data/models/update_profile_response.dart';
 
 part 'response_profile_swipe.g.dart';
 part 'response_profile_swipe_browse.dart';

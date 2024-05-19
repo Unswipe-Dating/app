@@ -48,7 +48,7 @@ abstract class _Mappers {
     final userAndTokenBuilder = UserAndTokenEntityBuilder()
       ..token = entity.token
       ..id = entity.id
-      ..flag = entity.flag;
+      ..userId = entity.userId;
 
     return AuthenticatedState((b) => b.userAndToken = userAndTokenBuilder);
   }
@@ -77,13 +77,13 @@ abstract class _Mappers {
   /// Response -> Entity
   static UserAndTokenEntity userResponseToUserAndTokenEntity(
     String token,
-      String id, bool flag
+      String id, String? userId
   ) {
     return UserAndTokenEntity(
       (b) => b
         ..token = token
         ..id = id
-        ..flag = flag
+        ..userId = userId
     );
   }
 }

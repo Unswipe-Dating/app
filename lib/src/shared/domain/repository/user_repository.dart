@@ -10,7 +10,7 @@ abstract class UserRepository {
   Stream<Result<AuthenticationState>> get authenticationState$;
   Stream<Result<OnBoardingState>> get onboardingState$;
   VoidResultStream updateOnBoardingState(OnBoardingStatus status);
-  VoidResultStream updateAuthenticationState(String token, String id, bool flag);
+  VoidResultStream updateAuthenticationState(String token, String id, String? userId);
 
 
 }

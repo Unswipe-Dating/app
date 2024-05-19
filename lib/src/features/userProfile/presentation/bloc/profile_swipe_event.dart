@@ -22,6 +22,9 @@ class OnUpdateOnBoardingUserEvent extends ProfileSwipeEvent {
 class OnRequestApiCall extends ProfileSwipeEvent {
   final String id;
   final String token;
-  OnRequestApiCall(this.token, this.id);
+  OnRequestApiCall(
+      this.token,
+      this.id,
+      );
 }
 
