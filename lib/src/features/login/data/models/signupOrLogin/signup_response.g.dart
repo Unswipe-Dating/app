@@ -19,28 +19,13 @@ Map<String, dynamic> _$SignUpResponseToJson(SignUpResponse instance) =>
 SignUpUserResponse _$SignUpUserResponseFromJson(Map<String, dynamic> json) =>
     SignUpUserResponse(
       json['id'] as String,
-      json['profile'] == null
-          ? null
-          : SignUpUserProfileResponse.fromJson(
-              json['profile'] as Map<String, dynamic>),
+      json['profileId'] as String?,
     );
 
 Map<String, dynamic> _$SignUpUserResponseToJson(SignUpUserResponse instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'profile': instance.profile,
-    };
-
-SignUpUserProfileResponse _$SignUpUserProfileResponseFromJson(
-        Map<String, dynamic> json) =>
-    SignUpUserProfileResponse(
-      json['id'] as String?,
-    );
-
-Map<String, dynamic> _$SignUpUserProfileResponseToJson(
-        SignUpUserProfileResponse instance) =>
-    <String, dynamic>{
-      'id': instance.id,
+      'profileId': instance.profileId,
     };
 
 SignUpDataResponse _$SignUpDataResponseFromJson(Map<String, dynamic> json) =>

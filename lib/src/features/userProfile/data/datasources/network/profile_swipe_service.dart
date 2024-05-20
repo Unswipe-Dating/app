@@ -66,7 +66,7 @@ class ProfileSwipeService {
   Future<ApiResponse<ResponseProfileRequest>> swipeProfiles(String token,
       ProfileSwipeParams params,
       ) async {
-    final query = '''
+    const query = '''
     mutation CreateRequest( \$data: RequestInput!){
   createRequest(data: \$data) {
     id

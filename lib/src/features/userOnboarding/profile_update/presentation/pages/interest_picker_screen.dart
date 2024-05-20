@@ -445,7 +445,8 @@ class _InterestsUpdateScreenState extends State<InterestsUpdateScreen> {
                               selfCareListString,
                               foodNDrinkListString,
                               sportsListString);
-                          context.read<UpdateProfileBloc>().add(OnUpdateOnBoardingUserEvent());
+                          context.read<UpdateProfileBloc>().add(
+                              OnUpdateProfileRequested(widget.params ?? UpdateProfileParams()));
 
                         }
                             : null,

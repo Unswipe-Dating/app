@@ -129,7 +129,7 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
     LoginStatus status = LoginStatus.loadingVerification;
     String token = "";
     String id = "";
-    SignUpUserProfileResponse? profile;
+    String? profile;
     LoginState intermediateState = state;
 
     emitter(state.copyWith(status: status));
@@ -154,7 +154,7 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
             (((responseData as api_response.Success).data) as SignUpResponse).signup
                 .accessToken;
         profile = (((responseData as api_response.Success).data) as SignUpResponse).signup
-            .user.profile;
+            .user.profileId;
 
       } else {
         status = LoginStatus.error;
@@ -162,7 +162,7 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
     });
     await Future.delayed(const Duration(seconds: 2), () {});
     if (status == LoginStatus.verified) {
-      await _onLoginSuccess(OnLoginSuccess(token, event.params.id, profile?.id));
+      await _onLoginSuccess(OnLoginSuccess(token, event.params.id, profile));
       intermediateState = await _onUpdatingOnBoardingEvent(profile);
       status = intermediateState.status;
     }
@@ -208,7 +208,7 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
     }
   }
 
-  Future<LoginState> _onUpdatingOnBoardingEvent(SignUpUserProfileResponse? profile) async {
+  Future<LoginState> _onUpdatingOnBoardingEvent(String? profile) async {
     LoginStatus status = LoginStatus.verified;
     OnBoardingStatus onBoardingStatus = OnBoardingStatus.contact;
     if(profile != null) {

@@ -2,7 +2,6 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'signup_response.g.dart';
 part 'signup_user_response.dart';
-part 'signup_user_profile_response.dart';
 part 'signup_data_response.dart';
 
 @JsonSerializable()

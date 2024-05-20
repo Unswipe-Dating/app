@@ -108,9 +108,7 @@ Future<ApiResponse<SignUpResponse>> signupOrLogin(
     refreshToken
     user {
         id
-        profile {
-            id
-        }
+        profileId
     }
   }
 }
