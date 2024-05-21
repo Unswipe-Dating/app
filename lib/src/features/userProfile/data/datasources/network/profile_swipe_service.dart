@@ -61,6 +61,46 @@ class ProfileSwipeService {
     }
   }
 
+  Future<ApiResponse<ResponseProfileSwipe>> getRequestedProfiles(String token,
+      ProfileSwipeParams params,
+      ) async {
+    final query = '''
+    query GetRequestedProfilesForUser(\$data: UserIdPaginatedArgs!) {
+    getRequestedProfilesForUser(data: \$data){
+        id
+        userId
+        name
+        interests
+        photoURLs
+        location
+    }
+}
+''';
+
+
+
+
+    final response = await service.performMutationWithHeader(token, query, variables: {
+      "data": {"userId" :params.userId},
+    });
+    log('$response');
+
+    if (!response.hasException) {
+      ResponseProfileSwipe? info;
+      try {
+        info = ResponseProfileSwipe.fromJson(
+          response.data as Map<String, dynamic>,
+        );
+      } on Exception catch (e) {
+        log('error', error: e);
+        return Failure(error: Exception(e));
+      }
+      return Success(data: info);
+    } else {
+      return OperationFailure(error: response.exception);
+    }
+  }
+
 
 
   Future<ApiResponse<ResponseProfileRequest>> swipeProfiles(String token,

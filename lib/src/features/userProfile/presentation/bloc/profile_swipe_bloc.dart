@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:unswipe/src/features/userOnboarding/contact_block/data/model/response_contact_block.dart';
 import 'package:unswipe/src/features/userOnboarding/contact_block/domain/repository/contact_block_repository.dart';
 import 'package:unswipe/src/features/userProfile/domain/usecase/profile_accept_usecase.dart';
+import 'package:unswipe/src/features/userProfile/domain/usecase/profile_get_requested_usecase.dart';
 import 'package:unswipe/src/features/userProfile/domain/usecase/profile_reject_usecase.dart';
 import 'package:unswipe/src/shared/domain/entities/auth_state.dart';
 
@@ -20,6 +21,7 @@ class ProfileSwipeBloc extends Bloc<ProfileSwipeEvent, ProfileSwipeState> {
   final GetAuthStateStreamUseCase getAuthStateStreamUseCase;
   final ProfileAcceptUseCase profileAcceptUseCase;
   final ProfileRejectUseCase profileRejectUseCase;
+  final ProfileGetRequestedUseCase profileGetRequestedUseCase;
   String token = "";
   String id = "";
   String userId = "";
@@ -31,8 +33,10 @@ class ProfileSwipeBloc extends Bloc<ProfileSwipeEvent, ProfileSwipeState> {
     required this.getAuthStateStreamUseCase,
     required this.profileAcceptUseCase,
     required this.profileRejectUseCase,
+    required this.profileGetRequestedUseCase,
   })
       : super(const ProfileSwipeState()) {
+    on<OnGetRequestedProfile>(_onStartRequestedProfileApi);
     on<OnProfileSwipeRequested>(_onStartProfileSwipe);
     on<OnRequestApiCall>(_onStartProfileApi);
     on<OnCreateRequest>(_onCreateRequest);
@@ -93,7 +97,33 @@ class ProfileSwipeBloc extends Bloc<ProfileSwipeEvent, ProfileSwipeState> {
     });
   }
 
+
   _onStartProfileApi(OnRequestApiCall event,
+      Emitter<ProfileSwipeState> emitter) async {
+
+
+    Stream<GetProfileSwipeUseCaseResponse> stream =
+    await profileSwipeUseCase.buildUseCaseStream(
+        event.token,
+        ProfileSwipeParams( userId: event.id));
+
+    await emitter.forEach(stream, onData: (response) {
+      final responseData = response.val;
+      if (responseData is api_response.Failure) {
+        return state.copyWith(status: ProfileSwipeStatus.error);
+      } else if (responseData is api_response.OperationFailure) {
+        return state.copyWith(status: ProfileSwipeStatus.error);
+      } else if (responseData is api_response.Success) {
+        var res = (((responseData as api_response.Success).data) as ResponseProfileSwipe);
+        return state.copyWith(status: ProfileSwipeStatus.loaded,
+            responseProfileSwipe: res);
+      } else {
+        return state.copyWith(status: ProfileSwipeStatus.error);
+      }
+    });
+  }
+
+  _onStartRequestedProfileApi(OnGetRequestedProfile event,
       Emitter<ProfileSwipeState> emitter) async {
 
 
@@ -140,10 +170,15 @@ class ProfileSwipeBloc extends Bloc<ProfileSwipeEvent, ProfileSwipeState> {
 
             if(r.userAndToken?.token != null
                 && r.userAndToken?.id != null)  {
-              add(OnRequestApiCall(
+              if(event.route == 0) {
+                add(OnRequestApiCall(
                   r.userAndToken!.token,
                   r.userAndToken!.id)
               );
+              } else {
+                add(OnGetRequestedProfile( r.userAndToken!.token,
+                    r.userAndToken!.id));
+              }
               token = r.userAndToken!.token;
               id = r.userAndToken!.id;
               userId = r.userAndToken!.userId!;

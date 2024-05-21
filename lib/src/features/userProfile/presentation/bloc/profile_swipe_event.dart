@@ -9,8 +9,18 @@ class OnProfileSwipesSuccess extends ProfileSwipeEvent {
 }
 
 class OnProfileSwipeRequested extends ProfileSwipeEvent {
-  OnProfileSwipeRequested();
+  final int route;
+  OnProfileSwipeRequested(this.route);
 }
+
+class OnGetRequestedProfile extends ProfileSwipeEvent {
+  final String id;
+  final String token;
+
+  OnGetRequestedProfile(
+      this.token,
+      this.id,
+      );}
 
 class OnUpdateOnBoardingUserEvent extends ProfileSwipeEvent {
   OnUpdateOnBoardingUserEvent();

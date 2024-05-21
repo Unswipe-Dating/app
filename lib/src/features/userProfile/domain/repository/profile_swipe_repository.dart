@@ -10,6 +10,8 @@ abstract class ProfileSwipeRepository {
       ProfileSwipeParams params);
   Future<ApiResponse<ResponseProfileCreateRequest>> rejectRequest(String token,
       ProfileSwipeParams params);
+  Future<ApiResponse<ResponseProfileSwipe>> getRequestedProfiles(String token,
+      ProfileSwipeParams params);
 
 }
 

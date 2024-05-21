@@ -5,30 +5,30 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'package:get_it/get_it.dart';
-import 'package:unswipe/src/features/chat/no_request_screen.dart';
 import 'package:unswipe/src/features/userProfile/domain/usecase/profile_accept_usecase.dart';
+import 'package:unswipe/src/features/userProfile/domain/usecase/profile_get_requested_usecase.dart';
 import 'package:unswipe/src/features/userProfile/domain/usecase/profile_reject_usecase.dart';
 import 'package:unswipe/src/features/userProfile/presentation/widgets/SwipeCard.dart';
 
 import '../../../../../Profile.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../shared/domain/usecases/get_auth_state_stream_use_case.dart';
+import '../../../chat/no_request_screen.dart';
 import '../../data/model/get_profile/response_profile_swipe.dart';
-import '../../domain/usecase/profile_get_requested_usecase.dart';
 import '../../domain/usecase/profile_get_usecase.dart';
 import '../bloc/profile_swipe_bloc.dart';
 import '../bloc/profile_swipe_state.dart';
 
-class SwipeInterface extends StatefulWidget {
-  const SwipeInterface({
+class MatchedSwipeInterface extends StatefulWidget {
+  const MatchedSwipeInterface({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<SwipeInterface> createState() => _SwipeInterfaceState();
+  State<MatchedSwipeInterface> createState() => _MatchedSwipeInterfaceState();
 }
 
-class _SwipeInterfaceState extends State<SwipeInterface> {
+class _MatchedSwipeInterfaceState extends State<MatchedSwipeInterface> {
   late List<SwipeCard> cards;
   final CardSwiperController controller = CardSwiperController();
 
@@ -45,12 +45,11 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
       create: (BuildContext context) => ProfileSwipeBloc(
           profileSwipeUseCase: GetIt.I.get<ProfileGetUseCase>(),
           getAuthStateStreamUseCase: GetIt.I.get<GetAuthStateStreamUseCase>(),
-        profileAcceptUseCase: GetIt.I.get<ProfileAcceptUseCase>(),
-        profileRejectUseCase: GetIt.I.get<ProfileRejectUseCase>(),
-        profileGetRequestedUseCase: GetIt.I.get<ProfileGetRequestedUseCase>(),
-
+          profileAcceptUseCase: GetIt.I.get<ProfileAcceptUseCase>(),
+          profileRejectUseCase: GetIt.I.get<ProfileRejectUseCase>(),
+          profileGetRequestedUseCase: GetIt.I.get<ProfileGetRequestedUseCase>(),
       )
-        ..add(OnProfileSwipeRequested(1)),
+        ..add(OnProfileSwipeRequested(0)),
       child: BlocConsumer<ProfileSwipeBloc, ProfileSwipeState>(
         listener: (context, state) {
           if (state.status == ProfileSwipeStatus.loaded) {
@@ -103,10 +102,10 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
   }
 
   bool _onSwipe(
-    int previousIndex,
-    int? currentIndex,
-    CardSwiperDirection direction,
-  ) {
+      int previousIndex,
+      int? currentIndex,
+      CardSwiperDirection direction,
+      ) {
     debugPrint(
       'The card $previousIndex was swiped to the ${direction.name}. Now the card $currentIndex is on top',
     );
@@ -114,10 +113,10 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
   }
 
   bool _onUndo(
-    int? previousIndex,
-    int currentIndex,
-    CardSwiperDirection direction,
-  ) {
+      int? previousIndex,
+      int currentIndex,
+      CardSwiperDirection direction,
+      ) {
     debugPrint(
       'The card $currentIndex was undod from the ${direction.name}',
     );
