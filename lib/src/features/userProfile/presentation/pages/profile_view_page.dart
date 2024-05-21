@@ -11,7 +11,7 @@ import '../../../../../Profile.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../shared/domain/usecases/get_auth_state_stream_use_case.dart';
 import '../../data/model/get_profile/response_profile_swipe.dart';
-import '../../domain/usecase/profile_swap_usecase.dart';
+import '../../domain/usecase/profile_get_usecase.dart';
 import '../bloc/profile_swipe_bloc.dart';
 import '../bloc/profile_swipe_state.dart';
 
@@ -39,7 +39,7 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (BuildContext context) => ProfileSwipeBloc(
-          profileSwipeUseCase: GetIt.I.get<ProfileSwipeUseCase>(),
+          profileSwipeUseCase: GetIt.I.get<ProfileGetUseCase>(),
           getAuthStateStreamUseCase: GetIt.I.get<GetAuthStateStreamUseCase>())
         ..add(OnProfileSwipeRequested()),
       child: BlocConsumer<ProfileSwipeBloc, ProfileSwipeState>(

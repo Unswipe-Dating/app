@@ -568,4 +568,89 @@ class ProfileUpdatedStateBuilder
   }
 }
 
+class _$ProfileMatchRequestState extends ProfileMatchRequestState {
+  @override
+  final OnBoardingStatus? onBoardingEntity;
+
+  factory _$ProfileMatchRequestState(
+          [void Function(ProfileMatchRequestStateBuilder)? updates]) =>
+      (new ProfileMatchRequestStateBuilder()..update(updates))._build();
+
+  _$ProfileMatchRequestState._({this.onBoardingEntity}) : super._();
+
+  @override
+  ProfileMatchRequestState rebuild(
+          void Function(ProfileMatchRequestStateBuilder) updates) =>
+      (toBuilder()..update(updates)).build();
+
+  @override
+  ProfileMatchRequestStateBuilder toBuilder() =>
+      new ProfileMatchRequestStateBuilder()..replace(this);
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(other, this)) return true;
+    return other is ProfileMatchRequestState &&
+        onBoardingEntity == other.onBoardingEntity;
+  }
+
+  @override
+  int get hashCode {
+    var _$hash = 0;
+    _$hash = $jc(_$hash, onBoardingEntity.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
+  }
+
+  @override
+  String toString() {
+    return (newBuiltValueToStringHelper(r'ProfileMatchRequestState')
+          ..add('onBoardingEntity', onBoardingEntity))
+        .toString();
+  }
+}
+
+class ProfileMatchRequestStateBuilder
+    implements
+        Builder<ProfileMatchRequestState, ProfileMatchRequestStateBuilder> {
+  _$ProfileMatchRequestState? _$v;
+
+  OnBoardingStatus? _onBoardingEntity;
+  OnBoardingStatus? get onBoardingEntity => _$this._onBoardingEntity;
+  set onBoardingEntity(OnBoardingStatus? onBoardingEntity) =>
+      _$this._onBoardingEntity = onBoardingEntity;
+
+  ProfileMatchRequestStateBuilder();
+
+  ProfileMatchRequestStateBuilder get _$this {
+    final $v = _$v;
+    if ($v != null) {
+      _onBoardingEntity = $v.onBoardingEntity;
+      _$v = null;
+    }
+    return this;
+  }
+
+  @override
+  void replace(ProfileMatchRequestState other) {
+    ArgumentError.checkNotNull(other, 'other');
+    _$v = other as _$ProfileMatchRequestState;
+  }
+
+  @override
+  void update(void Function(ProfileMatchRequestStateBuilder)? updates) {
+    if (updates != null) updates(this);
+  }
+
+  @override
+  ProfileMatchRequestState build() => _build();
+
+  _$ProfileMatchRequestState _build() {
+    final _$result = _$v ??
+        new _$ProfileMatchRequestState._(onBoardingEntity: onBoardingEntity);
+    replace(_$result);
+    return _$result;
+  }
+}
+
 // ignore_for_file: deprecated_member_use_from_same_package,type=lint

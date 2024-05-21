@@ -2,10 +2,12 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:unswipe/src/shared/domain/entities/auth_state.dart';
-import 'package:unswipe/src/shared/domain/usecases/get_auth_state_stream_use_case.dart';
+import 'package:unswipe/src/features/splash/data/datasources/model/response_meta.dart';
+import '../../../../../../data/api_response.dart' as api_response;
+import 'package:unswipe/src/features/splash/domain/usecases/meta_usecase.dart';
 import 'package:unswipe/src/features/onBoarding/domain/usecases/get_onboarding_state_stream_use_case.dart';
 import '../../../../../data/api_response.dart';
+import '../../../../shared/domain/usecases/get_auth_state_stream_use_case.dart';
 import '../../../onBoarding/domain/entities/onbaording_state/onboarding_state.dart';
 
 part 'splash_event.dart';
@@ -14,13 +16,50 @@ part 'splash_state.dart';
 
 class SplashBloc extends Bloc<SplashEvent, SplashState> {
   final GetOnboardingStateStreamUseCase onboardingStateStreamUseCase;
+  final MetaUseCase metaUseCase;
+  final GetAuthStateStreamUseCase getAuthStateStreamUseCase;
 
   StreamSubscription? subscription;
 
   SplashBloc({
     required this.onboardingStateStreamUseCase,
+    required this.metaUseCase,
+    required this.getAuthStateStreamUseCase,
   }) : super(const SplashState()) {
     on<onFirstTimeUserEvent>(_onGettingOnBoardingEvent);
+    on<onGetMetaEvent>(_onGettingMetaEvent);
+    on<onAuthenticatedUserEvent>(_onStartAuthCheck);
+
+  }
+
+  _onStartAuthCheck(onAuthenticatedUserEvent event,
+      Emitter<SplashState> emitter) async {
+
+    emitter(state.copyWith(status: SplashStatus.loading));
+
+    await emitter.forEach(getAuthStateStreamUseCase.call(), onData: (response) {
+      return response.fold(
+          ifLeft: (l) {
+            if (l is CancelTokenFailure) {
+              return state.copyWith(status: SplashStatus.error);
+            } else {
+              return state.copyWith(status: SplashStatus.error);
+            }
+          },
+          ifRight: (r) {
+
+            if(r.userAndToken?.token != null && r.userAndToken?.id != null)  {
+              add(onGetMetaEvent(token: r.userAndToken!.token));
+            }else {
+              add(onFirstTimeUserEvent());
+            }
+            return state.copyWith(status: SplashStatus.loading);
+
+          }
+      );
+    },
+    );
+
   }
 
   _onGettingOnBoardingEvent(
@@ -87,6 +126,41 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
 
         }
       });
+    });
+  }
+
+  _onGettingMetaEvent(
+      onGetMetaEvent event, Emitter<SplashState> emitter) async {
+
+    Stream<GetMetaUseCaseResponse> stream =
+    await metaUseCase.buildUseCaseStream(
+        event.token);
+
+    await emitter.forEach(stream, onData: (response) {
+      final responseData = response.val;
+      if (responseData is api_response.Failure) {
+        return state.copyWith(status: SplashStatus.error);
+      } else if (responseData is api_response.OperationFailure) {
+        return state.copyWith(status: SplashStatus.error);
+      } else if (responseData is api_response.Success) {
+        var res = (((responseData as api_response.Success).data) as ResponseMeta);
+        if(res.getConfig.timeLeftForExpiry != null) {
+          return state.copyWith(status: SplashStatus.loaded,
+              isFirstTime: false,
+              isAuthenticated: false,
+              isProfileMatchRequested: true,
+              profileMatchDuration: res.getConfig.timeLeftForExpiry
+          );
+        } else {
+          add(onFirstTimeUserEvent());
+        }
+        return state.copyWith(status: SplashStatus.loaded,);
+
+
+
+      } else {
+        return state.copyWith(status: SplashStatus.error);
+      }
     });
   }
 

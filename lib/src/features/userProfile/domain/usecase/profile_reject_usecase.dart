@@ -6,6 +6,7 @@ import 'package:unswipe/src/features/login/domain/repository/login_repository.da
 import 'package:unswipe/src/features/login/presentation/bloc/login_bloc.dart';
 import 'package:unswipe/src/features/userOnboarding/contact_block/data/model/response_contact_block.dart';
 import 'package:unswipe/src/features/userOnboarding/contact_block/domain/repository/contact_block_repository.dart';
+import 'package:unswipe/src/features/userProfile/data/model/create_request/response_profile_request.dart';
 
 import '../../../../../../data/api_response.dart';
 import '../../data/model/get_profile/response_profile_swipe.dart';
@@ -13,19 +14,19 @@ import '../repository/profile_swipe_repository.dart';
 
 
 @Injectable()
-class ProfileSwipeUseCase {
+class ProfileRejectUseCase {
   final ProfileSwipeRepository _repository;
 
-  ProfileSwipeUseCase(this._repository);
+  ProfileRejectUseCase(this._repository);
 
 
-  Future<Stream<GetProfileSwipeUseCaseResponse>> buildUseCaseStream(String token,
+  Future<Stream<GetProfileRejectUseCaseResponse>> buildUseCaseStream(String token,
       ProfileSwipeParams? params) async {
-    final controller = StreamController<GetProfileSwipeUseCaseResponse>();
+    final controller = StreamController<GetProfileRejectUseCaseResponse>();
     try{
       if(params != null) {
-        final result = await _repository.getProfiles(token, params);
-        controller.add(GetProfileSwipeUseCaseResponse(result));
+        final result = await _repository.rejectRequest(token, params);
+        controller.add(GetProfileRejectUseCaseResponse(result));
         controller.close();
       } else {
         controller.addError(Exception());
@@ -41,8 +42,8 @@ class ProfileSwipeUseCase {
 
 
 
-class GetProfileSwipeUseCaseResponse {
-  final ApiResponse<ResponseProfileSwipe> val;
+class GetProfileRejectUseCaseResponse {
+  final ApiResponse<ResponseProfileCreateRequest> val;
 
-  GetProfileSwipeUseCaseResponse(this.val);
+  GetProfileRejectUseCaseResponse(this.val);
 }

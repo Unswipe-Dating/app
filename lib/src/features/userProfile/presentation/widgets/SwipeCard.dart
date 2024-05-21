@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:unswipe/src/features/userProfile/domain/usecase/profile_swap_usecase.dart';
+import 'package:unswipe/src/features/userProfile/domain/usecase/profile_get_usecase.dart';
 import 'package:unswipe/src/features/userProfile/presentation/bloc/profile_swipe_bloc.dart';
 import 'package:unswipe/src/features/userProfile/presentation/bloc/profile_swipe_state.dart';
 import 'package:unswipe/src/features/userProfile/presentation/widgets/swipeViewCards/date_preference_card.dart';

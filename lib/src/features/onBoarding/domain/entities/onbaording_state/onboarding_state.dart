@@ -9,7 +9,8 @@ enum OnBoardingStatus  {
   contact,
   images,
   profile,
-  update
+  update,
+  matchRequested,
 
 }
 
@@ -117,6 +118,20 @@ abstract class ProfileUpdatedState
   factory ProfileUpdatedState(
       [void Function(ProfileUpdatedStateBuilder) updates]) =
   _$ProfileUpdatedState;
+}
+
+abstract class ProfileMatchRequestState
+    implements
+        Built<ProfileMatchRequestState, ProfileMatchRequestStateBuilder>,
+        OnBoardingState {
+  @override
+  OnBoardingStatus? get onBoardingEntity;
+
+  ProfileMatchRequestState._();
+
+  factory ProfileMatchRequestState(
+      [void Function(ProfileMatchRequestStateBuilder) updates]) =
+  _$ProfileMatchRequestState;
 }
 
 

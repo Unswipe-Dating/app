@@ -64,6 +64,7 @@ abstract class _Mappers {
       case OnBoardingStatus.images: return ImageUploadedState();
       case OnBoardingStatus.update: return ProfileUpdateState();
       case OnBoardingStatus.profile: return ProfileUpdatedState();
+      case OnBoardingStatus.matchRequested: return ProfileMatchRequestState();
     }
   }
 

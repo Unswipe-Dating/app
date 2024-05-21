@@ -9,14 +9,21 @@ part of 'response_profile_request.dart';
 ResponseProfileRequest _$ResponseProfileRequestFromJson(
         Map<String, dynamic> json) =>
     ResponseProfileRequest(
-      ResponseProfileCreateRequest.fromJson(
-          json['createRequest'] as Map<String, dynamic>),
+      json['createRequest'] == null
+          ? null
+          : ResponseProfileCreateRequest.fromJson(
+              json['createRequest'] as Map<String, dynamic>),
+      json['rejectRequest'] == null
+          ? null
+          : ResponseProfileCreateRequest.fromJson(
+              json['rejectRequest'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$ResponseProfileRequestToJson(
         ResponseProfileRequest instance) =>
     <String, dynamic>{
       'createRequest': instance.createRequest,
+      'rejectRequest': instance.rejectRequest,
     };
 
 ResponseProfileCreateRequest _$ResponseProfileCreateRequestFromJson(

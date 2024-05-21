@@ -9,12 +9,14 @@ part 'response_profile_request_challenge.dart';
 
 @JsonSerializable()
 class ResponseProfileRequest {
-  ResponseProfileRequest(this.createRequest);
+  ResponseProfileRequest(this.createRequest, this.rejectRequest);
 
   factory ResponseProfileRequest.fromJson(Map<String, dynamic> json) =>
       _$ResponseProfileRequestFromJson(json);
 
-  ResponseProfileCreateRequest createRequest;
+  ResponseProfileCreateRequest? createRequest;
+  ResponseProfileCreateRequest? rejectRequest;
+
 
   Map<String, dynamic> toJson() => _$ResponseProfileRequestToJson(this);
 }

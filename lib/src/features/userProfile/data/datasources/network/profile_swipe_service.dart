@@ -111,4 +111,54 @@ class ProfileSwipeService {
     }
   }
 
+
+
+  Future<ApiResponse<ResponseProfileRequest>> rejectProfiles(String token,
+      ProfileSwipeParams params,
+      ) async {
+    const query = '''
+   mutation RejectRequest( \$data: RejectRequestInput!){
+  rejectRequest(data: \$data) {
+    id
+    type
+    requesterProfileId
+    requesteeProfileId
+    expiry
+    status
+    challenge
+    challengeVerification
+    challengeVerificationStatus
+  }
+}
+''';
+
+
+
+
+    final response = await service.performMutationWithHeader(token, query, variables: {
+      "data": {
+        "type": "HYPER_EXCLUSIVE",
+        "requesterProfileId": params.userId,
+        "requesteeProfileId": params.matchUserId,
+        "status" :"ACTIVE"
+      },
+    });
+    log('$response');
+
+    if (!response.hasException) {
+      ResponseProfileRequest? info;
+      try {
+        info = ResponseProfileRequest.fromJson(
+          response.data as Map<String, dynamic>,
+        );
+      } on Exception catch (e) {
+        log('error', error: e);
+        return Failure(error: Exception(e));
+      }
+      return Success(data: info);
+    } else {
+      return OperationFailure(error: response.exception);
+    }
+  }
+
 }

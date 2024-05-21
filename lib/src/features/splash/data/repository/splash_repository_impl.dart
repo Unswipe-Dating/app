@@ -1,35 +1,32 @@
-
-
-import 'dart:ffi';
-
-import 'package:dart_either/dart_either.dart';
-import 'package:unswipe/src/core/network/error/exceptions.dart';
-import 'package:unswipe/src/core/preference.dart';
-import 'package:unswipe/src/features/splash/data/datasources/local/splash_shared_pref.dart';
-import 'package:unswipe/src/features/splash/domain/entities/splash_params.dart';
+import 'package:injectable/injectable.dart';
+import 'package:unswipe/src/features/splash/data/datasources/model/response_meta.dart';
 import 'package:unswipe/src/features/splash/domain/repository/splash_repository.dart';
-
 import '../../../../../data/api_response.dart';
+import '../datasources/remote/meta_api_service.dart';
 
-
-class SplashRepositoryImpl extends AbstractSplashRepository {
-  final SplashSharedPref pref;
+@Injectable(as: SplashRepository)
+class SplashRepositoryImpl extends SplashRepository {
+  final MetaService service;
 
   SplashRepositoryImpl(
-      this.pref
+      this.service,
       );
 
   @override
-  Future<ApiResponse<bool>> imitateInit(SplashParams params) async {
+  Future<ApiResponse<ResponseMeta>> getConfig(String token) async {
 
-    try {
-      final result = await pref.getBool("key", defaultValue: false);
-      return Success( data: result);
-    } on ServerException catch (e) {
-      return Failure(error: e);
+    final response = await service.getMeta(token);
+    if (response is Success) {
+      try {
+        final result = (response as Success).data as ResponseMeta;
+        return Success(data: result);
+      } on Exception catch (e, _) {
+        return Failure(error: e);
+      }
+    } else {
+      return Failure(error: Exception((response as Failure).error));
     }
   }
-
 
 
 

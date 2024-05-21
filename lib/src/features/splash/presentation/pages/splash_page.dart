@@ -4,7 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:unswipe/src/features/splash/domain/usecases/splash_usecase.dart';
+import 'package:unswipe/src/features/splash/domain/usecases/meta_usecase.dart';
 import 'package:unswipe/src/features/splash/presentation/bloc/splash_bloc.dart';
 import 'package:unswipe/src/shared/domain/usecases/get_auth_state_stream_use_case.dart';
 import 'package:unswipe/src/features/onBoarding/domain/usecases/get_onboarding_state_stream_use_case.dart';
@@ -40,9 +40,11 @@ class SplashScreen extends StatelessWidget {
   BlocProvider<SplashBloc> _buildBody(BuildContext context) {
     return BlocProvider(
       create: (BuildContext context) => SplashBloc(
-          onboardingStateStreamUseCase:
-              GetIt.I.get<GetOnboardingStateStreamUseCase>())
-        ..add(onFirstTimeUserEvent()),
+        onboardingStateStreamUseCase: GetIt.I.get<GetOnboardingStateStreamUseCase>(),
+        metaUseCase: GetIt.I.get<MetaUseCase>(),
+        getAuthStateStreamUseCase: GetIt.I.get<GetAuthStateStreamUseCase>()
+      )
+        ..add(onAuthenticatedUserEvent()),
       child: Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,

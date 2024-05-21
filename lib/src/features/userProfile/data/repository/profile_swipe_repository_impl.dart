@@ -7,6 +7,7 @@ import 'package:unswipe/src/features/login/data/models/verify_otp/verify_otp_res
 import 'package:unswipe/src/features/login/domain/repository/login_repository.dart';
 import 'package:unswipe/src/features/userOnboarding/contact_block/data/datasources/network/contact_bloc_service.dart';
 import 'package:unswipe/src/features/userOnboarding/contact_block/data/model/response_contact_block.dart';
+import 'package:unswipe/src/features/userProfile/data/model/create_request/response_profile_request.dart';
 
 import '../../domain/repository/profile_swipe_repository.dart';
 import '../datasources/network/profile_swipe_service.dart';
@@ -35,6 +36,36 @@ class ProfileSwipeRepositoryImpl implements ProfileSwipeRepository {
       return Failure(error: Exception((response as Failure).error));
     }
   }
+
+  @override
+  Future<ApiResponse<ResponseProfileCreateRequest>> createRequest(String token,
+      ProfileSwipeParams params) async{
+    final response = await services.swipeProfiles(token, params);
+    if (response is Success) {
+      try {
+        final result = (response as Success).data as ResponseProfileCreateRequest;
+        return Success(data: result);
+      } on Exception catch (e, _) {
+        return Failure(error: e);
+      }
+    } else {
+      return Failure(error: Exception((response as Failure).error));
+    }  }
+
+  @override
+  Future<ApiResponse<ResponseProfileCreateRequest>> rejectRequest(String token,
+      ProfileSwipeParams params) async {
+    final response = await services.rejectProfiles(token, params);
+    if (response is Success) {
+      try {
+        final result = (response as Success).data as ResponseProfileCreateRequest;
+        return Success(data: result);
+      } on Exception catch (e, _) {
+        return Failure(error: e);
+      }
+    } else {
+      return Failure(error: Exception((response as Failure).error));
+    }  }
 
 
 }

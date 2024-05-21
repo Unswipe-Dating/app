@@ -11,6 +11,8 @@ class SplashState extends Equatable {
   final bool isImageUploaded;
   final bool isContactsBlocked;
   final bool isProfileUpdated;
+  final bool isProfileMatchRequested;
+  final int profileMatchDuration;
 
 
   const SplashState({
@@ -21,7 +23,9 @@ class SplashState extends Equatable {
     this.isUserJourneyComplete = false,
     this.isImageUploaded = false,
     this.isContactsBlocked = false,
-    this.isProfileUpdated = false
+    this.isProfileUpdated = false,
+    this.isProfileMatchRequested = false,
+    this.profileMatchDuration = 0,
 
   });
 
@@ -35,6 +39,8 @@ class SplashState extends Equatable {
     bool? isImageUploaded,
     bool? isContactsBlocked,
     bool? isProfileUpdated,
+    bool? isProfileMatchRequested,
+    int? profileMatchDuration
 
   }) {
     return SplashState(
@@ -46,6 +52,9 @@ class SplashState extends Equatable {
       isImageUploaded: isImageUploaded ?? this.isImageUploaded,
       isContactsBlocked: isContactsBlocked ?? this.isContactsBlocked,
       isProfileUpdated: isProfileUpdated ?? this.isProfileUpdated,
+      isProfileMatchRequested: isProfileMatchRequested ?? this.isProfileMatchRequested,
+      profileMatchDuration: profileMatchDuration ?? this.profileMatchDuration
+
     );
   }
 
@@ -58,7 +67,8 @@ class SplashState extends Equatable {
     isImageUploaded,
     isContactsBlocked,
     isProfileUpdated,
-
+    isProfileMatchRequested,
+    profileMatchDuration
   ];
 }
 
