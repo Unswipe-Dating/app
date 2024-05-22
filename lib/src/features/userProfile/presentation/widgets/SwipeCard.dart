@@ -284,7 +284,9 @@ class _SwipeCard extends State<SwipeCard> {
   String message = "Are you sure you want to proceed?";
 
   void handleAccept() {
-    widget.likeAction(widget.id);
+    widget.likeAction();
+    context.read<ProfileSwipeBloc>().add(OnCreateRequest(widget.id));
+
   }
 
   void handleReject() {

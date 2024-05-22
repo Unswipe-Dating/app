@@ -17,9 +17,10 @@ class ProfileSwipeService {
 
   final GraphQLService service;
 
-  Future<ApiResponse<ResponseProfileSwipe>> getProfiles(String token,
-      ProfileSwipeParams params,
-      ) async {
+  Future<ApiResponse<ResponseProfileSwipe>> getProfiles(
+    String token,
+    ProfileSwipeParams params,
+  ) async {
     final query = '''
     query BrowseProfiles(\$data: UserIdPaginatedArgs!) {
     browseProfiles(data: \$data){
@@ -37,11 +38,9 @@ class ProfileSwipeService {
 }
 ''';
 
-
-
-
-    final response = await service.performMutationWithHeader(token, query, variables: {
-      "data": {"userId" :params.userId, "page_size": 10},
+    final response =
+        await service.performMutationWithHeader(token, query, variables: {
+      "data": {"userId": params.userId, "page_size": 10},
     });
     log('$response');
 
@@ -61,9 +60,10 @@ class ProfileSwipeService {
     }
   }
 
-  Future<ApiResponse<ResponseProfileSwipe>> getRequestedProfiles(String token,
-      ProfileSwipeParams params,
-      ) async {
+  Future<ApiResponse<ResponseProfileSwipe>> getRequestedProfiles(
+    String token,
+    ProfileSwipeParams params,
+  ) async {
     final query = '''
     query GetRequestedProfilesForUser(\$data: UserIdPaginatedArgs!) {
     getRequestedProfilesForUser(data: \$data){
@@ -77,11 +77,9 @@ class ProfileSwipeService {
 }
 ''';
 
-
-
-
-    final response = await service.performMutationWithHeader(token, query, variables: {
-      "data": {"userId" :params.userId},
+    final response =
+        await service.performMutationWithHeader(token, query, variables: {
+      "data": {"userId": params.userId},
     });
     log('$response');
 
@@ -101,11 +99,10 @@ class ProfileSwipeService {
     }
   }
 
-
-
-  Future<ApiResponse<ResponseProfileRequest>> acceptProfiles(String token,
-      ProfileSwipeParams params,
-      ) async {
+  Future<ApiResponse<ResponseProfileRequest>> acceptProfiles(
+    String token,
+    ProfileSwipeParams params,
+  ) async {
     const query = '''
     mutation CreateRequest( \$data: RequestInput!){
   createRequest(data: \$data) {
@@ -122,15 +119,13 @@ class ProfileSwipeService {
 }
 ''';
 
-
-
-
-    final response = await service.performMutationWithHeader(token, query, variables: {
+    final response =
+        await service.performMutationWithHeader(token, query, variables: {
       "data": {
         "type": "HYPER_EXCLUSIVE",
         "requesterProfileId": params.userId,
         "requesteeProfileId": params.matchUserId,
-        "status" :"ACTIVE"
+        "status": "ACTIVE"
       },
     });
     log('$response');
@@ -151,11 +146,10 @@ class ProfileSwipeService {
     }
   }
 
-
-
-  Future<ApiResponse<ResponseProfileRequest>> rejectProfiles(String token,
-      ProfileSwipeParams params,
-      ) async {
+  Future<ApiResponse<ResponseProfileRequest>> rejectProfiles(
+    String token,
+    ProfileSwipeParams params,
+  ) async {
     const query = '''
    mutation RejectRequest( \$data: RejectRequestInput!){
   rejectRequest(data: \$data) {
@@ -172,10 +166,8 @@ class ProfileSwipeService {
 }
 ''';
 
-
-
-
-    final response = await service.performMutationWithHeader(token, query, variables: {
+    final response =
+        await service.performMutationWithHeader(token, query, variables: {
       "data": {
         "id": params.matchUserId,
       },
@@ -197,5 +189,4 @@ class ProfileSwipeService {
       return OperationFailure(error: response.exception);
     }
   }
-
 }

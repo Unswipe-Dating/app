@@ -1,18 +1,13 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'package:get_it/get_it.dart';
 import 'package:unswipe/src/features/chat/no_request_screen.dart';
-import 'package:unswipe/src/features/userOnboarding/profile_update/presentation/bloc/profile_update_bloc.dart';
-import 'package:unswipe/src/features/userProfile/domain/repository/profile_swipe_repository.dart';
 import 'package:unswipe/src/features/userProfile/domain/usecase/profile_accept_usecase.dart';
 import 'package:unswipe/src/features/userProfile/domain/usecase/profile_reject_usecase.dart';
 import 'package:unswipe/src/features/userProfile/presentation/widgets/SwipeCard.dart';
-
-import '../../../../../Profile.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../shared/domain/usecases/get_auth_state_stream_use_case.dart';
 import '../../data/model/get_profile/response_profile_swipe.dart';
@@ -116,14 +111,12 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
     );
   }
 
-  void swipeRightMethod(String id, String imageUri) {
-    this.imageUri = imageUri;
-    context.read<ProfileSwipeBloc>().add(OnCreateRequest(id));
+  void swipeRightMethod() {
     controller.swipe(CardSwiperDirection.right);
 
   }
 
-  void swipeLeftMethod(String id) {
+  void swipeLeftMethod() {
     controller.swipe(CardSwiperDirection.left);
   }
 
@@ -161,7 +154,6 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
       isVerified: true,
       pronouns: "",
     )).toList();
-
 
   }
 }
