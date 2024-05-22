@@ -9,12 +9,14 @@ part 'response_profile_swipe_interests.dart';
 
 @JsonSerializable()
 class ResponseProfileSwipe {
-  ResponseProfileSwipe(this.browseProfiles);
+  ResponseProfileSwipe(this.browseProfiles, this.getRequestedProfilesForUser);
 
   factory ResponseProfileSwipe.fromJson(Map<String, dynamic> json) =>
       _$ResponseProfileSwipeFromJson(json);
 
-  ResponseProfileSwipeBrowse browseProfiles;
+  ResponseProfileSwipeBrowse? browseProfiles;
+  List<ResponseProfileList>? getRequestedProfilesForUser;
+
 
   Map<String, dynamic> toJson() => _$ResponseProfileSwipeToJson(this);
 }

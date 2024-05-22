@@ -128,7 +128,7 @@ class ProfileSwipeBloc extends Bloc<ProfileSwipeEvent, ProfileSwipeState> {
 
 
     Stream<GetProfileSwipeUseCaseResponse> stream =
-    await profileSwipeUseCase.buildUseCaseStream(
+    await profileGetRequestedUseCase.buildUseCaseStream(
         event.token,
         ProfileSwipeParams( userId: event.id));
 

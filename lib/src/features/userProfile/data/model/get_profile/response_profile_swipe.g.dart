@@ -9,14 +9,20 @@ part of 'response_profile_swipe.dart';
 ResponseProfileSwipe _$ResponseProfileSwipeFromJson(
         Map<String, dynamic> json) =>
     ResponseProfileSwipe(
-      ResponseProfileSwipeBrowse.fromJson(
-          json['browseProfiles'] as Map<String, dynamic>),
+      json['browseProfiles'] == null
+          ? null
+          : ResponseProfileSwipeBrowse.fromJson(
+              json['browseProfiles'] as Map<String, dynamic>),
+      (json['getRequestedProfilesForUser'] as List<dynamic>?)
+          ?.map((e) => ResponseProfileList.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$ResponseProfileSwipeToJson(
         ResponseProfileSwipe instance) =>
     <String, dynamic>{
       'browseProfiles': instance.browseProfiles,
+      'getRequestedProfilesForUser': instance.getRequestedProfilesForUser,
     };
 
 ResponseProfileSwipeBrowse _$ResponseProfileSwipeBrowseFromJson(

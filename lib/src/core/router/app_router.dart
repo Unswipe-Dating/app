@@ -12,6 +12,7 @@ import 'package:unswipe/src/features/onBoarding/presentation/pages/OnBoarding.da
 import 'package:unswipe/src/features/splash/presentation/pages/splash_page.dart';
 import 'package:unswipe/src/features/userOnboarding/profile_update/data/models/update_profile_response.dart';
 import 'package:unswipe/src/features/userOnboarding/profile_update/domain/repository/update_profile_repository.dart';
+import 'package:unswipe/src/features/userProfile/presentation/pages/matched_profile_view_page.dart';
 import 'package:unswipe/src/features/userProfile/presentation/pages/profile_view_page.dart';
 
 import '../../features/chat/chat_request_screen.dart';
@@ -122,7 +123,7 @@ class CustomNavigationHelper {
                 path: chatPath,
                 pageBuilder: (context, state) {
                   return getPage(
-                    child: const ChatRequestListPage(),
+                    child: const MatchedSwipeInterface(),
                     state: state,
                   );
                 },

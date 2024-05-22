@@ -50,7 +50,7 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
         profileGetRequestedUseCase: GetIt.I.get<ProfileGetRequestedUseCase>(),
 
       )
-        ..add(OnProfileSwipeRequested(1)),
+        ..add(OnProfileSwipeRequested(0)),
       child: BlocConsumer<ProfileSwipeBloc, ProfileSwipeState>(
         listener: (context, state) {
           if (state.status == ProfileSwipeStatus.loaded) {
@@ -63,7 +63,7 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
               return const Center(child: CircularProgressIndicator());
             case ProfileSwipeStatus.loaded:
               if (state.responseProfileSwipe != null) {
-                if(state.responseProfileSwipe?.browseProfiles.profiles.isNotEmpty == true) {
+                if(state.responseProfileSwipe?.browseProfiles?.profiles.isNotEmpty == true) {
                   updateProfiles(state.responseProfileSwipe!);
                   return CardSwiper(
                     allowedSwipeDirection: const AllowedSwipeDirection.only(
@@ -126,7 +126,7 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
 
   void updateProfiles(ResponseProfileSwipe responseProfileSwipe) {
 
-    cards = responseProfileSwipe.browseProfiles.profiles.map((profile) => SwipeCard(
+    cards = responseProfileSwipe.browseProfiles!.profiles.map((profile) => SwipeCard(
       likeAction: swipeRightMethod,
       dislikeAction: swipeLeftMethod,
       id: profile.id,
