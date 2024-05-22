@@ -1,5 +1,4 @@
-
-
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:injectable/injectable.dart';
 import 'package:unswipe/data/api_response.dart';
 import 'package:unswipe/src/features/login/data/models/request_otp/otp_response.dart';
@@ -13,17 +12,17 @@ import '../../domain/repository/profile_swipe_repository.dart';
 import '../datasources/network/profile_swipe_service.dart';
 import '../model/get_profile/response_profile_swipe.dart';
 
-
 @Injectable(as: ProfileSwipeRepository)
 class ProfileSwipeRepositoryImpl implements ProfileSwipeRepository {
-
   final ProfileSwipeService services;
 
   ProfileSwipeRepositoryImpl(
-      this.services,
-      );
+    this.services,
+  );
+
   @override
-  Future<ApiResponse<ResponseProfileSwipe>> getProfiles(String token, ProfileSwipeParams params) async {
+  Future<ApiResponse<ResponseProfileSwipe>> getProfiles(
+      String token, ProfileSwipeParams params) async {
     final response = await services.getProfiles(token, params);
     if (response is Success) {
       try {
@@ -32,13 +31,16 @@ class ProfileSwipeRepositoryImpl implements ProfileSwipeRepository {
       } on Exception catch (e, _) {
         return Failure(error: e);
       }
+    } else if (response is OperationFailure) {
+      return OperationFailure(error: (response as OperationFailure).error);
     } else {
-      return Failure(error: Exception((response as Failure).error));
+      return Failure(error: (response as Failure).error);
     }
   }
 
   @override
-  Future<ApiResponse<ResponseProfileSwipe>> getRequestedProfiles(String token, ProfileSwipeParams params) async {
+  Future<ApiResponse<ResponseProfileSwipe>> getRequestedProfiles(
+      String token, ProfileSwipeParams params) async {
     final response = await services.getRequestedProfiles(token, params);
     if (response is Success) {
       try {
@@ -47,41 +49,48 @@ class ProfileSwipeRepositoryImpl implements ProfileSwipeRepository {
       } on Exception catch (e, _) {
         return Failure(error: e);
       }
+    } else if (response is OperationFailure) {
+      return OperationFailure(error: (response as OperationFailure).error);
     } else {
-      return Failure(error: Exception((response as Failure).error));
+      return Failure(error: (response as Failure).error);
     }
   }
 
   @override
-  Future<ApiResponse<ResponseProfileCreateRequest>> createRequest(String token,
-      ProfileSwipeParams params) async{
-    final response = await services.swipeProfiles(token, params);
+  Future<ApiResponse<ResponseProfileCreateRequest>> createRequest(
+      String token, ProfileSwipeParams params) async {
+    final response = await services.acceptProfiles(token, params);
     if (response is Success) {
       try {
-        final result = (response as Success).data as ResponseProfileCreateRequest;
+        final result =
+            (response as Success).data as ResponseProfileCreateRequest;
         return Success(data: result);
       } on Exception catch (e, _) {
         return Failure(error: e);
       }
+    } else if (response is OperationFailure) {
+      return OperationFailure(error: (response as OperationFailure).error);
     } else {
-      return Failure(error: Exception((response as Failure).error));
-    }  }
+      return Failure(error: (response as Failure).error);
+    }
+  }
 
   @override
-  Future<ApiResponse<ResponseProfileCreateRequest>> rejectRequest(String token,
-      ProfileSwipeParams params) async {
+  Future<ApiResponse<ResponseProfileCreateRequest>> rejectRequest(
+      String token, ProfileSwipeParams params) async {
     final response = await services.rejectProfiles(token, params);
     if (response is Success) {
       try {
-        final result = (response as Success).data as ResponseProfileCreateRequest;
+        final result =
+            (response as Success).data as ResponseProfileCreateRequest;
         return Success(data: result);
       } on Exception catch (e, _) {
         return Failure(error: e);
       }
+    } else if (response is OperationFailure) {
+      return OperationFailure(error: (response as OperationFailure).error);
     } else {
-      return Failure(error: Exception((response as Failure).error));
-    }  }
-
-
+      return Failure(error: (response as Failure).error);
+    }
+  }
 }
-

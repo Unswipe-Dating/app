@@ -6,6 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'package:get_it/get_it.dart';
 import 'package:unswipe/src/features/chat/no_request_screen.dart';
+import 'package:unswipe/src/features/userOnboarding/profile_update/presentation/bloc/profile_update_bloc.dart';
+import 'package:unswipe/src/features/userProfile/domain/repository/profile_swipe_repository.dart';
 import 'package:unswipe/src/features/userProfile/domain/usecase/profile_accept_usecase.dart';
 import 'package:unswipe/src/features/userProfile/domain/usecase/profile_reject_usecase.dart';
 import 'package:unswipe/src/features/userProfile/presentation/widgets/SwipeCard.dart';
@@ -29,8 +31,10 @@ class SwipeInterface extends StatefulWidget {
 }
 
 class _SwipeInterfaceState extends State<SwipeInterface> {
-  late List<SwipeCard> cards;
+  List<SwipeCard> cards = [];
   final CardSwiperController controller = CardSwiperController();
+
+  String imageUri= "";
 
 
   @override
@@ -50,18 +54,32 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
         profileGetRequestedUseCase: GetIt.I.get<ProfileGetRequestedUseCase>(),
 
       )
+        ..add(OnInitiateSubjects())
+        ..add(OnInitiateAcceptSubject())
+        ..add(OnInitiateRejectSubject())
+        ..add(OnInitiateMatchSubject())
         ..add(OnProfileSwipeRequested(0)),
       child: BlocConsumer<ProfileSwipeBloc, ProfileSwipeState>(
         listener: (context, state) {
           if (state.status == ProfileSwipeStatus.loaded) {
 
+          } else if (state.status == ProfileSwipeStatus.loadedCreate) {
+            CustomNavigationHelper.router
+                .push(CustomNavigationHelper.profilePathHyperEx, extra: imageUri );
+
+          }else if (state.status == ProfileSwipeStatus.loadedReject) {
+
+          }else if (state.status == ProfileSwipeStatus.errorSwipe) {
+            controller.undo();
           }
+
         },
         builder: (context, state) {
           switch (state.status) {
             case ProfileSwipeStatus.loading:
               return const Center(child: CircularProgressIndicator());
             case ProfileSwipeStatus.loaded:
+            case ProfileSwipeStatus.loadedReject:
               if (state.responseProfileSwipe != null) {
                 if(state.responseProfileSwipe?.browseProfiles?.profiles.isNotEmpty == true) {
                   updateProfiles(state.responseProfileSwipe!);
@@ -73,6 +91,10 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
                     cardsCount: cards.length,
                     onSwipe: _onSwipe,
                     onUndo: _onUndo,
+                    isLoop: false,
+                    onEnd: (){
+                      context.read<ProfileSwipeBloc>().add(OnRequestApiCall("", ""));
+                        },
                     numberOfCardsDisplayed: cards.length > 1 ? 2 : 1,
                     padding: const EdgeInsets.all(0.0),
                     cardBuilder: (context,
@@ -94,11 +116,14 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
     );
   }
 
-  void swipeRightMethod() {
+  void swipeRightMethod(String id, String imageUri) {
+    this.imageUri = imageUri;
+    context.read<ProfileSwipeBloc>().add(OnCreateRequest(id));
     controller.swipe(CardSwiperDirection.right);
+
   }
 
-  void swipeLeftMethod() {
+  void swipeLeftMethod(String id) {
     controller.swipe(CardSwiperDirection.left);
   }
 
@@ -125,8 +150,7 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
   }
 
   void updateProfiles(ResponseProfileSwipe responseProfileSwipe) {
-
-    cards = responseProfileSwipe.browseProfiles!.profiles.map((profile) => SwipeCard(
+     cards = responseProfileSwipe.browseProfiles!.profiles.map((profile) => SwipeCard(
       likeAction: swipeRightMethod,
       dislikeAction: swipeLeftMethod,
       id: profile.id,
@@ -137,6 +161,7 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
       isVerified: true,
       pronouns: "",
     )).toList();
+
 
   }
 }

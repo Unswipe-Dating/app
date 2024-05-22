@@ -243,7 +243,8 @@ class _SwipeCard extends State<SwipeCard> {
                                     heroTag: null,
                                     shape: const CircleBorder(),
                                     onPressed: () {
-                                      widget.dislikeAction();
+                                      context.read<ProfileSwipeBloc>().add(OnRejectRequest(widget.id));
+                                      widget.dislikeAction(widget.id);
                                       controller.jumpTo(0);
                                     },
                                     backgroundColor: Colors.black,
@@ -283,8 +284,7 @@ class _SwipeCard extends State<SwipeCard> {
   String message = "Are you sure you want to proceed?";
 
   void handleAccept() {
-    CustomNavigationHelper.router
-        .push(CustomNavigationHelper.profilePathHyperEx, extra: imageUrls[0]);
+    widget.likeAction(widget.id);
   }
 
   void handleReject() {

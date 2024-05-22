@@ -29,8 +29,10 @@ class ContactBlockRepositoryImpl implements ContactBlockRepository {
       } on Exception catch (e, _) {
         return Failure(error: e);
       }
+    } else if (response is OperationFailure) {
+      return OperationFailure(error: (response as OperationFailure).error);
     } else {
-      return Failure(error: Exception((response as Failure).error));
+      return Failure(error: (response as Failure).error);
     }
   }
 

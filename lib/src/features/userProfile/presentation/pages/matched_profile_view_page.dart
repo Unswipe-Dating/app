@@ -29,7 +29,7 @@ class MatchedSwipeInterface extends StatefulWidget {
 }
 
 class _MatchedSwipeInterfaceState extends State<MatchedSwipeInterface> {
-  late List<SwipeCard> cards;
+  List<SwipeCard> cards = [];
   final CardSwiperController controller = CardSwiperController();
 
 
@@ -125,7 +125,8 @@ class _MatchedSwipeInterfaceState extends State<MatchedSwipeInterface> {
 
   void updateProfiles(ResponseProfileSwipe responseProfileSwipe) {
 
-    cards = responseProfileSwipe.getRequestedProfilesForUser!.map((profile) => SwipeCard(
+    if(cards.isEmpty) {
+      cards = responseProfileSwipe.getRequestedProfilesForUser!.map((profile) => SwipeCard(
       likeAction: swipeRightMethod,
       dislikeAction: swipeLeftMethod,
       id: profile.id,
@@ -136,6 +137,7 @@ class _MatchedSwipeInterfaceState extends State<MatchedSwipeInterface> {
       isVerified: true,
       pronouns: "",
     )).toList();
+    }
 
   }
 }

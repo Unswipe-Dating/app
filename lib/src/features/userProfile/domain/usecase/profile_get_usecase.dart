@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:injectable/injectable.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:unswipe/src/features/login/data/models/request_otp/otp_response.dart';
 import 'package:unswipe/src/features/login/domain/repository/login_repository.dart';
 import 'package:unswipe/src/features/login/presentation/bloc/login_bloc.dart';
@@ -16,17 +17,18 @@ import '../repository/profile_swipe_repository.dart';
 class ProfileGetUseCase {
   final ProfileSwipeRepository _repository;
 
+  BehaviorSubject<GetProfileSwipeUseCaseResponse> controller =
+  BehaviorSubject<GetProfileSwipeUseCaseResponse>();
+
   ProfileGetUseCase(this._repository);
 
 
-  Future<Stream<GetProfileSwipeUseCaseResponse>> buildUseCaseStream(String token,
+   FutureOr<void> buildUseCaseStream(String token,
       ProfileSwipeParams? params) async {
-    final controller = StreamController<GetProfileSwipeUseCaseResponse>();
     try{
       if(params != null) {
         final result = await _repository.getProfiles(token, params);
-        controller.add(GetProfileSwipeUseCaseResponse(result));
-        controller.close();
+         controller.add(GetProfileSwipeUseCaseResponse(result));
       } else {
         controller.addError(Exception());
       }
@@ -34,7 +36,6 @@ class ProfileGetUseCase {
       controller.addError(e);
     }
 
-    return controller.stream;
   }
 
 }

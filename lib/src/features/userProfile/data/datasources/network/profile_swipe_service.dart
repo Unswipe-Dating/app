@@ -103,7 +103,7 @@ class ProfileSwipeService {
 
 
 
-  Future<ApiResponse<ResponseProfileRequest>> swipeProfiles(String token,
+  Future<ApiResponse<ResponseProfileRequest>> acceptProfiles(String token,
       ProfileSwipeParams params,
       ) async {
     const query = '''
@@ -177,10 +177,7 @@ class ProfileSwipeService {
 
     final response = await service.performMutationWithHeader(token, query, variables: {
       "data": {
-        "type": "HYPER_EXCLUSIVE",
-        "requesterProfileId": params.userId,
-        "requesteeProfileId": params.matchUserId,
-        "status" :"ACTIVE"
+        "id": params.matchUserId,
       },
     });
     log('$response');

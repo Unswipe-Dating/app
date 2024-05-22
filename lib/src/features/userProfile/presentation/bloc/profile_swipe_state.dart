@@ -2,7 +2,15 @@ import 'package:equatable/equatable.dart';
 
 import '../../data/model/get_profile/response_profile_swipe.dart';
 
-enum ProfileSwipeStatus { initial, fetchedToken, loading, loaded, error }
+enum ProfileSwipeStatus { initial,
+  fetchedToken,
+  loading,
+  loaded,
+  loadedCreate,
+  loadedReject,
+  error,
+  errorSwipe
+}
 
 class ProfileSwipeState extends Equatable {
   final ProfileSwipeStatus status;

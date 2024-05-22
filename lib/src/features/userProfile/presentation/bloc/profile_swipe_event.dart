@@ -26,6 +26,23 @@ class OnUpdateOnBoardingUserEvent extends ProfileSwipeEvent {
   OnUpdateOnBoardingUserEvent();
 }
 
+class OnInitiateSubjects extends ProfileSwipeEvent {
+  OnInitiateSubjects();
+}
+
+class OnInitiateRejectSubject extends ProfileSwipeEvent {
+  OnInitiateRejectSubject();
+}
+
+class OnInitiateAcceptSubject extends ProfileSwipeEvent {
+  OnInitiateAcceptSubject();
+}
+
+class OnInitiateMatchSubject extends ProfileSwipeEvent {
+  OnInitiateMatchSubject();
+}
+
+
 class OnRequestApiCall extends ProfileSwipeEvent {
   final String id;
   final String token;
@@ -37,25 +54,18 @@ class OnRequestApiCall extends ProfileSwipeEvent {
 }
 
 class OnCreateRequest extends ProfileSwipeEvent {
-  final String id;
-  final String token;
+
   final String matchId;
 
   OnCreateRequest(
-    this.token,
-    this.id,
       this.matchId,
   );
 }
 
 class OnRejectRequest extends ProfileSwipeEvent {
-  final String id;
-  final String token;
   final String matchId;
 
   OnRejectRequest(
-      this.token,
-      this.id,
       this.matchId,
       );
 }
