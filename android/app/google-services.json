@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "815658870442",
+    "project_id": "unswipe-5a567",
+    "storage_bucket": "unswipe-5a567.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:815658870442:android:1a3aac74a12f19f3ffd2d3",
+        "android_client_info": {
+          "package_name": "com.abhilashi.unswipe"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCiTnmXain_Y9xBxNKV8G1IOvZCjzCwgJo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -34,18 +34,18 @@ dependencies:
   url_strategy: ^0.2.0
   tuple: ^2.0.0
   flutter_native_splash: ^2.3.11
-  app_state: ^0.7.0
+#  app_state: ^0.9.4
   bloc: ^8.1.0
-  enum_map: ^0.1.0
-  keyed_collection_widgets: ^0.3.2
+#  enum_map: ^0.3.0
+#  keyed_ collection_widgets: ^0.4.3
   font_awesome_flutter: ^10.7.0
-  bootstrap_icons: ^1.8.1
+#  bootstrap_icons: ^1.8.1
   flutter_card_swiper: ^7.0.0
   path: ^1.9.0
   injectable: ^2.4.1
   permission_handler: ^11.3.1
   flutter_reorderable_grid_view: ^4.0.0
-  file_picker: ^6.1.1
+  file_picker: ^8.0.3
   image_picker: ^1.0.4
 
   contacts_service: ^0.6.3
@@ -54,9 +54,9 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.6
+#  cupertino_icons: ^1.0.6
 
-  flutter_launcher_icons: ^0.12.0
+  flutter_launcher_icons: ^0.13.1
 
   # To Store Data In Local Storage
   shared_preferences: ^2.2.2
@@ -91,7 +91,7 @@ dependencies:
   # BloC State Management
   flutter_bloc: ^8.1.3
 
-  google_sign_in: ^5.2.4
+#  google_sign_in: ^6.2.1
   graphql_flutter: ^5.0.1
   # Json Annotation
   json_annotation: ^4.8.1
@@ -107,10 +107,9 @@ dependencies:
   pull_to_refresh: ^2.0.0
 
   # Shimmer when loading data from data source
-  shimmer: ^3.0.0
+#  shimmer: ^3.0.0
 
   # Device preview to test app in all devices
-  device_preview: ^1.1.0
 
   # Web view
   webview_flutter: ^4.4.2
@@ -120,25 +119,29 @@ dependencies:
   country_picker: ^2.0.25
 
   # Photo view to view image and control it
-  photo_view: ^0.14.0
+  photo_view: ^0.15.0
 
   flutter_svg_provider: ^1.0.7
 
-  # Mock classes
-  mockito: ^5.4.3
+
+  firebase_core: ^2.31.1
+  firebase_messaging: ^14.9.3
+  flutter_local_notifications: ^17.1.2
+
 
   # Generate CSV file and get coverage report
   test_cov_console: ^0.2.2
 
   # For Localization
-  intl: ^0.18.0
+  intl: ^0.19.0
 
-  go_router: ^10.1.2
+  go_router: ^14.1.3
   dart_either: ^1.0.0
   rxdart: ^0.27.7
   rxdart_ext: ^0.2.7
   loading_animation_widget: ^1.2.1
   reclaim_sdk: ^1.1.0
+  app_settings: ^5.1.1
 
 
 dev_dependencies:
@@ -147,10 +150,11 @@ dev_dependencies:
   # To generate Localization File's
   build_runner: ^2.4.7
   injectable_generator: ^2.6.1
-  analyzer: ^6.4.1
+#  analyzer: ^6.4.1
   built_value_generator: ^8.4.2
-  flutter_lints: ^2.0.1
-  built_value: ^8.4.2
+  flutter_lints: ^4.0.0
+  dependency_validator: ^3.0.0
+
 
 
   # Localization config

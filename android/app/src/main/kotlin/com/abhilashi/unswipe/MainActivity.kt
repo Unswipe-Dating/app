@@ -1,4 +1,4 @@
-package com.example.unswipe
+package com.abhilashi.unswipe
 
 import io.flutter.embedding.android.FlutterActivity
 

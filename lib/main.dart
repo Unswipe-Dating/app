@@ -1,21 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:provider/provider.dart';
 import 'package:unswipe/src/core/utils/bootstrap.dart';
-import 'package:unswipe/src/features/login/presentation/pages/Login.dart';
-import 'package:device_preview/device_preview.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:unswipe/src/core/router/app_router.dart';
 import 'package:unswipe/src/core/styles/app_theme.dart';
-import 'package:unswipe/src/core/translations/l10n.dart';
 
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:unswipe/src/core/helper/helper.dart';
-import 'package:unswipe/src/core/utils/injections.dart';
-import 'package:unswipe/src/shared/data/data_sources/app_shared_prefs.dart';
 
 
 final navigatorKey = GlobalKey<NavigatorState>();
@@ -64,7 +54,6 @@ class _AppState extends State<App> with WidgetsBindingObserver {
                 theme: appTheme,
                 debugShowCheckedModeBanner: false,
                 locale: locale,
-                builder: DevicePreview.appBuilder,
               );
         },
       ),
