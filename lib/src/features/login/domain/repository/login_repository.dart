@@ -15,15 +15,17 @@ abstract class LoginRepository {
 }
 
 class OtpParams {
-  late final String phone;
-  late final String id;
-  late final String otp;
-  late final String otpOrderId;
+   final String phone;
+   final String id;
+   final String otp;
+   final String otpOrderId;
+   final String fcmRegisterationToken;
 
   OtpParams({
     required this.phone,
     required this.id,
-     this.otp = "",
-    this.otpOrderId = ""
+    this.otp = "",
+    this.otpOrderId = "",
+    this.fcmRegisterationToken = ""
   });
 }

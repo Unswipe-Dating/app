@@ -54,12 +54,20 @@ class OtpService {
       OtpParams params,
       ) async {
     const query = '''
-     mutation ValidateOTP(\$id: String!,\$phone: String!, \$otp: String!, \$otpOrderId: String!) {
+     mutation ValidateOTP(
+     \$id: String!,
+      \$phone: String!,
+       \$otp: String!,
+        \$otpOrderId: String!,
+         \$fcmRegisterationToken: String!
+) {
   validateOTP(data: {
     id: \$id,
     phone: \$phone,
     otp: \$otp,
     otpOrderId: \$otpOrderId
+    fcmRegisterationToken: \$fcmRegisterationToken
+
   }) {
     accessToken
     refreshToken
@@ -73,7 +81,8 @@ class OtpService {
         "id": params.phone,
         "phone":params.phone,
         "otp": params.otp,
-        "otpOrderId": params.otpOrderId
+        "otpOrderId": params.otpOrderId,
+        "fcmRegisterationToken": params.fcmRegisterationToken
 
     });
     log('$response');
@@ -109,6 +118,7 @@ Future<ApiResponse<SignUpResponse>> signupOrLogin(
     user {
         id
         profileId
+        firebaseCustomToken
     }
   }
 }

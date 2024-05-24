@@ -4,6 +4,7 @@ import 'dart:ffi';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:unswipe/src/features/login/data/models/request_otp/otp_response.dart';
 import 'package:unswipe/src/features/login/data/models/request_otp/request_otp.dart';
 import 'package:unswipe/src/features/login/data/models/signupOrLogin/signup_response.dart';
@@ -130,6 +131,8 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
     String token = "";
     String id = "";
     String? profile;
+    String firebaseCustomToken = "";
+
     LoginState intermediateState = state;
 
     emitter(state.copyWith(status: status));
@@ -155,6 +158,9 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
                 .accessToken;
         profile = (((responseData as api_response.Success).data) as SignUpResponse).signup
             .user.profileId;
+        firebaseCustomToken = (((responseData as api_response.Success).data) as SignUpResponse).signup
+            .user.firebaseCustomToken;
+
 
       } else {
         status = LoginStatus.error;
@@ -162,7 +168,12 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
     });
     await Future.delayed(const Duration(seconds: 2), () {});
     if (status == LoginStatus.verified) {
-      await _onLoginSuccess(OnLoginSuccess(token, event.params.id, profile));
+      if(firebaseCustomToken.isNotEmpty) {
+        await FirebaseAuth.instance.signInWithCustomToken(firebaseCustomToken).then((onValue){
+          print(onValue.user?.uid);
+        });
+      }
+    await _onLoginSuccess(OnLoginSuccess(token, event.params.id, profile));
       intermediateState = await _onUpdatingOnBoardingEvent(profile);
       status = intermediateState.status;
     }
@@ -182,7 +193,9 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
         phone: event.params.phone,
         id: event.params.id,
         otp: event.params.otp,
-        otpOrderId: otpId));
+        otpOrderId: otpId,
+        fcmRegisterationToken: event.params.fcmRegisterationToken
+    ));
 
     stream.listen((response) {
       final responseData = response.val;

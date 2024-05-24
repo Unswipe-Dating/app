@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:unswipe/notification_services.dart';
 import 'package:unswipe/src/features/login/domain/repository/login_repository.dart';
 import 'package:unswipe/src/features/login/domain/usecases/request_otp_use_case.dart';
 import 'package:unswipe/src/features/login/domain/usecases/signup_login_usecase.dart';
@@ -27,6 +28,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
 
+
   _selectScreen() async {
     if (await Permission.contacts.isGranted) {
       CustomNavigationHelper.router.go(
@@ -34,7 +36,7 @@ class _LoginScreenState extends State<LoginScreen> {
       );
     } else {
       CustomNavigationHelper.router.go(
-          CustomNavigationHelper.blockContactPermissionPath,);
+        CustomNavigationHelper.blockContactPermissionPath,);
     }
   }
 
@@ -42,43 +44,51 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height,
+      width: MediaQuery
+          .of(context)
+          .size
+          .width,
+      height: MediaQuery
+          .of(context)
+          .size
+          .height,
       decoration: const BoxDecoration(
           image: DecorationImage(
-        image: AssetImage(
-          'assets/images/crowd_bkgd.jpg',
-        ),
-        fit: BoxFit.fill,
-      )),
+            image: AssetImage(
+              'assets/images/crowd_bkgd.jpg',
+            ),
+            fit: BoxFit.fill,
+          )),
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: BlocProvider(
-          create: (BuildContext context) => LoginBloc(
-              updateUserStateStreamUseCase:
+          create: (BuildContext context) =>
+              LoginBloc(
+                  updateUserStateStreamUseCase:
                   GetIt.I.get<UpdateUserStateStreamUseCase>(),
-              requestOtpUseCase: GetIt.I.get<RequestOtpUseCase>(),
-          verifyOtpUseCase: GetIt.I.get<VerifyOtpUseCase>(),
-            updateOnboardingStateStreamUseCase: GetIt.I.get<UpdateOnboardingStateStreamUseCase>(),
-            signUpUseCase: GetIt.I.get<SignUpUseCase>()
-          ),
+                  requestOtpUseCase: GetIt.I.get<RequestOtpUseCase>(),
+                  verifyOtpUseCase: GetIt.I.get<VerifyOtpUseCase>(),
+                  updateOnboardingStateStreamUseCase: GetIt.I.get<
+                      UpdateOnboardingStateStreamUseCase>(),
+                  signUpUseCase: GetIt.I.get<SignUpUseCase>()
+              ),
 
           child: BlocConsumer<LoginBloc, LoginState>(
             listener: (context, state) {
               if (state.status == LoginStatus.loaded) {
-                if(state.onBoardingStatus == OnBoardingStatus.profile) {
+                if (state.onBoardingStatus == OnBoardingStatus.profile) {
                   CustomNavigationHelper.router.go(
                     CustomNavigationHelper.profilePath,
                   );
                 } else {
                   _selectScreen();
                 }
-
               }
             },
             builder: (context, state) {
               return state.status == LoginStatus.loadingVerification
-                  ? const Center(child: CircularProgressIndicator()): const Stack(
+                  ? const Center(child: CircularProgressIndicator())
+                  : const Stack(
                 children: [
                   Center(
                     child: MyForm(),
@@ -91,9 +101,11 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+
 }
 
 class MyForm extends StatefulWidget {
+
   const MyForm({
     super.key,
   });
@@ -103,6 +115,8 @@ class MyForm extends StatefulWidget {
 }
 
 class _MyFormState extends State<MyForm> {
+  NotificationServices services = NotificationServices();
+  String fcmToken = "";
   TextEditingController contactController = TextEditingController();
   TextEditingController codeController = TextEditingController();
 
@@ -123,6 +137,11 @@ class _MyFormState extends State<MyForm> {
   @override
   void initState() {
     super.initState();
+
+    services.requestNotificationPermission();
+    services.getDeviceToken().then((onValue){
+      fcmToken = onValue ?? "";
+    });
 
     // Add listeners to the controllers to track changes in text fields
     buttonState = CustomButtonState.code;
@@ -197,7 +216,9 @@ class _MyFormState extends State<MyForm> {
                 OnOtpVerificationRequest(
                     OtpParams(phone: "${codeController.text}${contactController.text}",
                         id: "${codeController.text}${contactController.text}",
-                        otp: otpController.text)));
+                        otp: otpController.text,
+                        fcmRegisterationToken: fcmToken,
+                    )));
 
         }
     }

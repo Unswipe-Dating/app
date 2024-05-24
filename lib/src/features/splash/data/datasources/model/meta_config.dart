@@ -11,6 +11,7 @@ class MetaConfig {
   FirebaseConfig firebase;
   ReclaimConfig reclaim;
   int? timeLeftForExpiry;
+  String? status;
 
   Map<String, dynamic> toJson() => _$MetaConfigToJson(this);
 }

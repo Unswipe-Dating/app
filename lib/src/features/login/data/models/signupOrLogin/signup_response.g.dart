@@ -20,12 +20,14 @@ SignUpUserResponse _$SignUpUserResponseFromJson(Map<String, dynamic> json) =>
     SignUpUserResponse(
       json['id'] as String,
       json['profileId'] as String?,
+      json['firebaseCustomToken'] as String,
     );
 
 Map<String, dynamic> _$SignUpUserResponseToJson(SignUpUserResponse instance) =>
     <String, dynamic>{
       'id': instance.id,
       'profileId': instance.profileId,
+      'firebaseCustomToken': instance.firebaseCustomToken,
     };
 
 SignUpDataResponse _$SignUpDataResponseFromJson(Map<String, dynamic> json) =>

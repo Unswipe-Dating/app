@@ -27,13 +27,13 @@ import '../../features/onBoarding/domain/usecases/get_onboarding_state_stream_us
 import '../../features/onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart'
     as _i41;
 import '../../features/splash/data/datasources/remote/meta_api_service.dart'
-    as _i12;
+    as _i8;
 import '../../features/splash/data/repository/splash_repository_impl.dart'
     as _i14;
 import '../../features/splash/domain/repository/splash_repository.dart' as _i13;
 import '../../features/splash/domain/usecases/meta_usecase.dart' as _i18;
 import '../../features/userOnboarding/contact_block/data/datasources/network/contact_bloc_service.dart'
-    as _i8;
+    as _i9;
 import '../../features/userOnboarding/contact_block/data/repository/contact_block_repository_impl.dart'
     as _i24;
 import '../../features/userOnboarding/contact_block/domain/repository/contact_block_repository.dart'
@@ -41,7 +41,7 @@ import '../../features/userOnboarding/contact_block/domain/repository/contact_bl
 import '../../features/userOnboarding/contact_block/domain/usecase/contact_bloc_usecase.dart'
     as _i36;
 import '../../features/userOnboarding/image_upload/data/datasources/network/image_upload_service.dart'
-    as _i9;
+    as _i10;
 import '../../features/userOnboarding/image_upload/data/repository/image_upload_repository_impl.dart'
     as _i20;
 import '../../features/userOnboarding/image_upload/domain/repository/image_upload_repository.dart'
@@ -49,7 +49,7 @@ import '../../features/userOnboarding/image_upload/domain/repository/image_uploa
 import '../../features/userOnboarding/image_upload/domain/usecase/image_upload_usecase.dart'
     as _i25;
 import '../../features/userOnboarding/profile_update/data/datasources/network/service/profile_update_service.dart'
-    as _i10;
+    as _i11;
 import '../../features/userOnboarding/profile_update/data/repository/update_profile_repository_impl.dart'
     as _i22;
 import '../../features/userOnboarding/profile_update/domain/repository/update_profile_repository.dart'
@@ -59,7 +59,7 @@ import '../../features/userOnboarding/profile_update/domain/usecases/create_user
 import '../../features/userOnboarding/profile_update/domain/usecases/update_user_use_case.dart'
     as _i43;
 import '../../features/userProfile/data/datasources/network/profile_swipe_service.dart'
-    as _i11;
+    as _i12;
 import '../../features/userProfile/data/repository/profile_swipe_repository_impl.dart'
     as _i17;
 import '../../features/userProfile/domain/repository/profile_swipe_repository.dart'
@@ -99,32 +99,32 @@ extension GetItInjectableX on _i1.GetIt {
     gh.singleton<_i4.GraphQLService>(() => _i4.GraphQLService());
     gh.factory<_i5.Crypto>(() => _i6.MethodChannelCryptoImpl());
     gh.factory<_i7.OtpService>(() => _i7.OtpService(gh<_i4.GraphQLService>()));
-    gh.factory<_i8.ContactBlockService>(
-        () => _i8.ContactBlockService(gh<_i4.GraphQLService>()));
-    gh.factory<_i9.ImageUploadService>(
-        () => _i9.ImageUploadService(gh<_i4.GraphQLService>()));
-    gh.factory<_i10.UpdateUserService>(
-        () => _i10.UpdateUserService(gh<_i4.GraphQLService>()));
-    gh.factory<_i11.ProfileSwipeService>(
-        () => _i11.ProfileSwipeService(gh<_i4.GraphQLService>()));
-    gh.factory<_i12.MetaService>(
-        () => _i12.MetaService(gh<_i4.GraphQLService>()));
+    gh.factory<_i8.MetaService>(
+        () => _i8.MetaService(gh<_i4.GraphQLService>()));
+    gh.factory<_i9.ContactBlockService>(
+        () => _i9.ContactBlockService(gh<_i4.GraphQLService>()));
+    gh.factory<_i10.ImageUploadService>(
+        () => _i10.ImageUploadService(gh<_i4.GraphQLService>()));
+    gh.factory<_i11.UpdateUserService>(
+        () => _i11.UpdateUserService(gh<_i4.GraphQLService>()));
+    gh.factory<_i12.ProfileSwipeService>(
+        () => _i12.ProfileSwipeService(gh<_i4.GraphQLService>()));
     gh.factory<_i13.SplashRepository>(
-        () => _i14.SplashRepositoryImpl(gh<_i12.MetaService>()));
+        () => _i14.SplashRepositoryImpl(gh<_i8.MetaService>()));
     gh.factory<_i5.LocalDataSource>(() => _i15.SharedPrefUtil(
           gh<_i3.RxSharedPreferences>(),
           gh<_i5.Crypto>(),
         ));
     gh.factory<_i16.ProfileSwipeRepository>(
-        () => _i17.ProfileSwipeRepositoryImpl(gh<_i11.ProfileSwipeService>()));
+        () => _i17.ProfileSwipeRepositoryImpl(gh<_i12.ProfileSwipeService>()));
     gh.factory<_i18.MetaUseCase>(
         () => _i18.MetaUseCase(gh<_i13.SplashRepository>()));
     gh.factory<_i19.ImageUploadRepository>(
-        () => _i20.ImageUploadRepositoryImpl(gh<_i9.ImageUploadService>()));
+        () => _i20.ImageUploadRepositoryImpl(gh<_i10.ImageUploadService>()));
     gh.factory<_i21.UpdateProfileRepository>(
-        () => _i22.UpdateProfileRepositoryImpl(gh<_i10.UpdateUserService>()));
+        () => _i22.UpdateProfileRepositoryImpl(gh<_i11.UpdateUserService>()));
     gh.factory<_i23.ContactBlockRepository>(
-        () => _i24.ContactBlockRepositoryImpl(gh<_i8.ContactBlockService>()));
+        () => _i24.ContactBlockRepositoryImpl(gh<_i9.ContactBlockService>()));
     gh.factory<_i25.ImageUploadUseCase>(
         () => _i25.ImageUploadUseCase(gh<_i19.ImageUploadRepository>()));
     gh.factory<_i26.LoginRepository>(

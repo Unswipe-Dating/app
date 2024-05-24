@@ -60,8 +60,8 @@ Map<String, dynamic> _$ResponseProfileCreateRequestToJson(
 ResponseProfileRequestChallenge _$ResponseProfileRequestChallengeFromJson(
         Map<String, dynamic> json) =>
     ResponseProfileRequestChallenge(
-      json['weeklyDates'] as int,
-      json['amountUSD'] as int,
+      (json['weeklyDates'] as num).toInt(),
+      (json['amountUSD'] as num).toInt(),
     );
 
 Map<String, dynamic> _$ResponseProfileRequestChallengeToJson(

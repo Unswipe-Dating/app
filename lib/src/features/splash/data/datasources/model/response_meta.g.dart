@@ -18,14 +18,15 @@ Map<String, dynamic> _$ResponseMetaToJson(ResponseMeta instance) =>
 MetaConfig _$MetaConfigFromJson(Map<String, dynamic> json) => MetaConfig(
       FirebaseConfig.fromJson(json['firebase'] as Map<String, dynamic>),
       ReclaimConfig.fromJson(json['reclaim'] as Map<String, dynamic>),
-      json['timeLeftForExpiry'] as int?,
-    );
+      (json['timeLeftForExpiry'] as num?)?.toInt(),
+    )..status = json['status'] as String?;
 
 Map<String, dynamic> _$MetaConfigToJson(MetaConfig instance) =>
     <String, dynamic>{
       'firebase': instance.firebase,
       'reclaim': instance.reclaim,
       'timeLeftForExpiry': instance.timeLeftForExpiry,
+      'status': instance.status,
     };
 
 FirebaseConfig _$FirebaseConfigFromJson(Map<String, dynamic> json) =>

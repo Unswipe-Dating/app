@@ -3,6 +3,7 @@
 
 import 'package:app_settings/app_settings.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
 
 class NotificationServices {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
@@ -24,10 +25,12 @@ class NotificationServices {
 
     if(settings.authorizationStatus == AuthorizationStatus.authorized) {
 
+      debugPrint("");
     } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
+      debugPrint("");
 
     } else {
-      //AppSettings.openAppSettings(type: AppSettingsType.notification);
+      AppSettings.openAppSettings(type: AppSettingsType.notification);
     }
 
   }

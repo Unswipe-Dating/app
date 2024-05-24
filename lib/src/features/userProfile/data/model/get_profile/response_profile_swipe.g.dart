@@ -32,7 +32,7 @@ ResponseProfileSwipeBrowse _$ResponseProfileSwipeBrowseFromJson(
           .map((e) => ResponseProfileList.fromJson(e as Map<String, dynamic>))
           .toList(),
       json['hasNext'] as bool?,
-      json['nextCursor'] as int?,
+      (json['nextCursor'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$ResponseProfileSwipeBrowseToJson(
