@@ -56,10 +56,10 @@ class OtpService {
     const query = '''
      mutation ValidateOTP(
      \$id: String!,
-      \$phone: String!,
-       \$otp: String!,
-        \$otpOrderId: String!,
-         \$fcmRegisterationToken: String!
+     \$phone: String!,
+     \$otp: String!,
+     \$otpOrderId: String!,
+     \$fcmRegisterationToken: String!
 ) {
   validateOTP(data: {
     id: \$id,

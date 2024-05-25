@@ -9,8 +9,8 @@ class ValidateOtp {
   factory ValidateOtp.fromJson(Map<String, dynamic> json) =>
       _$ValidateOtpFromJson(json);
 
-  String accessToken;
-  String refreshToken;
+  String? accessToken;
+  String? refreshToken;
 
   Map<String, dynamic> toJson() => _$ValidateOtpToJson(this);
 }

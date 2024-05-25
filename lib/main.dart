@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 import 'package:provider/provider.dart';
@@ -30,6 +31,10 @@ class _AppState extends State<App> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+
+    FirebaseMessaging.onMessage.listen((data){
+      debugPrint("$data");
+    });
 
     WidgetsBinding.instance.addObserver(this);
   }

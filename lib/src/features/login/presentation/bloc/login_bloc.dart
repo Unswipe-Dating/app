@@ -168,11 +168,11 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
     });
     await Future.delayed(const Duration(seconds: 2), () {});
     if (status == LoginStatus.verified) {
-      if(firebaseCustomToken.isNotEmpty) {
-        await FirebaseAuth.instance.signInWithCustomToken(firebaseCustomToken).then((onValue){
-          print(onValue.user?.uid);
-        });
-      }
+      // if(firebaseCustomToken.isNotEmpty) {
+      //   await FirebaseAuth.instance.signInWithCustomToken(firebaseCustomToken).then((onValue){
+      //     print(onValue.user?.uid);
+      //   });
+      // }
     await _onLoginSuccess(OnLoginSuccess(token, event.params.id, profile));
       intermediateState = await _onUpdatingOnBoardingEvent(profile);
       status = intermediateState.status;
@@ -208,7 +208,7 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
         token =
             (((responseData as api_response.Success).data) as VerifyOtpResponse)
                 .validateOTP
-                .accessToken;
+                .accessToken ?? "";
       } else {
         status = LoginStatus.error;
       }

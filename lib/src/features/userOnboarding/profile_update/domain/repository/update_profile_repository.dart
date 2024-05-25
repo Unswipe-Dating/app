@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:nativewrappers/_internal/vm/lib/ffi_patch.dart';
 
 import 'package:unswipe/src/features/userOnboarding/profile_update/data/models/update_profile_response.dart';
 
@@ -23,6 +24,7 @@ class UpdateProfileParams {
   String? name;
   String? pronouns;
   bool? showTruncatedName;
+  List<String>? locationCoordinates;
 
   UpdateProfileParams({this.userId,
       this.completed,
@@ -33,7 +35,9 @@ class UpdateProfileParams {
       this.interests,
       this.name,
       this.pronouns,
-      this.showTruncatedName}
+      this.showTruncatedName,
+    this.locationCoordinates,
+  }
       );
 
   UpdateProfileParams getUpdatedParams(UpdateProfileParams? params) {

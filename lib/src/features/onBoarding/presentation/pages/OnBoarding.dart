@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:unswipe/src/core/utils/injections.dart';
 import 'package:unswipe/src/features/onBoarding/presentation/bloc/onboarding_bloc.dart';
 import 'package:unswipe/src/features/onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart';
@@ -68,6 +69,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   @override
   void initState() {
     super.initState();
+    var status = Permission.contacts.status;
     _pageController = PageController(initialPage: 0);
   }
   @override
