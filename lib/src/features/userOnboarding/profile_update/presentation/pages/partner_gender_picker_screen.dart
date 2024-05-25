@@ -14,7 +14,7 @@ class PartnerGenderUpdateScreen extends StatefulWidget {
   _PartnerGenderUpdateScreenState createState() => _PartnerGenderUpdateScreenState();
 }
 
-enum SingingCharacter { MEN, WOMEN, Nonbinary }
+enum SingingCharacter { MEN, WOMEN, NONBINARY }
 
 class _PartnerGenderUpdateScreenState extends State<PartnerGenderUpdateScreen> {
   bool isButtonEnabled = true;
@@ -150,7 +150,7 @@ class _PartnerGenderUpdateScreenState extends State<PartnerGenderUpdateScreen> {
                               fontSize: 18.0),
                         ),
                         leading: Radio<SingingCharacter>(
-                          value: SingingCharacter.Nonbinary,
+                          value: SingingCharacter.NONBINARY,
                           groupValue: _character,
                           fillColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
                             if (states.contains(MaterialState.disabled)) {
@@ -197,7 +197,7 @@ class _PartnerGenderUpdateScreenState extends State<PartnerGenderUpdateScreen> {
                   padding: EdgeInsets.all(16),
                   child: ElevatedButton(
                     onPressed: isButtonEnabled ? () {
-                      widget.params?.gender = _character?.name;
+                      widget.params?.datingPreference = _character?.name;
                       CustomNavigationHelper.router.push(
                         CustomNavigationHelper.onboardingInterestPath,
                           extra: UpdateProfileParams().getUpdatedParams(widget.params)

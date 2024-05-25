@@ -14,7 +14,7 @@ class GenderUpdateScreen extends StatefulWidget {
   _GenderUpdateScreenState createState() => _GenderUpdateScreenState();
 }
 
-enum SingingCharacter { MEN, WOMEN, Nonbinary }
+enum SingingCharacter { MEN, WOMEN, NONBINARY }
 
 class _GenderUpdateScreenState extends State<GenderUpdateScreen> {
   bool isButtonEnabled = true;
@@ -149,7 +149,7 @@ class _GenderUpdateScreenState extends State<GenderUpdateScreen> {
                               fontSize: 18.0),
                         ),
                         leading: Radio<SingingCharacter>(
-                          value: SingingCharacter.Nonbinary,
+                          value: SingingCharacter.NONBINARY,
                           groupValue: _character,
                           fillColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
                             if (states.contains(MaterialState.disabled)) {
