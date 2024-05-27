@@ -151,9 +151,12 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
               isProfileMatchRequested: true,
               profileMatchDuration: res.getConfig.timeLeftForExpiry
           );
-        }  else {
-          return state.copyWith(status: SplashStatus.loaded,);
+        } else if (res.getConfig.status == "MATCHED"){
+          //todo
+        } else {
+          add(onFirstTimeUserEvent());
         }
+        return state.copyWith(status: SplashStatus.loaded,);
 
       } else {
         return state.copyWith(status: SplashStatus.error);

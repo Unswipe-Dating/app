@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -15,11 +16,19 @@ import 'app_bloc_observer.dart';
 import 'injections.dart';
 import 'log/app_logger.dart';
 
+@pragma('vm:entry-point')
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // If you're going to use other Firebase services in the background, such as Firestore,
+  // make sure you call `initializeApp` before using other Firebase services.
+
+}
+
 Future<void> bootstrap(FutureOr<Widget> Function() builder, String env) async {
   await runZonedGuarded(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
-      Firebase.initializeApp();
+      await Firebase.initializeApp();
+      FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
       CustomNavigationHelper.instance;
 
       flutterLogError();
@@ -37,6 +46,8 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder, String env) async {
     (error, stackTrace) => log(error.toString(), stackTrace: stackTrace),
   );
 }
+
+
 
 Future<void> initDioInjections() async {
   // initRootLogger();

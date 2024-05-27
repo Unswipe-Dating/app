@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:nativewrappers/_internal/vm/lib/ffi_patch.dart';
 
 import 'package:unswipe/src/features/userOnboarding/profile_update/data/models/update_profile_response.dart';
 
@@ -50,7 +49,8 @@ class UpdateProfileParams {
       interests: params?.interests,
       name: params?.name,
       pronouns: params?.pronouns,
-      showTruncatedName: params?.showTruncatedName
+      showTruncatedName: params?.showTruncatedName,
+      locationCoordinates: params?.locationCoordinates,
     );
   }
 }

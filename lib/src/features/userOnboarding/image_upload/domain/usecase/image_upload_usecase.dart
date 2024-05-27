@@ -28,7 +28,6 @@ class ImageUploadUseCase {
       if(files != null) {
         final result = await _repository.uploadImages(token, files);
         controller.add(UploadImageUseCaseResponse(result));
-        controller.close();
       } else {
         controller.addError(Exception());
       }

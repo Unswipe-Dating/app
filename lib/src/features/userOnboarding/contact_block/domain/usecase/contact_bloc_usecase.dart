@@ -24,7 +24,6 @@ class ContactBlockUseCase {
       if(params != null) {
         final result = await _repository.blockContacts(token, params);
         controller.add(GetBlockContactsUseCaseResponse(result));
-        controller.close();
       } else {
         controller.addError(Exception());
       }

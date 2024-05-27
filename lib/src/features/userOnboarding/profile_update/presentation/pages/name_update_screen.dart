@@ -185,6 +185,10 @@ class _NameUpdateScreenState extends State<NameUpdateScreen> {
                 padding: const EdgeInsets.all(16),
                 child: ElevatedButton(
                   onPressed: isButtonEnabled ? () async {
+                    isButtonEnabled = false;
+                    setState(() {
+
+                    });
                     var pos = await _determinePosition();
                     CustomNavigationHelper.router.push(
                       CustomNavigationHelper.onboardingDOBPath,
@@ -192,6 +196,7 @@ class _NameUpdateScreenState extends State<NameUpdateScreen> {
                             showTruncatedName: isTrue, locationCoordinates: [pos.latitude.toString(),
                               pos.longitude.toString()])
                     );
+                    isButtonEnabled = true;
                   }: null,
                   style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,

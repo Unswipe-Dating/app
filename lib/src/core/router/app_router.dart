@@ -9,6 +9,7 @@ import 'package:unswipe/src/features/hyperExclusiveMatch/hyper_ex_request_lock_p
 import 'package:unswipe/src/features/hyperExclusiveMatch/hyper_exclusive_page.dart';
 import 'package:unswipe/src/features/login/presentation/pages/Login.dart';
 import 'package:unswipe/src/features/onBoarding/presentation/pages/OnBoarding.dart';
+import 'package:unswipe/src/features/settings/edit_profile_screen.dart';
 import 'package:unswipe/src/features/splash/presentation/pages/splash_page.dart';
 import 'package:unswipe/src/features/userOnboarding/profile_update/data/models/update_profile_response.dart';
 import 'package:unswipe/src/features/userOnboarding/profile_update/domain/repository/update_profile_repository.dart';
@@ -160,7 +161,7 @@ class CustomNavigationHelper {
                 path: settingsPath,
                 pageBuilder: (context, state) {
                   return getPage(
-                    child: const SwipeInterface(),
+                    child: const EditProfileScreen(),
                     state: state,
                   );
                 },
