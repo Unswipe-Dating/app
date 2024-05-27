@@ -64,7 +64,7 @@ import '../../features/userProfile/data/repository/profile_swipe_repository_impl
     as _i17;
 import '../../features/userProfile/domain/repository/profile_swipe_repository.dart'
     as _i16;
-import '../../features/userProfile/domain/usecase/profile_accept_usecase.dart'
+import '../../features/userProfile/domain/usecase/profile_create_usecase.dart'
     as _i28;
 import '../../features/userProfile/domain/usecase/profile_get_requested_usecase.dart'
     as _i29;

@@ -3,6 +3,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:unswipe/src/features/userOnboarding/contact_block/data/model/response_contact_block.dart';
 import 'package:unswipe/src/features/userOnboarding/contact_block/domain/repository/contact_block_repository.dart';
 import 'package:unswipe/src/features/userProfile/domain/usecase/profile_accept_usecase.dart';
+import 'package:unswipe/src/features/userProfile/domain/usecase/profile_create_usecase.dart';
 import 'package:unswipe/src/features/userProfile/domain/usecase/profile_get_requested_usecase.dart';
 import 'package:unswipe/src/features/userProfile/domain/usecase/profile_reject_usecase.dart';
 import 'package:unswipe/src/shared/domain/entities/auth_state.dart';
@@ -21,9 +22,10 @@ part 'profile_swipe_event.dart';
 class ProfileSwipeBloc extends Bloc<ProfileSwipeEvent, ProfileSwipeState> {
   final ProfileGetUseCase profileSwipeUseCase;
   final GetAuthStateStreamUseCase getAuthStateStreamUseCase;
-  final ProfileAcceptUseCase profileAcceptUseCase;
+  final ProfileCreateUseCase profileCreateUseCase;
   final ProfileRejectUseCase profileRejectUseCase;
   final ProfileGetRequestedUseCase profileGetRequestedUseCase;
+  final ProfileAcceptUseCase profileAcceptUseCase;
 
   String token = "";
   String id = "";
@@ -34,17 +36,21 @@ class ProfileSwipeBloc extends Bloc<ProfileSwipeEvent, ProfileSwipeState> {
   ProfileSwipeBloc({
     required this.profileSwipeUseCase,
     required this.getAuthStateStreamUseCase,
-    required this.profileAcceptUseCase,
+    required this.profileCreateUseCase,
     required this.profileRejectUseCase,
     required this.profileGetRequestedUseCase,
+    required this.profileAcceptUseCase,
   }) : super(const ProfileSwipeState()) {
     on<OnGetRequestedProfile>(_onStartRequestedProfileApi);
     on<OnProfileSwipeRequested>(_onStartProfileSwipe);
     on<OnRequestApiCall>(_onStartProfileApi);
     on<OnCreateRequest>(_onCreateRequest);
+    on<OnAcceptRequest>(_onAcceptRequest);
+
     on<OnRejectRequest>(_onRejectRequest);
     on<OnInitiateSubjects>(setUpProfileSwipeApi);
     on<OnInitiateRejectSubject>(setUpRejectApi);
+    on<OnInitiateCreateSubject>(setUpCreateApi);
     on<OnInitiateAcceptSubject>(setUpAcceptApi);
     on<OnInitiateMatchSubject>(setUpMatchApi);
   }
@@ -69,9 +75,9 @@ class ProfileSwipeBloc extends Bloc<ProfileSwipeEvent, ProfileSwipeState> {
     });
   }
 
-  setUpAcceptApi(
-      OnInitiateAcceptSubject event, Emitter<ProfileSwipeState> emitter) async {
-    await emitter.forEach(profileAcceptUseCase.controller.stream,
+  setUpCreateApi(
+      OnInitiateCreateSubject event, Emitter<ProfileSwipeState> emitter) async {
+    await emitter.forEach(profileCreateUseCase.controller.stream,
         onData: (response) {
       final responseData = response.val;
       if (responseData is api_response.Failure) {
@@ -86,6 +92,25 @@ class ProfileSwipeBloc extends Bloc<ProfileSwipeEvent, ProfileSwipeState> {
       }
     });
   }
+
+  setUpAcceptApi(
+      OnInitiateAcceptSubject event, Emitter<ProfileSwipeState> emitter) async {
+    await emitter.forEach(profileAcceptUseCase.controller.stream,
+        onData: (response) {
+          final responseData = response.val;
+          if (responseData is api_response.Failure) {
+            return state.copyWith(status: ProfileSwipeStatus.errorSwipe);
+          } else if (responseData is api_response.OperationFailure) {
+            return state.copyWith(status: ProfileSwipeStatus.errorSwipe);
+          } else if (responseData is api_response.Success) {
+            return state.copyWith(
+                status: ProfileSwipeStatus.loadedCreate);
+          } else {
+            return state.copyWith(status: ProfileSwipeStatus.errorSwipe);
+          }
+        });
+  }
+
 
   setUpRejectApi(
       OnInitiateRejectSubject event, Emitter<ProfileSwipeState> emitter) async {
@@ -127,6 +152,13 @@ class ProfileSwipeBloc extends Bloc<ProfileSwipeEvent, ProfileSwipeState> {
 
   _onCreateRequest(
       OnCreateRequest event, Emitter<ProfileSwipeState> emitter) async {
+    emitter(state.copyWith(status: ProfileSwipeStatus.loading));
+    await profileCreateUseCase.buildUseCaseStream(
+        token, ProfileSwipeParams(userId: userId, matchUserId: event.matchId));
+  }
+
+  _onAcceptRequest(
+      OnAcceptRequest event, Emitter<ProfileSwipeState> emitter) async {
     emitter(state.copyWith(status: ProfileSwipeStatus.loading));
     await profileAcceptUseCase.buildUseCaseStream(
         token, ProfileSwipeParams(userId: userId, matchUserId: event.matchId));
@@ -192,7 +224,7 @@ class ProfileSwipeBloc extends Bloc<ProfileSwipeEvent, ProfileSwipeState> {
   @override
   Future<void> close() {
     profileSwipeUseCase.controller.close();
-    profileAcceptUseCase.controller.close();
+    profileCreateUseCase.controller.close();
     profileRejectUseCase.controller.close();
     profileGetRequestedUseCase.controller.close();
     return super.close();

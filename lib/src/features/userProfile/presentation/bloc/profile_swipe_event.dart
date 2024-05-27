@@ -38,6 +38,10 @@ class OnInitiateAcceptSubject extends ProfileSwipeEvent {
   OnInitiateAcceptSubject();
 }
 
+class OnInitiateCreateSubject extends ProfileSwipeEvent {
+  OnInitiateCreateSubject();
+}
+
 class OnInitiateMatchSubject extends ProfileSwipeEvent {
   OnInitiateMatchSubject();
 }
@@ -60,6 +64,15 @@ class OnCreateRequest extends ProfileSwipeEvent {
   OnCreateRequest(
       this.matchId,
   );
+}
+
+class OnAcceptRequest extends ProfileSwipeEvent {
+
+  final String matchId;
+
+  OnAcceptRequest(
+      this.matchId,
+      );
 }
 
 class OnRejectRequest extends ProfileSwipeEvent {

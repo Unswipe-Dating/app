@@ -24,6 +24,7 @@ class SwipeCard extends StatefulWidget {
   final Function likeAction;
   final Function dislikeAction;
   final String pronouns;
+  final bool isCreate;
 
   const SwipeCard({
     Key? key,
@@ -36,6 +37,7 @@ class SwipeCard extends StatefulWidget {
     required this.profileImageSrc,
     required this.isVerified,
     required this.pronouns,
+    required this.isCreate,
   }) : super(key: key);
 
   @override
@@ -285,12 +287,17 @@ class _SwipeCard extends State<SwipeCard> {
 
   void handleAccept() {
     widget.likeAction();
-    context.read<ProfileSwipeBloc>().add(OnCreateRequest(widget.id));
+    if(widget.isCreate) {
+      context.read<ProfileSwipeBloc>().add(OnCreateRequest(widget.id));
+    } else {
+      context.read<ProfileSwipeBloc>().add(OnAcceptRequest(widget.id));
+
+    }
 
   }
 
   void handleReject() {
-    print("User rejected");
-    // Perform actions on reject
+    context.read<ProfileSwipeBloc>().add(OnRejectRequest(widget.id));
+
   }
 }

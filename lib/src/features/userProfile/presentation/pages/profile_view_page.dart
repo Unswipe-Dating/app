@@ -5,12 +5,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'package:get_it/get_it.dart';
 import 'package:unswipe/src/features/chat/no_request_screen.dart';
-import 'package:unswipe/src/features/userProfile/domain/usecase/profile_accept_usecase.dart';
+import 'package:unswipe/src/features/userProfile/domain/usecase/profile_create_usecase.dart';
 import 'package:unswipe/src/features/userProfile/domain/usecase/profile_reject_usecase.dart';
 import 'package:unswipe/src/features/userProfile/presentation/widgets/SwipeCard.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../shared/domain/usecases/get_auth_state_stream_use_case.dart';
 import '../../data/model/get_profile/response_profile_swipe.dart';
+import '../../domain/usecase/profile_accept_usecase.dart';
 import '../../domain/usecase/profile_get_requested_usecase.dart';
 import '../../domain/usecase/profile_get_usecase.dart';
 import '../bloc/profile_swipe_bloc.dart';
@@ -45,12 +46,14 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
           profileSwipeUseCase: GetIt.I.get<ProfileGetUseCase>(),
           getAuthStateStreamUseCase: GetIt.I.get<GetAuthStateStreamUseCase>(),
         profileAcceptUseCase: GetIt.I.get<ProfileAcceptUseCase>(),
+        profileCreateUseCase: GetIt.I.get<ProfileCreateUseCase>(),
         profileRejectUseCase: GetIt.I.get<ProfileRejectUseCase>(),
         profileGetRequestedUseCase: GetIt.I.get<ProfileGetRequestedUseCase>(),
 
       )
         ..add(OnInitiateSubjects())
         ..add(OnInitiateAcceptSubject())
+        ..add(OnInitiateCreateSubject())
         ..add(OnInitiateRejectSubject())
         ..add(OnInitiateMatchSubject())
         ..add(OnProfileSwipeRequested(0)),
@@ -153,6 +156,7 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
       profileImageSrc: "",
       isVerified: true,
       pronouns: "",
+      isCreate: true,
     )).toList();
 
   }

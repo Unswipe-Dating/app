@@ -16,6 +16,8 @@ class ResponseProfileRequest {
 
   ResponseProfileCreateRequest? createRequest;
   ResponseProfileCreateRequest? rejectRequest;
+  ResponseProfileCreateRequest? matchRequest;
+
 
 
   Map<String, dynamic> toJson() => _$ResponseProfileRequestToJson(this);

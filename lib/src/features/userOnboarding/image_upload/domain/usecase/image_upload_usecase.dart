@@ -40,10 +40,6 @@ class ImageUploadUseCase {
 
 }
 
-
-
-
-
 class UploadImageUseCaseResponse {
   final ApiResponse<ResponseImageUpload> val;
 

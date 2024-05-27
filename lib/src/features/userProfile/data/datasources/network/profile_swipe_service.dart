@@ -21,7 +21,7 @@ class ProfileSwipeService {
     String token,
     ProfileSwipeParams params,
   ) async {
-    final query = '''
+    const query = '''
     query BrowseProfiles(\$data: UserIdPaginatedArgs!) {
     browseProfiles(data: \$data){
         profiles {
@@ -64,7 +64,7 @@ class ProfileSwipeService {
     String token,
     ProfileSwipeParams params,
   ) async {
-    final query = '''
+    const query = '''
     query GetRequestedProfilesForUser(\$data: UserIdPaginatedArgs!) {
     getRequestedProfilesForUser(data: \$data){
         id
@@ -99,7 +99,7 @@ class ProfileSwipeService {
     }
   }
 
-  Future<ApiResponse<ResponseProfileRequest>> acceptProfiles(
+  Future<ApiResponse<ResponseProfileRequest>> createProfiles(
     String token,
     ProfileSwipeParams params,
   ) async {
@@ -126,6 +126,50 @@ class ProfileSwipeService {
         "requesterProfileId": params.userId,
         "requesteeProfileId": params.matchUserId,
         "status": "ACTIVE"
+      },
+    });
+    log('$response');
+
+    if (!response.hasException) {
+      ResponseProfileRequest? info;
+      try {
+        info = ResponseProfileRequest.fromJson(
+          response.data as Map<String, dynamic>,
+        );
+      } on Exception catch (e) {
+        log('error', error: e);
+        return Failure(error: Exception(e));
+      }
+      return Success(data: info);
+    } else {
+      return OperationFailure(error: response.exception);
+    }
+  }
+
+  Future<ApiResponse<ResponseProfileRequest>> acceptProfiles(
+      String token,
+      ProfileSwipeParams params,
+      ) async {
+    const query = '''
+  mutation MatchRequest( \$data: MatchRequestInput!){
+  matchRequest(data: \$data) {
+    id
+    type
+    requesterProfileId
+    requesteeProfileId
+    expiry
+    status
+    challenge
+    challengeVerification
+    challengeVerificationStatus
+  }
+}
+''';
+
+    final response =
+    await service.performMutationWithHeader(token, query, variables: {
+      "data": {
+        "id": params.matchUserId,
       },
     });
     log('$response');

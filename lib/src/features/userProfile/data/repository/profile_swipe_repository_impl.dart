@@ -59,7 +59,7 @@ class ProfileSwipeRepositoryImpl implements ProfileSwipeRepository {
   @override
   Future<ApiResponse<ResponseProfileCreateRequest>> createRequest(
       String token, ProfileSwipeParams params) async {
-    final response = await services.acceptProfiles(token, params);
+    final response = await services.createProfiles(token, params);
     if (response is Success) {
       try {
         final result =
