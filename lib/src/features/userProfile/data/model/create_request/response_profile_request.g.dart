@@ -17,6 +17,10 @@ ResponseProfileRequest _$ResponseProfileRequestFromJson(
           ? null
           : ResponseProfileCreateRequest.fromJson(
               json['rejectRequest'] as Map<String, dynamic>),
+      json['matchRequest'] == null
+          ? null
+          : ResponseProfileCreateRequest.fromJson(
+              json['matchRequest'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$ResponseProfileRequestToJson(
@@ -24,6 +28,7 @@ Map<String, dynamic> _$ResponseProfileRequestToJson(
     <String, dynamic>{
       'createRequest': instance.createRequest,
       'rejectRequest': instance.rejectRequest,
+      'matchRequest': instance.matchRequest,
     };
 
 ResponseProfileCreateRequest _$ResponseProfileCreateRequestFromJson(

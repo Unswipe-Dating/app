@@ -18,8 +18,13 @@ Map<String, dynamic> _$ResponseMetaToJson(ResponseMeta instance) =>
 MetaConfig _$MetaConfigFromJson(Map<String, dynamic> json) => MetaConfig(
       FirebaseConfig.fromJson(json['firebase'] as Map<String, dynamic>),
       ReclaimConfig.fromJson(json['reclaim'] as Map<String, dynamic>),
-      (json['timeLeftForExpiry'] as num?)?.toInt(),
-    )..status = json['status'] as String?;
+      json['timeLeftForExpiry'] as String?,
+    )
+      ..status = json['status'] as String?
+      ..request = json['request'] == null
+          ? null
+          : ResponseProfileCreateRequest.fromJson(
+              json['request'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$MetaConfigToJson(MetaConfig instance) =>
     <String, dynamic>{
@@ -27,6 +32,7 @@ Map<String, dynamic> _$MetaConfigToJson(MetaConfig instance) =>
       'reclaim': instance.reclaim,
       'timeLeftForExpiry': instance.timeLeftForExpiry,
       'status': instance.status,
+      'request': instance.request,
     };
 
 FirebaseConfig _$FirebaseConfigFromJson(Map<String, dynamic> json) =>

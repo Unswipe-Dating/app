@@ -17,15 +17,15 @@ import '../../features/login/data/datasources/network/service/otp_service.dart'
 import '../../features/login/data/repository/login_repository_impl.dart'
     as _i27;
 import '../../features/login/domain/repository/login_repository.dart' as _i26;
-import '../../features/login/domain/usecases/request_otp_use_case.dart' as _i37;
-import '../../features/login/domain/usecases/signup_login_usecase.dart' as _i38;
+import '../../features/login/domain/usecases/request_otp_use_case.dart' as _i39;
+import '../../features/login/domain/usecases/signup_login_usecase.dart' as _i40;
 import '../../features/login/domain/usecases/update_login_state_stream_usecase.dart'
-    as _i34;
-import '../../features/login/domain/usecases/verify_otp_use_case.dart' as _i39;
+    as _i36;
+import '../../features/login/domain/usecases/verify_otp_use_case.dart' as _i41;
 import '../../features/onBoarding/domain/usecases/get_onboarding_state_stream_use_case.dart'
-    as _i40;
+    as _i42;
 import '../../features/onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart'
-    as _i41;
+    as _i43;
 import '../../features/splash/data/datasources/remote/meta_api_service.dart'
     as _i8;
 import '../../features/splash/data/repository/splash_repository_impl.dart'
@@ -39,7 +39,7 @@ import '../../features/userOnboarding/contact_block/data/repository/contact_bloc
 import '../../features/userOnboarding/contact_block/domain/repository/contact_block_repository.dart'
     as _i23;
 import '../../features/userOnboarding/contact_block/domain/usecase/contact_bloc_usecase.dart'
-    as _i36;
+    as _i38;
 import '../../features/userOnboarding/image_upload/data/datasources/network/image_upload_service.dart'
     as _i10;
 import '../../features/userOnboarding/image_upload/data/repository/image_upload_repository_impl.dart'
@@ -55,32 +55,36 @@ import '../../features/userOnboarding/profile_update/data/repository/update_prof
 import '../../features/userOnboarding/profile_update/domain/repository/update_profile_repository.dart'
     as _i21;
 import '../../features/userOnboarding/profile_update/domain/usecases/create_user_use_case.dart'
-    as _i42;
+    as _i44;
 import '../../features/userOnboarding/profile_update/domain/usecases/update_user_use_case.dart'
-    as _i43;
+    as _i45;
 import '../../features/userProfile/data/datasources/network/profile_swipe_service.dart'
     as _i12;
 import '../../features/userProfile/data/repository/profile_swipe_repository_impl.dart'
     as _i17;
 import '../../features/userProfile/domain/repository/profile_swipe_repository.dart'
     as _i16;
-import '../../features/userProfile/domain/usecase/profile_create_usecase.dart'
+import '../../features/userProfile/domain/usecase/profile_accept_usecase.dart'
     as _i28;
-import '../../features/userProfile/domain/usecase/profile_get_requested_usecase.dart'
+import '../../features/userProfile/domain/usecase/profile_create_usecase.dart'
     as _i29;
-import '../../features/userProfile/domain/usecase/profile_get_usecase.dart'
+import '../../features/userProfile/domain/usecase/profile_get_requested_usecase.dart'
     as _i30;
-import '../../features/userProfile/domain/usecase/profile_reject_usecase.dart'
+import '../../features/userProfile/domain/usecase/profile_get_usecase.dart'
     as _i31;
-import '../../shared/data/repository/user_repository_imp.dart' as _i33;
-import '../../shared/domain/repository/user_repository.dart' as _i32;
+import '../../features/userProfile/domain/usecase/profile_reject_usecase.dart'
+    as _i32;
+import '../../features/userProfile/domain/usecase/profile_skip_usecase.dart'
+    as _i33;
+import '../../shared/data/repository/user_repository_imp.dart' as _i35;
+import '../../shared/domain/repository/user_repository.dart' as _i34;
 import '../../shared/domain/usecases/get_auth_state_stream_use_case.dart'
-    as _i35;
+    as _i37;
 import '../local_data_source.dart' as _i5;
 import '../network/graphql/graphql_service.dart' as _i4;
 import '../shared_pref_util.dart' as _i15;
 import 'constant/method_channel_crypto_impl.dart' as _i6;
-import 'usecases/usecase_module.dart' as _i44;
+import 'usecases/usecase_module.dart' as _i46;
 
 extension GetItInjectableX on _i1.GetIt {
 // initializes the registration of main-scope dependencies inside of GetIt
@@ -131,36 +135,40 @@ extension GetItInjectableX on _i1.GetIt {
         () => _i27.LoginRepositoryImpl(gh<_i7.OtpService>()));
     gh.factory<_i28.ProfileAcceptUseCase>(
         () => _i28.ProfileAcceptUseCase(gh<_i16.ProfileSwipeRepository>()));
-    gh.factory<_i29.ProfileGetRequestedUseCase>(() =>
-        _i29.ProfileGetRequestedUseCase(gh<_i16.ProfileSwipeRepository>()));
-    gh.factory<_i30.ProfileGetUseCase>(
-        () => _i30.ProfileGetUseCase(gh<_i16.ProfileSwipeRepository>()));
-    gh.factory<_i31.ProfileRejectUseCase>(
-        () => _i31.ProfileRejectUseCase(gh<_i16.ProfileSwipeRepository>()));
-    gh.factory<_i32.UserRepository>(
-        () => _i33.UserRepositoryImpl(gh<_i5.LocalDataSource>()));
-    gh.factory<_i34.UpdateUserStateStreamUseCase>(
-        () => _i34.UpdateUserStateStreamUseCase(gh<_i32.UserRepository>()));
-    gh.factory<_i35.GetAuthStateStreamUseCase>(
-        () => _i35.GetAuthStateStreamUseCase(gh<_i32.UserRepository>()));
-    gh.factory<_i36.ContactBlockUseCase>(
-        () => _i36.ContactBlockUseCase(gh<_i23.ContactBlockRepository>()));
-    gh.factory<_i37.RequestOtpUseCase>(
-        () => _i37.RequestOtpUseCase(gh<_i26.LoginRepository>()));
-    gh.factory<_i38.SignUpUseCase>(
-        () => _i38.SignUpUseCase(gh<_i26.LoginRepository>()));
-    gh.factory<_i39.VerifyOtpUseCase>(
-        () => _i39.VerifyOtpUseCase(gh<_i26.LoginRepository>()));
-    gh.factory<_i40.GetOnboardingStateStreamUseCase>(
-        () => _i40.GetOnboardingStateStreamUseCase(gh<_i32.UserRepository>()));
-    gh.factory<_i41.UpdateOnboardingStateStreamUseCase>(() =>
-        _i41.UpdateOnboardingStateStreamUseCase(gh<_i32.UserRepository>()));
-    gh.factory<_i42.CreateProfileUseCase>(
-        () => _i42.CreateProfileUseCase(gh<_i21.UpdateProfileRepository>()));
-    gh.factory<_i43.UpdateProfileUseCase>(
-        () => _i43.UpdateProfileUseCase(gh<_i21.UpdateProfileRepository>()));
+    gh.factory<_i29.ProfileCreateUseCase>(
+        () => _i29.ProfileCreateUseCase(gh<_i16.ProfileSwipeRepository>()));
+    gh.factory<_i30.ProfileGetRequestedUseCase>(() =>
+        _i30.ProfileGetRequestedUseCase(gh<_i16.ProfileSwipeRepository>()));
+    gh.factory<_i31.ProfileGetUseCase>(
+        () => _i31.ProfileGetUseCase(gh<_i16.ProfileSwipeRepository>()));
+    gh.factory<_i32.ProfileRejectUseCase>(
+        () => _i32.ProfileRejectUseCase(gh<_i16.ProfileSwipeRepository>()));
+    gh.factory<_i33.ProfileSkipUseCase>(
+        () => _i33.ProfileSkipUseCase(gh<_i16.ProfileSwipeRepository>()));
+    gh.factory<_i34.UserRepository>(
+        () => _i35.UserRepositoryImpl(gh<_i5.LocalDataSource>()));
+    gh.factory<_i36.UpdateUserStateStreamUseCase>(
+        () => _i36.UpdateUserStateStreamUseCase(gh<_i34.UserRepository>()));
+    gh.factory<_i37.GetAuthStateStreamUseCase>(
+        () => _i37.GetAuthStateStreamUseCase(gh<_i34.UserRepository>()));
+    gh.factory<_i38.ContactBlockUseCase>(
+        () => _i38.ContactBlockUseCase(gh<_i23.ContactBlockRepository>()));
+    gh.factory<_i39.RequestOtpUseCase>(
+        () => _i39.RequestOtpUseCase(gh<_i26.LoginRepository>()));
+    gh.factory<_i40.SignUpUseCase>(
+        () => _i40.SignUpUseCase(gh<_i26.LoginRepository>()));
+    gh.factory<_i41.VerifyOtpUseCase>(
+        () => _i41.VerifyOtpUseCase(gh<_i26.LoginRepository>()));
+    gh.factory<_i42.GetOnboardingStateStreamUseCase>(
+        () => _i42.GetOnboardingStateStreamUseCase(gh<_i34.UserRepository>()));
+    gh.factory<_i43.UpdateOnboardingStateStreamUseCase>(() =>
+        _i43.UpdateOnboardingStateStreamUseCase(gh<_i34.UserRepository>()));
+    gh.factory<_i44.CreateProfileUseCase>(
+        () => _i44.CreateProfileUseCase(gh<_i21.UpdateProfileRepository>()));
+    gh.factory<_i45.UpdateProfileUseCase>(
+        () => _i45.UpdateProfileUseCase(gh<_i21.UpdateProfileRepository>()));
     return this;
   }
 }
 
-class _$RegisterModule extends _i44.RegisterModule {}
+class _$RegisterModule extends _i46.RegisterModule {}

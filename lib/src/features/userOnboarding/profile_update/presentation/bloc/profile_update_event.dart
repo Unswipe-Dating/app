@@ -31,10 +31,10 @@ class OnRequestApiCallUpdate extends UpdateProfileEvent {
 }
 
 class OnUpdateUserState extends UpdateProfileEvent {
-  final String userId;
   final String id;
   final String token;
-  OnUpdateUserState(this.userId, this.token, this.id);
+  final UpsertProfile response;
+  OnUpdateUserState(this.response, this.token, this.id);
 }
 
 class OnRequestApiCallCreate extends UpdateProfileEvent {

@@ -6,6 +6,7 @@ import 'package:unswipe/src/features/login/data/models/verify_otp/verify_otp_res
 import 'package:unswipe/src/features/login/domain/repository/login_repository.dart';
 import 'package:unswipe/src/features/userOnboarding/contact_block/data/model/response_contact_block.dart';
 import 'package:unswipe/src/features/userProfile/data/model/create_request/response_profile_request.dart';
+import 'package:unswipe/src/features/userProfile/data/model/response_profile_skip.dart';
 import '../../../../../../../data/api_response.dart';
 import '../../../../../core/network/graphql/graphql_service.dart';
 import '../../../domain/repository/profile_swipe_repository.dart';
@@ -233,4 +234,40 @@ class ProfileSwipeService {
       return OperationFailure(error: response.exception);
     }
   }
+
+  Future<ApiResponse<ResponseProfileSkip>> skipProfiles(
+      String token,
+      ProfileSwipeParams params,
+      ) async {
+    const query = '''
+   mutation SkipProfile(\$data: SkipProfileInput!) {
+  skipProfile(data: \$data)
+  }
+''';
+
+    final response =
+    await service.performMutationWithHeader(token, query, variables: {
+      "data": {
+        "id": params.matchUserId,
+      },
+    });
+    log('$response');
+
+    if (!response.hasException) {
+      ResponseProfileSkip? info;
+      try {
+        info = ResponseProfileSkip.fromJson(
+          response.data as Map<String, dynamic>,
+        );
+      } on Exception catch (e) {
+        log('error', error: e);
+        return Failure(error: Exception(e));
+      }
+      return Success(data: info);
+    } else {
+      return OperationFailure(error: response.exception);
+    }
+  }
+
+
 }

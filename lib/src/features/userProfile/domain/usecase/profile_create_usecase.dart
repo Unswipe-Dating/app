@@ -40,7 +40,7 @@ class ProfileCreateUseCase {
 
 
 class GetProfileCreateUseCaseResponse {
-  final ApiResponse<ResponseProfileCreateRequest> val;
+  final ApiResponse<ResponseProfileRequest> val;
 
   GetProfileCreateUseCaseResponse(this.val);
 }

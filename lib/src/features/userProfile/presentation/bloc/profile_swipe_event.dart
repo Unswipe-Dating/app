@@ -34,6 +34,11 @@ class OnInitiateRejectSubject extends ProfileSwipeEvent {
   OnInitiateRejectSubject();
 }
 
+class OnInitiateSkipSubject extends ProfileSwipeEvent {
+  OnInitiateSkipSubject();
+}
+
+
 class OnInitiateAcceptSubject extends ProfileSwipeEvent {
   OnInitiateAcceptSubject();
 }
@@ -79,6 +84,14 @@ class OnRejectRequest extends ProfileSwipeEvent {
   final String matchId;
 
   OnRejectRequest(
+      this.matchId,
+      );
+}
+
+class OnSkipRequest extends ProfileSwipeEvent {
+  final String matchId;
+
+  OnSkipRequest(
       this.matchId,
       );
 }

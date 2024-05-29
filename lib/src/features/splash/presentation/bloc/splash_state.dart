@@ -12,7 +12,8 @@ class SplashState extends Equatable {
   final bool isContactsBlocked;
   final bool isProfileUpdated;
   final bool isProfileMatchRequested;
-  final int profileMatchDuration;
+  final String profileMatchDuration;
+  final Room? loadChat;
 
 
   const SplashState({
@@ -25,7 +26,8 @@ class SplashState extends Equatable {
     this.isContactsBlocked = false,
     this.isProfileUpdated = false,
     this.isProfileMatchRequested = false,
-    this.profileMatchDuration = 0,
+    this.profileMatchDuration = "",
+    this.loadChat
 
   });
 
@@ -40,7 +42,8 @@ class SplashState extends Equatable {
     bool? isContactsBlocked,
     bool? isProfileUpdated,
     bool? isProfileMatchRequested,
-    int? profileMatchDuration
+    String? profileMatchDuration,
+    Room? loadChat,
 
   }) {
     return SplashState(
@@ -53,7 +56,8 @@ class SplashState extends Equatable {
       isContactsBlocked: isContactsBlocked ?? this.isContactsBlocked,
       isProfileUpdated: isProfileUpdated ?? this.isProfileUpdated,
       isProfileMatchRequested: isProfileMatchRequested ?? this.isProfileMatchRequested,
-      profileMatchDuration: profileMatchDuration ?? this.profileMatchDuration
+      profileMatchDuration: profileMatchDuration ?? this.profileMatchDuration,
+      loadChat: loadChat ?? this.loadChat
 
     );
   }
@@ -68,7 +72,8 @@ class SplashState extends Equatable {
     isContactsBlocked,
     isProfileUpdated,
     isProfileMatchRequested,
-    profileMatchDuration
+    profileMatchDuration,
+    loadChat
   ];
 }
 

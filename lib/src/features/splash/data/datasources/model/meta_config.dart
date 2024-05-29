@@ -10,8 +10,9 @@ class MetaConfig {
 
   FirebaseConfig firebase;
   ReclaimConfig reclaim;
-  int? timeLeftForExpiry;
+  String? timeLeftForExpiry;
   String? status;
+  ResponseProfileCreateRequest? request;
 
   Map<String, dynamic> toJson() => _$MetaConfigToJson(this);
 }

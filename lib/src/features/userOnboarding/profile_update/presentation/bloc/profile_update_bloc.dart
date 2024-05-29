@@ -5,11 +5,13 @@ import 'dart:ffi';
 import 'package:bloc/bloc.dart';
 import 'package:dart_either/dart_either.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:http/http.dart';
 import 'package:unswipe/src/core/app_error.dart';
 import 'package:unswipe/src/features/userOnboarding/profile_update/data/models/create_profile_response.dart';
+import 'package:unswipe/src/features/userOnboarding/profile_update/data/models/update_profile_response.dart';
 import 'package:unswipe/src/features/userOnboarding/profile_update/domain/repository/update_profile_repository.dart';
-
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import '../../../../../../../data/api_response.dart' as api_response;
 import '../../../../../../data/api_response.dart';
 import '../../../../../shared/domain/usecases/get_auth_state_stream_use_case.dart';
@@ -48,8 +50,16 @@ class UpdateProfileBloc extends Bloc<UpdateProfileEvent, UpdateProfileState> {
 
   _onProfileCreateSuccess(
       OnUpdateUserState event, Emitter<UpdateProfileState> emitter) async {
+    await FirebaseChatCore.instance.createUserInFirestore(
+      types.User(
+        firstName: event.response.name,
+        id: event.response.id ?? "",
+        imageUrl: '',
+      ),
+    );
     Stream<Either<AppError, void>> stream =
-        updateUserStateStreamUseCase.call(event.token, event.id, event.userId);
+         updateUserStateStreamUseCase.call(event.token, event.id, event.response.id);
+
     emitter.forEach(stream, onData: (event) {
       return event.fold(ifLeft: (l) {
         if (l is CancelTokenFailure) {
@@ -119,7 +129,7 @@ class UpdateProfileBloc extends Bloc<UpdateProfileEvent, UpdateProfileState> {
         UpdateProfileParams().getUpdatedParams(event.params);
     params.id = event.id;
     params.userId = event.id;
-    String? profile;
+    UpsertProfile profile;
 
     Stream<GetCreateUserResponse> stream =
         await createProfileUseCase.buildUseCaseStream(event.token, params);
@@ -133,9 +143,8 @@ class UpdateProfileBloc extends Bloc<UpdateProfileEvent, UpdateProfileState> {
       } else if (responseData is api_response.Success) {
         profile = (((responseData as api_response.Success).data)
                 as CreateProfileResponse)
-            .createProfile
-            .id;
-        add(OnUpdateUserState(profile ?? "", event.token, event.id));
+            .createProfile;
+        add(OnUpdateUserState(profile , event.token, event.id));
         return state.copyWith(status: UpdateProfileStatus.loading);
       } else {
         return state.copyWith(status: UpdateProfileStatus.error);

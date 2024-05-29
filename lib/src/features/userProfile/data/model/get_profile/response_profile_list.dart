@@ -18,6 +18,6 @@ class ResponseProfileList {
   String name;
   ResponseProfileSwipeInterests interests;
   List<String> photoURLs;
-  String location;
+  String? location;
   Map<String, dynamic> toJson() => _$ResponseProfileListToJson(this);
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart';
 import 'package:go_router/go_router.dart';
 import 'package:unswipe/src/features/chat/no_request_individual_screen.dart';
 import 'package:unswipe/src/features/chat/no_request_screen.dart';
@@ -16,6 +17,7 @@ import 'package:unswipe/src/features/userOnboarding/profile_update/domain/reposi
 import 'package:unswipe/src/features/userProfile/presentation/pages/matched_profile_view_page.dart';
 import 'package:unswipe/src/features/userProfile/presentation/pages/profile_view_page.dart';
 
+import '../../chat/chat.dart';
 import '../../features/chat/chat_request_screen.dart';
 import '../../features/userOnboarding/contact_block/presentation/pages/contact_block_init_screen.dart';
 import '../../features/userOnboarding/contact_block/presentation/pages/contact_block_screen.dart';
@@ -79,6 +81,7 @@ class CustomNavigationHelper {
 
   static const String chatRequestPath = '/chat/chatRequest';
 
+  static const String startChatPath = '/startChat';
 
   static const String chatPath = '/chat';
   static const String communityPath = '/community';
@@ -199,6 +202,18 @@ class CustomNavigationHelper {
         pageBuilder: (context, state) {
           return getPage(
             child: BlockContactScreen(),
+            state: state,
+          );
+        },
+      ),
+
+      GoRoute(
+        parentNavigatorKey: parentNavigatorKey,
+        path: startChatPath,
+        pageBuilder: (context, state) {
+          Room room = state.extra as Room;
+          return getPage(
+            child: ChatPage(room: room),
             state: state,
           );
         },

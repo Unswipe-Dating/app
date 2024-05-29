@@ -51,7 +51,7 @@ ResponseProfileList _$ResponseProfileListFromJson(Map<String, dynamic> json) =>
       ResponseProfileSwipeInterests.fromJson(
           json['interests'] as Map<String, dynamic>),
       (json['photoURLs'] as List<dynamic>).map((e) => e as String).toList(),
-      json['location'] as String,
+      json['location'] as String?,
     );
 
 Map<String, dynamic> _$ResponseProfileListToJson(

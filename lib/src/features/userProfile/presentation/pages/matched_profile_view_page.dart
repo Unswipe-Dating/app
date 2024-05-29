@@ -17,6 +17,7 @@ import '../../../chat/no_request_screen.dart';
 import '../../data/model/get_profile/response_profile_swipe.dart';
 import '../../domain/usecase/profile_accept_usecase.dart';
 import '../../domain/usecase/profile_get_usecase.dart';
+import '../../domain/usecase/profile_skip_usecase.dart';
 import '../bloc/profile_swipe_bloc.dart';
 import '../bloc/profile_swipe_state.dart';
 
@@ -50,12 +51,15 @@ class _MatchedSwipeInterfaceState extends State<MatchedSwipeInterface> {
         profileCreateUseCase: GetIt.I.get<ProfileCreateUseCase>(),
         profileRejectUseCase: GetIt.I.get<ProfileRejectUseCase>(),
           profileGetRequestedUseCase: GetIt.I.get<ProfileGetRequestedUseCase>(),
+        profileSkipUseCase: GetIt.I.get<ProfileSkipUseCase>(),
+
       )
         ..add(OnInitiateSubjects())
         ..add(OnInitiateAcceptSubject())
         ..add(OnInitiateCreateSubject())
         ..add(OnInitiateRejectSubject())
         ..add(OnInitiateMatchSubject())
+        ..add(OnInitiateSkipSubject())
         ..add(OnProfileSwipeRequested(0)),
       child: BlocConsumer<ProfileSwipeBloc, ProfileSwipeState>(
         listener: (context, state) {

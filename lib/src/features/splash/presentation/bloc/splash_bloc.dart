@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart';
+import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:unswipe/src/features/splash/data/datasources/model/response_meta.dart';
 import '../../../../../../data/api_response.dart' as api_response;
 import 'package:unswipe/src/features/splash/domain/usecases/meta_usecase.dart';
@@ -9,6 +11,7 @@ import 'package:unswipe/src/features/onBoarding/domain/usecases/get_onboarding_s
 import '../../../../../data/api_response.dart';
 import '../../../../shared/domain/usecases/get_auth_state_stream_use_case.dart';
 import '../../../onBoarding/domain/entities/onbaording_state/onboarding_state.dart';
+import '../../../userProfile/data/model/create_request/response_profile_request.dart';
 
 part 'splash_event.dart';
 
@@ -29,6 +32,9 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
     on<onFirstTimeUserEvent>(_onGettingOnBoardingEvent);
     on<onGetMetaEvent>(_onGettingMetaEvent);
     on<onAuthenticatedUserEvent>(_onStartAuthCheck);
+    on<onCheckChatIntent>(_onCheckChatIntent);
+    on<onStartChatIntent>(_onStartChatIntent);
+
 
   }
 
@@ -147,21 +153,55 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
         if(res.getConfig.timeLeftForExpiry != null) {
           return state.copyWith(status: SplashStatus.loaded,
               isFirstTime: false,
-              isAuthenticated: false,
+              isAuthenticated: true,
               isProfileMatchRequested: true,
               profileMatchDuration: res.getConfig.timeLeftForExpiry
           );
         } else if (res.getConfig.status == "MATCHED"){
-          //todo
+          add(onStartChatIntent(res.getConfig.request));
         } else {
           add(onFirstTimeUserEvent());
         }
-        return state.copyWith(status: SplashStatus.loaded,);
+        return state.copyWith(status: SplashStatus.loading,);
 
       } else {
         return state.copyWith(status: SplashStatus.error);
       }
     });
+  }
+
+  _onCheckChatIntent(
+      onCheckChatIntent event, Emitter<SplashState> emitter) async {
+
+    Stream<List<Room>> stream =
+    FirebaseChatCore.instance.rooms();
+
+    await emitter.forEach(stream, onData: (response) {
+      final responseData = response;
+      if (responseData.isEmpty) {
+      add(onStartChatIntent(event.request));
+      return state.copyWith(status: SplashStatus.loading,);
+      } else  {
+        return state.copyWith(status: SplashStatus.loaded,
+          isFirstTime: false,
+          isAuthenticated: true,
+          loadChat: response.first,
+        );
+      } 
+    });
+  }
+
+  _onStartChatIntent(
+      onStartChatIntent event, Emitter<SplashState> emitter) async {
+
+    var roomId =  await FirebaseChatCore.instance.createRoom(User(id:
+    event.request?.requesteeProfileId ?? ""));
+
+    emitter.call(state.copyWith(status: SplashStatus.loaded,
+    isFirstTime: false,
+    isAuthenticated: true,
+    loadChat: roomId,)
+    );
   }
 
 // Getting splash event

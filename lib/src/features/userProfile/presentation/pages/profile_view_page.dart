@@ -7,6 +7,7 @@ import 'package:get_it/get_it.dart';
 import 'package:unswipe/src/features/chat/no_request_screen.dart';
 import 'package:unswipe/src/features/userProfile/domain/usecase/profile_create_usecase.dart';
 import 'package:unswipe/src/features/userProfile/domain/usecase/profile_reject_usecase.dart';
+import 'package:unswipe/src/features/userProfile/domain/usecase/profile_skip_usecase.dart';
 import 'package:unswipe/src/features/userProfile/presentation/widgets/SwipeCard.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../shared/domain/usecases/get_auth_state_stream_use_case.dart';
@@ -49,6 +50,8 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
         profileCreateUseCase: GetIt.I.get<ProfileCreateUseCase>(),
         profileRejectUseCase: GetIt.I.get<ProfileRejectUseCase>(),
         profileGetRequestedUseCase: GetIt.I.get<ProfileGetRequestedUseCase>(),
+        profileSkipUseCase: GetIt.I.get<ProfileSkipUseCase>(),
+
 
       )
         ..add(OnInitiateSubjects())
@@ -56,6 +59,7 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
         ..add(OnInitiateCreateSubject())
         ..add(OnInitiateRejectSubject())
         ..add(OnInitiateMatchSubject())
+        ..add(OnInitiateSkipSubject())
         ..add(OnProfileSwipeRequested(0)),
       child: BlocConsumer<ProfileSwipeBloc, ProfileSwipeState>(
         listener: (context, state) {

@@ -41,7 +41,7 @@ class ProfileRejectUseCase {
 
 
 class GetProfileRejectUseCaseResponse {
-  final ApiResponse<ResponseProfileCreateRequest> val;
+  final ApiResponse<ResponseProfileRequest> val;
 
   GetProfileRejectUseCaseResponse(this.val);
 }

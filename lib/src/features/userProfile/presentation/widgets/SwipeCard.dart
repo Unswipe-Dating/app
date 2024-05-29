@@ -245,8 +245,13 @@ class _SwipeCard extends State<SwipeCard> {
                                     heroTag: null,
                                     shape: const CircleBorder(),
                                     onPressed: () {
-                                      context.read<ProfileSwipeBloc>().add(OnRejectRequest(widget.id));
-                                      widget.dislikeAction(widget.id);
+                                      widget.dislikeAction();
+                                      if(widget.isCreate) {
+                                        context.read<ProfileSwipeBloc>().add(OnSkipRequest(widget.id));
+                                      } else {
+                                        context.read<ProfileSwipeBloc>().add(OnRejectRequest(widget.id));
+                                      }
+
                                       controller.jumpTo(0);
                                     },
                                     backgroundColor: Colors.black,
@@ -297,7 +302,6 @@ class _SwipeCard extends State<SwipeCard> {
   }
 
   void handleReject() {
-    context.read<ProfileSwipeBloc>().add(OnRejectRequest(widget.id));
 
   }
 }

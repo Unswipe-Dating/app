@@ -26,6 +26,19 @@ class onAuthenticatedUserEvent extends SplashEvent {
   onAuthenticatedUserEvent();
 }
 
+class onStartChatIntent extends SplashEvent {
+  ResponseProfileCreateRequest? request;
+
+  onStartChatIntent(this.request);
+}
+
+class onCheckChatIntent extends SplashEvent {
+  ResponseProfileCreateRequest? request;
+
+  onCheckChatIntent(this.request);
+}
+
+
 class onSplashErrorEvent extends SplashEvent {
   onSplashErrorEvent();
 }
