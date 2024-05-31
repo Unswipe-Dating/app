@@ -32,6 +32,13 @@ class ProfileSwipeService {
             interests
             photoURLs
             location
+            dob
+            datingPreference
+            height
+            hometown
+            location
+            zodiac
+            languages
         }
         hasNext
         nextCursor

@@ -7,7 +7,7 @@ import 'package:unswipe/src/features/userProfile/data/model/create_request/respo
 part 'meta_config.dart';
 part 'firebase_config.dart';
 part 'reclaim_config.dart';
-
+part 'meta_config_chat.dart';
 part 'response_meta.g.dart';
 
 @JsonSerializable()

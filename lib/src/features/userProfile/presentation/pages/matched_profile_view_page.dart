@@ -60,7 +60,7 @@ class _MatchedSwipeInterfaceState extends State<MatchedSwipeInterface> {
         ..add(OnInitiateRejectSubject())
         ..add(OnInitiateMatchSubject())
         ..add(OnInitiateSkipSubject())
-        ..add(OnProfileSwipeRequested(0)),
+        ..add(OnProfileSwipeRequested(1)),
       child: BlocConsumer<ProfileSwipeBloc, ProfileSwipeState>(
         listener: (context, state) {
           if (state.status == ProfileSwipeStatus.loaded) {

@@ -13,6 +13,7 @@ class MetaConfig {
   String? timeLeftForExpiry;
   String? status;
   ResponseProfileCreateRequest? request;
+  MetaConfigChat? chat;
 
   Map<String, dynamic> toJson() => _$MetaConfigToJson(this);
 }

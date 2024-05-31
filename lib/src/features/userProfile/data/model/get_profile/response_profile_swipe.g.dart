@@ -52,6 +52,12 @@ ResponseProfileList _$ResponseProfileListFromJson(Map<String, dynamic> json) =>
           json['interests'] as Map<String, dynamic>),
       (json['photoURLs'] as List<dynamic>).map((e) => e as String).toList(),
       json['location'] as String?,
+      json['dob'] as String?,
+      json['datingPreference'] as String?,
+      json['height'] as String?,
+      json['hometown'] as String?,
+      json['zodiac'] as String?,
+      (json['languages'] as List<dynamic>?)?.map((e) => e as String).toList(),
     );
 
 Map<String, dynamic> _$ResponseProfileListToJson(
@@ -63,6 +69,12 @@ Map<String, dynamic> _$ResponseProfileListToJson(
       'interests': instance.interests,
       'photoURLs': instance.photoURLs,
       'location': instance.location,
+      'dob': instance.dob,
+      'datingPreference': instance.datingPreference,
+      'height': instance.height,
+      'hometown': instance.hometown,
+      'zodiac': instance.zodiac,
+      'languages': instance.languages,
     };
 
 ResponseProfileSwipeInterests _$ResponseProfileSwipeInterestsFromJson(
