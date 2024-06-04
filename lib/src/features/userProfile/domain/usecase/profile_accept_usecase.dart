@@ -25,7 +25,7 @@ class ProfileAcceptUseCase {
       ProfileSwipeParams? params) async {
     try{
       if(params != null) {
-        final result = await _repository.createRequest(token, params);
+        final result = await _repository.acceptRequest(token, params);
         controller.add(GetProfileAcceptUseCaseResponse(result));
       } else {
         controller.addError(Exception());

@@ -24,6 +24,22 @@ class OnOtpResendRequested extends LogInEvent {
   OnOtpResendRequested(this.params);
 }
 
+class OnUpdateOnBoardingUserEvent extends LogInEvent {
+  String? profileId;
+  OnUpdateOnBoardingUserEvent({this.profileId});
+}
+
+class OnGetMetaEvent extends LogInEvent {
+  final String token;
+  OnGetMetaEvent({required this.token});
+}
+
+class onStartChatIntent extends LogInEvent {
+  ResponseProfileCreateRequest? request;
+
+  onStartChatIntent(this.request);
+}
+
 class OnOtpVerificationRequest extends LogInEvent {
   final OtpParams params;
 

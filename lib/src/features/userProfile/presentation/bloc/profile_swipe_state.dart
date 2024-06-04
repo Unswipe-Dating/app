@@ -8,6 +8,8 @@ enum ProfileSwipeStatus { initial,
   loaded,
   loadedCreate,
   loadedReject,
+  loadedAccept,
+  loadedSkip,
   error,
   errorSwipe
 }

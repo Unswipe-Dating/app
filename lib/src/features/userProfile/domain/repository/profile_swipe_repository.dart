@@ -23,10 +23,12 @@ abstract class ProfileSwipeRepository {
 class ProfileSwipeParams {
   final String? userId;
   final String? matchUserId;
+  final String? requestId;
 
 
   ProfileSwipeParams({
     this.userId,
     this.matchUserId,
+    this.requestId,
   });
 }

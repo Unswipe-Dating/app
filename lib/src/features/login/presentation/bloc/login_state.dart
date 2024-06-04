@@ -8,16 +8,23 @@ enum LoginStatus { initial,
   loadedResend,
   loadingVerification,
   verified,
-  loaded
+  loaded,
+  loadedChat,
+  loadedExpiryTimer,
+  loadingTimer
 }
 
 class LoginState extends Equatable {
   final LoginStatus status;
   final OnBoardingStatus onBoardingStatus;
+  final String? profileMatchDuration;
+  final Room? chatId;
 
   const LoginState({
     this.status = LoginStatus.initial,
     this.onBoardingStatus = OnBoardingStatus.contact,
+    this.profileMatchDuration,
+    this.chatId,
 
   });
 
@@ -26,11 +33,14 @@ class LoginState extends Equatable {
     LoginStatus? status,
     int? token,
     OnBoardingStatus? onBoardingStatus,
+    String? profileMatchDuration,
+    Room? chatId,
   }) {
     return LoginState(
       status: status ?? this.status,
       onBoardingStatus: onBoardingStatus ?? this.onBoardingStatus,
-
+      profileMatchDuration: profileMatchDuration ?? this.profileMatchDuration,
+        chatId: chatId ?? this.chatId
     );
   }
 
@@ -38,6 +48,8 @@ class LoginState extends Equatable {
   List<Object?> get props => [
     status,
     onBoardingStatus,
+    profileMatchDuration,
+    chatId
   ];
 }
 

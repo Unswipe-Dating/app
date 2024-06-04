@@ -14,6 +14,7 @@ import 'package:unswipe/src/features/login/presentation/bloc/login_bloc.dart';
 import 'package:unswipe/src/features/onBoarding/domain/entities/onbaording_state/onboarding_state.dart';
 import 'package:unswipe/src/features/onBoarding/domain/usecases/get_onboarding_state_stream_use_case.dart';
 import 'package:unswipe/src/features/onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart';
+import 'package:unswipe/src/features/splash/domain/usecases/meta_usecase.dart';
 import 'package:unswipe/widgets/login/icon_text.dart';
 import 'package:unswipe/widgets/login/rounded_text_field.dart';
 
@@ -70,7 +71,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   verifyOtpUseCase: GetIt.I.get<VerifyOtpUseCase>(),
                   updateOnboardingStateStreamUseCase: GetIt.I.get<
                       UpdateOnboardingStateStreamUseCase>(),
-                  signUpUseCase: GetIt.I.get<SignUpUseCase>()
+                  signUpUseCase: GetIt.I.get<SignUpUseCase>(),
+                metaUseCase: GetIt.I.get<MetaUseCase>(),
+
               ),
 
           child: BlocConsumer<LoginBloc, LoginState>(
@@ -80,9 +83,18 @@ class _LoginScreenState extends State<LoginScreen> {
                   CustomNavigationHelper.router.go(
                     CustomNavigationHelper.profilePath,
                   );
-                } else {
+                }  else {
                   _selectScreen();
                 }
+
+              }
+              else if(state.status == LoginStatus.loadedChat) {
+                CustomNavigationHelper.router
+                    .go(CustomNavigationHelper.startChatPath, extra: state.chatId);
+              } else if(state.status == LoginStatus.loadedExpiryTimer) {
+                CustomNavigationHelper.router
+                    .go(CustomNavigationHelper.profilePathHyperEx, extra: "" );
+
               }
             },
             builder: (context, state) {

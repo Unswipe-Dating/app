@@ -21,7 +21,6 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
   final GetOnboardingStateStreamUseCase onboardingStateStreamUseCase;
   final MetaUseCase metaUseCase;
   final GetAuthStateStreamUseCase getAuthStateStreamUseCase;
-
   StreamSubscription? subscription;
 
   SplashBloc({
@@ -158,7 +157,18 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
               profileMatchDuration: res.getConfig.timeLeftForExpiry
           );
         } else if (res.getConfig.status == "MATCHED"){
-          add(onStartChatIntent(res.getConfig.request));
+          if(res.getConfig.chat != null && res.getConfig.request != null) {
+            // if(res.getConfig.chat?.status == "ACTIVE") {
+            //   add(onStartChatIntent(res.getConfig.request));
+            // } else {
+            //   add(onFirstTimeUserEvent());
+            // }
+            add(onStartChatIntent(res.getConfig.request));
+
+
+          } else {
+            return state.copyWith(status: SplashStatus.error);
+          }
         } else {
           add(onFirstTimeUserEvent());
         }
@@ -187,16 +197,14 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
           isAuthenticated: true,
           loadChat: response.first,
         );
-      } 
+      }
     });
   }
 
   _onStartChatIntent(
       onStartChatIntent event, Emitter<SplashState> emitter) async {
-
     var roomId =  await FirebaseChatCore.instance.createRoom(User(id:
     event.request?.requesteeProfileId ?? ""));
-
     emitter.call(state.copyWith(status: SplashStatus.loaded,
     isFirstTime: false,
     isAuthenticated: true,

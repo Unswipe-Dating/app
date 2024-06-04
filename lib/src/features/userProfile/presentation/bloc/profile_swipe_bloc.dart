@@ -108,7 +108,7 @@ class ProfileSwipeBloc extends Bloc<ProfileSwipeEvent, ProfileSwipeState> {
             return state.copyWith(status: ProfileSwipeStatus.errorSwipe);
           } else if (responseData is api_response.Success) {
             return state.copyWith(
-                status: ProfileSwipeStatus.loadedCreate);
+                status: ProfileSwipeStatus.loadedAccept);
           } else {
             return state.copyWith(status: ProfileSwipeStatus.errorSwipe);
           }
