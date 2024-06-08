@@ -147,6 +147,10 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
         return state.copyWith(status: SplashStatus.error);
       } else if (responseData is api_response.OperationFailure) {
         return state.copyWith(status: SplashStatus.error);
+      } else if (responseData is api_response.AuthorizationFailure) {
+        return state.copyWith(status: SplashStatus.error);
+      } else if (responseData is api_response.TimeOutFailure) {
+        return state.copyWith(status: SplashStatus.error);
       } else if (responseData is api_response.Success) {
         var res = (((responseData as api_response.Success).data) as ResponseMeta);
         if(res.getConfig.timeLeftForExpiry != null) {

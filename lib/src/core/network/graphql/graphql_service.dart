@@ -25,7 +25,7 @@ class GraphQLService {
       );
 
       final result = await _graphQLClient.query(options)
-          .timeout(const Duration(milliseconds: 100), onTimeout: () {
+          .timeout(const Duration(minutes: 1), onTimeout: () {
             throw TimeOutFailure();
       });
 
@@ -51,7 +51,7 @@ class GraphQLService {
     final options = MutationOptions(document: gql(query), variables: variables);
 
     final result = await _graphQLClient.mutate(options)
-        .timeout(const Duration(milliseconds: 100), onTimeout: () {
+        .timeout(const Duration(minutes: 1), onTimeout: () {
       throw TimeOutFailure();
     });
 
@@ -75,7 +75,7 @@ class GraphQLService {
         });
     final result = await GraphQLClient(link: link, cache: GraphQLCache())
         .mutate(options)
-        .timeout(const Duration(milliseconds: 100),
+        .timeout(const Duration(minutes: 1),
         onTimeout: () {
           throw TimeOutFailure();
     });
@@ -99,7 +99,7 @@ class GraphQLService {
         });
     final result = await GraphQLClient(link: link, cache: GraphQLCache())
         .mutate(options)
-        .timeout(const Duration(milliseconds: 100), onTimeout: () {
+        .timeout(const Duration(minutes: 1), onTimeout: () {
       throw TimeOutFailure();
     });
 

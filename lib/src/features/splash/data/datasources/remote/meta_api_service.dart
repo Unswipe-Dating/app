@@ -50,9 +50,9 @@ class MetaService {
         }
         return OperationFailure(error: response.exception);
       }
-    } on OperationFailure catch (_) {
+    } on TimeOutFailure catch (_) {
       // todo: timeout failure
-      return OperationFailure();
+      return TimeOutFailure();
 
     }
   }

@@ -118,6 +118,10 @@ class UpdateProfileBloc extends Bloc<UpdateProfileEvent, UpdateProfileState> {
       final responseData = response.val;
       if (responseData is api_response.Failure) {
         return state.copyWith(status: UpdateProfileStatus.error);
+      } else if (responseData is api_response.AuthorizationFailure) {
+        return state.copyWith(status: UpdateProfileStatus.error);
+      } else if (responseData is api_response.TimeOutFailure) {
+        return state.copyWith(status: UpdateProfileStatus.error);
       } else if (responseData is api_response.OperationFailure) {
         return state.copyWith(status: UpdateProfileStatus.error);
       } else if (responseData is api_response.Success) {
@@ -143,6 +147,10 @@ class UpdateProfileBloc extends Bloc<UpdateProfileEvent, UpdateProfileState> {
     await emitter.forEach(stream, onData: (response) {
       final responseData = response.val;
       if (responseData is api_response.Failure) {
+        return state.copyWith(status: UpdateProfileStatus.error);
+      } else if (responseData is api_response.AuthorizationFailure) {
+        return state.copyWith(status: UpdateProfileStatus.error);
+      } else if (responseData is api_response.TimeOutFailure) {
         return state.copyWith(status: UpdateProfileStatus.error);
       } else if (responseData is api_response.OperationFailure) {
         return state.copyWith(status: UpdateProfileStatus.error);
@@ -224,6 +232,10 @@ class UpdateProfileBloc extends Bloc<UpdateProfileEvent, UpdateProfileState> {
     await emitter.forEach(stream, onData: (response) {
       final responseData = response.val;
       if (responseData is api_response.Failure) {
+        return state.copyWith(status: UpdateProfileStatus.error);
+      } else if (responseData is api_response.AuthorizationFailure) {
+        return state.copyWith(status: UpdateProfileStatus.error);
+      } else if (responseData is api_response.TimeOutFailure) {
         return state.copyWith(status: UpdateProfileStatus.error);
       } else if (responseData is api_response.OperationFailure) {
         return state.copyWith(status: UpdateProfileStatus.error);

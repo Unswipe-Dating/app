@@ -66,6 +66,10 @@ class ProfileSwipeBloc extends Bloc<ProfileSwipeEvent, ProfileSwipeState> {
       final responseData = response.val;
       if (responseData is api_response.Failure) {
         return state.copyWith(status: ProfileSwipeStatus.error);
+      } else if (responseData is api_response.AuthorizationFailure) {
+        return state.copyWith(status: ProfileSwipeStatus.error);
+      } else if (responseData is api_response.TimeOutFailure) {
+        return state.copyWith(status: ProfileSwipeStatus.error);
       } else if (responseData is api_response.OperationFailure) {
         return state.copyWith(status: ProfileSwipeStatus.error);
       } else if (responseData is api_response.Success) {
@@ -86,6 +90,10 @@ class ProfileSwipeBloc extends Bloc<ProfileSwipeEvent, ProfileSwipeState> {
       final responseData = response.val;
       if (responseData is api_response.Failure) {
         return state.copyWith(status: ProfileSwipeStatus.errorSwipe);
+      } else if (responseData is api_response.AuthorizationFailure) {
+        return state.copyWith(status: ProfileSwipeStatus.error);
+      } else if (responseData is api_response.TimeOutFailure) {
+        return state.copyWith(status: ProfileSwipeStatus.error);
       } else if (responseData is api_response.OperationFailure) {
         return state.copyWith(status: ProfileSwipeStatus.errorSwipe);
       } else if (responseData is api_response.Success) {
@@ -104,6 +112,10 @@ class ProfileSwipeBloc extends Bloc<ProfileSwipeEvent, ProfileSwipeState> {
           final responseData = response.val;
           if (responseData is api_response.Failure) {
             return state.copyWith(status: ProfileSwipeStatus.errorSwipe);
+          } else if (responseData is api_response.AuthorizationFailure) {
+            return state.copyWith(status: ProfileSwipeStatus.error);
+          } else if (responseData is api_response.TimeOutFailure) {
+            return state.copyWith(status: ProfileSwipeStatus.error);
           } else if (responseData is api_response.OperationFailure) {
             return state.copyWith(status: ProfileSwipeStatus.errorSwipe);
           } else if (responseData is api_response.Success) {
@@ -123,6 +135,10 @@ class ProfileSwipeBloc extends Bloc<ProfileSwipeEvent, ProfileSwipeState> {
       final responseData = response.val;
       if (responseData is api_response.Failure) {
         return state.copyWith(status: ProfileSwipeStatus.errorSwipe);
+      } else if (responseData is api_response.AuthorizationFailure) {
+        return state.copyWith(status: ProfileSwipeStatus.error);
+      } else if (responseData is api_response.TimeOutFailure) {
+        return state.copyWith(status: ProfileSwipeStatus.error);
       } else if (responseData is api_response.OperationFailure) {
         return state.copyWith(status: ProfileSwipeStatus.errorSwipe);
       } else if (responseData is api_response.Success) {
@@ -141,6 +157,10 @@ class ProfileSwipeBloc extends Bloc<ProfileSwipeEvent, ProfileSwipeState> {
           final responseData = response.val;
           if (responseData is api_response.Failure) {
             return state.copyWith(status: ProfileSwipeStatus.errorSwipe);
+          } else if (responseData is api_response.AuthorizationFailure) {
+            return state.copyWith(status: ProfileSwipeStatus.error);
+          } else if (responseData is api_response.TimeOutFailure) {
+            return state.copyWith(status: ProfileSwipeStatus.error);
           } else if (responseData is api_response.OperationFailure) {
             return state.copyWith(status: ProfileSwipeStatus.errorSwipe);
           } else if (responseData is api_response.Success) {
@@ -158,6 +178,10 @@ class ProfileSwipeBloc extends Bloc<ProfileSwipeEvent, ProfileSwipeState> {
         onData: (response) {
       final responseData = response.val;
       if (responseData is api_response.Failure) {
+        return state.copyWith(status: ProfileSwipeStatus.error);
+      } else if (responseData is api_response.AuthorizationFailure) {
+        return state.copyWith(status: ProfileSwipeStatus.error);
+      } else if (responseData is api_response.TimeOutFailure) {
         return state.copyWith(status: ProfileSwipeStatus.error);
       } else if (responseData is api_response.OperationFailure) {
         return state.copyWith(status: ProfileSwipeStatus.error);

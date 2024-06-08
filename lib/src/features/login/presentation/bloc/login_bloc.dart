@@ -106,6 +106,10 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
       final responseData = response.val;
       if (responseData is api_response.Failure) {
         return state.copyWith(status: LoginStatus.error);
+      } else if (responseData is api_response.AuthorizationFailure) {
+        return state.copyWith(status: LoginStatus.error);
+      } else if (responseData is api_response.TimeOutFailure) {
+        return state.copyWith(status: LoginStatus.error);
       } else if (responseData is api_response.OperationFailure) {
         return state.copyWith(status: LoginStatus.error);
       } else if (responseData is api_response.Success) {
@@ -131,6 +135,10 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
     await emitter.forEach(stream, onData: (response) {
       final responseData = response.val;
       if (responseData is api_response.Failure) {
+        return state.copyWith(status: LoginStatus.error);
+      } else if (responseData is api_response.AuthorizationFailure) {
+        return state.copyWith(status: LoginStatus.error);
+      } else if (responseData is api_response.TimeOutFailure) {
         return state.copyWith(status: LoginStatus.error);
       } else if (responseData is api_response.OperationFailure) {
         return state.copyWith(status: LoginStatus.error);
@@ -173,6 +181,10 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
       final responseData = response.val;
       if (responseData is api_response.Failure) {
         return state.copyWith(status: LoginStatus.error);
+      } else if (responseData is api_response.AuthorizationFailure) {
+        return state.copyWith(status: LoginStatus.error);
+      } else if (responseData is api_response.TimeOutFailure) {
+        return state.copyWith(status: LoginStatus.error);
       } else if (responseData is api_response.OperationFailure) {
         return state.copyWith(status: LoginStatus.error);
       } else if (responseData is api_response.Success) {
@@ -213,6 +225,10 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
       final responseData = response.val;
       if (responseData is api_response.Failure) {
         return state.copyWith(status: LoginStatus.error);
+      } else if (responseData is api_response.AuthorizationFailure) {
+        return state.copyWith(status: LoginStatus.error);
+      } else if (responseData is api_response.TimeOutFailure) {
+        return state.copyWith(status: LoginStatus.error);
       } else if (responseData is api_response.OperationFailure) {
         return state.copyWith(status: LoginStatus.error);
       } else if (responseData is api_response.Success) {
@@ -239,6 +255,10 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
     await emitter.forEach(stream, onData: (response) {
       final responseData = response.val;
       if (responseData is api_response.Failure) {
+        return state.copyWith(status: LoginStatus.error);
+      } else if (responseData is api_response.AuthorizationFailure) {
+        return state.copyWith(status: LoginStatus.error);
+      } else if (responseData is api_response.TimeOutFailure) {
         return state.copyWith(status: LoginStatus.error);
       } else if (responseData is api_response.OperationFailure) {
         return state.copyWith(status: LoginStatus.error);

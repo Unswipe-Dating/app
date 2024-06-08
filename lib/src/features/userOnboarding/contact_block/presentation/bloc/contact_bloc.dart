@@ -73,6 +73,10 @@ class ContactBloc extends Bloc<ContactBlockEvent, ContactBlockState> {
       final responseData = response.val;
       if (responseData is api_response.Failure) {
         return state.copyWith(status: ContactBlockStatus.error);
+      } else if (responseData is api_response.AuthorizationFailure) {
+        return state.copyWith(status: ContactBlockStatus.error);
+      } else if (responseData is api_response.TimeOutFailure) {
+        return state.copyWith(status: ContactBlockStatus.error);
       } else if (responseData is api_response.OperationFailure) {
         return state.copyWith(status: ContactBlockStatus.error);
       } else if (responseData is api_response.Success) {
