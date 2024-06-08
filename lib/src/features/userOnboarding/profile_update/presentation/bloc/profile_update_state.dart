@@ -7,11 +7,15 @@ class UpdateProfileState extends Equatable {
   final UpdateProfileStatus status;
   final bool isFirstTime;
   final bool isAuthenticated;
+  final ResponseProfileList? responseProfileList;
+
 
   const UpdateProfileState({
     this.status = UpdateProfileStatus.initial,
     this.isFirstTime = true,
     this.isAuthenticated = false,
+    this.responseProfileList,
+
 
   });
 
@@ -20,11 +24,13 @@ class UpdateProfileState extends Equatable {
     UpdateProfileStatus? status,
     bool? isFirstTime,
     bool? isAuthenticated,
+    ResponseProfileList? responseProfileList
   }) {
     return UpdateProfileState(
       status: status ?? this.status,
       isFirstTime: isFirstTime ?? this.isFirstTime,
       isAuthenticated: isAuthenticated ?? this.isAuthenticated,
+        responseProfileList: responseProfileList?? this.responseProfileList
     );
   }
 
@@ -33,5 +39,6 @@ class UpdateProfileState extends Equatable {
     status,
     isFirstTime,
     isAuthenticated,
+    responseProfileList
   ];
 }

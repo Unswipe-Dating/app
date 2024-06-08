@@ -42,6 +42,9 @@ class MetaService {
       }
       return Success(data: info);
     } else {
+      if(response.exception?.graphqlErrors[0].extensions?['code'] == "UNAUTHENTICATED") {
+        return AuthorizationFailure(error: response.exception);
+      }
       return OperationFailure(error: response.exception);
     }
   }

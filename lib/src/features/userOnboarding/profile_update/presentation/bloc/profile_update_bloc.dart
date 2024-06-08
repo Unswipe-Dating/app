@@ -18,6 +18,8 @@ import '../../../../../shared/domain/usecases/get_auth_state_stream_use_case.dar
 import '../../../../login/domain/usecases/update_login_state_stream_usecase.dart';
 import '../../../../onBoarding/domain/entities/onbaording_state/onboarding_state.dart';
 import '../../../../onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart';
+import '../../../../settings/domain/usecases/get_settings_profile_usecase.dart';
+import '../../../../userProfile/data/model/get_profile/response_profile_swipe.dart';
 import '../../domain/usecases/create_user_use_case.dart';
 import '../../domain/usecases/update_user_use_case.dart';
 
@@ -31,6 +33,7 @@ class UpdateProfileBloc extends Bloc<UpdateProfileEvent, UpdateProfileState> {
   final GetAuthStateStreamUseCase getAuthStateStreamUseCase;
   final CreateProfileUseCase createProfileUseCase;
   final UpdateProfileUseCase updateProfileUseCase;
+  final GetSettingsProfileUseCase getSettingsProfileUseCase;
 
   // List of splash
 
@@ -40,12 +43,15 @@ class UpdateProfileBloc extends Bloc<UpdateProfileEvent, UpdateProfileState> {
     required this.createProfileUseCase,
     required this.updateProfileUseCase,
     required this.updateUserStateStreamUseCase,
+    required this.getSettingsProfileUseCase
   }) : super(UpdateProfileState()) {
     on<OnUpdateOnBoardingUserEvent>(_onUpdatingOnBoardingEvent);
     on<OnUpdateProfileRequested>(_onStartUpdateProfile);
     on<OnRequestApiCallUpdate>(_onStartUpdateProfileApi);
     on<OnRequestApiCallCreate>(_onStartCreateProfileApi);
     on<OnUpdateUserState>(_onProfileCreateSuccess);
+    on<OnStartGettingProfile>(_onStartSettingProfileUseCase);
+    on<OnGetUserProfile>(_onGetUserProfile);
   }
 
   _onProfileCreateSuccess(
@@ -181,6 +187,55 @@ class UpdateProfileBloc extends Bloc<UpdateProfileEvent, UpdateProfileState> {
         });
       },
     );
+  }
+
+  _onStartSettingProfileUseCase(OnStartGettingProfile event,
+      Emitter<UpdateProfileState> emitter) async {
+    emitter(state.copyWith(status: UpdateProfileStatus.loading));
+
+    await emitter.forEach(
+      getAuthStateStreamUseCase.call(),
+      onData: (response) {
+        return response.fold(ifLeft: (l) {
+          if (l is CancelTokenFailure) {
+            return state.copyWith(status: UpdateProfileStatus.error);
+          } else {
+            return state.copyWith(status: UpdateProfileStatus.error);
+          }
+        }, ifRight: (r) {
+          if (r.userAndToken?.token != null && r.userAndToken?.id != null) {
+              add(OnGetUserProfile(r.userAndToken!.token, r.userAndToken!.id)
+              );
+            return state.copyWith(status: UpdateProfileStatus.loading);
+          } else {
+            return state.copyWith(status: UpdateProfileStatus.error);
+          }
+        });
+      },
+    );
+  }
+
+  _onGetUserProfile(OnGetUserProfile event,
+      Emitter<UpdateProfileState> emitter) async {
+
+    Stream<GetSettingsProfileUseCaseResponse> stream =
+    await getSettingsProfileUseCase.buildUseCaseStream(event.token, event.id);
+
+    await emitter.forEach(stream, onData: (response) {
+      final responseData = response.val;
+      if (responseData is api_response.Failure) {
+        return state.copyWith(status: UpdateProfileStatus.error);
+      } else if (responseData is api_response.OperationFailure) {
+        return state.copyWith(status: UpdateProfileStatus.error);
+      } else if (responseData is api_response.Success) {
+        var profile = (((responseData as api_response.Success).data)
+        as ResponseProfileSwipe)
+            .userProfile;
+        return state.copyWith(status: UpdateProfileStatus.loaded, responseProfileList: profile);
+      } else {
+        return state.copyWith(status: UpdateProfileStatus.error);
+      }
+    });
   }
 
 // This function is called whenever the text field changes

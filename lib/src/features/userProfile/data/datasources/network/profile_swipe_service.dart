@@ -64,6 +64,9 @@ class ProfileSwipeService {
       }
       return Success(data: info);
     } else {
+      if(response.exception?.graphqlErrors[0].extensions?['code'] == "UNAUTHENTICATED") {
+        return AuthorizationFailure(error: response.exception);
+      }
       return OperationFailure(error: response.exception);
     }
   }
@@ -81,6 +84,9 @@ class ProfileSwipeService {
         interests
         photoURLs
         location
+        request {
+            id
+        }
     }
 }
 ''';
@@ -103,6 +109,9 @@ class ProfileSwipeService {
       }
       return Success(data: info);
     } else {
+      if(response.exception?.graphqlErrors[0].extensions?['code'] == "UNAUTHENTICATED") {
+        return AuthorizationFailure(error: response.exception);
+      }
       return OperationFailure(error: response.exception);
     }
   }
@@ -150,6 +159,9 @@ class ProfileSwipeService {
       }
       return Success(data: info);
     } else {
+      if(response.exception?.graphqlErrors[0].extensions?['code'] == "UNAUTHENTICATED") {
+        return AuthorizationFailure(error: response.exception);
+      }
       return OperationFailure(error: response.exception);
     }
   }
@@ -194,6 +206,9 @@ class ProfileSwipeService {
       }
       return Success(data: info);
     } else {
+      if(response.exception?.graphqlErrors[0].extensions?['code'] == "UNAUTHENTICATED") {
+        return AuthorizationFailure(error: response.exception);
+      }
       return OperationFailure(error: response.exception);
     }
   }
@@ -238,6 +253,9 @@ class ProfileSwipeService {
       }
       return Success(data: info);
     } else {
+      if(response.exception?.graphqlErrors[0].extensions?['code'] == "UNAUTHENTICATED") {
+        return AuthorizationFailure(error: response.exception);
+      }
       return OperationFailure(error: response.exception);
     }
   }
@@ -272,6 +290,9 @@ class ProfileSwipeService {
       }
       return Success(data: info);
     } else {
+      if(response.exception?.graphqlErrors[0].extensions?['code'] == "UNAUTHENTICATED") {
+        return AuthorizationFailure(error: response.exception);
+      }
       return OperationFailure(error: response.exception);
     }
   }

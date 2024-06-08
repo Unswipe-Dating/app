@@ -31,6 +31,9 @@ class UpdateProfileRepositoryImpl implements UpdateProfileRepository {
       } on Exception catch (e, _) {
         return Failure(error: e);
       }
+    } else if (response is AuthorizationFailure) {
+      return AuthorizationFailure(
+          error: (response as AuthorizationFailure).error);
     } else if (response is OperationFailure) {
       return OperationFailure(error: (response as OperationFailure).error);
     } else {
@@ -48,6 +51,9 @@ class UpdateProfileRepositoryImpl implements UpdateProfileRepository {
       } on Exception catch (e, _) {
         return Failure(error: e);
       }
+    } else if (response is AuthorizationFailure) {
+      return AuthorizationFailure(
+          error: (response as AuthorizationFailure).error);
     } else if (response is OperationFailure) {
       return OperationFailure(error: (response as OperationFailure).error);
     } else {

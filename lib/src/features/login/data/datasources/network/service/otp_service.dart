@@ -46,6 +46,9 @@ class OtpService {
       }
       return Success(data: info);
     } else {
+      if(response.exception?.graphqlErrors[0].extensions?['code'] == "UNAUTHENTICATED") {
+        return AuthorizationFailure(error: response.exception);
+      }
       return OperationFailure(error: response.exception);
     }
   }
@@ -99,6 +102,9 @@ class OtpService {
       }
       return Success(data: info);
     } else {
+      if(response.exception?.graphqlErrors[0].extensions?['code'] == "UNAUTHENTICATED") {
+        return AuthorizationFailure(error: response.exception);
+      }
       return OperationFailure(error: response.exception);
     }
   }
@@ -145,6 +151,9 @@ Future<ApiResponse<SignUpResponse>> signupOrLogin(
     }
     return Success(data: info);
   } else {
+    if(response.exception?.graphqlErrors[0].extensions?['code'] == "UNAUTHENTICATED") {
+      return AuthorizationFailure(error: response.exception);
+    }
     return OperationFailure(error: response.exception);
   }
 }

@@ -16,6 +16,10 @@ ResponseProfileSwipe _$ResponseProfileSwipeFromJson(
       (json['getRequestedProfilesForUser'] as List<dynamic>?)
           ?.map((e) => ResponseProfileList.fromJson(e as Map<String, dynamic>))
           .toList(),
+      json['userProfile'] == null
+          ? null
+          : ResponseProfileList.fromJson(
+              json['userProfile'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$ResponseProfileSwipeToJson(
@@ -23,6 +27,7 @@ Map<String, dynamic> _$ResponseProfileSwipeToJson(
     <String, dynamic>{
       'browseProfiles': instance.browseProfiles,
       'getRequestedProfilesForUser': instance.getRequestedProfilesForUser,
+      'userProfile': instance.userProfile,
     };
 
 ResponseProfileSwipeBrowse _$ResponseProfileSwipeBrowseFromJson(
@@ -58,6 +63,10 @@ ResponseProfileList _$ResponseProfileListFromJson(Map<String, dynamic> json) =>
       json['hometown'] as String?,
       json['zodiac'] as String?,
       (json['languages'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      json['request'] == null
+          ? null
+          : ResponseProfileRequestBody.fromJson(
+              json['request'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$ResponseProfileListToJson(
@@ -75,6 +84,7 @@ Map<String, dynamic> _$ResponseProfileListToJson(
       'hometown': instance.hometown,
       'zodiac': instance.zodiac,
       'languages': instance.languages,
+      'request': instance.request,
     };
 
 ResponseProfileSwipeInterests _$ResponseProfileSwipeInterestsFromJson(
@@ -97,4 +107,16 @@ Map<String, dynamic> _$ResponseProfileSwipeInterestsToJson(
       'selfCare': instance.selfCare,
       'fnd': instance.fnd,
       'sports': instance.sports,
+    };
+
+ResponseProfileRequestBody _$ResponseProfileRequestBodyFromJson(
+        Map<String, dynamic> json) =>
+    ResponseProfileRequestBody(
+      json['id'] as String,
+    );
+
+Map<String, dynamic> _$ResponseProfileRequestBodyToJson(
+        ResponseProfileRequestBody instance) =>
+    <String, dynamic>{
+      'id': instance.id,
     };

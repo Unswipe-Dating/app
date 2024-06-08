@@ -22,6 +22,13 @@ class OperationFailure<T> extends ApiResponse<T> {
   OperationFailure({this.error});
 }
 
+class AuthorizationFailure<T> extends ApiResponse<T> {
+  OperationException? error;
+
+
+  AuthorizationFailure({this.error});
+}
+
 class CancelTokenFailure<T> extends Failure<T> {
   CancelTokenFailure({required super.error});
 }

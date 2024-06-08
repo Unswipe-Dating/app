@@ -161,6 +161,7 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
       isVerified: true,
       pronouns: "",
       isCreate: true,
+       requestId: profile.request?.id,
     )).toList();
 
   }

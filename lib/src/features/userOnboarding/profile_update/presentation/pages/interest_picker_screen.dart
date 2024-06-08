@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:unswipe/src/features/login/domain/usecases/update_login_state_stream_usecase.dart';
+import 'package:unswipe/src/features/settings/domain/usecases/get_settings_profile_usecase.dart';
 import 'package:unswipe/src/features/userOnboarding/profile_update/data/models/update_profile_response.dart';
 import 'package:unswipe/src/features/userOnboarding/profile_update/domain/usecases/create_user_use_case.dart';
 import 'package:unswipe/src/features/userOnboarding/profile_update/domain/usecases/update_user_use_case.dart';
@@ -126,6 +127,7 @@ class _InterestsUpdateScreenState extends State<InterestsUpdateScreen> {
             updateProfileUseCase: GetIt.I.get<UpdateProfileUseCase>(),
             createProfileUseCase: GetIt.I.get<CreateProfileUseCase>(),
             updateUserStateStreamUseCase: GetIt.I.get<UpdateUserStateStreamUseCase>(),
+            getSettingsProfileUseCase: GetIt.I.get<GetSettingsProfileUseCase>()
 
 
           ),

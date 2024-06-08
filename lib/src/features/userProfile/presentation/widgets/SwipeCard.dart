@@ -25,9 +25,11 @@ class SwipeCard extends StatefulWidget {
   final Function dislikeAction;
   final String pronouns;
   final bool isCreate;
+  final String? requestId;
 
   const SwipeCard({
     Key? key,
+
     required this.likeAction,
     required this.dislikeAction,
     required this.id,
@@ -38,6 +40,7 @@ class SwipeCard extends StatefulWidget {
     required this.isVerified,
     required this.pronouns,
     required this.isCreate,
+    required this.requestId,
   }) : super(key: key);
 
   @override
@@ -249,7 +252,7 @@ class _SwipeCard extends State<SwipeCard> {
                                       if(widget.isCreate) {
                                         context.read<ProfileSwipeBloc>().add(OnSkipRequest(widget.id));
                                       } else {
-                                        context.read<ProfileSwipeBloc>().add(OnRejectRequest(widget.id));
+                                        context.read<ProfileSwipeBloc>().add(OnRejectRequest(widget.requestId!));
                                       }
 
                                       controller.jumpTo(0);
@@ -295,7 +298,7 @@ class _SwipeCard extends State<SwipeCard> {
     if(widget.isCreate) {
       context.read<ProfileSwipeBloc>().add(OnCreateRequest(widget.id));
     } else {
-      context.read<ProfileSwipeBloc>().add(OnAcceptRequest(widget.id));
+      context.read<ProfileSwipeBloc>().add(OnAcceptRequest(widget.requestId!));
 
     }
 

@@ -18,6 +18,7 @@ class ResponseProfileList {
       this.hometown,
       this.zodiac,
       this.languages,
+      this.request
 
       );
 
@@ -36,5 +37,6 @@ class ResponseProfileList {
   String? hometown;
   String? zodiac;
   List<String>? languages;
+  ResponseProfileRequestBody? request;
   Map<String, dynamic> toJson() => _$ResponseProfileListToJson(this);
 }

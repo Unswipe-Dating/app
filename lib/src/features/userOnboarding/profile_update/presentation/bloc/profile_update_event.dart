@@ -37,6 +37,20 @@ class OnUpdateUserState extends UpdateProfileEvent {
   OnUpdateUserState(this.response, this.token, this.id);
 }
 
+class OnStartGettingProfile extends UpdateProfileEvent {
+  final String id;
+  final String token;
+  OnStartGettingProfile(this.token, this.id);
+}
+
+class OnGetUserProfile extends UpdateProfileEvent {
+  final String id;
+  final String token;
+  OnGetUserProfile(this.token, this.id);
+}
+
+
+
 class OnRequestApiCallCreate extends UpdateProfileEvent {
   final UpdateProfileParams params;
   final String id;
