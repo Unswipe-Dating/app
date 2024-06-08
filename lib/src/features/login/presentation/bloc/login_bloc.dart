@@ -107,9 +107,9 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
       if (responseData is api_response.Failure) {
         return state.copyWith(status: LoginStatus.error);
       } else if (responseData is api_response.AuthorizationFailure) {
-        return state.copyWith(status: LoginStatus.error);
+        return state.copyWith(status: LoginStatus.errorAuth);
       } else if (responseData is api_response.TimeOutFailure) {
-        return state.copyWith(status: LoginStatus.error);
+        return state.copyWith(status: LoginStatus.errorAuth);
       } else if (responseData is api_response.OperationFailure) {
         return state.copyWith(status: LoginStatus.error);
       } else if (responseData is api_response.Success) {
@@ -137,9 +137,9 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
       if (responseData is api_response.Failure) {
         return state.copyWith(status: LoginStatus.error);
       } else if (responseData is api_response.AuthorizationFailure) {
-        return state.copyWith(status: LoginStatus.error);
+        return state.copyWith(status: LoginStatus.errorAuth);
       } else if (responseData is api_response.TimeOutFailure) {
-        return state.copyWith(status: LoginStatus.error);
+        return state.copyWith(status: LoginStatus.errorTimeOut);
       } else if (responseData is api_response.OperationFailure) {
         return state.copyWith(status: LoginStatus.error);
       } else if (responseData is api_response.Success) {
@@ -182,9 +182,9 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
       if (responseData is api_response.Failure) {
         return state.copyWith(status: LoginStatus.error);
       } else if (responseData is api_response.AuthorizationFailure) {
-        return state.copyWith(status: LoginStatus.error);
+        return state.copyWith(status: LoginStatus.errorAuth);
       } else if (responseData is api_response.TimeOutFailure) {
-        return state.copyWith(status: LoginStatus.error);
+        return state.copyWith(status: LoginStatus.errorTimeOut);
       } else if (responseData is api_response.OperationFailure) {
         return state.copyWith(status: LoginStatus.error);
       } else if (responseData is api_response.Success) {
@@ -196,9 +196,7 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
         var firebaseCustomToken = (((responseData as api_response.Success).data) as SignUpResponse).signup
             .user.firebaseCustomToken;
 
-        add(OnLoginSuccess(token, event.params.id, profile));
-        add(OnUpdateOnBoardingUserEvent(profileId: profile));
-
+        add(OnGetMetaEvent(token: token, id: event.params.id, userId: profile));
         return state.copyWith(status: LoginStatus.verified);
 
       } else {
@@ -226,9 +224,9 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
       if (responseData is api_response.Failure) {
         return state.copyWith(status: LoginStatus.error);
       } else if (responseData is api_response.AuthorizationFailure) {
-        return state.copyWith(status: LoginStatus.error);
+        return state.copyWith(status: LoginStatus.errorAuth);
       } else if (responseData is api_response.TimeOutFailure) {
-        return state.copyWith(status: LoginStatus.error);
+        return state.copyWith(status: LoginStatus.errorTimeOut);
       } else if (responseData is api_response.OperationFailure) {
         return state.copyWith(status: LoginStatus.error);
       } else if (responseData is api_response.Success) {
@@ -257,12 +255,14 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
       if (responseData is api_response.Failure) {
         return state.copyWith(status: LoginStatus.error);
       } else if (responseData is api_response.AuthorizationFailure) {
-        return state.copyWith(status: LoginStatus.error);
+        return state.copyWith(status: LoginStatus.errorAuth);
       } else if (responseData is api_response.TimeOutFailure) {
-        return state.copyWith(status: LoginStatus.error);
+        return state.copyWith(status: LoginStatus.errorTimeOut);
       } else if (responseData is api_response.OperationFailure) {
         return state.copyWith(status: LoginStatus.error);
       } else if (responseData is api_response.Success) {
+        add(OnLoginSuccess(event.token, event.id, event.userId));
+        add(OnUpdateOnBoardingUserEvent(profileId: event.userId));
         var res = (((responseData as api_response.Success).data) as ResponseMeta);
         if(res.getConfig.timeLeftForExpiry != null) {
           return state.copyWith(status: LoginStatus.loadedExpiryTimer,
@@ -285,6 +285,7 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
           return state.copyWith(status: LoginStatus.loaded,
           );
         }
+
         return state.copyWith(status: LoginStatus.loadingTimer,);
 
       } else {

@@ -5,12 +5,12 @@ import 'package:unswipe/src/shared/domain/repository/user_repository.dart';
 import '../../../../core/app_error.dart';
 
 @Injectable()
-class UpdateOnboardingStateStreamUseCase {
+class ResetUserTokenStateStreamUseCase {
   final UserRepository _onBoardingRepository;
 
-  const UpdateOnboardingStateStreamUseCase(this._onBoardingRepository);
+  const ResetUserTokenStateStreamUseCase(this._onBoardingRepository);
 
-  VoidResultStream call(OnBoardingStatus status) {
-    return _onBoardingRepository.updateOnBoardingState(status);
+  VoidResultStream call() {
+    return _onBoardingRepository.resetAuthState();
   }
 }

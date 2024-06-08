@@ -30,8 +30,9 @@ class UserRepositoryImpl implements UserRepository {
   @override
   VoidResultStream updateOnBoardingState(OnBoardingStatus status) =>
       _localDataSource.saveOnBoardingToken(
-          _Mappers.userResponseToOnBoardingTokenEntity(status)
-      ).toEitherStream(_Mappers.errorToAppError);
+        _Mappers.userResponseToOnBoardingTokenEntity(status)
+    ).toEitherStream(_Mappers.errorToAppError);
+
 
   @override
   VoidResultStream updateAuthenticationState(String token, String id, String? userId) =>
@@ -55,6 +56,12 @@ class UserRepositoryImpl implements UserRepository {
 
             {
   }
+
+
+  @override
+  VoidResultStream resetAuthState() =>
+    _localDataSource.removeUserAndToken().toEitherStream(_Mappers.errorToAppError);
+
 
 
 

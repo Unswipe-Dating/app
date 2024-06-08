@@ -1,6 +1,6 @@
 part of 'onboarding_bloc.dart';
 
-enum OnBoardStatus { initial, loading, loaded, error }
+enum OnBoardStatus { initial, loading, loaded, error, errorAuth, errorTimeOut, }
 
 class OnBoardState extends Equatable {
   final OnBoardStatus status;

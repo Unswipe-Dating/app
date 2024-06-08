@@ -1,7 +1,7 @@
 part of 'profile_update_bloc.dart';
 
 
-enum UpdateProfileStatus { initial, fetchedToken, loading, loaded, error }
+enum UpdateProfileStatus { initial, fetchedToken, loading, loaded, error, errorAuth, errorTimeOut,  }
 
 class UpdateProfileState extends Equatable {
   final UpdateProfileStatus status;

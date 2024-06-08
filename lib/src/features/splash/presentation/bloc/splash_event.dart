@@ -13,13 +13,18 @@ class onFirstTimeUserEvent extends SplashEvent {
   onFirstTimeUserEvent();
 }
 
+
 class onGetMetaEvent extends SplashEvent {
   final String token;
   onGetMetaEvent({required this.token});
 }
 
-class onUpdateOnBoardingUserEvent extends SplashEvent {
-  onUpdateOnBoardingUserEvent();
+class OnUpdateOnBoardingUserEvent extends SplashEvent {
+  OnUpdateOnBoardingUserEvent();
+}
+
+class OnResetUserTokenEvent extends SplashEvent {
+  OnResetUserTokenEvent();
 }
 
 class onAuthenticatedUserEvent extends SplashEvent {

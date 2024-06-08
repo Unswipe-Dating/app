@@ -18,7 +18,8 @@ class OnImageUploadRequested extends ImageUploadEvent {
 
 
 class OnUpdateOnBoardingUserEvent extends ImageUploadEvent {
-  OnUpdateOnBoardingUserEvent();
+  bool isUnAuthorized = false;
+  OnUpdateOnBoardingUserEvent({required this.isUnAuthorized});
 }
 
 class OnRequestApiCall extends ImageUploadEvent {

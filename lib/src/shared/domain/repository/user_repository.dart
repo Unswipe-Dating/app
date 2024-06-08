@@ -11,6 +11,7 @@ abstract class UserRepository {
   Stream<Result<OnBoardingState>> get onboardingState$;
   VoidResultStream updateOnBoardingState(OnBoardingStatus status);
   VoidResultStream updateAuthenticationState(String token, String id, String? userId);
+  VoidResultStream resetAuthState();
 
 
 }

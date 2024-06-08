@@ -11,7 +11,9 @@ enum ProfileSwipeStatus { initial,
   loadedAccept,
   loadedSkip,
   error,
-  errorSwipe
+  errorAuth,
+  errorTimeOut,
+errorSwipe
 }
 
 class ProfileSwipeState extends Equatable {

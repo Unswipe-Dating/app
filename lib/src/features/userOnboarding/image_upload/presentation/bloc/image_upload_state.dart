@@ -1,7 +1,7 @@
 part of 'image_upload_bloc.dart';
 
 
-enum ImageUploadStatus { initial, fetchedToken, loading, loaded, error }
+enum ImageUploadStatus { initial, fetchedToken, loading, loaded, error, errorAuth, errorTimeOut, }
 
 class ImageUploadState extends Equatable {
   final ImageUploadStatus status;

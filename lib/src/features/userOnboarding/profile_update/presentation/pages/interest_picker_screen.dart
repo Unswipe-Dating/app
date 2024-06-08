@@ -137,6 +137,10 @@ class _InterestsUpdateScreenState extends State<InterestsUpdateScreen> {
                 CustomNavigationHelper.router.go(
                   CustomNavigationHelper.profilePath,
                 );
+              } else if (state.status == UpdateProfileStatus.errorAuth) {
+                CustomNavigationHelper.router.go(
+                  CustomNavigationHelper.loginPath,
+                );
               }
             },
             builder: (context, state) {

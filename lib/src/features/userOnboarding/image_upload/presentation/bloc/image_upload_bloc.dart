@@ -39,12 +39,15 @@ class ImageUploadBloc extends Bloc<ImageUploadEvent, ImageUploadState> {
   _onUpdatingOnBoardingEvent(OnUpdateOnBoardingUserEvent event,
       Emitter<ImageUploadState> emitter) async{
 
-    emitter(state.copyWith(status: ImageUploadStatus.loading));
 
-    await Future.delayed(const Duration(seconds: 3));
+    OnBoardingStatus status = OnBoardingStatus.update;
+    if(event.isUnAuthorized) {
+      status = OnBoardingStatus.init;
+    }
+
     await emitter.forEach(
         updateOnboardingStateStreamUseCase
-            .call(OnBoardingStatus.update), onData: (event) {
+            .call(status), onData: (event) {
       return event.fold(ifLeft: (l) {
         if (l is CancelTokenFailure) {
           return state.copyWith(status: ImageUploadStatus.error);
@@ -53,6 +56,10 @@ class ImageUploadBloc extends Bloc<ImageUploadEvent, ImageUploadState> {
         }
       },
           ifRight: (r) {
+        if(status == OnBoardingStatus.init) {
+          return state.copyWith(status: ImageUploadStatus.errorAuth);
+        }
+
             return state.copyWith(status: ImageUploadStatus.loaded);}
       );
 
@@ -76,13 +83,15 @@ class ImageUploadBloc extends Bloc<ImageUploadEvent, ImageUploadState> {
       if (responseData is api_response.Failure) {
         return state.copyWith(status: ImageUploadStatus.error);
       } else if (responseData is api_response.AuthorizationFailure) {
-        return state.copyWith(status: ImageUploadStatus.error);
+        add(OnUpdateOnBoardingUserEvent(isUnAuthorized: true));
+
+        return state.copyWith(status: ImageUploadStatus.loading);
       } else if (responseData is api_response.TimeOutFailure) {
-        return state.copyWith(status: ImageUploadStatus.error);
+        return state.copyWith(status: ImageUploadStatus.errorTimeOut);
       } else if (responseData is api_response.OperationFailure) {
         return state.copyWith(status: ImageUploadStatus.error);
       } else if (responseData is api_response.Success) {
-        add(OnUpdateOnBoardingUserEvent());
+        add(OnUpdateOnBoardingUserEvent(isUnAuthorized: false));
         return state.copyWith(status: ImageUploadStatus.loading);
       } else {
         return state.copyWith(status: ImageUploadStatus.error);

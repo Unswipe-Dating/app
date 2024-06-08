@@ -2,6 +2,8 @@ part of 'login_bloc.dart';
 
 enum LoginStatus { initial,
   error,
+  errorAuth,
+  errorTimeOut,
   loadingOTP,
   loadedOtp,
   loadingResend,

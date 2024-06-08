@@ -98,6 +98,10 @@ class _BlockContactState extends State<BlockContactScreen> {
                   CustomNavigationHelper.router.push(
                     CustomNavigationHelper.uploadImagePath,
                   );
+                } else if (state.status == ContactBlockStatus.errorAuth) {
+                  CustomNavigationHelper.router.go(
+                    CustomNavigationHelper.loginPath,
+                  );
                 }
               },
               builder: (context, state) {

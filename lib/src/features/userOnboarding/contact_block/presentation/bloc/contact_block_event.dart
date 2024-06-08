@@ -17,7 +17,8 @@ class OnContactBlockRequested extends ContactBlockEvent {
 
 
 class OnUpdateOnBoardingUserEvent extends ContactBlockEvent {
-  OnUpdateOnBoardingUserEvent();
+  bool isUnAuthorized = false;
+  OnUpdateOnBoardingUserEvent({required this.isUnAuthorized});
 }
 
 class OnRequestApiCall extends ContactBlockEvent {

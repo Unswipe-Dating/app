@@ -95,6 +95,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 CustomNavigationHelper.router
                     .go(CustomNavigationHelper.profilePathHyperEx, extra: "" );
 
+              } else if(state.status == LoginStatus.errorAuth) {
+                CustomNavigationHelper.router
+                    .go(CustomNavigationHelper.startChatPath, extra: state.chatId);
               }
             },
             builder: (context, state) {

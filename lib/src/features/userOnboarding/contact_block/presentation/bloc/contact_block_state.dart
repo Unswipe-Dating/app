@@ -1,7 +1,7 @@
 part of 'contact_bloc.dart';
 
 
-enum ContactBlockStatus { initial, fetchedToken, loading, loaded, error }
+enum ContactBlockStatus { initial, fetchedToken, loading, loaded, error, errorAuth, errorTimeOut, }
 
 class ContactBlockState extends Equatable {
   final ContactBlockStatus status;

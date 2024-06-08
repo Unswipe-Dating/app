@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:unswipe/src/features/onBoarding/domain/usecases/reset_user_token_state_stream_usecase.dart';
 import 'package:unswipe/src/features/splash/domain/usecases/meta_usecase.dart';
 import 'package:unswipe/src/features/splash/presentation/bloc/splash_bloc.dart';
 import 'package:unswipe/src/shared/domain/usecases/get_auth_state_stream_use_case.dart';
@@ -42,7 +43,9 @@ class SplashScreen extends StatelessWidget {
       create: (BuildContext context) => SplashBloc(
         onboardingStateStreamUseCase: GetIt.I.get<GetOnboardingStateStreamUseCase>(),
         metaUseCase: GetIt.I.get<MetaUseCase>(),
-        getAuthStateStreamUseCase: GetIt.I.get<GetAuthStateStreamUseCase>()
+        getAuthStateStreamUseCase: GetIt.I.get<GetAuthStateStreamUseCase>(),
+        updateOnboardingStateStreamUseCase: GetIt.I.get<UpdateOnboardingStateStreamUseCase>(),
+        resetUserTokenStateStreamUseCase: GetIt.I.get<ResetUserTokenStateStreamUseCase>(),
       )
         ..add(onAuthenticatedUserEvent()),
       child: Container(
@@ -91,6 +94,10 @@ class SplashScreen extends StatelessWidget {
                   _selectScreen();
                 }
               }
+            } else if (state.status == SplashStatus.errorAuth) {
+              CustomNavigationHelper.router.go(
+                CustomNavigationHelper.loginPath,
+              );
             }
           },
           // Here I have used BlocBuilder, but instead you can also use BlocListner as well.

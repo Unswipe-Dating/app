@@ -66,6 +66,10 @@ class _ProfileImagePickerScreenState extends State<ProfileImagePickerScreen> {
               CustomNavigationHelper.router.push(
                 CustomNavigationHelper.onboardingNamePath,
               );
+            } else if (state.status == ImageUploadStatus.errorAuth) {
+              CustomNavigationHelper.router.go(
+                CustomNavigationHelper.loginPath,
+              );
             }
           }, builder: (context, state) {
             return state.status == ImageUploadStatus.loading

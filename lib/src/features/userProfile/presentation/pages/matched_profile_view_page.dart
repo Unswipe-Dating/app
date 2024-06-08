@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'package:get_it/get_it.dart';
+import 'package:unswipe/src/features/onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart';
 import 'package:unswipe/src/features/userProfile/domain/usecase/profile_create_usecase.dart';
 import 'package:unswipe/src/features/userProfile/domain/usecase/profile_get_requested_usecase.dart';
 import 'package:unswipe/src/features/userProfile/domain/usecase/profile_reject_usecase.dart';
@@ -52,6 +53,7 @@ class _MatchedSwipeInterfaceState extends State<MatchedSwipeInterface> {
         profileRejectUseCase: GetIt.I.get<ProfileRejectUseCase>(),
           profileGetRequestedUseCase: GetIt.I.get<ProfileGetRequestedUseCase>(),
         profileSkipUseCase: GetIt.I.get<ProfileSkipUseCase>(),
+        updateOnboardingStateStreamUseCase: GetIt.I.get<UpdateOnboardingStateStreamUseCase>()
 
       )
         ..add(OnInitiateSubjects())
@@ -65,6 +67,10 @@ class _MatchedSwipeInterfaceState extends State<MatchedSwipeInterface> {
         listener: (context, state) {
           if (state.status == ProfileSwipeStatus.loaded) {
 
+          } else if (state.status == ProfileSwipeStatus.errorAuth) {
+            CustomNavigationHelper.router.go(
+              CustomNavigationHelper.loginPath,
+            );
           }
         },
         builder: (context, state) {

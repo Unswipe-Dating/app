@@ -4,6 +4,8 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart';
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
+import 'package:unswipe/src/features/login/presentation/bloc/login_bloc.dart';
+import 'package:unswipe/src/features/onBoarding/domain/usecases/reset_user_token_state_stream_usecase.dart';
 import 'package:unswipe/src/features/splash/data/datasources/model/response_meta.dart';
 import '../../../../../../data/api_response.dart' as api_response;
 import 'package:unswipe/src/features/splash/domain/usecases/meta_usecase.dart';
@@ -11,6 +13,7 @@ import 'package:unswipe/src/features/onBoarding/domain/usecases/get_onboarding_s
 import '../../../../../data/api_response.dart';
 import '../../../../shared/domain/usecases/get_auth_state_stream_use_case.dart';
 import '../../../onBoarding/domain/entities/onbaording_state/onboarding_state.dart';
+import '../../../onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart';
 import '../../../userProfile/data/model/create_request/response_profile_request.dart';
 
 part 'splash_event.dart';
@@ -20,21 +23,66 @@ part 'splash_state.dart';
 class SplashBloc extends Bloc<SplashEvent, SplashState> {
   final GetOnboardingStateStreamUseCase onboardingStateStreamUseCase;
   final MetaUseCase metaUseCase;
+  final UpdateOnboardingStateStreamUseCase updateOnboardingStateStreamUseCase;
   final GetAuthStateStreamUseCase getAuthStateStreamUseCase;
+  final ResetUserTokenStateStreamUseCase resetUserTokenStateStreamUseCase;
   StreamSubscription? subscription;
 
   SplashBloc({
     required this.onboardingStateStreamUseCase,
     required this.metaUseCase,
     required this.getAuthStateStreamUseCase,
+    required this.updateOnboardingStateStreamUseCase,
+    required this.resetUserTokenStateStreamUseCase,
   }) : super(const SplashState()) {
     on<onFirstTimeUserEvent>(_onGettingOnBoardingEvent);
     on<onGetMetaEvent>(_onGettingMetaEvent);
     on<onAuthenticatedUserEvent>(_onStartAuthCheck);
     on<onCheckChatIntent>(_onCheckChatIntent);
     on<onStartChatIntent>(_onStartChatIntent);
+    on<OnUpdateOnBoardingUserEvent>(_onUpdatingOnBoardingEvent);
+    on<OnResetUserTokenEvent>(_onResetUserTokenEvent);
 
 
+  }
+
+  _onResetUserTokenEvent(OnResetUserTokenEvent event,
+      Emitter<SplashState> emitter) async {
+    await emitter.forEach(
+        resetUserTokenStateStreamUseCase.call(),
+        onData: (event) {
+          return event.fold(ifLeft: (l) {
+            if (l is CancelTokenFailure) {
+              return state.copyWith(status: SplashStatus.error);
+            } else {
+              return state.copyWith(status: SplashStatus.error);
+            }
+          }, ifRight: (r) {
+            add(OnUpdateOnBoardingUserEvent());
+            return state.copyWith(status: SplashStatus.loading);
+          });
+        }, onError: (error, stacktrace) {
+      return state.copyWith(status: SplashStatus.error);
+    });
+  }
+
+  _onUpdatingOnBoardingEvent(OnUpdateOnBoardingUserEvent event,
+      Emitter<SplashState> emitter) async {
+    await emitter.forEach(
+        updateOnboardingStateStreamUseCase.call(OnBoardingStatus.init),
+        onData: (event) {
+          return event.fold(ifLeft: (l) {
+            if (l is CancelTokenFailure) {
+              return state.copyWith(status: SplashStatus.error);
+            } else {
+              return state.copyWith(status: SplashStatus.error);
+            }
+          }, ifRight: (r) {
+            return state.copyWith(status: SplashStatus.errorAuth);
+          });
+        }, onError: (error, stacktrace) {
+      return state.copyWith(status: SplashStatus.error);
+    });
   }
 
   _onStartAuthCheck(onAuthenticatedUserEvent event,
@@ -148,9 +196,10 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
       } else if (responseData is api_response.OperationFailure) {
         return state.copyWith(status: SplashStatus.error);
       } else if (responseData is api_response.AuthorizationFailure) {
-        return state.copyWith(status: SplashStatus.error);
+        add(OnResetUserTokenEvent());
+        return state.copyWith(status: SplashStatus.loading);
       } else if (responseData is api_response.TimeOutFailure) {
-        return state.copyWith(status: SplashStatus.error);
+        return state.copyWith(status: SplashStatus.errorTimeOut);
       } else if (responseData is api_response.Success) {
         var res = (((responseData as api_response.Success).data) as ResponseMeta);
         if(res.getConfig.timeLeftForExpiry != null) {

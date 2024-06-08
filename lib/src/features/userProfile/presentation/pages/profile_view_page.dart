@@ -11,6 +11,7 @@ import 'package:unswipe/src/features/userProfile/domain/usecase/profile_skip_use
 import 'package:unswipe/src/features/userProfile/presentation/widgets/SwipeCard.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../shared/domain/usecases/get_auth_state_stream_use_case.dart';
+import '../../../onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart';
 import '../../data/model/get_profile/response_profile_swipe.dart';
 import '../../domain/usecase/profile_accept_usecase.dart';
 import '../../domain/usecase/profile_get_requested_usecase.dart';
@@ -31,8 +32,7 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
   List<SwipeCard> cards = [];
   final CardSwiperController controller = CardSwiperController();
 
-  String imageUri= "";
-
+  String imageUri = "";
 
   @override
   void dispose() {
@@ -46,14 +46,13 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
       create: (BuildContext context) => ProfileSwipeBloc(
           profileSwipeUseCase: GetIt.I.get<ProfileGetUseCase>(),
           getAuthStateStreamUseCase: GetIt.I.get<GetAuthStateStreamUseCase>(),
-        profileAcceptUseCase: GetIt.I.get<ProfileAcceptUseCase>(),
-        profileCreateUseCase: GetIt.I.get<ProfileCreateUseCase>(),
-        profileRejectUseCase: GetIt.I.get<ProfileRejectUseCase>(),
-        profileGetRequestedUseCase: GetIt.I.get<ProfileGetRequestedUseCase>(),
-        profileSkipUseCase: GetIt.I.get<ProfileSkipUseCase>(),
-
-
-      )
+          profileAcceptUseCase: GetIt.I.get<ProfileAcceptUseCase>(),
+          profileCreateUseCase: GetIt.I.get<ProfileCreateUseCase>(),
+          profileRejectUseCase: GetIt.I.get<ProfileRejectUseCase>(),
+          profileGetRequestedUseCase: GetIt.I.get<ProfileGetRequestedUseCase>(),
+          profileSkipUseCase: GetIt.I.get<ProfileSkipUseCase>(),
+          updateOnboardingStateStreamUseCase:
+              GetIt.I.get<UpdateOnboardingStateStreamUseCase>())
         ..add(OnInitiateSubjects())
         ..add(OnInitiateAcceptSubject())
         ..add(OnInitiateCreateSubject())
@@ -64,17 +63,18 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
       child: BlocConsumer<ProfileSwipeBloc, ProfileSwipeState>(
         listener: (context, state) {
           if (state.status == ProfileSwipeStatus.loaded) {
-
           } else if (state.status == ProfileSwipeStatus.loadedCreate) {
-            CustomNavigationHelper.router
-                .push(CustomNavigationHelper.profilePathHyperEx, extra: imageUri );
-
-          }else if (state.status == ProfileSwipeStatus.loadedReject) {
-
-          }else if (state.status == ProfileSwipeStatus.errorSwipe) {
+            CustomNavigationHelper.router.push(
+                CustomNavigationHelper.profilePathHyperEx,
+                extra: imageUri);
+          } else if (state.status == ProfileSwipeStatus.loadedReject) {
+          } else if (state.status == ProfileSwipeStatus.errorSwipe) {
             controller.undo();
+          } else if (state.status == ProfileSwipeStatus.errorAuth) {
+            CustomNavigationHelper.router.go(
+              CustomNavigationHelper.loginPath,
+            );
           }
-
         },
         builder: (context, state) {
           switch (state.status) {
@@ -83,7 +83,9 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
             case ProfileSwipeStatus.loaded:
             case ProfileSwipeStatus.loadedReject:
               if (state.responseProfileSwipe != null) {
-                if(state.responseProfileSwipe?.browseProfiles?.profiles.isNotEmpty == true) {
+                if (state.responseProfileSwipe?.browseProfiles?.profiles
+                        .isNotEmpty ==
+                    true) {
                   updateProfiles(state.responseProfileSwipe!);
                   return CardSwiper(
                     allowedSwipeDirection: const AllowedSwipeDirection.only(
@@ -94,16 +96,20 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
                     onSwipe: _onSwipe,
                     onUndo: _onUndo,
                     isLoop: false,
-                    onEnd: (){
-                      context.read<ProfileSwipeBloc>().add(OnRequestApiCall("", ""));
-                        },
+                    onEnd: () {
+                      context
+                          .read<ProfileSwipeBloc>()
+                          .add(OnRequestApiCall("", ""));
+                    },
                     numberOfCardsDisplayed: cards.length > 1 ? 2 : 1,
                     padding: const EdgeInsets.all(0.0),
-                    cardBuilder: (context,
-                        index,
-                        horizontalThresholdPercentage,
-                        verticalThresholdPercentage,) =>
-                    cards[index],
+                    cardBuilder: (
+                      context,
+                      index,
+                      horizontalThresholdPercentage,
+                      verticalThresholdPercentage,
+                    ) =>
+                        cards[index],
                   );
                 } else {
                   return NoRequestScreen();
@@ -120,7 +126,6 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
 
   void swipeRightMethod() {
     controller.swipe(CardSwiperDirection.right);
-
   }
 
   void swipeLeftMethod() {
@@ -150,19 +155,20 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
   }
 
   void updateProfiles(ResponseProfileSwipe responseProfileSwipe) {
-     cards = responseProfileSwipe.browseProfiles!.profiles.map((profile) => SwipeCard(
-      likeAction: swipeRightMethod,
-      dislikeAction: swipeLeftMethod,
-      id: profile.id,
-      userName: profile.name,
-      userAge: 20,
-      userDescription: "no desc",
-      profileImageSrc: "",
-      isVerified: true,
-      pronouns: "",
-      isCreate: true,
-       requestId: profile.request?.id,
-    )).toList();
-
+    cards = responseProfileSwipe.browseProfiles!.profiles
+        .map((profile) => SwipeCard(
+              likeAction: swipeRightMethod,
+              dislikeAction: swipeLeftMethod,
+              id: profile.id,
+              userName: profile.name,
+              userAge: 20,
+              userDescription: "no desc",
+              profileImageSrc: "",
+              isVerified: true,
+              pronouns: "",
+              isCreate: true,
+              requestId: profile.request?.id,
+            ))
+        .toList();
   }
 }

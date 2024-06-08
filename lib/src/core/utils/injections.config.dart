@@ -24,6 +24,8 @@ import '../../features/login/domain/usecases/update_login_state_stream_usecase.d
 import '../../features/login/domain/usecases/verify_otp_use_case.dart' as _i45;
 import '../../features/onBoarding/domain/usecases/get_onboarding_state_stream_use_case.dart'
     as _i46;
+import '../../features/onBoarding/domain/usecases/reset_user_token_state_stream_usecase.dart'
+    as _i48;
 import '../../features/onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart'
     as _i47;
 import '../../features/settings/data/datasources/remote/UserSettingService.dart'
@@ -63,9 +65,9 @@ import '../../features/userOnboarding/profile_update/data/repository/update_prof
 import '../../features/userOnboarding/profile_update/domain/repository/update_profile_repository.dart'
     as _i22;
 import '../../features/userOnboarding/profile_update/domain/usecases/create_user_use_case.dart'
-    as _i48;
-import '../../features/userOnboarding/profile_update/domain/usecases/update_user_use_case.dart'
     as _i49;
+import '../../features/userOnboarding/profile_update/domain/usecases/update_user_use_case.dart'
+    as _i50;
 import '../../features/userProfile/data/datasources/network/profile_swipe_service.dart'
     as _i12;
 import '../../features/userProfile/data/repository/profile_swipe_repository_impl.dart'
@@ -92,7 +94,7 @@ import '../local_data_source.dart' as _i5;
 import '../network/graphql/graphql_service.dart' as _i4;
 import '../shared_pref_util.dart' as _i16;
 import 'constant/method_channel_crypto_impl.dart' as _i6;
-import 'usecases/usecase_module.dart' as _i50;
+import 'usecases/usecase_module.dart' as _i51;
 
 extension GetItInjectableX on _i1.GetIt {
 // initializes the registration of main-scope dependencies inside of GetIt
@@ -177,12 +179,14 @@ extension GetItInjectableX on _i1.GetIt {
         () => _i46.GetOnboardingStateStreamUseCase(gh<_i38.UserRepository>()));
     gh.factory<_i47.UpdateOnboardingStateStreamUseCase>(() =>
         _i47.UpdateOnboardingStateStreamUseCase(gh<_i38.UserRepository>()));
-    gh.factory<_i48.CreateProfileUseCase>(
-        () => _i48.CreateProfileUseCase(gh<_i22.UpdateProfileRepository>()));
-    gh.factory<_i49.UpdateProfileUseCase>(
-        () => _i49.UpdateProfileUseCase(gh<_i22.UpdateProfileRepository>()));
+    gh.factory<_i48.ResetUserTokenStateStreamUseCase>(
+        () => _i48.ResetUserTokenStateStreamUseCase(gh<_i38.UserRepository>()));
+    gh.factory<_i49.CreateProfileUseCase>(
+        () => _i49.CreateProfileUseCase(gh<_i22.UpdateProfileRepository>()));
+    gh.factory<_i50.UpdateProfileUseCase>(
+        () => _i50.UpdateProfileUseCase(gh<_i22.UpdateProfileRepository>()));
     return this;
   }
 }
 
-class _$RegisterModule extends _i50.RegisterModule {}
+class _$RegisterModule extends _i51.RegisterModule {}

@@ -38,11 +38,13 @@ class ContactBloc extends Bloc<ContactBlockEvent, ContactBlockState> {
   _onUpdatingOnBoardingEvent(OnUpdateOnBoardingUserEvent event,
       Emitter<ContactBlockState> emitter) async{
 
-    emitter(state.copyWith(status: ContactBlockStatus.loading));
-
+    OnBoardingStatus status = OnBoardingStatus.images;
+    if(event.isUnAuthorized) {
+      status = OnBoardingStatus.init;
+    }
     await emitter.forEach(
         updateOnboardingStateStreamUseCase
-            .call(OnBoardingStatus.images), onData: (event) {
+            .call(status), onData: (event) {
       return event.fold(ifLeft: (l) {
         if (l is CancelTokenFailure) {
           return state.copyWith(status: ContactBlockStatus.error);
@@ -51,6 +53,9 @@ class ContactBloc extends Bloc<ContactBlockEvent, ContactBlockState> {
         }
       },
       ifRight: (r) {
+        if(status == OnBoardingStatus.init) {
+          return state.copyWith(status: ContactBlockStatus.errorAuth);
+        }
         return state.copyWith(status: ContactBlockStatus.loaded);}
       );
 
@@ -74,13 +79,14 @@ class ContactBloc extends Bloc<ContactBlockEvent, ContactBlockState> {
       if (responseData is api_response.Failure) {
         return state.copyWith(status: ContactBlockStatus.error);
       } else if (responseData is api_response.AuthorizationFailure) {
-        return state.copyWith(status: ContactBlockStatus.error);
+        add(OnUpdateOnBoardingUserEvent(isUnAuthorized: true));
+        return state.copyWith(status: ContactBlockStatus.loading);
       } else if (responseData is api_response.TimeOutFailure) {
-        return state.copyWith(status: ContactBlockStatus.error);
+        return state.copyWith(status: ContactBlockStatus.errorTimeOut);
       } else if (responseData is api_response.OperationFailure) {
         return state.copyWith(status: ContactBlockStatus.error);
       } else if (responseData is api_response.Success) {
-        add(OnUpdateOnBoardingUserEvent());
+        add(OnUpdateOnBoardingUserEvent(isUnAuthorized: false));
         return state.copyWith(status: ContactBlockStatus.loading);
       } else {
         return state.copyWith(status: ContactBlockStatus.error);

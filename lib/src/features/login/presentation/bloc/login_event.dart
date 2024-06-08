@@ -31,7 +31,9 @@ class OnUpdateOnBoardingUserEvent extends LogInEvent {
 
 class OnGetMetaEvent extends LogInEvent {
   final String token;
-  OnGetMetaEvent({required this.token});
+  final String id;
+  final String? userId;
+  OnGetMetaEvent({required this.token, required this.id, required this.userId});
 }
 
 class onStartChatIntent extends LogInEvent {

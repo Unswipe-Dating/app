@@ -13,6 +13,8 @@ import '../../../../../../data/api_response.dart' as api_response;
 
 import '../../../../../../data/api_response.dart';
 import '../../../../shared/domain/usecases/get_auth_state_stream_use_case.dart';
+import '../../../onBoarding/domain/entities/onbaording_state/onboarding_state.dart';
+import '../../../onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart';
 import '../../data/model/get_profile/response_profile_swipe.dart';
 import '../../domain/repository/profile_swipe_repository.dart';
 import '../../domain/usecase/profile_get_usecase.dart';
@@ -21,6 +23,7 @@ import 'profile_swipe_state.dart';
 part 'profile_swipe_event.dart';
 
 class ProfileSwipeBloc extends Bloc<ProfileSwipeEvent, ProfileSwipeState> {
+  final UpdateOnboardingStateStreamUseCase updateOnboardingStateStreamUseCase;
   final ProfileGetUseCase profileSwipeUseCase;
   final GetAuthStateStreamUseCase getAuthStateStreamUseCase;
   final ProfileCreateUseCase profileCreateUseCase;
@@ -28,6 +31,7 @@ class ProfileSwipeBloc extends Bloc<ProfileSwipeEvent, ProfileSwipeState> {
   final ProfileGetRequestedUseCase profileGetRequestedUseCase;
   final ProfileAcceptUseCase profileAcceptUseCase;
   final ProfileSkipUseCase profileSkipUseCase;
+
 
   String token = "";
   String id = "";
@@ -43,7 +47,9 @@ class ProfileSwipeBloc extends Bloc<ProfileSwipeEvent, ProfileSwipeState> {
     required this.profileGetRequestedUseCase,
     required this.profileAcceptUseCase,
     required this.profileSkipUseCase,
+    required this.updateOnboardingStateStreamUseCase,
   }) : super(const ProfileSwipeState()) {
+    on<OnUpdateOnBoardingUserEvent>(_onUpdatingOnBoardingEvent);
     on<OnGetRequestedProfile>(_onStartRequestedProfileApi);
     on<OnProfileSwipeRequested>(_onStartProfileSwipe);
     on<OnRequestApiCall>(_onStartProfileApi);
@@ -59,6 +65,26 @@ class ProfileSwipeBloc extends Bloc<ProfileSwipeEvent, ProfileSwipeState> {
     on<OnInitiateMatchSubject>(setUpMatchApi);
   }
 
+
+  _onUpdatingOnBoardingEvent(OnUpdateOnBoardingUserEvent event,
+      Emitter<ProfileSwipeState> emitter) async {
+    await emitter.forEach(
+        updateOnboardingStateStreamUseCase.call(OnBoardingStatus.init),
+        onData: (event) {
+          return event.fold(ifLeft: (l) {
+            if (l is CancelTokenFailure) {
+              return state.copyWith(status: ProfileSwipeStatus.error);
+            } else {
+              return state.copyWith(status: ProfileSwipeStatus.error);
+            }
+          }, ifRight: (r) {
+            return state.copyWith(status: ProfileSwipeStatus.errorAuth);
+          });
+        }, onError: (error, stacktrace) {
+      return state.copyWith(status: ProfileSwipeStatus.error);
+    });
+  }
+
   setUpMatchApi(
       OnInitiateMatchSubject event, Emitter<ProfileSwipeState> emitter) async {
     await emitter.forEach(profileGetRequestedUseCase.controller.stream,
@@ -67,9 +93,10 @@ class ProfileSwipeBloc extends Bloc<ProfileSwipeEvent, ProfileSwipeState> {
       if (responseData is api_response.Failure) {
         return state.copyWith(status: ProfileSwipeStatus.error);
       } else if (responseData is api_response.AuthorizationFailure) {
-        return state.copyWith(status: ProfileSwipeStatus.error);
+        add(OnUpdateOnBoardingUserEvent());
+        return state.copyWith(status: ProfileSwipeStatus.loading);
       } else if (responseData is api_response.TimeOutFailure) {
-        return state.copyWith(status: ProfileSwipeStatus.error);
+        return state.copyWith(status: ProfileSwipeStatus.errorTimeOut);
       } else if (responseData is api_response.OperationFailure) {
         return state.copyWith(status: ProfileSwipeStatus.error);
       } else if (responseData is api_response.Success) {
@@ -91,9 +118,10 @@ class ProfileSwipeBloc extends Bloc<ProfileSwipeEvent, ProfileSwipeState> {
       if (responseData is api_response.Failure) {
         return state.copyWith(status: ProfileSwipeStatus.errorSwipe);
       } else if (responseData is api_response.AuthorizationFailure) {
-        return state.copyWith(status: ProfileSwipeStatus.error);
+        add(OnUpdateOnBoardingUserEvent());
+        return state.copyWith(status: ProfileSwipeStatus.loading);
       } else if (responseData is api_response.TimeOutFailure) {
-        return state.copyWith(status: ProfileSwipeStatus.error);
+        return state.copyWith(status: ProfileSwipeStatus.errorTimeOut);
       } else if (responseData is api_response.OperationFailure) {
         return state.copyWith(status: ProfileSwipeStatus.errorSwipe);
       } else if (responseData is api_response.Success) {
@@ -113,9 +141,10 @@ class ProfileSwipeBloc extends Bloc<ProfileSwipeEvent, ProfileSwipeState> {
           if (responseData is api_response.Failure) {
             return state.copyWith(status: ProfileSwipeStatus.errorSwipe);
           } else if (responseData is api_response.AuthorizationFailure) {
-            return state.copyWith(status: ProfileSwipeStatus.error);
+            add(OnUpdateOnBoardingUserEvent());
+            return state.copyWith(status: ProfileSwipeStatus.loading);
           } else if (responseData is api_response.TimeOutFailure) {
-            return state.copyWith(status: ProfileSwipeStatus.error);
+            return state.copyWith(status: ProfileSwipeStatus.errorTimeOut);
           } else if (responseData is api_response.OperationFailure) {
             return state.copyWith(status: ProfileSwipeStatus.errorSwipe);
           } else if (responseData is api_response.Success) {
@@ -136,9 +165,10 @@ class ProfileSwipeBloc extends Bloc<ProfileSwipeEvent, ProfileSwipeState> {
       if (responseData is api_response.Failure) {
         return state.copyWith(status: ProfileSwipeStatus.errorSwipe);
       } else if (responseData is api_response.AuthorizationFailure) {
-        return state.copyWith(status: ProfileSwipeStatus.error);
+        add(OnUpdateOnBoardingUserEvent());
+        return state.copyWith(status: ProfileSwipeStatus.loading);
       } else if (responseData is api_response.TimeOutFailure) {
-        return state.copyWith(status: ProfileSwipeStatus.error);
+        return state.copyWith(status: ProfileSwipeStatus.errorTimeOut);
       } else if (responseData is api_response.OperationFailure) {
         return state.copyWith(status: ProfileSwipeStatus.errorSwipe);
       } else if (responseData is api_response.Success) {
@@ -158,9 +188,10 @@ class ProfileSwipeBloc extends Bloc<ProfileSwipeEvent, ProfileSwipeState> {
           if (responseData is api_response.Failure) {
             return state.copyWith(status: ProfileSwipeStatus.errorSwipe);
           } else if (responseData is api_response.AuthorizationFailure) {
-            return state.copyWith(status: ProfileSwipeStatus.error);
+            add(OnUpdateOnBoardingUserEvent());
+            return state.copyWith(status: ProfileSwipeStatus.loading);
           } else if (responseData is api_response.TimeOutFailure) {
-            return state.copyWith(status: ProfileSwipeStatus.error);
+            return state.copyWith(status: ProfileSwipeStatus.errorTimeOut);
           } else if (responseData is api_response.OperationFailure) {
             return state.copyWith(status: ProfileSwipeStatus.errorSwipe);
           } else if (responseData is api_response.Success) {
@@ -180,9 +211,10 @@ class ProfileSwipeBloc extends Bloc<ProfileSwipeEvent, ProfileSwipeState> {
       if (responseData is api_response.Failure) {
         return state.copyWith(status: ProfileSwipeStatus.error);
       } else if (responseData is api_response.AuthorizationFailure) {
-        return state.copyWith(status: ProfileSwipeStatus.error);
+        add(OnUpdateOnBoardingUserEvent());
+        return state.copyWith(status: ProfileSwipeStatus.loading);
       } else if (responseData is api_response.TimeOutFailure) {
-        return state.copyWith(status: ProfileSwipeStatus.error);
+        return state.copyWith(status: ProfileSwipeStatus.errorTimeOut);
       } else if (responseData is api_response.OperationFailure) {
         return state.copyWith(status: ProfileSwipeStatus.error);
       } else if (responseData is api_response.Success) {

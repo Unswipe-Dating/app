@@ -20,7 +20,8 @@ class OnUpdateProfileRequested extends UpdateProfileEvent {
 
 
 class OnUpdateOnBoardingUserEvent extends UpdateProfileEvent {
-  OnUpdateOnBoardingUserEvent();
+  bool isUnAuthorized = false;
+  OnUpdateOnBoardingUserEvent({required this.isUnAuthorized});
 }
 
 class OnRequestApiCallUpdate extends UpdateProfileEvent {

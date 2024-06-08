@@ -74,7 +74,7 @@ class UpdateProfileBloc extends Bloc<UpdateProfileEvent, UpdateProfileState> {
           return state.copyWith(status: UpdateProfileStatus.error);
         }
       }, ifRight: (r) {
-        add(OnUpdateOnBoardingUserEvent());
+        add(OnUpdateOnBoardingUserEvent(isUnAuthorized: false));
         return state.copyWith(status: UpdateProfileStatus.loaded);
       });
     }, onError: (error, stacktrace) {
@@ -84,11 +84,12 @@ class UpdateProfileBloc extends Bloc<UpdateProfileEvent, UpdateProfileState> {
 
   _onUpdatingOnBoardingEvent(OnUpdateOnBoardingUserEvent event,
       Emitter<UpdateProfileState> emitter) async {
-    emitter(state.copyWith(status: UpdateProfileStatus.loading));
-
-    await Future.delayed(const Duration(seconds: 3));
+    OnBoardingStatus status = OnBoardingStatus.profile;
+    if(event.isUnAuthorized) {
+      status = OnBoardingStatus.init;
+    }
     await emitter.forEach(
-        updateOnboardingStateStreamUseCase.call(OnBoardingStatus.profile),
+        updateOnboardingStateStreamUseCase.call(status),
         onData: (event) {
       return event.fold(ifLeft: (l) {
         if (l is CancelTokenFailure) {
@@ -97,6 +98,9 @@ class UpdateProfileBloc extends Bloc<UpdateProfileEvent, UpdateProfileState> {
           return state.copyWith(status: UpdateProfileStatus.error);
         }
       }, ifRight: (r) {
+        if(status == OnBoardingStatus.init) {
+          return state.copyWith(status: UpdateProfileStatus.errorAuth);
+        }
         return state.copyWith(status: UpdateProfileStatus.loaded);
       });
     }, onError: (error, stacktrace) {
@@ -119,13 +123,14 @@ class UpdateProfileBloc extends Bloc<UpdateProfileEvent, UpdateProfileState> {
       if (responseData is api_response.Failure) {
         return state.copyWith(status: UpdateProfileStatus.error);
       } else if (responseData is api_response.AuthorizationFailure) {
-        return state.copyWith(status: UpdateProfileStatus.error);
+        add(OnUpdateOnBoardingUserEvent(isUnAuthorized: true));
+        return state.copyWith(status: UpdateProfileStatus.loading);
       } else if (responseData is api_response.TimeOutFailure) {
-        return state.copyWith(status: UpdateProfileStatus.error);
+        return state.copyWith(status: UpdateProfileStatus.errorAuth);
       } else if (responseData is api_response.OperationFailure) {
         return state.copyWith(status: UpdateProfileStatus.error);
       } else if (responseData is api_response.Success) {
-        add(OnUpdateOnBoardingUserEvent());
+        add(OnUpdateOnBoardingUserEvent(isUnAuthorized: false));
         return state.copyWith(status: UpdateProfileStatus.loading);
       } else {
         return state.copyWith(status: UpdateProfileStatus.error);
@@ -149,9 +154,9 @@ class UpdateProfileBloc extends Bloc<UpdateProfileEvent, UpdateProfileState> {
       if (responseData is api_response.Failure) {
         return state.copyWith(status: UpdateProfileStatus.error);
       } else if (responseData is api_response.AuthorizationFailure) {
-        return state.copyWith(status: UpdateProfileStatus.error);
+        return state.copyWith(status: UpdateProfileStatus.errorAuth);
       } else if (responseData is api_response.TimeOutFailure) {
-        return state.copyWith(status: UpdateProfileStatus.error);
+        return state.copyWith(status: UpdateProfileStatus.errorTimeOut);
       } else if (responseData is api_response.OperationFailure) {
         return state.copyWith(status: UpdateProfileStatus.error);
       } else if (responseData is api_response.Success) {
@@ -234,9 +239,9 @@ class UpdateProfileBloc extends Bloc<UpdateProfileEvent, UpdateProfileState> {
       if (responseData is api_response.Failure) {
         return state.copyWith(status: UpdateProfileStatus.error);
       } else if (responseData is api_response.AuthorizationFailure) {
-        return state.copyWith(status: UpdateProfileStatus.error);
+        return state.copyWith(status: UpdateProfileStatus.errorAuth);
       } else if (responseData is api_response.TimeOutFailure) {
-        return state.copyWith(status: UpdateProfileStatus.error);
+        return state.copyWith(status: UpdateProfileStatus.errorTimeOut);
       } else if (responseData is api_response.OperationFailure) {
         return state.copyWith(status: UpdateProfileStatus.error);
       } else if (responseData is api_response.Success) {
