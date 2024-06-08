@@ -38,27 +38,34 @@ class UserSettingService {
 }
     ''';
 
-    final response = await service.performMutationWithHeader(token, query, variables: {
-      "userId": id,
-    });
-    log('$response');
+    try {
+      final response = await service.performMutationWithHeader(
+          token, query, variables: {
+        "userId": id,
+      });
+      log('$response');
 
-    if (!response.hasException) {
-      ResponseProfileSwipe? info;
-      try {
-        info = ResponseProfileSwipe.fromJson(
-          response.data as Map<String, dynamic>,
-        );
-      } on Exception catch (e) {
-        log('error', error: e);
-        return Failure(error: Exception(e));
+      if (!response.hasException) {
+        ResponseProfileSwipe? info;
+        try {
+          info = ResponseProfileSwipe.fromJson(
+            response.data as Map<String, dynamic>,
+          );
+        } on Exception catch (e) {
+          log('error', error: e);
+          return Failure(error: Exception(e));
+        }
+        return Success(data: info);
+      } else {
+        if (response.exception?.graphqlErrors[0].extensions?['code'] ==
+            "UNAUTHENTICATED") {
+          return AuthorizationFailure(error: response.exception);
+        }
+        return OperationFailure(error: response.exception);
       }
-      return Success(data: info);
-    } else {
-      if(response.exception?.graphqlErrors[0].extensions?['code'] == "UNAUTHENTICATED") {
-        return AuthorizationFailure(error: response.exception);
-      }
-      return OperationFailure(error: response.exception);
+    } on TimeOutFailure catch (_) {
+      // todo: timeout failure
+      return TimeOutFailure();
     }
   }
 }

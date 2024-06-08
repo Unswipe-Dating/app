@@ -17,9 +17,11 @@ class Failure<T> extends ApiResponse<T> {
 
 class OperationFailure<T> extends ApiResponse<T> {
   OperationException? error;
-
-
   OperationFailure({this.error});
+}
+
+class TimeOutFailure<T> extends ApiResponse<T> {
+  TimeOutFailure();
 }
 
 class AuthorizationFailure<T> extends ApiResponse<T> {

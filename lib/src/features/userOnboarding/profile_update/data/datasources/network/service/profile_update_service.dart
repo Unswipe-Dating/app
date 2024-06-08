@@ -18,9 +18,9 @@ class UpdateUserService {
 
   Future<ApiResponse<UpdateProfileResponse>> updateUser(
     String token,
-      UpdateProfileParams params,
+    UpdateProfileParams params,
   ) async {
-    const query ='''
+    const query = '''
     mutation UpdateProfile(
   \$userId: String!,
   \$completed: Boolean,
@@ -73,34 +73,40 @@ class UpdateUserService {
 }
     ''';
 
-    final response =
-        await service.performMutationWithHeader(token, query, variables: {});
-    log('$response');
+    try {
+      final response =
+          await service.performMutationWithHeader(token, query, variables: {});
+      log('$response');
 
-    if (!response.hasException) {
-      UpdateProfileResponse? info;
-      try {
-        info = UpdateProfileResponse.fromJson(
-          response.data as Map<String, dynamic>,
-        );
-      } on Exception catch (e) {
-        log('error', error: e);
-        return Failure(error: Exception(e));
+      if (!response.hasException) {
+        UpdateProfileResponse? info;
+        try {
+          info = UpdateProfileResponse.fromJson(
+            response.data as Map<String, dynamic>,
+          );
+        } on Exception catch (e) {
+          log('error', error: e);
+          return Failure(error: Exception(e));
+        }
+        return Success(data: info);
+      } else {
+        if (response.exception?.graphqlErrors[0].extensions?['code'] ==
+            "UNAUTHENTICATED") {
+          return AuthorizationFailure(error: response.exception);
+        }
+        return OperationFailure(error: response.exception);
       }
-      return Success(data: info);
-    } else {
-      if(response.exception?.graphqlErrors[0].extensions?['code'] == "UNAUTHENTICATED") {
-        return AuthorizationFailure(error: response.exception);
-      }
-      return OperationFailure(error: response.exception);
+    } on TimeOutFailure catch (_) {
+      // todo: timeout failure
+      return TimeOutFailure();
     }
   }
 
   Future<ApiResponse<CreateProfileResponse>> createUser(
-      String token,
-      UpdateProfileParams params,
-      ) async {
-    const query ='''
+    String token,
+    UpdateProfileParams params,
+  ) async {
+    const query = '''
     mutation CreateProfile(
   \$userId: String!,
   \$completed: Boolean,
@@ -153,36 +159,42 @@ class UpdateUserService {
 }
     ''';
 
-    final response =
-    await service.performMutationWithHeader(token, query, variables: {
-      "userId": params.userId,
-      "datingPreference": params.datingPreference,
-      "dob": params.dob,
-      "gender": params.gender,
-      "id": params.id,
-      "interests": params.interests,
-      "name": params.name,
-      "pronouns": params.pronouns,
-      "showTruncatedName": params.showTruncatedName
-    });
-    log('$response');
+    try {
+      final response =
+          await service.performMutationWithHeader(token, query, variables: {
+        "userId": params.userId,
+        "datingPreference": params.datingPreference,
+        "dob": params.dob,
+        "gender": params.gender,
+        "id": params.id,
+        "interests": params.interests,
+        "name": params.name,
+        "pronouns": params.pronouns,
+        "showTruncatedName": params.showTruncatedName
+      });
+      log('$response');
 
-    if (!response.hasException) {
-      CreateProfileResponse? info;
-      try {
-        info = CreateProfileResponse.fromJson(
-          response.data as Map<String, dynamic>,
-        );
-      } on Exception catch (e) {
-        log('error', error: e);
-        return Failure(error: Exception(e));
+      if (!response.hasException) {
+        CreateProfileResponse? info;
+        try {
+          info = CreateProfileResponse.fromJson(
+            response.data as Map<String, dynamic>,
+          );
+        } on Exception catch (e) {
+          log('error', error: e);
+          return Failure(error: Exception(e));
+        }
+        return Success(data: info);
+      } else {
+        if (response.exception?.graphqlErrors[0].extensions?['code'] ==
+            "UNAUTHENTICATED") {
+          return AuthorizationFailure(error: response.exception);
+        }
+        return OperationFailure(error: response.exception);
       }
-      return Success(data: info);
-    } else {
-      if(response.exception?.graphqlErrors[0].extensions?['code'] == "UNAUTHENTICATED") {
-        return AuthorizationFailure(error: response.exception);
-      }
-      return OperationFailure(error: response.exception);
+    } on TimeOutFailure catch (_) {
+      // todo: timeout failure
+      return TimeOutFailure();
     }
   }
 }

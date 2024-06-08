@@ -15,39 +15,45 @@ class ContactBlockService {
 
   final GraphQLService service;
 
-  Future<ApiResponse<ResponseContactBlock>> blockContacts(String token,
-      ContactBlockParams params,
-      ) async {
+  Future<ApiResponse<ResponseContactBlock>> blockContacts(
+    String token,
+    ContactBlockParams params,
+  ) async {
     final query = '''
      mutation BlockUsers(\$id: String!, \$data: BlockUserInput!) {
   blockUsers(id: \$id, data: \$data)
 }
     ''';
 
+    try {
+      final response =
+          await service.performMutationWithHeader(token, query, variables: {
+        "id": params.id,
+        "data": {"phones": params.data.phones},
+      });
+      log('$response');
 
-    final response = await service.performMutationWithHeader(token, query, variables: {
-      "id": params.id,
-      "data": {"phones" : params.data.phones},
-    });
-    log('$response');
-
-    if (!response.hasException) {
-      ResponseContactBlock? info;
-      try {
-        info = ResponseContactBlock.fromJson(
-          response.data as Map<String, dynamic>,
-        );
-      } on Exception catch (e) {
-        log('error', error: e);
-        return Failure(error: Exception(e));
+      if (!response.hasException) {
+        ResponseContactBlock? info;
+        try {
+          info = ResponseContactBlock.fromJson(
+            response.data as Map<String, dynamic>,
+          );
+        } on Exception catch (e) {
+          log('error', error: e);
+          return Failure(error: Exception(e));
+        }
+        return Success(data: info);
+      } else {
+        if (response.exception?.graphqlErrors[0].extensions?['code'] ==
+            "UNAUTHENTICATED") {
+          return AuthorizationFailure(error: response.exception);
+        }
+        return OperationFailure(error: response.exception);
       }
-      return Success(data: info);
-    } else {
-      if(response.exception?.graphqlErrors[0].extensions?['code'] == "UNAUTHENTICATED") {
-        return AuthorizationFailure(error: response.exception);
-      }
-      return OperationFailure(error: response.exception);
+    } on TimeOutFailure catch (_) {
+      // todo: timeout failure
+      return TimeOutFailure();
     }
   }
-
 }

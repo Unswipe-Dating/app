@@ -23,6 +23,8 @@ class SplashRepositoryImpl extends SplashRepository {
       } on Exception catch (e, _) {
         return Failure(error: e);
       }
+    } else if (response is TimeOutFailure) {
+      return TimeOutFailure();
     } else if (response is AuthorizationFailure) {
       return AuthorizationFailure(
           error: (response as AuthorizationFailure).error);

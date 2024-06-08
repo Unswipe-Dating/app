@@ -46,28 +46,34 @@ class ProfileSwipeService {
 }
 ''';
 
-    final response =
-        await service.performMutationWithHeader(token, query, variables: {
-      "data": {"userId": params.userId, "page_size": 10},
-    });
-    log('$response');
+    try {
+      final response =
+          await service.performMutationWithHeader(token, query, variables: {
+        "data": {"userId": params.userId, "page_size": 10},
+      });
+      log('$response');
 
-    if (!response.hasException) {
-      ResponseProfileSwipe? info;
-      try {
-        info = ResponseProfileSwipe.fromJson(
-          response.data as Map<String, dynamic>,
-        );
-      } on Exception catch (e) {
-        log('error', error: e);
-        return Failure(error: Exception(e));
+      if (!response.hasException) {
+        ResponseProfileSwipe? info;
+        try {
+          info = ResponseProfileSwipe.fromJson(
+            response.data as Map<String, dynamic>,
+          );
+        } on Exception catch (e) {
+          log('error', error: e);
+          return Failure(error: Exception(e));
+        }
+        return Success(data: info);
+      } else {
+        if (response.exception?.graphqlErrors[0].extensions?['code'] ==
+            "UNAUTHENTICATED") {
+          return AuthorizationFailure(error: response.exception);
+        }
+        return OperationFailure(error: response.exception);
       }
-      return Success(data: info);
-    } else {
-      if(response.exception?.graphqlErrors[0].extensions?['code'] == "UNAUTHENTICATED") {
-        return AuthorizationFailure(error: response.exception);
-      }
-      return OperationFailure(error: response.exception);
+    } on TimeOutFailure catch (_) {
+      // todo: timeout failure
+      return TimeOutFailure();
     }
   }
 
@@ -91,28 +97,34 @@ class ProfileSwipeService {
 }
 ''';
 
-    final response =
-        await service.performMutationWithHeader(token, query, variables: {
-      "data": {"userId": params.userId},
-    });
-    log('$response');
+    try {
+      final response =
+          await service.performMutationWithHeader(token, query, variables: {
+        "data": {"userId": params.userId},
+      });
+      log('$response');
 
-    if (!response.hasException) {
-      ResponseProfileSwipe? info;
-      try {
-        info = ResponseProfileSwipe.fromJson(
-          response.data as Map<String, dynamic>,
-        );
-      } on Exception catch (e) {
-        log('error', error: e);
-        return Failure(error: Exception(e));
+      if (!response.hasException) {
+        ResponseProfileSwipe? info;
+        try {
+          info = ResponseProfileSwipe.fromJson(
+            response.data as Map<String, dynamic>,
+          );
+        } on Exception catch (e) {
+          log('error', error: e);
+          return Failure(error: Exception(e));
+        }
+        return Success(data: info);
+      } else {
+        if (response.exception?.graphqlErrors[0].extensions?['code'] ==
+            "UNAUTHENTICATED") {
+          return AuthorizationFailure(error: response.exception);
+        }
+        return OperationFailure(error: response.exception);
       }
-      return Success(data: info);
-    } else {
-      if(response.exception?.graphqlErrors[0].extensions?['code'] == "UNAUTHENTICATED") {
-        return AuthorizationFailure(error: response.exception);
-      }
-      return OperationFailure(error: response.exception);
+    } on TimeOutFailure catch (_) {
+      // todo: timeout failure
+      return TimeOutFailure();
     }
   }
 
@@ -136,40 +148,46 @@ class ProfileSwipeService {
 }
 ''';
 
-    final response =
-        await service.performMutationWithHeader(token, query, variables: {
-      "data": {
-        "type": "HYPER_EXCLUSIVE",
-        "requesterProfileId": params.userId,
-        "requesteeProfileId": params.matchUserId,
-        "status": "ACTIVE"
-      },
-    });
-    log('$response');
+    try {
+      final response =
+          await service.performMutationWithHeader(token, query, variables: {
+        "data": {
+          "type": "HYPER_EXCLUSIVE",
+          "requesterProfileId": params.userId,
+          "requesteeProfileId": params.matchUserId,
+          "status": "ACTIVE"
+        },
+      });
+      log('$response');
 
-    if (!response.hasException) {
-      ResponseProfileRequest? info;
-      try {
-        info = ResponseProfileRequest.fromJson(
-          response.data as Map<String, dynamic>,
-        );
-      } on Exception catch (e) {
-        log('error', error: e);
-        return Failure(error: Exception(e));
+      if (!response.hasException) {
+        ResponseProfileRequest? info;
+        try {
+          info = ResponseProfileRequest.fromJson(
+            response.data as Map<String, dynamic>,
+          );
+        } on Exception catch (e) {
+          log('error', error: e);
+          return Failure(error: Exception(e));
+        }
+        return Success(data: info);
+      } else {
+        if (response.exception?.graphqlErrors[0].extensions?['code'] ==
+            "UNAUTHENTICATED") {
+          return AuthorizationFailure(error: response.exception);
+        }
+        return OperationFailure(error: response.exception);
       }
-      return Success(data: info);
-    } else {
-      if(response.exception?.graphqlErrors[0].extensions?['code'] == "UNAUTHENTICATED") {
-        return AuthorizationFailure(error: response.exception);
-      }
-      return OperationFailure(error: response.exception);
+    } on TimeOutFailure catch (_) {
+      // todo: timeout failure
+      return TimeOutFailure();
     }
   }
 
   Future<ApiResponse<ResponseProfileRequest>> acceptProfiles(
-      String token,
-      ProfileSwipeParams params,
-      ) async {
+    String token,
+    ProfileSwipeParams params,
+  ) async {
     const query = '''
   mutation MatchRequest( \$data: MatchRequestInput!){
   matchRequest(data: \$data) {
@@ -186,30 +204,36 @@ class ProfileSwipeService {
 }
 ''';
 
-    final response =
-    await service.performMutationWithHeader(token, query, variables: {
-      "data": {
-        "id": params.matchUserId,
-      },
-    });
-    log('$response');
+    try {
+      final response =
+          await service.performMutationWithHeader(token, query, variables: {
+        "data": {
+          "id": params.matchUserId,
+        },
+      });
+      log('$response');
 
-    if (!response.hasException) {
-      ResponseProfileRequest? info;
-      try {
-        info = ResponseProfileRequest.fromJson(
-          response.data as Map<String, dynamic>,
-        );
-      } on Exception catch (e) {
-        log('error', error: e);
-        return Failure(error: Exception(e));
+      if (!response.hasException) {
+        ResponseProfileRequest? info;
+        try {
+          info = ResponseProfileRequest.fromJson(
+            response.data as Map<String, dynamic>,
+          );
+        } on Exception catch (e) {
+          log('error', error: e);
+          return Failure(error: Exception(e));
+        }
+        return Success(data: info);
+      } else {
+        if (response.exception?.graphqlErrors[0].extensions?['code'] ==
+            "UNAUTHENTICATED") {
+          return AuthorizationFailure(error: response.exception);
+        }
+        return OperationFailure(error: response.exception);
       }
-      return Success(data: info);
-    } else {
-      if(response.exception?.graphqlErrors[0].extensions?['code'] == "UNAUTHENTICATED") {
-        return AuthorizationFailure(error: response.exception);
-      }
-      return OperationFailure(error: response.exception);
+    } on TimeOutFailure catch (_) {
+      // todo: timeout failure
+      return TimeOutFailure();
     }
   }
 
@@ -233,69 +257,79 @@ class ProfileSwipeService {
 }
 ''';
 
-    final response =
-        await service.performMutationWithHeader(token, query, variables: {
-      "data": {
-        "id": params.matchUserId,
-      },
-    });
-    log('$response');
+    try {
+      final response =
+          await service.performMutationWithHeader(token, query, variables: {
+        "data": {
+          "id": params.matchUserId,
+        },
+      });
+      log('$response');
 
-    if (!response.hasException) {
-      ResponseProfileRequest? info;
-      try {
-        info = ResponseProfileRequest.fromJson(
-          response.data as Map<String, dynamic>,
-        );
-      } on Exception catch (e) {
-        log('error', error: e);
-        return Failure(error: Exception(e));
+      if (!response.hasException) {
+        ResponseProfileRequest? info;
+        try {
+          info = ResponseProfileRequest.fromJson(
+            response.data as Map<String, dynamic>,
+          );
+        } on Exception catch (e) {
+          log('error', error: e);
+          return Failure(error: Exception(e));
+        }
+        return Success(data: info);
+      } else {
+        if (response.exception?.graphqlErrors[0].extensions?['code'] ==
+            "UNAUTHENTICATED") {
+          return AuthorizationFailure(error: response.exception);
+        }
+        return OperationFailure(error: response.exception);
       }
-      return Success(data: info);
-    } else {
-      if(response.exception?.graphqlErrors[0].extensions?['code'] == "UNAUTHENTICATED") {
-        return AuthorizationFailure(error: response.exception);
-      }
-      return OperationFailure(error: response.exception);
+    } on TimeOutFailure catch (_) {
+      // todo: timeout failure
+      return TimeOutFailure();
     }
   }
 
   Future<ApiResponse<ResponseProfileSkip>> skipProfiles(
-      String token,
-      ProfileSwipeParams params,
-      ) async {
+    String token,
+    ProfileSwipeParams params,
+  ) async {
     const query = '''
    mutation SkipProfile(\$data: SkipProfileInput!) {
   skipProfile(data: \$data)
   }
 ''';
 
-    final response =
-    await service.performMutationWithHeader(token, query, variables: {
-      "data": {
-        "id": params.matchUserId,
-      },
-    });
-    log('$response');
+    try {
+      final response =
+          await service.performMutationWithHeader(token, query, variables: {
+        "data": {
+          "id": params.matchUserId,
+        },
+      });
+      log('$response');
 
-    if (!response.hasException) {
-      ResponseProfileSkip? info;
-      try {
-        info = ResponseProfileSkip.fromJson(
-          response.data as Map<String, dynamic>,
-        );
-      } on Exception catch (e) {
-        log('error', error: e);
-        return Failure(error: Exception(e));
+      if (!response.hasException) {
+        ResponseProfileSkip? info;
+        try {
+          info = ResponseProfileSkip.fromJson(
+            response.data as Map<String, dynamic>,
+          );
+        } on Exception catch (e) {
+          log('error', error: e);
+          return Failure(error: Exception(e));
+        }
+        return Success(data: info);
+      } else {
+        if (response.exception?.graphqlErrors[0].extensions?['code'] ==
+            "UNAUTHENTICATED") {
+          return AuthorizationFailure(error: response.exception);
+        }
+        return OperationFailure(error: response.exception);
       }
-      return Success(data: info);
-    } else {
-      if(response.exception?.graphqlErrors[0].extensions?['code'] == "UNAUTHENTICATED") {
-        return AuthorizationFailure(error: response.exception);
-      }
-      return OperationFailure(error: response.exception);
+    } on TimeOutFailure catch (_) {
+      // todo: timeout failure
+      return TimeOutFailure();
     }
   }
-
-
 }

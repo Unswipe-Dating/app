@@ -27,35 +27,38 @@ class OtpService {
 }
     ''';
 
+    try {
+      final response = await service.performMutation(query,
+          variables: {"id": params.phone, "phone": params.phone});
+      log('$response');
 
-    final response = await service.performMutation(query, variables: {
-      "id": params.phone,
-      "phone":params.phone
-    });
-    log('$response');
-
-    if (!response.hasException) {
-      OtpResponse? info;
-      try {
-        info = OtpResponse.fromJson(
-          response.data as Map<String, dynamic>,
-        );
-      } on Exception catch (e) {
-        log('error', error: e);
-        return Failure(error: Exception(e));
+      if (!response.hasException) {
+        OtpResponse? info;
+        try {
+          info = OtpResponse.fromJson(
+            response.data as Map<String, dynamic>,
+          );
+        } on Exception catch (e) {
+          log('error', error: e);
+          return Failure(error: Exception(e));
+        }
+        return Success(data: info);
+      } else {
+        if (response.exception?.graphqlErrors[0].extensions?['code'] ==
+            "UNAUTHENTICATED") {
+          return AuthorizationFailure(error: response.exception);
+        }
+        return OperationFailure(error: response.exception);
       }
-      return Success(data: info);
-    } else {
-      if(response.exception?.graphqlErrors[0].extensions?['code'] == "UNAUTHENTICATED") {
-        return AuthorizationFailure(error: response.exception);
-      }
-      return OperationFailure(error: response.exception);
+    } on TimeOutFailure catch (_) {
+      // todo: timeout failure
+      return TimeOutFailure();
     }
   }
 
   Future<ApiResponse<VerifyOtpResponse>> verifyOtp(
-      OtpParams params,
-      ) async {
+    OtpParams params,
+  ) async {
     const query = '''
      mutation ValidateOTP(
      \$id: String!,
@@ -78,42 +81,44 @@ class OtpService {
 }
     ''';
 
-
-    final response = await service.performMutation(query, variables: {
-
+    try {
+      final response = await service.performMutation(query, variables: {
         "id": params.phone,
-        "phone":params.phone,
+        "phone": params.phone,
         "otp": params.otp,
         "otpOrderId": params.otpOrderId,
         "fcmRegisterationToken": params.fcmRegisterationToken
+      });
+      log('$response');
 
-    });
-    log('$response');
-
-    if (!response.hasException) {
-      VerifyOtpResponse? info;
-      try {
-        info = VerifyOtpResponse.fromJson(
-          response.data as Map<String, dynamic>,
-        );
-      } on Exception catch (e) {
-        log('error', error: e);
-        return Failure(error: Exception(e));
+      if (!response.hasException) {
+        VerifyOtpResponse? info;
+        try {
+          info = VerifyOtpResponse.fromJson(
+            response.data as Map<String, dynamic>,
+          );
+        } on Exception catch (e) {
+          log('error', error: e);
+          return Failure(error: Exception(e));
+        }
+        return Success(data: info);
+      } else {
+        if (response.exception?.graphqlErrors[0].extensions?['code'] ==
+            "UNAUTHENTICATED") {
+          return AuthorizationFailure(error: response.exception);
+        }
+        return OperationFailure(error: response.exception);
       }
-      return Success(data: info);
-    } else {
-      if(response.exception?.graphqlErrors[0].extensions?['code'] == "UNAUTHENTICATED") {
-        return AuthorizationFailure(error: response.exception);
-      }
-      return OperationFailure(error: response.exception);
+    } on TimeOutFailure catch (_) {
+      // todo: timeout failure
+      return TimeOutFailure();
     }
   }
 
-
-Future<ApiResponse<SignUpResponse>> signupOrLogin(
+  Future<ApiResponse<SignUpResponse>> signupOrLogin(
     OtpParams params,
-    ) async {
-  const query = '''
+  ) async {
+    const query = '''
    mutation Signup(\$id: String!,\$phone: String!) {
   signup(data: {
     id: \$id,
@@ -130,31 +135,34 @@ Future<ApiResponse<SignUpResponse>> signupOrLogin(
 }
     ''';
 
-
-  final response = await service.performMutation(query, variables: {
-
-    "id": params.phone,
-    "phone":params.phone,
-
-  });
-  log('$response');
-
-  if (!response.hasException) {
-    SignUpResponse? info;
     try {
-      info = SignUpResponse.fromJson(
-        response.data as Map<String, dynamic>,
-      );
-    } on Exception catch (e) {
-      log('error', error: e);
-      return Failure(error: Exception(e));
+      final response = await service.performMutation(query, variables: {
+        "id": params.phone,
+        "phone": params.phone,
+      });
+      log('$response');
+
+      if (!response.hasException) {
+        SignUpResponse? info;
+        try {
+          info = SignUpResponse.fromJson(
+            response.data as Map<String, dynamic>,
+          );
+        } on Exception catch (e) {
+          log('error', error: e);
+          return Failure(error: Exception(e));
+        }
+        return Success(data: info);
+      } else {
+        if (response.exception?.graphqlErrors[0].extensions?['code'] ==
+            "UNAUTHENTICATED") {
+          return AuthorizationFailure(error: response.exception);
+        }
+        return OperationFailure(error: response.exception);
+      }
+    } on TimeOutFailure catch (_) {
+      // todo: timeout failure
+      return TimeOutFailure();
     }
-    return Success(data: info);
-  } else {
-    if(response.exception?.graphqlErrors[0].extensions?['code'] == "UNAUTHENTICATED") {
-      return AuthorizationFailure(error: response.exception);
-    }
-    return OperationFailure(error: response.exception);
   }
-}
 }

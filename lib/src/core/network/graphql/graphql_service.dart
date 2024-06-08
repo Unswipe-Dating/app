@@ -24,7 +24,10 @@ class GraphQLService {
         variables: variables,
       );
 
-      final result = await _graphQLClient.query(options);
+      final result = await _graphQLClient.query(options)
+          .timeout(const Duration(milliseconds: 100), onTimeout: () {
+            throw TimeOutFailure();
+      });
 
       if (result.hasException) {
         final errorCode =
@@ -47,7 +50,10 @@ class GraphQLService {
   }) async {
     final options = MutationOptions(document: gql(query), variables: variables);
 
-    final result = await _graphQLClient.mutate(options);
+    final result = await _graphQLClient.mutate(options)
+        .timeout(const Duration(milliseconds: 100), onTimeout: () {
+      throw TimeOutFailure();
+    });
 
     log(result.toString());
 
@@ -67,7 +73,12 @@ class GraphQLService {
           'Accept-Charset': 'utf-8',
           'Authorization': 'Bearer $token',
         });
-    final result = await GraphQLClient(link: link, cache: GraphQLCache()).mutate(options);
+    final result = await GraphQLClient(link: link, cache: GraphQLCache())
+        .mutate(options)
+        .timeout(const Duration(milliseconds: 100),
+        onTimeout: () {
+          throw TimeOutFailure();
+    });
 
     log(result.toString());
 
@@ -86,7 +97,11 @@ class GraphQLService {
           'x-apollo-operation-name': 'uploadProfilePhotos ',
           'Authorization': 'Bearer $token',
         });
-    final result = await GraphQLClient(link: link, cache: GraphQLCache()).mutate(options);
+    final result = await GraphQLClient(link: link, cache: GraphQLCache())
+        .mutate(options)
+        .timeout(const Duration(milliseconds: 100), onTimeout: () {
+      throw TimeOutFailure();
+    });
 
     log(result.toString());
 
