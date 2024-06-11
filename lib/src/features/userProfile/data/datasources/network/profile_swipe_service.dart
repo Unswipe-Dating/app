@@ -6,7 +6,7 @@ import 'package:unswipe/src/features/login/data/models/verify_otp/verify_otp_res
 import 'package:unswipe/src/features/login/domain/repository/login_repository.dart';
 import 'package:unswipe/src/features/userOnboarding/contact_block/data/model/response_contact_block.dart';
 import 'package:unswipe/src/features/userProfile/data/model/create_request/response_profile_request.dart';
-import 'package:unswipe/src/features/userProfile/data/model/response_profile_skip.dart';
+import 'package:unswipe/src/features/userProfile/data/model/skip_profile/response_profile_skip.dart';
 import '../../../../../../../data/api_response.dart';
 import '../../../../../core/network/graphql/graphql_service.dart';
 import '../../../domain/repository/profile_swipe_repository.dart';

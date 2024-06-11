@@ -45,7 +45,8 @@ class EditProfileScreen extends StatelessWidget {
                 updateUserStateStreamUseCase:
                     GetIt.I.get<UpdateUserStateStreamUseCase>(),
                 getSettingsProfileUseCase:
-                    GetIt.I.get<GetSettingsProfileUseCase>()),
+                    GetIt.I.get<GetSettingsProfileUseCase>())
+            ..add(OnStartGettingProfile()),
             child: BlocConsumer<UpdateProfileBloc, UpdateProfileState>(
               listener: (context, state) {
                 if (state.status == UpdateProfileStatus.loaded) {

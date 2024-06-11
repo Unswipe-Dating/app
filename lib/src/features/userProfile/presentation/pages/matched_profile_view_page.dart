@@ -11,7 +11,7 @@ import 'package:unswipe/src/features/userProfile/domain/usecase/profile_get_requ
 import 'package:unswipe/src/features/userProfile/domain/usecase/profile_reject_usecase.dart';
 import 'package:unswipe/src/features/userProfile/presentation/widgets/SwipeCard.dart';
 
-import '../../../../../Profile.dart';
+import '../../data/model/profile.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../shared/domain/usecases/get_auth_state_stream_use_case.dart';
 import '../../../chat/no_request_screen.dart';

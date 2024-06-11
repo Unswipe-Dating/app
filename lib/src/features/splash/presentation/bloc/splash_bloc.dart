@@ -201,27 +201,22 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
       } else if (responseData is api_response.TimeOutFailure) {
         return state.copyWith(status: SplashStatus.errorTimeOut);
       } else if (responseData is api_response.Success) {
-        var res = (((responseData as api_response.Success).data) as ResponseMeta);
-        if(res.getConfig.timeLeftForExpiry != null) {
+        var res =
+        (((responseData as api_response.Success).data) as ResponseMeta);
+        if (res.getConfig.status == "MATCHED") {
+          if (res.getConfig.request != null) {
+            add(onStartChatIntent(res.getConfig.request));
+          } else {
+            return state.copyWith(status: SplashStatus.error);
+          }
+        } else if (res.getConfig.status =="ACTIVE"
+            && res.getConfig.timeLeftForExpiry != null) {
           return state.copyWith(status: SplashStatus.loaded,
               isFirstTime: false,
               isAuthenticated: true,
               isProfileMatchRequested: true,
               profileMatchDuration: res.getConfig.timeLeftForExpiry
           );
-        } else if (res.getConfig.status == "MATCHED"){
-          if(res.getConfig.chat != null && res.getConfig.request != null) {
-            // if(res.getConfig.chat?.status == "ACTIVE") {
-            //   add(onStartChatIntent(res.getConfig.request));
-            // } else {
-            //   add(onFirstTimeUserEvent());
-            // }
-            add(onStartChatIntent(res.getConfig.request));
-
-
-          } else {
-            return state.copyWith(status: SplashStatus.error);
-          }
         } else {
           add(onFirstTimeUserEvent());
         }
@@ -258,7 +253,7 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
       onStartChatIntent event, Emitter<SplashState> emitter) async {
     var roomId =  await FirebaseChatCore.instance.createRoom(User(id:
     event.request?.requesteeProfileId ?? ""));
-    emitter.call(state.copyWith(status: SplashStatus.loaded,
+    emitter.call(state.copyWith(status: SplashStatus.loadedChat,
     isFirstTime: false,
     isAuthenticated: true,
     loadChat: roomId,)

@@ -20,7 +20,7 @@ class LoginState extends Equatable {
   final LoginStatus status;
   final OnBoardingStatus onBoardingStatus;
   final String? profileMatchDuration;
-  final Room? chatId;
+  final types.Room? chatId;
 
   const LoginState({
     this.status = LoginStatus.initial,
@@ -36,7 +36,7 @@ class LoginState extends Equatable {
     int? token,
     OnBoardingStatus? onBoardingStatus,
     String? profileMatchDuration,
-    Room? chatId,
+    types.Room? chatId,
   }) {
     return LoginState(
       status: status ?? this.status,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:go_router/go_router.dart';
 
 import '../userProfile/presentation/pages/profile_view_page.dart';
@@ -15,20 +16,21 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
+  List<Color> colors = [Colors.white,
+    Colors.white,
+    Colors.black,
+    const Color(0xffFFDEC6)
+  ];
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        canvasColor: Colors.white,
-        primaryColor: Colors.white, // Set the primary color
-        appBarTheme: const AppBarTheme(
-          color: Colors.white, // Set the appbar background colo
-        ),
-      ),
       home: Scaffold(
         appBar: AppBar(
-          title: const Padding(
+          elevation: 20,
+          backgroundColor: colors[widget.child.currentIndex],
+          title: widget.child.currentIndex < 2 ?  const Padding(
             padding: EdgeInsets.all(8),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -44,7 +46,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 Icon(Icons.notifications),
               ],
             ),
-          ),
+          ) : null,
         ),
         body: SafeArea(
           child: widget.child,

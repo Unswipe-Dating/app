@@ -126,8 +126,10 @@ class CustomNavigationHelper {
               GoRoute(
                 path: chatPath,
                 pageBuilder: (context, state) {
+                  Room roomId =
+                  state.extra as Room;
                   return getPage(
-                    child: const MatchedSwipeInterface(),
+                    child: ChatPage(room: roomId),
                     state: state,
                   );
                 },

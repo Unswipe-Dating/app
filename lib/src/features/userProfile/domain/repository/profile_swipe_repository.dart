@@ -2,7 +2,7 @@ import 'package:unswipe/src/features/userProfile/data/model/create_request/respo
 
 import '../../../../../../data/api_response.dart';
 import '../../data/model/get_profile/response_profile_swipe.dart';
-import '../../data/model/response_profile_skip.dart';
+import '../../data/model/skip_profile/response_profile_skip.dart';
 
 abstract class ProfileSwipeRepository {
   Future<ApiResponse<ResponseProfileSwipe>> getProfiles(String token,

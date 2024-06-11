@@ -4,10 +4,11 @@ import 'dart:ffi';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter_chat_types/flutter_chat_types.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:unswipe/src/features/login/data/models/request_otp/otp_response.dart';
-import 'package:unswipe/src/features/login/data/models/request_otp/request_otp.dart';
 import 'package:unswipe/src/features/login/data/models/signupOrLogin/signup_response.dart';
 import 'package:unswipe/src/features/login/data/models/verify_otp/verify_otp_response.dart';
 import 'package:unswipe/src/features/login/domain/repository/login_repository.dart';
@@ -36,18 +37,16 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
   final SignUpUseCase signUpUseCase;
   final MetaUseCase metaUseCase;
 
-
   String otpId = "";
 
-  LoginBloc({required this.updateUserStateStreamUseCase,
+  LoginBloc({
+    required this.updateUserStateStreamUseCase,
     required this.requestOtpUseCase,
     required this.verifyOtpUseCase,
     required this.signUpUseCase,
     required this.updateOnboardingStateStreamUseCase,
     required this.metaUseCase,
-
-  })
-      : super(const LoginState()) {
+  }) : super(const LoginState()) {
     on<OnOtpRequested>(_onOtpRequested);
     on<OnOtpResendRequested>(_onOtpResendRequested);
     on<OnOtpVerificationRequest>(_onOtpVerified);
@@ -56,51 +55,41 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
     on<OnLoginSuccess>(_onLoginSuccess);
     on<OnGetMetaEvent>(_onGettingMetaEvent);
     on<onStartChatIntent>(_onStartChatIntent);
-
-
-
   }
 
-  _onUpdatingOnBoardingEvent(OnUpdateOnBoardingUserEvent event,
-      Emitter<LoginState> emitter) async{
-
+  _onUpdatingOnBoardingEvent(
+      OnUpdateOnBoardingUserEvent event, Emitter<LoginState> emitter) async {
     OnBoardingStatus onBoardingStatus = OnBoardingStatus.contact;
-    if(event.profileId != null) {
+    if (event.profileId != null) {
       onBoardingStatus = OnBoardingStatus.profile;
     }
 
-    await emitter.forEach(
-        updateOnboardingStateStreamUseCase
-            .call(onBoardingStatus), onData: (event) {
+    await emitter
+        .forEach(updateOnboardingStateStreamUseCase.call(onBoardingStatus),
+            onData: (event) {
       return event.fold(ifLeft: (l) {
         if (l is CancelTokenFailure) {
           return state.copyWith(status: LoginStatus.error);
         } else {
           return state.copyWith(status: LoginStatus.error);
         }
-      },
-          ifRight: (r) {
-            return state.copyWith(status: LoginStatus.loaded,
-                onBoardingStatus: onBoardingStatus);
-      }
-      );
-
+      }, ifRight: (r) {
+        return state.copyWith(
+            status: LoginStatus.loaded, onBoardingStatus: onBoardingStatus);
+      });
     }, onError: (error, stacktrace) {
       return state.copyWith(status: LoginStatus.error);
-
     });
-
   }
 
-
-  _onOtpResendRequested(OnOtpResendRequested event,
-      Emitter<LoginState> emitter) async {
+  _onOtpResendRequested(
+      OnOtpResendRequested event, Emitter<LoginState> emitter) async {
     emitter(state.copyWith(
         status: LoginStatus.loadingResend,
         token: LoginStatus.loadingResend.index));
 
     Stream<GetOtpUseCaseResponse> stream =
-    await requestOtpUseCase.buildUseCaseStream(event.params);
+        await requestOtpUseCase.buildUseCaseStream(event.params);
 
     await emitter.forEach(stream, onData: (response) {
       final responseData = response.val;
@@ -116,21 +105,19 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
         otpId = (((responseData as api_response.Success).data) as OtpResponse)
             .requestOTP
             .orderId;
-        return state.copyWith(
-            status: LoginStatus.loadedResend);
+        return state.copyWith(status: LoginStatus.loadedResend);
       } else {
         return state.copyWith(status: LoginStatus.error);
       }
     });
   }
 
-
   _onOtpRequested(OnOtpRequested event, Emitter<LoginState> emitter) async {
     emitter(state.copyWith(
         status: LoginStatus.loadingOTP, token: LoginStatus.loadingOTP.index));
 
     Stream<GetOtpUseCaseResponse> stream =
-    await requestOtpUseCase.buildUseCaseStream(event.params);
+        await requestOtpUseCase.buildUseCaseStream(event.params);
 
     await emitter.forEach(stream, onData: (response) {
       final responseData = response.val;
@@ -146,8 +133,7 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
         otpId = (((responseData as api_response.Success).data) as OtpResponse)
             .requestOTP
             .orderId;
-        return state.copyWith(
-            status: LoginStatus.loadedOtp);
+        return state.copyWith(status: LoginStatus.loadedOtp);
       } else {
         return state.copyWith(status: LoginStatus.error);
       }
@@ -156,26 +142,24 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
 
   _onLoginSuccess(OnLoginSuccess event, Emitter<LoginState> emitter) async {
     LoginStatus status = LoginStatus.verified;
-        updateUserStateStreamUseCase.call(event.token,
-            event.id, event.userId).listen((
-            event) {
-          event.fold(
-              ifLeft: (l) {
-                if (l is CancelTokenFailure) {} else {}
-              },
-              ifRight: (r) {});
-        });
+    updateUserStateStreamUseCase
+        .call(event.token, event.id, event.userId)
+        .listen((event) {
+      event.fold(
+          ifLeft: (l) {
+            if (l is CancelTokenFailure) {
+            } else {}
+          },
+          ifRight: (r) {});
+    });
 
     return status;
   }
 
   _onSignUp(OnSignupRequest event, Emitter<LoginState> emitter) async {
-
     Stream<SignUpUseCaseResponse> stream =
-    await signUpUseCase.buildUseCaseStream(OtpParams(
-        phone: event.params.phone,
-        id: event.params.id
-    ));
+        await signUpUseCase.buildUseCaseStream(
+            OtpParams(phone: event.params.phone, id: event.params.id));
 
     await emitter.forEach(stream, onData: (response) {
       final responseData = response.val;
@@ -189,35 +173,43 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
         return state.copyWith(status: LoginStatus.error);
       } else if (responseData is api_response.Success) {
         var token =
-            (((responseData as api_response.Success).data) as SignUpResponse).signup
+            (((responseData as api_response.Success).data) as SignUpResponse)
+                .signup
                 .accessToken;
-        var profile = (((responseData as api_response.Success).data) as SignUpResponse).signup
-            .user.profileId;
-        var firebaseCustomToken = (((responseData as api_response.Success).data) as SignUpResponse).signup
-            .user.firebaseCustomToken;
+        var profile =
+            (((responseData as api_response.Success).data) as SignUpResponse)
+                .signup
+                .user
+                .profileId;
+        var firebaseCustomToken =
+            (((responseData as api_response.Success).data) as SignUpResponse)
+                .signup
+                .user
+                .firebaseCustomToken;
 
-        add(OnGetMetaEvent(token: token, id: event.params.id, userId: profile));
+        add(OnGetMetaEvent(token: token,
+            id: event.params.id,
+            userId: profile,
+          fcmCustomToken: firebaseCustomToken
+        ));
         return state.copyWith(status: LoginStatus.verified);
-
       } else {
         return state.copyWith(status: LoginStatus.error);
       }
     });
   }
 
-  _onOtpVerified(OnOtpVerificationRequest event,
-      Emitter<LoginState> emitter) async {
-
+  _onOtpVerified(
+      OnOtpVerificationRequest event, Emitter<LoginState> emitter) async {
     emitter(state.copyWith(status: LoginStatus.loadingVerification));
 
     Stream<VerifyOtpUseCaseResponse> stream =
-    await verifyOtpUseCase.buildUseCaseStream(OtpParams(
-        phone: event.params.phone,
-        id: event.params.id,
-        otp: event.params.otp,
-        otpOrderId: otpId,
-        fcmRegisterationToken: event.params.fcmRegisterationToken
-    ));
+        await verifyOtpUseCase.buildUseCaseStream(OtpParams(
+            phone: event.params.phone,
+            id: event.params.id,
+            otp: event.params.otp,
+            otpOrderId: otpId,
+            fcmRegisterationToken: event.params.fcmRegisterationToken));
 
     await emitter.forEach(stream, onData: (response) {
       final responseData = response.val;
@@ -232,23 +224,29 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
       } else if (responseData is api_response.Success) {
         var token =
             (((responseData as api_response.Success).data) as VerifyOtpResponse)
-                .validateOTP
-                .accessToken ?? "";
+                    .validateOTP
+                    .accessToken ??
+                "";
         add(OnSignupRequest(event.params));
         return state.copyWith(status: LoginStatus.verified);
-
       } else {
         return state.copyWith(status: LoginStatus.error);
       }
     });
   }
 
-  _onGettingMetaEvent(
-      OnGetMetaEvent event, Emitter<LoginState> emitter) async {
+  _onGettingMetaEvent(OnGetMetaEvent event, Emitter<LoginState> emitter) async {
+
+    try {
+      final credential =
+      await FirebaseAuth.instance.signInWithCustomToken(event.fcmCustomToken??"");
+    } on Exception catch (_) {
+      debugPrint("");
+    }
 
     Stream<GetMetaUseCaseResponse> stream =
-    await metaUseCase.buildUseCaseStream(
-        event.token);
+        await metaUseCase.buildUseCaseStream(event.token);
+
 
     await emitter.forEach(stream, onData: (response) {
       final responseData = response.val;
@@ -263,31 +261,32 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
       } else if (responseData is api_response.Success) {
         add(OnLoginSuccess(event.token, event.id, event.userId));
         add(OnUpdateOnBoardingUserEvent(profileId: event.userId));
-        var res = (((responseData as api_response.Success).data) as ResponseMeta);
-        if(res.getConfig.timeLeftForExpiry != null) {
-          return state.copyWith(status: LoginStatus.loadedExpiryTimer,
-              profileMatchDuration: res.getConfig.timeLeftForExpiry
-          );
-        } else if (res.getConfig.status == "MATCHED"){
-          if(res.getConfig.chat != null && res.getConfig.request != null) {
+        var res =
+            (((responseData as api_response.Success).data) as ResponseMeta);
+        if (res.getConfig.status == "MATCHED") {
+          if (res.getConfig.chat != null && res.getConfig.request != null) {
             // if(res.getConfig.chat?.status == "ACTIVE") {
             //   add(onStartChatIntent(res.getConfig.request));
             // } else {
             //   return state.copyWith(status: LoginStatus.loaded,);
             // }
             add(onStartChatIntent(res.getConfig.request));
-
-
           } else {
             return state.copyWith(status: LoginStatus.error);
           }
+        } else if (res.getConfig.timeLeftForExpiry != null) {
+          return state.copyWith(
+              status: LoginStatus.loadedExpiryTimer,
+              profileMatchDuration: res.getConfig.timeLeftForExpiry);
         } else {
-          return state.copyWith(status: LoginStatus.loaded,
+          return state.copyWith(
+            status: LoginStatus.loaded,
           );
         }
 
-        return state.copyWith(status: LoginStatus.loadingTimer,);
-
+        return state.copyWith(
+          status: LoginStatus.loadingTimer,
+        );
       } else {
         return state.copyWith(status: LoginStatus.error);
       }
@@ -296,13 +295,11 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
 
   _onStartChatIntent(
       onStartChatIntent event, Emitter<LoginState> emitter) async {
-    var roomId =  await FirebaseChatCore.instance.createRoom(User(id:
-    event.request?.requesteeProfileId ?? ""));
-    emitter.call(state.copyWith(status: LoginStatus.loadedChat,
-      chatId: roomId,)
-    );
+    var roomId = await FirebaseChatCore.instance
+        .createRoom(types.User(id: event.request?.requesteeProfileId ?? ""));
+    emitter.call(state.copyWith(
+      status: LoginStatus.loadedChat,
+      chatId: roomId,
+    ));
   }
-
-
-
 }

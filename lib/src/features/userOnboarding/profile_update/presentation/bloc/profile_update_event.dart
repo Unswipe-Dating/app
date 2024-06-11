@@ -39,9 +39,7 @@ class OnUpdateUserState extends UpdateProfileEvent {
 }
 
 class OnStartGettingProfile extends UpdateProfileEvent {
-  final String id;
-  final String token;
-  OnStartGettingProfile(this.token, this.id);
+  OnStartGettingProfile();
 }
 
 class OnGetUserProfile extends UpdateProfileEvent {

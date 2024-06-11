@@ -33,7 +33,11 @@ class OnGetMetaEvent extends LogInEvent {
   final String token;
   final String id;
   final String? userId;
-  OnGetMetaEvent({required this.token, required this.id, required this.userId});
+  final String? fcmCustomToken;
+  OnGetMetaEvent({required this.token,
+    required this.id,
+    required this.userId,
+    required this.fcmCustomToken});
 }
 
 class onStartChatIntent extends LogInEvent {

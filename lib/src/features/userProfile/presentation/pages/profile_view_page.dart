@@ -43,7 +43,8 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context) => ProfileSwipeBloc(
+      create: (BuildContext context) =>
+      ProfileSwipeBloc(
           profileSwipeUseCase: GetIt.I.get<ProfileGetUseCase>(),
           getAuthStateStreamUseCase: GetIt.I.get<GetAuthStateStreamUseCase>(),
           profileAcceptUseCase: GetIt.I.get<ProfileAcceptUseCase>(),
@@ -52,23 +53,20 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
           profileGetRequestedUseCase: GetIt.I.get<ProfileGetRequestedUseCase>(),
           profileSkipUseCase: GetIt.I.get<ProfileSkipUseCase>(),
           updateOnboardingStateStreamUseCase:
-              GetIt.I.get<UpdateOnboardingStateStreamUseCase>())
-        ..add(OnInitiateSubjects())
-        ..add(OnInitiateAcceptSubject())
-        ..add(OnInitiateCreateSubject())
-        ..add(OnInitiateRejectSubject())
-        ..add(OnInitiateMatchSubject())
-        ..add(OnInitiateSkipSubject())
-        ..add(OnProfileSwipeRequested(0)),
+          GetIt.I.get<UpdateOnboardingStateStreamUseCase>())
+        ..add(OnInitiateSubjects())..add(OnInitiateAcceptSubject())..add(
+          OnInitiateCreateSubject())..add(OnInitiateRejectSubject())..add(
+          OnInitiateMatchSubject())..add(OnInitiateSkipSubject())..add(
+          OnProfileSwipeRequested(0)),
       child: BlocConsumer<ProfileSwipeBloc, ProfileSwipeState>(
         listener: (context, state) {
-          if (state.status == ProfileSwipeStatus.loaded) {
-          } else if (state.status == ProfileSwipeStatus.loadedCreate) {
+          if (state.status == ProfileSwipeStatus.loaded) {} else
+          if (state.status == ProfileSwipeStatus.loadedCreate) {
             CustomNavigationHelper.router.push(
                 CustomNavigationHelper.profilePathHyperEx,
                 extra: imageUri);
-          } else if (state.status == ProfileSwipeStatus.loadedReject) {
-          } else if (state.status == ProfileSwipeStatus.errorSwipe) {
+          } else if (state.status == ProfileSwipeStatus.loadedReject) {} else
+          if (state.status == ProfileSwipeStatus.errorSwipe) {
             controller.undo();
           } else if (state.status == ProfileSwipeStatus.errorAuth) {
             CustomNavigationHelper.router.go(
@@ -78,46 +76,49 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
         },
         builder: (context, state) {
           switch (state.status) {
-            case ProfileSwipeStatus.loading:
-              return const Center(child: CircularProgressIndicator());
-            case ProfileSwipeStatus.loaded:
-            case ProfileSwipeStatus.loadedReject:
-              if (state.responseProfileSwipe != null) {
-                if (state.responseProfileSwipe?.browseProfiles?.profiles
-                        .isNotEmpty ==
-                    true) {
-                  updateProfiles(state.responseProfileSwipe!);
-                  return CardSwiper(
-                    allowedSwipeDirection: const AllowedSwipeDirection.only(
-                        up: false, down: false, left: false, right: false),
-                    threshold: 100,
-                    controller: controller,
-                    cardsCount: cards.length,
-                    onSwipe: _onSwipe,
-                    onUndo: _onUndo,
-                    isLoop: false,
-                    onEnd: () {
-                      context
-                          .read<ProfileSwipeBloc>()
-                          .add(OnRequestApiCall("", ""));
-                    },
-                    numberOfCardsDisplayed: cards.length > 1 ? 2 : 1,
-                    padding: const EdgeInsets.all(0.0),
-                    cardBuilder: (
-                      context,
-                      index,
-                      horizontalThresholdPercentage,
-                      verticalThresholdPercentage,
-                    ) =>
-                        cards[index],
-                  );
-                } else {
-                  return NoRequestScreen();
-                }
-              } else
-                return const Center(child: CircularProgressIndicator());
-            default:
-              return const Center(child: CircularProgressIndicator());
+          case ProfileSwipeStatus.loading:
+          return const Center(child: CircularProgressIndicator());
+          case ProfileSwipeStatus.loaded:
+          case ProfileSwipeStatus.loadedReject:
+          if (state.responseProfileSwipe != null) {
+          if (state.responseProfileSwipe?.browseProfiles?.profiles
+              .isNotEmpty ==
+          true) {
+          updateProfiles(state.responseProfileSwipe!);
+          return Container(
+          color: Colors.red,
+          child: CardSwiper(
+          allowedSwipeDirection: const AllowedSwipeDirection.only(
+          up: false, down: false, left: false, right: false),
+          threshold: 100,
+          controller: controller,
+          cardsCount: cards.length,
+          onSwipe: _onSwipe,
+          onUndo: _onUndo,
+          isLoop: false,
+          onEnd: () {
+          context
+              .read<ProfileSwipeBloc>()
+              .add(OnRequestApiCall("", ""));
+          },
+          numberOfCardsDisplayed: cards.length > 1 ? 2 : 1,
+          padding: const EdgeInsets.all(0.0),
+          cardBuilder: (
+          context,
+          index,
+          horizontalThresholdPercentage,
+          verticalThresholdPercentage,
+          ) =>
+          cards[index],
+          ),
+          );
+          } else {
+          return NoRequestScreen();
+          }
+          } else
+          return const Center(child: CircularProgressIndicator());
+          default:
+          return const Center(child: CircularProgressIndicator());
           }
         },
       ),
@@ -132,22 +133,19 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
     controller.swipe(CardSwiperDirection.left);
   }
 
-  bool _onSwipe(
-    int previousIndex,
-    int? currentIndex,
-    CardSwiperDirection direction,
-  ) {
+  bool _onSwipe(int previousIndex,
+      int? currentIndex,
+      CardSwiperDirection direction,) {
     debugPrint(
-      'The card $previousIndex was swiped to the ${direction.name}. Now the card $currentIndex is on top',
+      'The card $previousIndex was swiped to the ${direction
+          .name}. Now the card $currentIndex is on top',
     );
     return true;
   }
 
-  bool _onUndo(
-    int? previousIndex,
-    int currentIndex,
-    CardSwiperDirection direction,
-  ) {
+  bool _onUndo(int? previousIndex,
+      int currentIndex,
+      CardSwiperDirection direction,) {
     debugPrint(
       'The card $currentIndex was undod from the ${direction.name}',
     );
@@ -156,19 +154,20 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
 
   void updateProfiles(ResponseProfileSwipe responseProfileSwipe) {
     cards = responseProfileSwipe.browseProfiles!.profiles
-        .map((profile) => SwipeCard(
-              likeAction: swipeRightMethod,
-              dislikeAction: swipeLeftMethod,
-              id: profile.id,
-              userName: profile.name,
-              userAge: 20,
-              userDescription: "no desc",
-              profileImageSrc: "",
-              isVerified: true,
-              pronouns: "",
-              isCreate: true,
-              requestId: profile.request?.id,
-            ))
+        .map((profile) =>
+        SwipeCard(
+          likeAction: swipeRightMethod,
+          dislikeAction: swipeLeftMethod,
+          id: profile.id,
+          userName: profile.name,
+          userAge: 20,
+          userDescription: "no desc",
+          profileImageSrc: "",
+          isVerified: true,
+          pronouns: "",
+          isCreate: true,
+          requestId: profile.request?.id,
+        ))
         .toList();
   }
 }
