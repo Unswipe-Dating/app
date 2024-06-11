@@ -11,7 +11,6 @@ import 'package:unswipe/src/features/userOnboarding/image_upload/data/model/resp
 import 'package:unswipe/src/features/userOnboarding/image_upload/domain/repository/image_upload_repository.dart';
 import "package:http_parser/http_parser.dart" show MediaType;
 import '../../../../../../data/api_response.dart';
-import '../../presentation/widgets/multi_image_picker_files/image_file.dart';
 
 
 @Injectable()

@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:http/http.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
+import 'package:multi_image_picker_view/multi_image_picker_view.dart';
 import '../../../../../../data/api_response.dart';
 import '../../../../../../data/api_response.dart' as api_response;
 import '../../../../../shared/domain/usecases/get_auth_state_stream_use_case.dart';
@@ -12,7 +13,6 @@ import '../../../../onBoarding/domain/entities/onbaording_state/onboarding_state
 import '../../../../onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart';
 import '../../../../onBoarding/presentation/bloc/onboarding_bloc.dart';
 import '../../domain/usecase/image_upload_usecase.dart';
-import '../widgets/multi_image_picker_files/image_file.dart';
 part 'image_upload_event.dart';
 part 'image_upload_state.dart';
 

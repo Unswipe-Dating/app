@@ -3,15 +3,14 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:multi_image_picker_view/multi_image_picker_view.dart';
 import 'package:unswipe/src/features/userOnboarding/image_upload/domain/usecase/image_upload_usecase.dart';
 import 'package:unswipe/src/shared/domain/usecases/get_auth_state_stream_use_case.dart';
 
 import '../../../../../core/router/app_router.dart';
 import '../../../../onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart';
 import '../bloc/image_upload_bloc.dart';
-import '../widgets/multi_image_picker_files/multi_image_picker_controller.dart';
-import '../widgets/multi_image_picker_files/multi_image_picker_view.dart';
-import '../widgets/multi_image_picker_files/picker.dart';
+import '../widgets/picker.dart';
 
 class ProfileImagePickerScreen extends StatefulWidget {
   const ProfileImagePickerScreen({super.key});
