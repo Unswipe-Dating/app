@@ -11,6 +11,7 @@ import 'package:unswipe/src/features/hyperExclusiveMatch/hyper_exclusive_page.da
 import 'package:unswipe/src/features/login/presentation/pages/Login.dart';
 import 'package:unswipe/src/features/onBoarding/presentation/pages/OnBoarding.dart';
 import 'package:unswipe/src/features/settings/presentation/pages/edit_profile_screen.dart';
+import 'package:unswipe/src/features/settings/presentation/pages/edit_profile_screen_basic.dart';
 import 'package:unswipe/src/features/splash/presentation/pages/splash_page.dart';
 import 'package:unswipe/src/features/userOnboarding/profile_update/data/models/update_profile_response.dart';
 import 'package:unswipe/src/features/userOnboarding/profile_update/domain/repository/update_profile_repository.dart';
@@ -86,6 +87,9 @@ class CustomNavigationHelper {
   static const String chatPath = '/chat';
   static const String communityPath = '/community';
   static const String settingsPath = '/settings';
+  static const String settingsPathBasic = '/settings/basic';
+  static const String chatScreen = '/chatScreen';
+
 
 
   factory CustomNavigationHelper() {
@@ -126,10 +130,8 @@ class CustomNavigationHelper {
               GoRoute(
                 path: chatPath,
                 pageBuilder: (context, state) {
-                  Room roomId =
-                  state.extra as Room;
                   return getPage(
-                    child: ChatPage(room: roomId),
+                    child: const MatchedSwipeInterface(),
                     state: state,
                   );
                 },
@@ -167,6 +169,15 @@ class CustomNavigationHelper {
                 pageBuilder: (context, state) {
                   return getPage(
                     child: const EditProfileScreen(),
+                    state: state,
+                  );
+                },
+              ),
+              GoRoute(
+                path: settingsPathBasic,
+                pageBuilder: (context, state) {
+                  return getPage(
+                    child: const EditProfileScreenBasic(),
                     state: state,
                   );
                 },
@@ -277,6 +288,7 @@ class CustomNavigationHelper {
           );
         },
       ),
+
       GoRoute(
         parentNavigatorKey: parentNavigatorKey,
         path: onboardingPartnerGenderPath,

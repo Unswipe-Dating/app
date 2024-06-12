@@ -205,6 +205,8 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
         (((responseData as api_response.Success).data) as ResponseMeta);
         if (res.getConfig.status == "MATCHED") {
           if (res.getConfig.request != null) {
+          //  add(onFirstTimeUserEvent());
+
             add(onStartChatIntent(res.getConfig.request));
           } else {
             return state.copyWith(status: SplashStatus.error);

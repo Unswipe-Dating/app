@@ -97,7 +97,8 @@ class SplashScreen extends StatelessWidget {
             }
             else if (state.status == SplashStatus.loadedChat) {
               CustomNavigationHelper.router.go(
-                CustomNavigationHelper.chatPath,
+                CustomNavigationHelper.startChatPath,
+                extra: state.loadChat
               );
             }
             else if (state.status == SplashStatus.errorAuth) {

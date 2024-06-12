@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 
+import '../../../../core/router/app_router.dart';
 import '../../../../shared/domain/usecases/get_auth_state_stream_use_case.dart';
 import '../../../login/domain/usecases/update_login_state_stream_usecase.dart';
 import '../../../onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart';
@@ -65,15 +66,21 @@ class EditProfileScreen extends StatelessWidget {
                         Expanded(
                           child: GridView.count(
                             crossAxisCount: 2,
-                            children: const [
-                              GridItem(icon: Icons.photo, text: 'Photos'),
-                              GridItem(icon: Icons.contacts, text: 'Basics'),
-                              GridItem(icon: Icons.work, text: 'Work'),
+                            children: [
+                              GridItem(icon: Icons.photo, text: 'Photos', onClick: () {
+
+                              }),
+                              GridItem(icon: Icons.contacts, text: 'Basics', onClick: () {
+                                CustomNavigationHelper.router.go(
+                                  CustomNavigationHelper.settingsPathBasic,
+                                );
+                              }, ),
+                              GridItem(icon: Icons.work, text: 'Work', onClick: () {}),
                               GridItem(
-                                  icon: Icons.remove_red_eye, text: 'Values'),
+                                  icon: Icons.remove_red_eye, text: 'Values', onClick: () {}),
                               GridItem(
-                                  icon: Icons.nightlife, text: 'Lifestyle'),
-                              GridItem(icon: Icons.message, text: 'Prompt'),
+                                  icon: Icons.nightlife, text: 'Lifestyle', onClick: () {}),
+                              GridItem(icon: Icons.message, text: 'Prompt', onClick: () {}),
                             ],
                           ),
                         )
@@ -89,15 +96,17 @@ class EditProfileScreen extends StatelessWidget {
 class GridItem extends StatelessWidget {
   final IconData icon;
   final String text;
+  final Function onClick;
 
-  const GridItem({super.key, required this.icon, required this.text});
+  const GridItem({super.key, required this.icon,
+    required this.text, required this.onClick});
 
   @override
   Widget build(BuildContext context) {
     return Card(
       surfaceTintColor: const Color(0xffFDFDFD),
       elevation: 8,
-      child: Padding(
+      child:InkWell(child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
         child: Center(
           child: Column(
@@ -116,7 +125,7 @@ class GridItem extends StatelessWidget {
             ],
           ),
         ),
-      ),
+      ), onTap: () => onClick(),)
     );
   }
 }

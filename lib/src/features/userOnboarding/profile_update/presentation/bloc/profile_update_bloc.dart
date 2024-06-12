@@ -59,7 +59,7 @@ class UpdateProfileBloc extends Bloc<UpdateProfileEvent, UpdateProfileState> {
     await FirebaseChatCore.instance.createUserInFirestore(
       types.User(
         firstName: event.response.name,
-        id: event.response.id ?? "",
+        id: event.id ?? "",
         imageUrl: '',
       ),
     );
