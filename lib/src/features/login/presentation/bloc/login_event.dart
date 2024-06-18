@@ -41,9 +41,10 @@ class OnGetMetaEvent extends LogInEvent {
 }
 
 class onStartChatIntent extends LogInEvent {
-  ResponseProfileCreateRequest? request;
+  ResponseProfileCreateRequest request;
+  String userId;
 
-  onStartChatIntent(this.request);
+  onStartChatIntent(this.request, this.userId);
 }
 
 class OnOtpVerificationRequest extends LogInEvent {

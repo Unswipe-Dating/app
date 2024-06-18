@@ -85,11 +85,7 @@ class SplashScreen extends StatelessWidget {
                 else if (state.isProfileMatchRequested) {
                   CustomNavigationHelper.router
                       .go(CustomNavigationHelper.profilePathHyperEx, extra: "" );
-                } else if (state.loadChat != null) {
-                  CustomNavigationHelper.router
-                      .go(CustomNavigationHelper.startChatPath, extra: state.loadChat);
                 }
-
                 else {
                   _selectScreen();
                 }
@@ -98,7 +94,7 @@ class SplashScreen extends StatelessWidget {
             else if (state.status == SplashStatus.loadedChat) {
               CustomNavigationHelper.router.go(
                 CustomNavigationHelper.startChatPath,
-                extra: state.loadChat
+                extra: state.chatParams
               );
             }
             else if (state.status == SplashStatus.errorAuth) {

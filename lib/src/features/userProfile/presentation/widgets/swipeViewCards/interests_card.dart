@@ -5,18 +5,20 @@ class InterestsCard extends StatelessWidget {
   final List<String> chipLabels;
   final String? header;
   final bool isFilled;
+  final double elevation;
 
   const InterestsCard(
       {Key? key,
       required this.header,
       this.isFilled = true,
+        this.elevation = 0,
       required this.chipLabels})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 0,
+      elevation: elevation,
       color: Colors.white,
       surfaceTintColor: Colors.white,
       child: Padding(

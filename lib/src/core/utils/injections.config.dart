@@ -25,11 +25,11 @@ import '../../features/login/domain/usecases/verify_otp_use_case.dart' as _i45;
 import '../../features/onBoarding/domain/usecases/get_onboarding_state_stream_use_case.dart'
     as _i46;
 import '../../features/onBoarding/domain/usecases/reset_user_token_state_stream_usecase.dart'
-    as _i48;
-import '../../features/onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart'
     as _i47;
+import '../../features/onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart'
+    as _i48;
 import '../../features/settings/data/datasources/remote/UserSettingService.dart'
-    as _i13;
+    as _i8;
 import '../../features/settings/data/repository/user_settings_repository_impl.dart'
     as _i30;
 import '../../features/settings/domain/repository/user_settings_repository.dart'
@@ -37,13 +37,13 @@ import '../../features/settings/domain/repository/user_settings_repository.dart'
 import '../../features/settings/domain/usecases/get_settings_profile_usecase.dart'
     as _i37;
 import '../../features/splash/data/datasources/remote/meta_api_service.dart'
-    as _i8;
+    as _i9;
 import '../../features/splash/data/repository/splash_repository_impl.dart'
     as _i15;
 import '../../features/splash/domain/repository/splash_repository.dart' as _i14;
 import '../../features/splash/domain/usecases/meta_usecase.dart' as _i19;
 import '../../features/userOnboarding/contact_block/data/datasources/network/contact_bloc_service.dart'
-    as _i9;
+    as _i10;
 import '../../features/userOnboarding/contact_block/data/repository/contact_block_repository_impl.dart'
     as _i25;
 import '../../features/userOnboarding/contact_block/domain/repository/contact_block_repository.dart'
@@ -51,7 +51,7 @@ import '../../features/userOnboarding/contact_block/domain/repository/contact_bl
 import '../../features/userOnboarding/contact_block/domain/usecase/contact_bloc_usecase.dart'
     as _i42;
 import '../../features/userOnboarding/image_upload/data/datasources/network/image_upload_service.dart'
-    as _i10;
+    as _i11;
 import '../../features/userOnboarding/image_upload/data/repository/image_upload_repository_impl.dart'
     as _i21;
 import '../../features/userOnboarding/image_upload/domain/repository/image_upload_repository.dart'
@@ -59,7 +59,7 @@ import '../../features/userOnboarding/image_upload/domain/repository/image_uploa
 import '../../features/userOnboarding/image_upload/domain/usecase/image_upload_usecase.dart'
     as _i26;
 import '../../features/userOnboarding/profile_update/data/datasources/network/service/profile_update_service.dart'
-    as _i11;
+    as _i12;
 import '../../features/userOnboarding/profile_update/data/repository/update_profile_repository_impl.dart'
     as _i23;
 import '../../features/userOnboarding/profile_update/domain/repository/update_profile_repository.dart'
@@ -69,7 +69,7 @@ import '../../features/userOnboarding/profile_update/domain/usecases/create_user
 import '../../features/userOnboarding/profile_update/domain/usecases/update_user_use_case.dart'
     as _i50;
 import '../../features/userProfile/data/datasources/network/profile_swipe_service.dart'
-    as _i12;
+    as _i13;
 import '../../features/userProfile/data/repository/profile_swipe_repository_impl.dart'
     as _i18;
 import '../../features/userProfile/domain/repository/profile_swipe_repository.dart'
@@ -113,40 +113,40 @@ extension GetItInjectableX on _i1.GetIt {
     gh.singleton<_i4.GraphQLService>(() => _i4.GraphQLService());
     gh.factory<_i5.Crypto>(() => _i6.MethodChannelCryptoImpl());
     gh.factory<_i7.OtpService>(() => _i7.OtpService(gh<_i4.GraphQLService>()));
-    gh.factory<_i8.MetaService>(
-        () => _i8.MetaService(gh<_i4.GraphQLService>()));
-    gh.factory<_i9.ContactBlockService>(
-        () => _i9.ContactBlockService(gh<_i4.GraphQLService>()));
-    gh.factory<_i10.ImageUploadService>(
-        () => _i10.ImageUploadService(gh<_i4.GraphQLService>()));
-    gh.factory<_i11.UpdateUserService>(
-        () => _i11.UpdateUserService(gh<_i4.GraphQLService>()));
-    gh.factory<_i12.ProfileSwipeService>(
-        () => _i12.ProfileSwipeService(gh<_i4.GraphQLService>()));
-    gh.factory<_i13.UserSettingService>(
-        () => _i13.UserSettingService(gh<_i4.GraphQLService>()));
+    gh.factory<_i8.UserSettingService>(
+        () => _i8.UserSettingService(gh<_i4.GraphQLService>()));
+    gh.factory<_i9.MetaService>(
+        () => _i9.MetaService(gh<_i4.GraphQLService>()));
+    gh.factory<_i10.ContactBlockService>(
+        () => _i10.ContactBlockService(gh<_i4.GraphQLService>()));
+    gh.factory<_i11.ImageUploadService>(
+        () => _i11.ImageUploadService(gh<_i4.GraphQLService>()));
+    gh.factory<_i12.UpdateUserService>(
+        () => _i12.UpdateUserService(gh<_i4.GraphQLService>()));
+    gh.factory<_i13.ProfileSwipeService>(
+        () => _i13.ProfileSwipeService(gh<_i4.GraphQLService>()));
     gh.factory<_i14.SplashRepository>(
-        () => _i15.SplashRepositoryImpl(gh<_i8.MetaService>()));
+        () => _i15.SplashRepositoryImpl(gh<_i9.MetaService>()));
     gh.factory<_i5.LocalDataSource>(() => _i16.SharedPrefUtil(
           gh<_i3.RxSharedPreferences>(),
           gh<_i5.Crypto>(),
         ));
     gh.factory<_i17.ProfileSwipeRepository>(
-        () => _i18.ProfileSwipeRepositoryImpl(gh<_i12.ProfileSwipeService>()));
+        () => _i18.ProfileSwipeRepositoryImpl(gh<_i13.ProfileSwipeService>()));
     gh.factory<_i19.MetaUseCase>(
         () => _i19.MetaUseCase(gh<_i14.SplashRepository>()));
     gh.factory<_i20.ImageUploadRepository>(
-        () => _i21.ImageUploadRepositoryImpl(gh<_i10.ImageUploadService>()));
+        () => _i21.ImageUploadRepositoryImpl(gh<_i11.ImageUploadService>()));
     gh.factory<_i22.UpdateProfileRepository>(
-        () => _i23.UpdateProfileRepositoryImpl(gh<_i11.UpdateUserService>()));
+        () => _i23.UpdateProfileRepositoryImpl(gh<_i12.UpdateUserService>()));
     gh.factory<_i24.ContactBlockRepository>(
-        () => _i25.ContactBlockRepositoryImpl(gh<_i9.ContactBlockService>()));
+        () => _i25.ContactBlockRepositoryImpl(gh<_i10.ContactBlockService>()));
     gh.factory<_i26.ImageUploadUseCase>(
         () => _i26.ImageUploadUseCase(gh<_i20.ImageUploadRepository>()));
     gh.factory<_i27.LoginRepository>(
         () => _i28.LoginRepositoryImpl(gh<_i7.OtpService>()));
     gh.factory<_i29.UserSettingsRepository>(
-        () => _i30.UserSettingsRepositoryImpl(gh<_i13.UserSettingService>()));
+        () => _i30.UserSettingsRepositoryImpl(gh<_i8.UserSettingService>()));
     gh.factory<_i31.ProfileAcceptUseCase>(
         () => _i31.ProfileAcceptUseCase(gh<_i17.ProfileSwipeRepository>()));
     gh.factory<_i32.ProfileCreateUseCase>(
@@ -177,10 +177,10 @@ extension GetItInjectableX on _i1.GetIt {
         () => _i45.VerifyOtpUseCase(gh<_i27.LoginRepository>()));
     gh.factory<_i46.GetOnboardingStateStreamUseCase>(
         () => _i46.GetOnboardingStateStreamUseCase(gh<_i38.UserRepository>()));
-    gh.factory<_i47.UpdateOnboardingStateStreamUseCase>(() =>
-        _i47.UpdateOnboardingStateStreamUseCase(gh<_i38.UserRepository>()));
-    gh.factory<_i48.ResetUserTokenStateStreamUseCase>(
-        () => _i48.ResetUserTokenStateStreamUseCase(gh<_i38.UserRepository>()));
+    gh.factory<_i47.ResetUserTokenStateStreamUseCase>(
+        () => _i47.ResetUserTokenStateStreamUseCase(gh<_i38.UserRepository>()));
+    gh.factory<_i48.UpdateOnboardingStateStreamUseCase>(() =>
+        _i48.UpdateOnboardingStateStreamUseCase(gh<_i38.UserRepository>()));
     gh.factory<_i49.CreateProfileUseCase>(
         () => _i49.CreateProfileUseCase(gh<_i22.UpdateProfileRepository>()));
     gh.factory<_i50.UpdateProfileUseCase>(

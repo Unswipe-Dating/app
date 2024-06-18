@@ -16,7 +16,8 @@ class onFirstTimeUserEvent extends SplashEvent {
 
 class onGetMetaEvent extends SplashEvent {
   final String token;
-  onGetMetaEvent({required this.token});
+  final String userId;
+  onGetMetaEvent({required this.token, required this.userId});
 }
 
 class OnUpdateOnBoardingUserEvent extends SplashEvent {
@@ -32,9 +33,10 @@ class onAuthenticatedUserEvent extends SplashEvent {
 }
 
 class onStartChatIntent extends SplashEvent {
-  ResponseProfileCreateRequest? request;
+  ResponseProfileCreateRequest request;
+  String userId;
 
-  onStartChatIntent(this.request);
+  onStartChatIntent(this.request, this.userId);
 }
 
 class onCheckChatIntent extends SplashEvent {

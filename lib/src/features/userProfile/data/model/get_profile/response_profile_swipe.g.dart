@@ -67,6 +67,9 @@ ResponseProfileList _$ResponseProfileListFromJson(Map<String, dynamic> json) =>
           ? null
           : ResponseProfileRequestBody.fromJson(
               json['request'] as Map<String, dynamic>),
+      json['pronouns'] as String?,
+      json['gender'] as String?,
+      json['showTruncatedName'] as bool?,
     );
 
 Map<String, dynamic> _$ResponseProfileListToJson(
@@ -83,6 +86,9 @@ Map<String, dynamic> _$ResponseProfileListToJson(
       'height': instance.height,
       'hometown': instance.hometown,
       'zodiac': instance.zodiac,
+      'pronouns': instance.pronouns,
+      'gender': instance.gender,
+      'showTruncatedName': instance.showTruncatedName,
       'languages': instance.languages,
       'request': instance.request,
     };

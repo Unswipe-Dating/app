@@ -4,13 +4,13 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart';
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
-import 'package:unswipe/src/features/login/presentation/bloc/login_bloc.dart';
 import 'package:unswipe/src/features/onBoarding/domain/usecases/reset_user_token_state_stream_usecase.dart';
 import 'package:unswipe/src/features/splash/data/datasources/model/response_meta.dart';
 import '../../../../../../data/api_response.dart' as api_response;
 import 'package:unswipe/src/features/splash/domain/usecases/meta_usecase.dart';
 import 'package:unswipe/src/features/onBoarding/domain/usecases/get_onboarding_state_stream_use_case.dart';
 import '../../../../../data/api_response.dart';
+import '../../../../chat/chat.dart';
 import '../../../../shared/domain/usecases/get_auth_state_stream_use_case.dart';
 import '../../../onBoarding/domain/entities/onbaording_state/onboarding_state.dart';
 import '../../../onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart';
@@ -38,7 +38,6 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
     on<onFirstTimeUserEvent>(_onGettingOnBoardingEvent);
     on<onGetMetaEvent>(_onGettingMetaEvent);
     on<onAuthenticatedUserEvent>(_onStartAuthCheck);
-    on<onCheckChatIntent>(_onCheckChatIntent);
     on<onStartChatIntent>(_onStartChatIntent);
     on<OnUpdateOnBoardingUserEvent>(_onUpdatingOnBoardingEvent);
     on<OnResetUserTokenEvent>(_onResetUserTokenEvent);
@@ -102,7 +101,8 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
           ifRight: (r) {
 
             if(r.userAndToken?.token != null && r.userAndToken?.id != null)  {
-              add(onGetMetaEvent(token: r.userAndToken!.token));
+              add(onGetMetaEvent(token: r.userAndToken!.token,
+                  userId:r.userAndToken!.id));
             }else {
               add(onFirstTimeUserEvent());
             }
@@ -207,7 +207,7 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
           if (res.getConfig.request != null) {
           //  add(onFirstTimeUserEvent());
 
-            add(onStartChatIntent(res.getConfig.request));
+            add(onStartChatIntent(res.getConfig.request!, event.userId));
           } else {
             return state.copyWith(status: SplashStatus.error);
           }
@@ -230,36 +230,14 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
     });
   }
 
-  _onCheckChatIntent(
-      onCheckChatIntent event, Emitter<SplashState> emitter) async {
-
-    Stream<List<Room>> stream =
-    FirebaseChatCore.instance.rooms();
-
-    await emitter.forEach(stream, onData: (response) {
-      final responseData = response;
-      if (responseData.isEmpty) {
-      add(onStartChatIntent(event.request));
-      return state.copyWith(status: SplashStatus.loading,);
-      } else  {
-        return state.copyWith(status: SplashStatus.loaded,
-          isFirstTime: false,
-          isAuthenticated: true,
-          loadChat: response.first,
-        );
-      }
-    });
-  }
-
   _onStartChatIntent(
       onStartChatIntent event, Emitter<SplashState> emitter) async {
     var roomId =  await FirebaseChatCore.instance.createRoom(User(id:
-    event.request?.requesteeProfileId ?? ""));
+    event.request.requesteeUserId == event.userId ? event.request.userId : event.request.requesteeUserId));
     emitter.call(state.copyWith(status: SplashStatus.loadedChat,
     isFirstTime: false,
-    isAuthenticated: true,
-    loadChat: roomId,)
-    );
+    isAuthenticated: true, chatParams: ChatPageParams(room: roomId, request: event.request),
+    ));
   }
 
 // Getting splash event

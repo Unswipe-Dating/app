@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
+import 'package:unswipe/src/chat/chat.dart';
 import 'package:unswipe/src/features/login/data/models/request_otp/otp_response.dart';
 import 'package:unswipe/src/features/login/data/models/signupOrLogin/signup_response.dart';
 import 'package:unswipe/src/features/login/data/models/verify_otp/verify_otp_response.dart';
@@ -192,7 +193,7 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
             userId: profile,
           fcmCustomToken: firebaseCustomToken
         ));
-        return state.copyWith(status: LoginStatus.verified);
+        return state.copyWith(status: LoginStatus.loadingVerification);
       } else {
         return state.copyWith(status: LoginStatus.error);
       }
@@ -228,7 +229,7 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
                     .accessToken ??
                 "";
         add(OnSignupRequest(event.params));
-        return state.copyWith(status: LoginStatus.verified);
+        return state.copyWith(status: LoginStatus.loadingVerification);
       } else {
         return state.copyWith(status: LoginStatus.error);
       }
@@ -260,17 +261,16 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
         return state.copyWith(status: LoginStatus.error);
       } else if (responseData is api_response.Success) {
         add(OnLoginSuccess(event.token, event.id, event.userId));
-        add(OnUpdateOnBoardingUserEvent(profileId: event.userId));
         var res =
             (((responseData as api_response.Success).data) as ResponseMeta);
         if (res.getConfig.status == "MATCHED") {
-          if (res.getConfig.chat != null && res.getConfig.request != null) {
+          if (res.getConfig.request != null) {
             // if(res.getConfig.chat?.status == "ACTIVE") {
             //   add(onStartChatIntent(res.getConfig.request));
             // } else {
             //   return state.copyWith(status: LoginStatus.loaded,);
             // }
-            add(onStartChatIntent(res.getConfig.request));
+            add(onStartChatIntent(res.getConfig.request!, event.id));
           } else {
             return state.copyWith(status: LoginStatus.error);
           }
@@ -279,13 +279,14 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
               status: LoginStatus.loadedExpiryTimer,
               profileMatchDuration: res.getConfig.timeLeftForExpiry);
         } else {
+          add(OnUpdateOnBoardingUserEvent(profileId: event.userId));
           return state.copyWith(
-            status: LoginStatus.loaded,
+            status: LoginStatus.loadingVerification,
           );
         }
 
         return state.copyWith(
-          status: LoginStatus.loadingTimer,
+          status: LoginStatus.loadingVerification,
         );
       } else {
         return state.copyWith(status: LoginStatus.error);
@@ -295,11 +296,11 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
 
   _onStartChatIntent(
       onStartChatIntent event, Emitter<LoginState> emitter) async {
-    var roomId = await FirebaseChatCore.instance
-        .createRoom(types.User(id: event.request?.requesteeProfileId ?? ""));
+    var roomId =  await FirebaseChatCore.instance.createRoom(types.User(id:
+    event.request.requesteeUserId == event.userId ? event.request.userId : event.request.requesteeUserId));
     emitter.call(state.copyWith(
       status: LoginStatus.loadedChat,
-      chatId: roomId,
+      chatParams: ChatPageParams(room: roomId, request: event.request),
     ));
   }
 }

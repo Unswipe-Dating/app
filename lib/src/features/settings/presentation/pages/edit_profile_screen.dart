@@ -51,9 +51,9 @@ class EditProfileScreen extends StatelessWidget {
             child: BlocConsumer<UpdateProfileBloc, UpdateProfileState>(
               listener: (context, state) {
                 if (state.status == UpdateProfileStatus.loaded) {
-                  // CustomNavigationHelper.router.go(
-                  //   CustomNavigationHelper.profilePath,
-                  // );
+                  CustomNavigationHelper.router.go(
+                    CustomNavigationHelper.profilePath,
+                  );
                 }
               },
               builder: (context, state) {
@@ -73,6 +73,7 @@ class EditProfileScreen extends StatelessWidget {
                               GridItem(icon: Icons.contacts, text: 'Basics', onClick: () {
                                 CustomNavigationHelper.router.go(
                                   CustomNavigationHelper.settingsPathBasic,
+                                  extra: state.responseProfileList
                                 );
                               }, ),
                               GridItem(icon: Icons.work, text: 'Work', onClick: () {}),

@@ -8,7 +8,7 @@ import '../../../features/login/data/datasources/network/exceptions/api_exceptio
 @singleton
 class GraphQLService {
   GraphQLService() {
-    final link = HttpLink('https://unswipe-backend-production.up.railway.app/graphql');
+    final link = HttpLink('https://api-production-229b.up.railway.app/graphql');
     _graphQLClient = GraphQLClient(link: link, cache: GraphQLCache());
   }
 
@@ -67,7 +67,7 @@ class GraphQLService {
         required Map<String, dynamic> variables,
       }) async {
     final options = MutationOptions(document: gql(query), variables: variables);
-     var link =  HttpLink('https://api.unswipe.xyz/graphql',
+     var link =  HttpLink('https://api-production-229b.up.railway.app/graphql',
         defaultHeaders: {
           'Content-Type': 'application/json',
           'Accept-Charset': 'utf-8',
@@ -92,7 +92,7 @@ class GraphQLService {
         required Map<String, dynamic> variables,
       }) async {
     final options = MutationOptions(document: gql(query), variables: variables);
-    var link =  HttpLink('https://api.unswipe.xyz/graphql',
+    var link =  HttpLink('https://api-production-229b.up.railway.app/graphql',
         defaultHeaders: {
           'x-apollo-operation-name': 'uploadProfilePhotos ',
           'Authorization': 'Bearer $token',

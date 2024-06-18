@@ -1,4 +1,6 @@
 
+import 'dart:ffi';
+
 import 'package:json_annotation/json_annotation.dart';
 
 part 'response_profile_swipe.g.dart';

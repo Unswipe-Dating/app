@@ -197,7 +197,7 @@ class _PronounUpdateScreenState extends State<PronounUpdateScreen> {
                   padding: EdgeInsets.all(16),
                   child: ElevatedButton(
                     onPressed: isButtonEnabled ? () {
-                      widget.params?.pronouns = _character?.name;
+                      widget.params?.pronouns = getNameFromCharacter(_character);
                       CustomNavigationHelper.router.push(
                         CustomNavigationHelper.onboardingPartnerGenderPath,
                           extra: UpdateProfileParams().getUpdatedParams(widget.params)
@@ -231,5 +231,14 @@ class _PronounUpdateScreenState extends State<PronounUpdateScreen> {
             ),
           )),
     );
+  }
+
+  String? getNameFromCharacter(SingingCharacter? character) {
+    switch (character) {
+      case SingingCharacter.Man: return "He/Him";
+      case SingingCharacter.Woman: return "She/Her";
+      case SingingCharacter.Nonbinary: return "They/Them";
+      default: return null;
+    }
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -80,6 +81,7 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
           return const Center(child: CircularProgressIndicator());
           case ProfileSwipeStatus.loaded:
           case ProfileSwipeStatus.loadedReject:
+            case ProfileSwipeStatus.loadedSkip:
           if (state.responseProfileSwipe != null) {
           if (state.responseProfileSwipe?.browseProfiles?.profiles
               .isNotEmpty ==
@@ -160,12 +162,16 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
           dislikeAction: swipeLeftMethod,
           id: profile.id,
           userName: profile.name,
-          userAge: 20,
+          userAge: 2024 - int.parse(profile.dob?.substring(0,4)??"2024"),
           userDescription: "no desc",
-          profileImageSrc: "",
+          profileImageSrc: profile.photoURLs,
           isVerified: true,
-          pronouns: "",
+          pronouns: profile.pronouns??"",
+          datePreference: profile.datingPreference,
           isCreate: true,
+          languages: profile.languages,
+          interests: profile.interests,
+          showTruncatedName: profile.showTruncatedName ?? false,
           requestId: profile.request?.id,
         ))
         .toList();

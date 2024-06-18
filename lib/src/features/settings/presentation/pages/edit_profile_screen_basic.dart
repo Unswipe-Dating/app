@@ -2,12 +2,14 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_it/get_it.dart';
 import 'package:unswipe/src/features/login/domain/usecases/update_login_state_stream_usecase.dart';
 import 'package:unswipe/src/features/settings/domain/usecases/get_settings_profile_usecase.dart';
 import 'package:unswipe/src/features/userOnboarding/profile_update/data/models/update_profile_response.dart';
 import 'package:unswipe/src/features/userOnboarding/profile_update/domain/usecases/create_user_use_case.dart';
 import 'package:unswipe/src/features/userOnboarding/profile_update/domain/usecases/update_user_use_case.dart';
+import 'package:unswipe/src/features/userProfile/data/model/get_profile/response_profile_swipe.dart';
 import 'package:unswipe/src/features/userProfile/presentation/widgets/swipeViewCards/interests_card.dart';
 import 'package:unswipe/src/shared/domain/usecases/get_auth_state_stream_use_case.dart';
 
@@ -18,121 +20,71 @@ import '../../../userOnboarding/profile_update/presentation/bloc/profile_update_
 
 class EditProfileScreenBasic extends StatefulWidget {
   final UpdateProfileParams? params;
+  final ResponseProfileList? profile;
 
-  const EditProfileScreenBasic({super.key, this.params});
+  const EditProfileScreenBasic({super.key,
+    this.params,
+    this.profile
+  });
 
   @override
-  _EditProfileScreenBasicState createState() => _EditProfileScreenBasicState();
+  State<EditProfileScreenBasic> createState() => _EditProfileScreenBasicState();
 }
 
 class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
   bool isButtonEnabled = true;
-  List<ChipValues> weekendList = [
-    ChipValues("Takeaway"),
-    ChipValues("Outdoors"),
-    ChipValues("Party"),
-    ChipValues("Club hop"),
-    ChipValues("Sleep in"),
-    ChipValues("Cook"),
-    ChipValues("Brunch"),
-    ChipValues("Music"),
-    ChipValues("Long Drive"),
-    ChipValues("Fancy restaurants")
-  ];
 
-  List<ChipValues> petsList = [
-    ChipValues("Dogs"),
-    ChipValues("Cats"),
-    ChipValues("Birds"),
-    ChipValues("Fish"),
-    ChipValues("Rabbits"),
-    ChipValues("Turtle"),
-  ];
+  List<String> interestString = [];
 
-  List<ChipValues> selfCareList = [
-    ChipValues("Yoga"),
-    ChipValues("Run"),
-    ChipValues("Meditate"),
-    ChipValues("Spa days"),
-    ChipValues("Travel"),
-    ChipValues("Gardening"),
-    ChipValues("Cycling"),
-    ChipValues("Journal"),
-    ChipValues("Dance"),
-    ChipValues("Photography"),
-    ChipValues("Music"),
-    ChipValues("Sing"),
-  ];
 
-  List<ChipValues> foodNDrinkList = [
-    ChipValues("Chinese"),
-    ChipValues("Thai"),
-    ChipValues("Greek"),
-    ChipValues("Korean"),
-    ChipValues("Mexican"),
-    ChipValues("Japanese"),
-    ChipValues("Italian"),
-    ChipValues("Vegan"),
-  ];
-
-  List<ChipValues> sportsList = [
-    ChipValues("Pilates"),
-    ChipValues("Gym"),
-    ChipValues("Football"),
-    ChipValues("Boxing"),
-    ChipValues("Cricket"),
-    ChipValues("Tennis"),
-    ChipValues("Badminton"),
-    ChipValues("Go kart"),
-    ChipValues("Basketball"),
-    ChipValues("Baseball"),
-    ChipValues("Hockey"),
-  ];
-
-  List<String> weekendListString = [];
-  List<String> petsListString = [];
-  List<String> foodNDrinkListString = [];
-  List<String> sportsListString = [];
-  List<String> selfCareListString = [];
-  int selectedLength = 0;
 
   @override
   void initState() {
     super.initState();
-  }
-
-  void updateSelectionState() {
-    selectedLength = weekendListString.length +
-        petsListString.length +
-        foodNDrinkListString.length +
-        sportsListString.length +
-        selfCareListString.length;
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
+    interestString = (widget.profile?.interests.weekendActivities??[] as List<String>)
+        + (widget.profile?.interests.sports??[]as List<String>)
+        + (widget.profile?.interests.selfCare??[]as List<String>)
+        + (widget.profile?.interests.pets??[]as List<String>)
+        + (widget.profile?.interests.fnd??[] as List<String>);
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text(""),
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 16.0,
+        title: const Text(
+          "Basics",
+          style: TextStyle(
+              color: Colors.black,
+              fontFamily: 'Playfair',
+              fontWeight: FontWeight.w600,
+              fontSize: 24.0),
         ),
-        body: BlocProvider(
+      ),
+      body: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        decoration: const BoxDecoration(
+            image: DecorationImage(
+          image: AssetImage(
+            'assets/images/permission_bg.png',
+          ),
+          fit: BoxFit.fill,
+        )),
+        child: BlocProvider(
             create: (BuildContext context) => UpdateProfileBloc(
                 updateOnboardingStateStreamUseCase:
-                GetIt.I.get<UpdateOnboardingStateStreamUseCase>(),
-                getAuthStateStreamUseCase: GetIt.I.get<GetAuthStateStreamUseCase>(),
+                    GetIt.I.get<UpdateOnboardingStateStreamUseCase>(),
+                getAuthStateStreamUseCase:
+                    GetIt.I.get<GetAuthStateStreamUseCase>(),
                 updateProfileUseCase: GetIt.I.get<UpdateProfileUseCase>(),
                 createProfileUseCase: GetIt.I.get<CreateProfileUseCase>(),
-                updateUserStateStreamUseCase: GetIt.I.get<UpdateUserStateStreamUseCase>(),
-                getSettingsProfileUseCase: GetIt.I.get<GetSettingsProfileUseCase>()
-
-
-            ),
+                updateUserStateStreamUseCase:
+                    GetIt.I.get<UpdateUserStateStreamUseCase>(),
+                getSettingsProfileUseCase:
+                    GetIt.I.get<GetSettingsProfileUseCase>()),
             child: BlocConsumer<UpdateProfileBloc, UpdateProfileState>(
               listener: (context, state) {
                 if (state.status == UpdateProfileStatus.loaded) {
@@ -146,383 +98,560 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                 }
               },
               builder: (context, state) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: Column(
-                    children: [
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      Expanded(
-                        child: SingleChildScrollView(
-                          child: Column(children: [
-                            const Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text(
-                                textAlign: TextAlign.start,
-                                'My Interests',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontFamily: 'Playfair',
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 24.0),
-                              ),
-                            ),
-                            const Text(
-                              "Tell us about all the things you love <3",
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontFamily: 'lato',
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 20.0),
-                            ),
-                            InterestsCard(header: null, chipLabels: ["a", "b", "c "]),
-                            const SizedBox(
-                              height: 24,
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text(
-                                textAlign: TextAlign.start,
-                                'My Interests',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontFamily: 'Playfair',
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 24.0),
-                              ),
-                            ),
-                            const Text(
-                              "Tell us about all the things you love <3",
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontFamily: 'lato',
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 20.0),
-                            ),
+                return SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            textAlign: TextAlign.start,
+                            'My Interests',
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontFamily: 'lato',
+                                fontWeight: FontWeight.w600,
+                                fontSize: 18.0),
+                          ),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          const Text(
+                            "Tell us about all the things you love <3",
+                            style: TextStyle(
+                                color: Colors.grey,
+                                fontFamily: 'lato',
+                                fontWeight: FontWeight.w400,
+                                fontSize: 16.0),
+                          ),
+                          SizedBox(
+                            height: 16,
+                          ),
+                          InterestsCard(
+                            header: null,
+                            chipLabels: interestString,
+                            elevation: 4,
+                          ),
+                          const SizedBox(
+                            height: 32,
+                          ),
+                          const Text(
+                            textAlign: TextAlign.start,
+                            'My Pronouns',
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontFamily: 'lato',
+                                fontWeight: FontWeight.w600,
+                                fontSize: 18.0),
+                          ),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          const Text(
+                            "Be Unapologetically yourself",
+                            style: TextStyle(
+                                color: Colors.grey,
+                                fontFamily: 'lato',
+                                fontWeight: FontWeight.w400,
+                                fontSize: 16.0),
+                          ),
+                          SizedBox(
+                            height: 16,
+                          ),
                           Card(
-                            elevation: 0,
+                            elevation: 4,
                             color: Colors.white,
                             surfaceTintColor: Colors.white,
                             child: Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.all(16.0),
                               child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Icon(Icons.person),
-                                SizedBox(width: 8,),
-                                Text(
-                                  "Pronoun",
-                                  style: TextStyle(
-                                      color: Colors.grey[900],
-                                      fontFamily: 'lato',
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 18.0),
-                                ),
-                                Text(
-                                  "selected text",
-                                  style: TextStyle(
-                                      color: Colors.grey[900],
-                                      fontFamily: 'lato',
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 18.0),
-                                ),
-                                Icon(Icons.keyboard_arrow_right),
-                              ],
-                            ),
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  RichText(
+                                    text: TextSpan(
+                                      children: [
+                                        WidgetSpan(
+                                          child: Icon(Icons.person, size: 14),
+                                        ),
+                                        WidgetSpan(
+                                            child: SizedBox(
+                                          width: 8,
+                                        )),
+                                        TextSpan(
+                                          text: "Pronoun ",
+                                          style: TextStyle(
+                                              color: Colors.grey[900],
+                                              fontFamily: 'lato',
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 16.0),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  RichText(
+                                    text: TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text:  widget.profile?.pronouns??"not set",
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontFamily: 'lato',
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 14.0),
+                                        ),
+                                        WidgetSpan(
+                                          child: Icon(
+                                              Icons.keyboard_arrow_right,
+                                              size: 14),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-
-                            const Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text(
-                                textAlign: TextAlign.start,
-                                'Basic Information',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontFamily: 'Playfair',
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 24.0),
-                              ),
-                            ),
-                            const Text(
-                              "Tell us more about you. Everyone is curious too",
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontFamily: 'lato',
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 20.0),
-                            ),
-
-                            Card(
-                              elevation: 0,
-                              color: Colors.white,
-                              surfaceTintColor: Colors.white,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Icon(Icons.person),
-                                      SizedBox(width: 8,),
-                                      Text(
-                                        "Pronoun",
-                                        style: TextStyle(
-                                            color: Colors.grey[900],
-                                            fontFamily: 'lato',
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 18.0),
-                                      ),
-                                      Text(
-                                        "selected text",
-                                        style: TextStyle(
-                                            color: Colors.grey[900],
-                                            fontFamily: 'lato',
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 18.0),
-                                      ),
-                                      Icon(Icons.keyboard_arrow_right),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Icon(Icons.person),
-                                      SizedBox(width: 8,),
-                                      Text(
-                                        "Pronoun",
-                                        style: TextStyle(
-                                            color: Colors.grey[900],
-                                            fontFamily: 'lato',
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 18.0),
-                                      ),
-                                      Text(
-                                        "selected text",
-                                        style: TextStyle(
-                                            color: Colors.grey[900],
-                                            fontFamily: 'lato',
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 18.0),
-                                      ),
-                                      Icon(Icons.keyboard_arrow_right),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Icon(Icons.person),
-                                      SizedBox(width: 8,),
-                                      Text(
-                                        "Pronoun",
-                                        style: TextStyle(
-                                            color: Colors.grey[900],
-                                            fontFamily: 'lato',
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 18.0),
-                                      ),
-                                      Text(
-                                        "selected text",
-                                        style: TextStyle(
-                                            color: Colors.grey[900],
-                                            fontFamily: 'lato',
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 18.0),
-                                      ),
-                                      Icon(Icons.keyboard_arrow_right),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Icon(Icons.person),
-                                      SizedBox(width: 8,),
-                                      Text(
-                                        "Pronoun",
-                                        style: TextStyle(
-                                            color: Colors.grey[900],
-                                            fontFamily: 'lato',
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 18.0),
-                                      ),
-                                      Text(
-                                        "selected text",
-                                        style: TextStyle(
-                                            color: Colors.grey[900],
-                                            fontFamily: 'lato',
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 18.0),
-                                      ),
-                                      Icon(Icons.keyboard_arrow_right),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Icon(Icons.person),
-                                      SizedBox(width: 8,),
-                                      Text(
-                                        "Pronoun",
-                                        style: TextStyle(
-                                            color: Colors.grey[900],
-                                            fontFamily: 'lato',
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 18.0),
-                                      ),
-                                      Text(
-                                        "selected text",
-                                        style: TextStyle(
-                                            color: Colors.grey[900],
-                                            fontFamily: 'lato',
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 18.0),
-                                      ),
-                                      Icon(Icons.keyboard_arrow_right),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Icon(Icons.person),
-                                      SizedBox(width: 8,),
-                                      Text(
-                                        "Pronoun",
-                                        style: TextStyle(
-                                            color: Colors.grey[900],
-                                            fontFamily: 'lato',
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 18.0),
-                                      ),
-                                      Text(
-                                        "selected text",
-                                        style: TextStyle(
-                                            color: Colors.grey[900],
-                                            fontFamily: 'lato',
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 18.0),
-                                      ),
-                                      Icon(Icons.keyboard_arrow_right),
-                                    ],
-                                  ),
-                                ],)
-                              ),
-                            ),
-
-                            const Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text(
-                                textAlign: TextAlign.start,
-                                'My Languages',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontFamily: 'Playfair',
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 24.0),
-                              ),
-                            ),
-                            const Text(
-                              "In how many languages can you place an order in a restaurant?",
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontFamily: 'lato',
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 20.0),
-                            ),
-
-                            Card(
-                              elevation: 0,
-                              color: Colors.white,
-                              surfaceTintColor: Colors.white,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          SizedBox(
+                            height: 32,
+                          ),
+                          const Text(
+                            textAlign: TextAlign.start,
+                            'Basic Information',
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontFamily: 'lato',
+                                fontWeight: FontWeight.w600,
+                                fontSize: 18.0),
+                          ),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          const Text(
+                            "Tell us more about you. Everyone is curious too",
+                            style: TextStyle(
+                                color: Colors.grey,
+                                fontFamily: 'lato',
+                                fontWeight: FontWeight.w400,
+                                fontSize: 16.0),
+                          ),
+                          SizedBox(
+                            height: 16,
+                          ),
+                          Card(
+                            elevation: 4,
+                            color: Colors.white,
+                            surfaceTintColor: Colors.white,
+                            child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Column(
                                   children: [
-                                    Icon(Icons.person),
-                                    SizedBox(width: 8,),
-                                    Text(
-                                      "Pronoun",
-                                      style: TextStyle(
-                                          color: Colors.grey[900],
-                                          fontFamily: 'lato',
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 18.0),
+                                    SizedBox(height: 8,),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        RichText(
+                                          text: TextSpan(
+                                            children: [
+                                              WidgetSpan(
+                                                child: Icon(Icons.male,
+                                                    size: 14),
+                                              ),
+                                              WidgetSpan(
+                                                  child: SizedBox(
+                                                width: 8,
+                                              )),
+                                              TextSpan(
+                                                text: "Gender ",
+                                                style: TextStyle(
+                                                    color: Colors.grey[900],
+                                                    fontFamily: 'lato',
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 16.0),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        RichText(
+                                          text: TextSpan(
+                                            children: [
+                                              TextSpan(
+                                                text: widget.profile?.gender??"not set",
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontFamily: 'lato',
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: 14.0),
+                                              ),
+                                              WidgetSpan(
+                                                child: Icon(
+                                                    Icons.keyboard_arrow_right,
+                                                    size: 14),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    Text(
-                                      "selected text",
-                                      style: TextStyle(
-                                          color: Colors.grey[900],
-                                          fontFamily: 'lato',
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 18.0),
+                                    SizedBox(height: 16,),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        RichText(
+                                          text: TextSpan(
+                                            children: [
+                                              WidgetSpan(
+                                                child: Icon(Icons.how_to_reg,
+                                                    size: 14),
+                                              ),
+                                              WidgetSpan(
+                                                  child: SizedBox(
+                                                width: 8,
+                                              )),
+                                              TextSpan(
+                                                text: "Prefer to date ",
+                                                style: TextStyle(
+                                                    color: Colors.grey[900],
+                                                    fontFamily: 'lato',
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 16.0),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        RichText(
+                                          text: TextSpan(
+                                            children: [
+                                              TextSpan(
+                                                text: widget.profile?.datingPreference??"not set",
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontFamily: 'lato',
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: 14.0),
+                                              ),
+                                              WidgetSpan(
+                                                child: Icon(
+                                                    Icons.keyboard_arrow_right,
+                                                    size: 14),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    Icon(Icons.keyboard_arrow_right),
+                                    SizedBox(height: 16,),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        RichText(
+                                          text: TextSpan(
+                                            children: [
+                                              WidgetSpan(
+                                                child: Icon(Icons.vertical_split,
+                                                    size: 14),
+                                              ),
+                                              WidgetSpan(
+                                                  child: SizedBox(
+                                                width: 8,
+                                              )),
+                                              TextSpan(
+                                                text: "Height ",
+                                                style: TextStyle(
+                                                    color: Colors.grey[900],
+                                                    fontFamily: 'lato',
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 16.0),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        RichText(
+                                          text: TextSpan(
+                                            children: [
+                                              TextSpan(
+                                                text: widget.profile?.height??"not set",
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontFamily: 'lato',
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: 14.0),
+                                              ),
+                                              WidgetSpan(
+                                                child: Icon(
+                                                    Icons.keyboard_arrow_right,
+                                                    size: 14),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 16,),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        RichText(
+                                          text: TextSpan(
+                                            children: [
+                                              WidgetSpan(
+                                                child: Icon(Icons.sunny,
+                                                    size: 14),
+                                              ),
+                                              WidgetSpan(
+                                                  child: SizedBox(
+                                                width: 8,
+                                              )),
+                                              TextSpan(
+                                                text: "Zodiac ",
+                                                style: TextStyle(
+                                                    color: Colors.grey[900],
+                                                    fontFamily: 'lato',
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 16.0),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        RichText(
+                                          text: TextSpan(
+                                            children: [
+                                              TextSpan(
+                                                text: widget.profile?.zodiac?? "Add",
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontFamily: 'lato',
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: 14.0),
+                                              ),
+                                              WidgetSpan(
+                                                child: Icon(
+                                                    Icons.keyboard_arrow_right,
+                                                    size: 14),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 16,),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        RichText(
+                                          text: TextSpan(
+                                            children: [
+                                              WidgetSpan(
+                                                child: Icon(Icons.pin_drop_outlined,
+                                                    size: 14),
+                                              ),
+                                              WidgetSpan(
+                                                  child: SizedBox(
+                                                width: 8,
+                                              )),
+                                              TextSpan(
+                                                text: "Location ",
+                                                style: TextStyle(
+                                                    color: Colors.grey[900],
+                                                    fontFamily: 'lato',
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 16.0),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        RichText(
+                                          text: TextSpan(
+                                            children: [
+                                              TextSpan(
+                                                text: widget.profile?.location??"Add",
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontFamily: 'lato',
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: 14.0),
+                                              ),
+                                              WidgetSpan(
+                                                child: Icon(
+                                                    Icons.keyboard_arrow_right,
+                                                    size: 14),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 16,),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        RichText(
+                                          text: TextSpan(
+                                            children: [
+                                              WidgetSpan(
+                                                child: Icon(Icons.home,
+                                                    size: 14),
+                                              ),
+                                              WidgetSpan(
+                                                  child: SizedBox(
+                                                width: 8,
+                                              )),
+                                              TextSpan(
+                                                text: "Hometown ",
+                                                style: TextStyle(
+                                                    color: Colors.grey[900],
+                                                    fontFamily: 'lato',
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 16.0),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        RichText(
+                                          text: TextSpan(
+                                            children: [
+                                              TextSpan(
+                                                text:  widget.profile?.hometown??"Add",
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontFamily: 'lato',
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: 14.0),
+                                              ),
+                                              WidgetSpan(
+                                                child: Icon(
+                                                    Icons.keyboard_arrow_right,
+                                                    size: 14),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 8,),
+
                                   ],
-                                ),
-                              ),
-                            ),
-
-                            Padding(
-                              padding: EdgeInsets.all(32),
-                              child: ElevatedButton(
-                                onPressed: () {
-                                },
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.black,
-                                    // Set button background color
-                                    foregroundColor: Colors.black,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                          2.0), // Rounded corners
+                                )),
+                          ),
+                          SizedBox(
+                            height: 32,
+                          ),
+                          const Text(
+                            textAlign: TextAlign.start,
+                            'My Languages',
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontFamily: 'lato',
+                                fontWeight: FontWeight.w600,
+                                fontSize: 18.0),
+                          ),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          const Text(
+                            "In how many languages can you place an order in a restaurant?",
+                            style: TextStyle(
+                                color: Colors.grey,
+                                fontFamily: 'lato',
+                                fontWeight: FontWeight.w400,
+                                fontSize: 16.0),
+                          ),
+                          SizedBox(
+                            height: 16,
+                          ),
+                          Card(
+                            elevation: 4,
+                            color: Colors.white,
+                            surfaceTintColor: Colors.white,
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  RichText(
+                                    text: TextSpan(
+                                      children: [
+                                        WidgetSpan(
+                                          child: Icon(Icons.person, size: 14),
+                                        ),
+                                        WidgetSpan(
+                                            child: SizedBox(
+                                          width: 8,
+                                        )),
+                                        TextSpan(
+                                          text: "Languages ",
+                                          style: TextStyle(
+                                              color: Colors.grey[900],
+                                              fontFamily: 'lato',
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 16.0),
+                                        ),
+                                      ],
                                     ),
-                                    minimumSize: const Size.fromHeight(
-                                        48) // Set button text color
-                                ),
-                                child: const Text(
-                                  'Save',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontFamily: 'Lato',
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 18.0),
-                                ),
+                                  ),
+                                  RichText(
+                                    text: TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: "Add",
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontFamily: 'lato',
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 14.0),
+                                        ),
+                                        WidgetSpan(
+                                          child: Icon(
+                                              Icons.keyboard_arrow_right,
+                                              size: 14),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
-                            )
-
-                          ]),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Selected",
-                              style: TextStyle(
-                                  color: Colors.grey[900],
-                                  fontFamily: 'lato',
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 18.0),
                             ),
-                            Text(
-                              "$selectedLength / 8",
-                              style: TextStyle(
-                                  color: Colors.grey[900],
-                                  fontFamily: 'lato',
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 18.0),
+                          ),
+                          SizedBox(
+                            height: 32,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(32),
+                            child: ElevatedButton(
+                              onPressed: () {},
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.black,
+                                  // Set button background color
+                                  foregroundColor: Colors.black,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        2.0), // Rounded corners
+                                  ),
+                                  minimumSize: const Size.fromHeight(
+                                      48) // Set button text color
+                                  ),
+                              child: const Text(
+                                'Save',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: 'Lato',
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 18.0),
+                              ),
                             ),
-                          ],
-                        ),
-                      ),
-                    ],
+                          )
+                        ]),
                   ),
                 );
               },
-            )
-        ),
+            )),
       ),
     );
   }

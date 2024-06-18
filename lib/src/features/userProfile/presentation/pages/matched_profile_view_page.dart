@@ -35,7 +35,6 @@ class _MatchedSwipeInterfaceState extends State<MatchedSwipeInterface> {
   List<SwipeCard> cards = [];
   final CardSwiperController controller = CardSwiperController();
 
-
   @override
   void dispose() {
     controller.dispose();
@@ -48,14 +47,13 @@ class _MatchedSwipeInterfaceState extends State<MatchedSwipeInterface> {
       create: (BuildContext context) => ProfileSwipeBloc(
           profileSwipeUseCase: GetIt.I.get<ProfileGetUseCase>(),
           getAuthStateStreamUseCase: GetIt.I.get<GetAuthStateStreamUseCase>(),
-        profileAcceptUseCase: GetIt.I.get<ProfileAcceptUseCase>(),
-        profileCreateUseCase: GetIt.I.get<ProfileCreateUseCase>(),
-        profileRejectUseCase: GetIt.I.get<ProfileRejectUseCase>(),
+          profileAcceptUseCase: GetIt.I.get<ProfileAcceptUseCase>(),
+          profileCreateUseCase: GetIt.I.get<ProfileCreateUseCase>(),
+          profileRejectUseCase: GetIt.I.get<ProfileRejectUseCase>(),
           profileGetRequestedUseCase: GetIt.I.get<ProfileGetRequestedUseCase>(),
-        profileSkipUseCase: GetIt.I.get<ProfileSkipUseCase>(),
-        updateOnboardingStateStreamUseCase: GetIt.I.get<UpdateOnboardingStateStreamUseCase>()
-
-      )
+          profileSkipUseCase: GetIt.I.get<ProfileSkipUseCase>(),
+          updateOnboardingStateStreamUseCase:
+              GetIt.I.get<UpdateOnboardingStateStreamUseCase>())
         ..add(OnInitiateSubjects())
         ..add(OnInitiateAcceptSubject())
         ..add(OnInitiateCreateSubject())
@@ -66,8 +64,11 @@ class _MatchedSwipeInterfaceState extends State<MatchedSwipeInterface> {
       child: BlocConsumer<ProfileSwipeBloc, ProfileSwipeState>(
         listener: (context, state) {
           if (state.status == ProfileSwipeStatus.loaded) {
-
-          } else if (state.status == ProfileSwipeStatus.errorAuth) {
+          } else if (state.status == ProfileSwipeStatus.loadedChat) {
+            CustomNavigationHelper.router
+                .go(CustomNavigationHelper.startChatPath, extra: state.chatParams);
+          }
+          else if (state.status == ProfileSwipeStatus.errorAuth) {
             CustomNavigationHelper.router.go(
               CustomNavigationHelper.loginPath,
             );
@@ -78,8 +79,12 @@ class _MatchedSwipeInterfaceState extends State<MatchedSwipeInterface> {
             case ProfileSwipeStatus.loading:
               return const Center(child: CircularProgressIndicator());
             case ProfileSwipeStatus.loaded:
+            case ProfileSwipeStatus.loadedReject:
+            case ProfileSwipeStatus.loadedSkip:
               if (state.responseProfileSwipe != null) {
-                if(state.responseProfileSwipe?.getRequestedProfilesForUser?.isNotEmpty == true) {
+                if (state.responseProfileSwipe?.getRequestedProfilesForUser
+                        ?.isNotEmpty ==
+                    true) {
                   updateProfiles(state.responseProfileSwipe!);
                   return CardSwiper(
                     allowedSwipeDirection: const AllowedSwipeDirection.only(
@@ -91,11 +96,13 @@ class _MatchedSwipeInterfaceState extends State<MatchedSwipeInterface> {
                     onUndo: _onUndo,
                     numberOfCardsDisplayed: cards.length > 1 ? 2 : 1,
                     padding: const EdgeInsets.all(0.0),
-                    cardBuilder: (context,
-                        index,
-                        horizontalThresholdPercentage,
-                        verticalThresholdPercentage,) =>
-                    cards[index],
+                    cardBuilder: (
+                      context,
+                      index,
+                      horizontalThresholdPercentage,
+                      verticalThresholdPercentage,
+                    ) =>
+                        cards[index],
                   );
                 } else {
                   return NoRequestScreen();
@@ -115,14 +122,17 @@ class _MatchedSwipeInterfaceState extends State<MatchedSwipeInterface> {
   }
 
   void swipeLeftMethod() {
+    if(cards.isNotEmpty) {
+      cards.removeAt(0);
+    }
     controller.swipe(CardSwiperDirection.left);
   }
 
   bool _onSwipe(
-      int previousIndex,
-      int? currentIndex,
-      CardSwiperDirection direction,
-      ) {
+    int previousIndex,
+    int? currentIndex,
+    CardSwiperDirection direction,
+  ) {
     debugPrint(
       'The card $previousIndex was swiped to the ${direction.name}. Now the card $currentIndex is on top',
     );
@@ -130,10 +140,10 @@ class _MatchedSwipeInterfaceState extends State<MatchedSwipeInterface> {
   }
 
   bool _onUndo(
-      int? previousIndex,
-      int currentIndex,
-      CardSwiperDirection direction,
-      ) {
+    int? previousIndex,
+    int currentIndex,
+    CardSwiperDirection direction,
+  ) {
     debugPrint(
       'The card $currentIndex was undod from the ${direction.name}',
     );
@@ -141,22 +151,26 @@ class _MatchedSwipeInterfaceState extends State<MatchedSwipeInterface> {
   }
 
   void updateProfiles(ResponseProfileSwipe responseProfileSwipe) {
-
-    if(cards.isEmpty) {
-      cards = responseProfileSwipe.getRequestedProfilesForUser!.map((profile) => SwipeCard(
-      likeAction: swipeRightMethod,
-      dislikeAction: swipeLeftMethod,
-      id: profile.id,
-      userName: profile.name,
-      userAge: 20,
-      userDescription: "no desc",
-      profileImageSrc: "",
-      isVerified: true,
-      pronouns: "",
-        isCreate: false,
-        requestId: profile.request?.id,
-      )).toList();
+    if (cards.isEmpty) {
+      cards = responseProfileSwipe.getRequestedProfilesForUser!
+          .map((profile) => SwipeCard(
+                likeAction: swipeRightMethod,
+                dislikeAction: swipeLeftMethod,
+                id: profile.id,
+                userName: profile.name,
+                userAge: 20,
+                userDescription: "no desc",
+                profileImageSrc: profile.photoURLs,
+                isVerified: true,
+                showTruncatedName: profile.showTruncatedName ?? false,
+                pronouns: profile.pronouns ?? "",
+                interests: profile.interests,
+                languages: profile.languages,
+                datePreference: profile.datingPreference,
+                isCreate: false,
+                requestId: profile.request?.id,
+              ))
+          .toList();
     }
-
   }
 }

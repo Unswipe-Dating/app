@@ -15,6 +15,7 @@ import 'package:unswipe/src/features/settings/presentation/pages/edit_profile_sc
 import 'package:unswipe/src/features/splash/presentation/pages/splash_page.dart';
 import 'package:unswipe/src/features/userOnboarding/profile_update/data/models/update_profile_response.dart';
 import 'package:unswipe/src/features/userOnboarding/profile_update/domain/repository/update_profile_repository.dart';
+import 'package:unswipe/src/features/userProfile/data/model/get_profile/response_profile_swipe.dart';
 import 'package:unswipe/src/features/userProfile/presentation/pages/matched_profile_view_page.dart';
 import 'package:unswipe/src/features/userProfile/presentation/pages/profile_view_page.dart';
 
@@ -173,15 +174,6 @@ class CustomNavigationHelper {
                   );
                 },
               ),
-              GoRoute(
-                path: settingsPathBasic,
-                pageBuilder: (context, state) {
-                  return getPage(
-                    child: const EditProfileScreenBasic(),
-                    state: state,
-                  );
-                },
-              ),
             ],
           ),
         ],
@@ -221,12 +213,23 @@ class CustomNavigationHelper {
       ),
 
       GoRoute(
+        path: settingsPathBasic,
+        pageBuilder: (context, state) {
+          ResponseProfileList profile = state.extra as ResponseProfileList;
+          return getPage(
+            child: EditProfileScreenBasic(profile: profile),
+            state: state,
+          );
+        },
+      ),
+
+      GoRoute(
         parentNavigatorKey: parentNavigatorKey,
         path: startChatPath,
         pageBuilder: (context, state) {
-          Room room = state.extra as Room;
+          ChatPageParams params = state.extra as ChatPageParams;
           return getPage(
-            child: ChatPage(room: room),
+            child: ChatPage(params: params),
             state: state,
           );
         },

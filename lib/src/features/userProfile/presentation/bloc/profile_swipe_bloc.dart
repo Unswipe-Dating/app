@@ -1,5 +1,10 @@
 import 'package:bloc/bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+
+import 'package:unswipe/src/chat/chat.dart';
 import 'package:unswipe/src/features/userOnboarding/contact_block/data/model/response_contact_block.dart';
 import 'package:unswipe/src/features/userOnboarding/contact_block/domain/repository/contact_block_repository.dart';
 import 'package:unswipe/src/features/userProfile/domain/usecase/profile_accept_usecase.dart';
@@ -15,6 +20,7 @@ import '../../../../../../data/api_response.dart';
 import '../../../../shared/domain/usecases/get_auth_state_stream_use_case.dart';
 import '../../../onBoarding/domain/entities/onbaording_state/onboarding_state.dart';
 import '../../../onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart';
+import '../../data/model/create_request/response_profile_request.dart';
 import '../../data/model/get_profile/response_profile_swipe.dart';
 import '../../domain/repository/profile_swipe_repository.dart';
 import '../../domain/usecase/profile_get_usecase.dart';
@@ -63,6 +69,8 @@ class ProfileSwipeBloc extends Bloc<ProfileSwipeEvent, ProfileSwipeState> {
     on<OnInitiateCreateSubject>(setUpCreateApi);
     on<OnInitiateAcceptSubject>(setUpAcceptApi);
     on<OnInitiateMatchSubject>(setUpMatchApi);
+    on<onStartChatIntent>(_onStartChatIntent);
+
   }
 
 
@@ -148,12 +156,27 @@ class ProfileSwipeBloc extends Bloc<ProfileSwipeEvent, ProfileSwipeState> {
           } else if (responseData is api_response.OperationFailure) {
             return state.copyWith(status: ProfileSwipeStatus.errorSwipe);
           } else if (responseData is api_response.Success) {
-            return state.copyWith(
-                status: ProfileSwipeStatus.loadedAccept);
+            var res =
+            (((responseData as api_response.Success).data) as ResponseProfileRequest);
+            if(res.matchRequest != null) {
+              add(onStartChatIntent(res.matchRequest!, id));
+              return state.copyWith(status: ProfileSwipeStatus.loadedAccept);
+              } else {
+              return state.copyWith(status: ProfileSwipeStatus.errorSwipe);
+            }
           } else {
             return state.copyWith(status: ProfileSwipeStatus.errorSwipe);
           }
         });
+  }
+
+  _onStartChatIntent(
+      onStartChatIntent event, Emitter<ProfileSwipeState> emitter) async {
+    var roomId =  await FirebaseChatCore.instance.createRoom(types.User(id:
+    event.request.requesteeUserId == event.userId ? event.request.userId : event.request.requesteeUserId));
+    emitter.call(state.copyWith(status: ProfileSwipeStatus.loadedChat,
+      chatParams: ChatPageParams(room: roomId, request: event.request),
+    ));
   }
 
 

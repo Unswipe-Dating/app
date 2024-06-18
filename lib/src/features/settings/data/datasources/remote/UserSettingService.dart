@@ -34,6 +34,9 @@ class UserSettingService {
        location
        zodiac
        languages
+       pronouns
+       gender
+       showTruncatedName
     }
 }
     ''';

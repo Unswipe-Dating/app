@@ -18,8 +18,10 @@ class ResponseProfileList {
       this.hometown,
       this.zodiac,
       this.languages,
-      this.request
-
+      this.request,
+      this.pronouns,
+      this.gender,
+      this.showTruncatedName,
       );
 
   factory ResponseProfileList.fromJson(Map<String, dynamic> json) =>
@@ -36,6 +38,9 @@ class ResponseProfileList {
   String? height;
   String? hometown;
   String? zodiac;
+  String? pronouns;
+  String? gender;
+  bool? showTruncatedName;
   List<String>? languages;
   ResponseProfileRequestBody? request;
   Map<String, dynamic> toJson() => _$ResponseProfileListToJson(this);

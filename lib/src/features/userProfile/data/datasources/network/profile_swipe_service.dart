@@ -137,8 +137,11 @@ class ProfileSwipeService {
   createRequest(data: \$data) {
     id
     type
-    requesterProfileId
-    requesteeProfileId
+    requesteeUserId
+    userProfileImage
+requesteeProfileImage
+
+    userId
     expiry
     status
     challenge
@@ -193,8 +196,11 @@ class ProfileSwipeService {
   matchRequest(data: \$data) {
     id
     type
-    requesterProfileId
-    requesteeProfileId
+    userId
+userProfileImage
+requesteeProfileImage
+
+    requesteeUserId
     expiry
     status
     challenge
@@ -246,8 +252,8 @@ class ProfileSwipeService {
   rejectRequest(data: \$data) {
     id
     type
-    requesterProfileId
-    requesteeProfileId
+    userId
+    requesteeUserId
     expiry
     status
     challenge

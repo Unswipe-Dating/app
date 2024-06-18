@@ -5,6 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:unswipe/notification_services.dart';
+import 'package:unswipe/src/chat/chat.dart';
 import 'package:unswipe/src/features/login/domain/repository/login_repository.dart';
 import 'package:unswipe/src/features/login/domain/usecases/request_otp_use_case.dart';
 import 'package:unswipe/src/features/login/domain/usecases/signup_login_usecase.dart';
@@ -90,18 +91,19 @@ class _LoginScreenState extends State<LoginScreen> {
               }
               else if(state.status == LoginStatus.loadedChat) {
                 CustomNavigationHelper.router
-                    .go(CustomNavigationHelper.startChatPath, extra: state.chatId);
+                    .go(CustomNavigationHelper.startChatPath, extra: state.chatParams);
               } else if(state.status == LoginStatus.loadedExpiryTimer) {
                 CustomNavigationHelper.router
-                    .go(CustomNavigationHelper.profilePathHyperEx, extra: "" );
+                    .go(CustomNavigationHelper.profilePathHyperEx, extra:  state.profileMatchDuration);
 
               } else if(state.status == LoginStatus.errorAuth) {
-                CustomNavigationHelper.router
-                    .go(CustomNavigationHelper.startChatPath, extra: state.chatId);
+                CustomNavigationHelper.router.go(
+                  CustomNavigationHelper.loginPath,
+                );
               }
             },
             builder: (context, state) {
-              return state.status == LoginStatus.loadingVerification
+              return state.status == (LoginStatus.loadingVerification )
                   ? const Center(child: CircularProgressIndicator())
                   : const Stack(
                 children: [

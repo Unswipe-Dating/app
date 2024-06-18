@@ -20,13 +20,13 @@ class LoginState extends Equatable {
   final LoginStatus status;
   final OnBoardingStatus onBoardingStatus;
   final String? profileMatchDuration;
-  final types.Room? chatId;
+  final ChatPageParams? chatParams;
 
   const LoginState({
     this.status = LoginStatus.initial,
     this.onBoardingStatus = OnBoardingStatus.contact,
     this.profileMatchDuration,
-    this.chatId,
+    this.chatParams,
 
   });
 
@@ -36,13 +36,13 @@ class LoginState extends Equatable {
     int? token,
     OnBoardingStatus? onBoardingStatus,
     String? profileMatchDuration,
-    types.Room? chatId,
+    ChatPageParams? chatParams,
   }) {
     return LoginState(
       status: status ?? this.status,
       onBoardingStatus: onBoardingStatus ?? this.onBoardingStatus,
       profileMatchDuration: profileMatchDuration ?? this.profileMatchDuration,
-        chatId: chatId ?? this.chatId
+        chatParams: chatParams ?? this.chatParams
     );
   }
 
@@ -51,7 +51,7 @@ class LoginState extends Equatable {
     status,
     onBoardingStatus,
     profileMatchDuration,
-    chatId
+    chatParams,
   ];
 }
 

@@ -47,6 +47,13 @@ class OnInitiateCreateSubject extends ProfileSwipeEvent {
   OnInitiateCreateSubject();
 }
 
+class onStartChatIntent extends ProfileSwipeEvent {
+  ResponseProfileCreateRequest request;
+  String userId;
+
+  onStartChatIntent(this.request, this.userId);
+}
+
 class OnInitiateMatchSubject extends ProfileSwipeEvent {
   OnInitiateMatchSubject();
 }
