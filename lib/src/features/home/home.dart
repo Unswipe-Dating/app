@@ -22,31 +22,26 @@ class _MyHomePageState extends State<MyHomePage> {
     const Color(0xffFFDEC6)
   ];
 
+  List<String> titles = ['Unswipe', 'Hyper Exclusive Requests', 'By & For U', 'Edit Profile'];
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          elevation: 20,
+          centerTitle: widget.child.currentIndex > 0,
           backgroundColor: colors[widget.child.currentIndex],
-          title: widget.child.currentIndex < 2 ?  const Padding(
-            padding: EdgeInsets.all(8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Unswipe",
-                  style: TextStyle(
+          title: Text(
+                  titles[widget.child.currentIndex],
+                  style:  TextStyle(
                     fontFamily: 'Playfair',
                     fontWeight: FontWeight.w700,
-                    fontSize: 24,
+                    fontSize: 22,
+                    color: widget.child.currentIndex == 2 ? Colors.white : Colors.black
                   ),
-                ),
-                Icon(Icons.notifications),
-              ],
-            ),
-          ) : null,
+
+          ),
         ),
         body: SafeArea(
           child: widget.child,

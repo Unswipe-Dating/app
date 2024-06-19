@@ -17,6 +17,7 @@ class EditProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         canvasColor: const Color(0xffFFDEC6), // Set app-wide background color
         appBarTheme: const AppBarTheme(
@@ -26,15 +27,6 @@ class EditProfileScreen extends StatelessWidget {
       ),
       home: Scaffold(
         backgroundColor: const Color(0xffFFDEC6),
-        appBar: AppBar(
-          centerTitle: true,
-          title: const Text('Edit Profile',
-              style: TextStyle(
-                  color: Colors.black,
-                  fontFamily: 'Playfair',
-                  fontWeight: FontWeight.w700,
-                  fontSize: 22.0)),
-        ),
         body: BlocProvider(
             create: (BuildContext context) => UpdateProfileBloc(
                 updateOnboardingStateStreamUseCase:
