@@ -9,11 +9,14 @@ import 'package:unswipe/src/shared/domain/usecases/get_auth_state_stream_use_cas
 
 import '../../../../../core/router/app_router.dart';
 import '../../../../onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart';
+import '../../../../userProfile/data/model/get_profile/response_profile_swipe.dart';
 import '../bloc/image_upload_bloc.dart';
 import '../widgets/picker.dart';
 
 class ProfileImagePickerScreen extends StatefulWidget {
-  const ProfileImagePickerScreen({super.key});
+  final ResponseProfileList? profile;
+
+  const ProfileImagePickerScreen({super.key, this.profile});
 
   @override
   _ProfileImagePickerScreenState createState() =>
@@ -21,7 +24,7 @@ class ProfileImagePickerScreen extends StatefulWidget {
 }
 
 class _ProfileImagePickerScreenState extends State<ProfileImagePickerScreen> {
-  final controller = MultiImagePickerController(
+   var controller = MultiImagePickerController(
       maxImages: 6,
       picker: (allowMultiple) async {
         return await pickImagesUsingImagePicker(allowMultiple);
@@ -58,14 +61,32 @@ class _ProfileImagePickerScreenState extends State<ProfileImagePickerScreen> {
                   GetIt.I.get<UpdateOnboardingStateStreamUseCase>(),
               getAuthStateStreamUseCase: GetIt.I.get<GetAuthStateStreamUseCase>(),
               imageUploadUseCase: GetIt.I.get<ImageUploadUseCase>()
-          ),
+          )..add(OnConvertS3ToImageFileEvent(widget.profile?.photoURLs)),
           child: BlocConsumer<ImageUploadBloc, ImageUploadState>(
               listener: (context, state) {
             if (state.status == ImageUploadStatus.loaded) {
-              CustomNavigationHelper.router.push(
-                CustomNavigationHelper.onboardingNamePath,
-              );
-            } else if (state.status == ImageUploadStatus.errorAuth) {
+              if(widget.profile?.photoURLs != null) {
+                CustomNavigationHelper.router.go(
+                  CustomNavigationHelper.settingsPath,
+                );
+              } else {
+                CustomNavigationHelper.router.push(
+                  CustomNavigationHelper.onboardingNamePath,
+                );
+              }
+            } else if (state.status == ImageUploadStatus.loadedS3Images) {
+             controller = MultiImagePickerController(
+                 maxImages: 6,
+                 picker: (allowMultiple) async {
+                   return await pickImagesUsingImagePicker(allowMultiple);
+                 }, images: state.loadedFiles);
+             controller.addListener(() {
+               isButtonEnabled = controller.images.length >= 3;
+               setState(() {});
+             });
+
+            }
+            else if (state.status == ImageUploadStatus.errorAuth) {
               CustomNavigationHelper.router.go(
                 CustomNavigationHelper.loginPath,
               );

@@ -248,7 +248,7 @@ class UpdateProfileBloc extends Bloc<UpdateProfileEvent, UpdateProfileState> {
         var profile = (((responseData as api_response.Success).data)
         as ResponseProfileSwipe)
             .userProfile;
-        return state.copyWith(status: UpdateProfileStatus.loaded,
+        return state.copyWith(status: UpdateProfileStatus.loadedProfile,
             responseProfileList: profile);
       } else {
         return state.copyWith(status: UpdateProfileStatus.error);

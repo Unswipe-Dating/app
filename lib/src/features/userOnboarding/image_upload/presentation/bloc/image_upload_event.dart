@@ -15,6 +15,11 @@ class OnImageUploadRequested extends ImageUploadEvent {
 
   OnImageUploadRequested(this.params);
 }
+class OnConvertS3ToImageFileEvent extends ImageUploadEvent {
+  final List<String>? s3Params;
+
+  OnConvertS3ToImageFileEvent(this.s3Params);
+}
 
 
 class OnUpdateOnBoardingUserEvent extends ImageUploadEvent {

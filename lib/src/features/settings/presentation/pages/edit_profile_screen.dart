@@ -50,10 +50,8 @@ class EditProfileScreen extends StatelessWidget {
             ..add(OnStartGettingProfile()),
             child: BlocConsumer<UpdateProfileBloc, UpdateProfileState>(
               listener: (context, state) {
-                if (state.status == UpdateProfileStatus.loaded) {
-                  CustomNavigationHelper.router.go(
-                    CustomNavigationHelper.profilePath,
-                  );
+                if (state.status == UpdateProfileStatus.loadedProfile) {
+
                 }
               },
               builder: (context, state) {
@@ -68,7 +66,10 @@ class EditProfileScreen extends StatelessWidget {
                             crossAxisCount: 2,
                             children: [
                               GridItem(icon: Icons.photo, text: 'Photos', onClick: () {
-
+                                CustomNavigationHelper.router.go(
+                                    CustomNavigationHelper.uploadImagePath,
+                                    extra: state.responseProfileList
+                                );
                               }),
                               GridItem(icon: Icons.contacts, text: 'Basics', onClick: () {
                                 CustomNavigationHelper.router.go(

@@ -13,6 +13,7 @@ import '../../../../onBoarding/domain/entities/onbaording_state/onboarding_state
 import '../../../../onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart';
 import '../../../../onBoarding/presentation/bloc/onboarding_bloc.dart';
 import '../../domain/usecase/image_upload_usecase.dart';
+import '../../../../../shared/utils/file_utils.dart';
 part 'image_upload_event.dart';
 part 'image_upload_state.dart';
 
@@ -20,6 +21,7 @@ class ImageUploadBloc extends Bloc<ImageUploadEvent, ImageUploadState> {
   final UpdateOnboardingStateStreamUseCase updateOnboardingStateStreamUseCase;
   final GetAuthStateStreamUseCase getAuthStateStreamUseCase;
   final ImageUploadUseCase imageUploadUseCase;
+  bool isS3FilesAvailable = false;
 
   // List of splash
 
@@ -33,8 +35,33 @@ class ImageUploadBloc extends Bloc<ImageUploadEvent, ImageUploadState> {
     on<OnImageUploadRequested>(_onStartImageUpload);
     on<OnRequestApiCall>(_onStartImageUploadApi);
     on<OnUpdateOnBoardingUserEvent>(_onUpdatingOnBoardingEvent);
+    on<OnConvertS3ToImageFileEvent>(_onConvertS3ToImageFIleEvent);
 
   }
+
+  _onConvertS3ToImageFIleEvent(OnConvertS3ToImageFileEvent event,
+      Emitter<ImageUploadState> emitter) async{
+
+    emitter(state.copyWith(
+        status: ImageUploadStatus.loading));
+
+    if(event.s3Params != null) {
+    isS3FilesAvailable = true;
+      List<ImageFile> files = [];
+
+      for (final uri in event.s3Params!) {
+        var val = await imageFileFromImageUrl(uri, uri.substring(0, 5));
+        files.add(val);
+      }
+
+      emitter.call(
+          state.copyWith(status: ImageUploadStatus.loadedS3Images, loadedFiles: files));
+    } else {
+      emitter.call(
+          state.copyWith(status: ImageUploadStatus.emptyFiles,));
+    }
+
+}
 
   _onUpdatingOnBoardingEvent(OnUpdateOnBoardingUserEvent event,
       Emitter<ImageUploadState> emitter) async{
@@ -84,13 +111,15 @@ class ImageUploadBloc extends Bloc<ImageUploadEvent, ImageUploadState> {
         return state.copyWith(status: ImageUploadStatus.error);
       } else if (responseData is api_response.AuthorizationFailure) {
         add(OnUpdateOnBoardingUserEvent(isUnAuthorized: true));
-
         return state.copyWith(status: ImageUploadStatus.loading);
       } else if (responseData is api_response.TimeOutFailure) {
         return state.copyWith(status: ImageUploadStatus.errorTimeOut);
       } else if (responseData is api_response.OperationFailure) {
         return state.copyWith(status: ImageUploadStatus.error);
       } else if (responseData is api_response.Success) {
+        if(isS3FilesAvailable) {
+          return state.copyWith(status: ImageUploadStatus.loaded);
+        }
         add(OnUpdateOnBoardingUserEvent(isUnAuthorized: false));
         return state.copyWith(status: ImageUploadStatus.loading);
       } else {
