@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_it/get_it.dart';
 import 'package:unswipe/src/features/login/domain/usecases/update_login_state_stream_usecase.dart';
+import 'package:unswipe/src/features/settings/domain/repository/user_settings_repository.dart';
 import 'package:unswipe/src/features/settings/domain/usecases/get_settings_profile_usecase.dart';
 import 'package:unswipe/src/features/userOnboarding/profile_update/data/models/update_profile_response.dart';
 import 'package:unswipe/src/features/userOnboarding/profile_update/domain/usecases/create_user_use_case.dart';
@@ -22,10 +23,7 @@ class EditProfileScreenBasic extends StatefulWidget {
   final UpdateProfileParams? params;
   final ResponseProfileList? profile;
 
-  const EditProfileScreenBasic({super.key,
-    this.params,
-    this.profile
-  });
+  const EditProfileScreenBasic({super.key, this.params, this.profile});
 
   @override
   State<EditProfileScreenBasic> createState() => _EditProfileScreenBasicState();
@@ -36,16 +34,15 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
 
   List<String> interestString = [];
 
-
-
   @override
   void initState() {
     super.initState();
-    interestString = (widget.profile?.interests.weekendActivities??[] as List<String>)
-        + (widget.profile?.interests.sports??[]as List<String>)
-        + (widget.profile?.interests.selfCare??[]as List<String>)
-        + (widget.profile?.interests.pets??[]as List<String>)
-        + (widget.profile?.interests.fnd??[] as List<String>);
+    interestString =
+        (widget.profile?.interests.weekendActivities ?? [] as List<String>) +
+            (widget.profile?.interests.sports ?? [] as List<String>) +
+            (widget.profile?.interests.selfCare ?? [] as List<String>) +
+            (widget.profile?.interests.pets ?? [] as List<String>) +
+            (widget.profile?.interests.fnd ?? [] as List<String>);
   }
 
   @override
@@ -100,7 +97,8 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
               builder: (context, state) {
                 return SingleChildScrollView(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 24),
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -113,7 +111,7 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                 fontWeight: FontWeight.w600,
                                 fontSize: 18.0),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 8,
                           ),
                           const Text(
@@ -124,13 +122,22 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                 fontWeight: FontWeight.w400,
                                 fontSize: 16.0),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 16,
                           ),
-                          InterestsCard(
-                            header: null,
-                            chipLabels: interestString,
-                            elevation: 4,
+                          InkWell(
+                            child: InterestsCard(
+                              header: null,
+                              chipLabels: interestString,
+                              elevation: 4,
+                            ),
+                            onTap: () {
+                              CustomNavigationHelper.router.go(
+                                CustomNavigationHelper.onboardingInterestPath,
+                                extra: SettingProfileParams(updateParams: UpdateProfileParams(),
+                                    profileParams: widget.profile)
+                              );
+                            },
                           ),
                           const SizedBox(
                             height: 32,
@@ -144,7 +151,7 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                 fontWeight: FontWeight.w600,
                                 fontSize: 18.0),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 8,
                           ),
                           const Text(
@@ -155,7 +162,7 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                 fontWeight: FontWeight.w400,
                                 fontSize: 16.0),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 16,
                           ),
                           Card(
@@ -171,10 +178,10 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                   RichText(
                                     text: TextSpan(
                                       children: [
-                                        WidgetSpan(
+                                        const WidgetSpan(
                                           child: Icon(Icons.person, size: 14),
                                         ),
-                                        WidgetSpan(
+                                        const WidgetSpan(
                                             child: SizedBox(
                                           width: 8,
                                         )),
@@ -193,14 +200,15 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                     text: TextSpan(
                                       children: [
                                         TextSpan(
-                                          text:  widget.profile?.pronouns??"not set",
-                                          style: TextStyle(
+                                          text: widget.profile?.pronouns ??
+                                              "not set",
+                                          style: const TextStyle(
                                               color: Colors.black,
                                               fontFamily: 'lato',
                                               fontWeight: FontWeight.w500,
                                               fontSize: 14.0),
                                         ),
-                                        WidgetSpan(
+                                        const WidgetSpan(
                                           child: Icon(
                                               Icons.keyboard_arrow_right,
                                               size: 14),
@@ -212,7 +220,7 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                               ),
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 32,
                           ),
                           const Text(
@@ -224,7 +232,7 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                 fontWeight: FontWeight.w600,
                                 fontSize: 18.0),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 8,
                           ),
                           const Text(
@@ -235,7 +243,7 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                 fontWeight: FontWeight.w400,
                                 fontSize: 16.0),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 16,
                           ),
                           Card(
@@ -246,7 +254,9 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                 padding: const EdgeInsets.all(16.0),
                                 child: Column(
                                   children: [
-                                    SizedBox(height: 8,),
+                                    const SizedBox(
+                                      height: 8,
+                                    ),
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
@@ -254,11 +264,11 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                         RichText(
                                           text: TextSpan(
                                             children: [
-                                              WidgetSpan(
-                                                child: Icon(Icons.male,
-                                                    size: 14),
+                                              const WidgetSpan(
+                                                child:
+                                                    Icon(Icons.male, size: 14),
                                               ),
-                                              WidgetSpan(
+                                              const WidgetSpan(
                                                   child: SizedBox(
                                                 width: 8,
                                               )),
@@ -277,14 +287,15 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                           text: TextSpan(
                                             children: [
                                               TextSpan(
-                                                text: widget.profile?.gender??"not set",
-                                                style: TextStyle(
+                                                text: widget.profile?.gender ??
+                                                    "not set",
+                                                style: const TextStyle(
                                                     color: Colors.black,
                                                     fontFamily: 'lato',
                                                     fontWeight: FontWeight.w500,
                                                     fontSize: 14.0),
                                               ),
-                                              WidgetSpan(
+                                              const WidgetSpan(
                                                 child: Icon(
                                                     Icons.keyboard_arrow_right,
                                                     size: 14),
@@ -294,7 +305,9 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                         ),
                                       ],
                                     ),
-                                    SizedBox(height: 16,),
+                                    const SizedBox(
+                                      height: 16,
+                                    ),
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
@@ -302,11 +315,11 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                         RichText(
                                           text: TextSpan(
                                             children: [
-                                              WidgetSpan(
+                                              const WidgetSpan(
                                                 child: Icon(Icons.how_to_reg,
                                                     size: 14),
                                               ),
-                                              WidgetSpan(
+                                              const WidgetSpan(
                                                   child: SizedBox(
                                                 width: 8,
                                               )),
@@ -325,14 +338,16 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                           text: TextSpan(
                                             children: [
                                               TextSpan(
-                                                text: widget.profile?.datingPreference??"not set",
-                                                style: TextStyle(
+                                                text: widget.profile
+                                                        ?.datingPreference ??
+                                                    "not set",
+                                                style: const TextStyle(
                                                     color: Colors.black,
                                                     fontFamily: 'lato',
                                                     fontWeight: FontWeight.w500,
                                                     fontSize: 14.0),
                                               ),
-                                              WidgetSpan(
+                                              const WidgetSpan(
                                                 child: Icon(
                                                     Icons.keyboard_arrow_right,
                                                     size: 14),
@@ -342,7 +357,9 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                         ),
                                       ],
                                     ),
-                                    SizedBox(height: 16,),
+                                    const SizedBox(
+                                      height: 16,
+                                    ),
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
@@ -350,11 +367,12 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                         RichText(
                                           text: TextSpan(
                                             children: [
-                                              WidgetSpan(
-                                                child: Icon(Icons.vertical_split,
+                                              const WidgetSpan(
+                                                child: Icon(
+                                                    Icons.vertical_split,
                                                     size: 14),
                                               ),
-                                              WidgetSpan(
+                                              const WidgetSpan(
                                                   child: SizedBox(
                                                 width: 8,
                                               )),
@@ -373,14 +391,15 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                           text: TextSpan(
                                             children: [
                                               TextSpan(
-                                                text: widget.profile?.height??"not set",
-                                                style: TextStyle(
+                                                text: widget.profile?.height ??
+                                                    "not set",
+                                                style: const TextStyle(
                                                     color: Colors.black,
                                                     fontFamily: 'lato',
                                                     fontWeight: FontWeight.w500,
                                                     fontSize: 14.0),
                                               ),
-                                              WidgetSpan(
+                                              const WidgetSpan(
                                                 child: Icon(
                                                     Icons.keyboard_arrow_right,
                                                     size: 14),
@@ -390,7 +409,9 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                         ),
                                       ],
                                     ),
-                                    SizedBox(height: 16,),
+                                    const SizedBox(
+                                      height: 16,
+                                    ),
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
@@ -398,11 +419,11 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                         RichText(
                                           text: TextSpan(
                                             children: [
-                                              WidgetSpan(
-                                                child: Icon(Icons.sunny,
-                                                    size: 14),
+                                              const WidgetSpan(
+                                                child:
+                                                    Icon(Icons.sunny, size: 14),
                                               ),
-                                              WidgetSpan(
+                                              const WidgetSpan(
                                                   child: SizedBox(
                                                 width: 8,
                                               )),
@@ -421,14 +442,15 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                           text: TextSpan(
                                             children: [
                                               TextSpan(
-                                                text: widget.profile?.zodiac?? "Add",
-                                                style: TextStyle(
+                                                text: widget.profile?.zodiac ??
+                                                    "Add",
+                                                style: const TextStyle(
                                                     color: Colors.black,
                                                     fontFamily: 'lato',
                                                     fontWeight: FontWeight.w500,
                                                     fontSize: 14.0),
                                               ),
-                                              WidgetSpan(
+                                              const WidgetSpan(
                                                 child: Icon(
                                                     Icons.keyboard_arrow_right,
                                                     size: 14),
@@ -438,7 +460,9 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                         ),
                                       ],
                                     ),
-                                    SizedBox(height: 16,),
+                                    const SizedBox(
+                                      height: 16,
+                                    ),
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
@@ -446,11 +470,12 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                         RichText(
                                           text: TextSpan(
                                             children: [
-                                              WidgetSpan(
-                                                child: Icon(Icons.pin_drop_outlined,
+                                              const WidgetSpan(
+                                                child: Icon(
+                                                    Icons.pin_drop_outlined,
                                                     size: 14),
                                               ),
-                                              WidgetSpan(
+                                              const WidgetSpan(
                                                   child: SizedBox(
                                                 width: 8,
                                               )),
@@ -469,14 +494,16 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                           text: TextSpan(
                                             children: [
                                               TextSpan(
-                                                text: widget.profile?.location??"Add",
-                                                style: TextStyle(
+                                                text:
+                                                    widget.profile?.location ??
+                                                        "Add",
+                                                style: const TextStyle(
                                                     color: Colors.black,
                                                     fontFamily: 'lato',
                                                     fontWeight: FontWeight.w500,
                                                     fontSize: 14.0),
                                               ),
-                                              WidgetSpan(
+                                              const WidgetSpan(
                                                 child: Icon(
                                                     Icons.keyboard_arrow_right,
                                                     size: 14),
@@ -486,7 +513,9 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                         ),
                                       ],
                                     ),
-                                    SizedBox(height: 16,),
+                                    const SizedBox(
+                                      height: 16,
+                                    ),
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
@@ -494,11 +523,11 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                         RichText(
                                           text: TextSpan(
                                             children: [
-                                              WidgetSpan(
-                                                child: Icon(Icons.home,
-                                                    size: 14),
+                                              const WidgetSpan(
+                                                child:
+                                                    Icon(Icons.home, size: 14),
                                               ),
-                                              WidgetSpan(
+                                              const WidgetSpan(
                                                   child: SizedBox(
                                                 width: 8,
                                               )),
@@ -517,14 +546,16 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                           text: TextSpan(
                                             children: [
                                               TextSpan(
-                                                text:  widget.profile?.hometown??"Add",
-                                                style: TextStyle(
+                                                text:
+                                                    widget.profile?.hometown ??
+                                                        "Add",
+                                                style: const TextStyle(
                                                     color: Colors.black,
                                                     fontFamily: 'lato',
                                                     fontWeight: FontWeight.w500,
                                                     fontSize: 14.0),
                                               ),
-                                              WidgetSpan(
+                                              const WidgetSpan(
                                                 child: Icon(
                                                     Icons.keyboard_arrow_right,
                                                     size: 14),
@@ -534,12 +565,13 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                         ),
                                       ],
                                     ),
-                                    SizedBox(height: 8,),
-
+                                    const SizedBox(
+                                      height: 8,
+                                    ),
                                   ],
                                 )),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 32,
                           ),
                           const Text(
@@ -551,7 +583,7 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                 fontWeight: FontWeight.w600,
                                 fontSize: 18.0),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 8,
                           ),
                           const Text(
@@ -562,7 +594,7 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                 fontWeight: FontWeight.w400,
                                 fontSize: 16.0),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 16,
                           ),
                           Card(
@@ -578,10 +610,10 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                   RichText(
                                     text: TextSpan(
                                       children: [
-                                        WidgetSpan(
+                                        const WidgetSpan(
                                           child: Icon(Icons.person, size: 14),
                                         ),
-                                        WidgetSpan(
+                                        const WidgetSpan(
                                             child: SizedBox(
                                           width: 8,
                                         )),
@@ -597,7 +629,7 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                     ),
                                   ),
                                   RichText(
-                                    text: TextSpan(
+                                    text: const TextSpan(
                                       children: [
                                         TextSpan(
                                           text: "Add",
@@ -619,11 +651,11 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                               ),
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 32,
                           ),
                           Padding(
-                            padding: EdgeInsets.all(32),
+                            padding: const EdgeInsets.all(32),
                             child: ElevatedButton(
                               onPressed: () {},
                               style: ElevatedButton.styleFrom(

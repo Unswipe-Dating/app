@@ -219,7 +219,6 @@ class _ProfileImagePickerScreenState extends State<ProfileImagePickerScreen> {
                       onPressed: isButtonEnabled
                           ? () {
                         context.read<ImageUploadBloc>().add(OnImageUploadRequested(controller.images.toList()));
-
                             }
                           : null,
                       style: ElevatedButton.styleFrom(

@@ -169,16 +169,20 @@ class ImageUploadBloc extends Bloc<ImageUploadEvent, ImageUploadState> {
   List<MultipartFile> getFilesForUpload(List<ImageFile> images) {
     List<MultipartFile> listFiles = [];
     for (var element in images) {
-      var value = (lookupMimeType(element.path??"")??"image/png").split("/");
+      if (element.path != null) {
+        File file = File(element.path!);
+        var value = (lookupMimeType(file.path ?? "") ?? "image/png").split(
+            "/");
 
-      listFiles.add(
-          MultipartFile.fromBytes(
-            "",
-            element.bytes??[],
-            filename: element.name,
-            contentType: MediaType(value.first, value.last),
-          )
-      );
+        listFiles.add(
+            MultipartFile.fromBytes(
+              "",
+              file.readAsBytesSync() ?? [],
+              filename: element.name,
+              contentType: MediaType(value.first, value.last),
+            )
+        );
+      }
     }
 
     return listFiles;

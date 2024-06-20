@@ -10,6 +10,7 @@ import 'package:unswipe/src/features/hyperExclusiveMatch/hyper_ex_request_lock_p
 import 'package:unswipe/src/features/hyperExclusiveMatch/hyper_exclusive_page.dart';
 import 'package:unswipe/src/features/login/presentation/pages/Login.dart';
 import 'package:unswipe/src/features/onBoarding/presentation/pages/OnBoarding.dart';
+import 'package:unswipe/src/features/settings/domain/repository/user_settings_repository.dart';
 import 'package:unswipe/src/features/settings/presentation/pages/edit_profile_screen.dart';
 import 'package:unswipe/src/features/settings/presentation/pages/edit_profile_screen_basic.dart';
 import 'package:unswipe/src/features/splash/presentation/pages/splash_page.dart';
@@ -309,8 +310,9 @@ class CustomNavigationHelper {
         parentNavigatorKey: parentNavigatorKey,
         path: onboardingInterestPath,
         pageBuilder: (context, state) {
-          UpdateProfileParams params =
-          state.extra as UpdateProfileParams;
+          SettingProfileParams params =
+          state.extra as SettingProfileParams;
+
           return getPage(
             child: InterestsUpdateScreen(params: params,),
             state: state,

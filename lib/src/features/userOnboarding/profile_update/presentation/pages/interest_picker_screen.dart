@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:unswipe/src/features/login/domain/usecases/update_login_state_stream_usecase.dart';
+import 'package:unswipe/src/features/settings/domain/repository/user_settings_repository.dart';
 import 'package:unswipe/src/features/settings/domain/usecases/get_settings_profile_usecase.dart';
 import 'package:unswipe/src/features/userOnboarding/profile_update/data/models/update_profile_response.dart';
 import 'package:unswipe/src/features/userOnboarding/profile_update/domain/usecases/create_user_use_case.dart';
@@ -12,12 +13,14 @@ import 'package:unswipe/src/shared/domain/usecases/get_auth_state_stream_use_cas
 
 import '../../../../../core/router/app_router.dart';
 import '../../../../onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart';
+import '../../../../userProfile/data/model/get_profile/response_profile_swipe.dart';
 import '../../domain/repository/update_profile_repository.dart';
 import '../bloc/profile_update_bloc.dart';
 class InterestsUpdateScreen extends StatefulWidget {
-  final UpdateProfileParams? params;
+  final SettingProfileParams params;
 
-  const InterestsUpdateScreen({super.key, this.params});
+
+  const InterestsUpdateScreen({super.key, required this.params});
 
   @override
   _InterestsUpdateScreenState createState() => _InterestsUpdateScreenState();
@@ -97,6 +100,7 @@ class _InterestsUpdateScreenState extends State<InterestsUpdateScreen> {
   @override
   void initState() {
     super.initState();
+
   }
 
   void updateSelectionState() {
@@ -134,9 +138,15 @@ class _InterestsUpdateScreenState extends State<InterestsUpdateScreen> {
           child: BlocConsumer<UpdateProfileBloc, UpdateProfileState>(
             listener: (context, state) {
               if (state.status == UpdateProfileStatus.loaded) {
-                CustomNavigationHelper.router.go(
-                  CustomNavigationHelper.profilePath,
-                );
+                if(widget.params.profileParams == null) {
+                  CustomNavigationHelper.router.go(
+                    CustomNavigationHelper.profilePath,
+                  );
+                } else {
+                  CustomNavigationHelper.router.go(
+                    CustomNavigationHelper.settingsPath,
+                  );
+                }
               } else if (state.status == UpdateProfileStatus.errorAuth) {
                 CustomNavigationHelper.router.go(
                   CustomNavigationHelper.loginPath,
@@ -148,7 +158,8 @@ class _InterestsUpdateScreenState extends State<InterestsUpdateScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: Column(
                   children: [
-                    const Row(
+                    if (widget.params.profileParams == null)
+                      const Row(
                       children: [
                         Expanded(
                             flex: 9,
@@ -156,7 +167,8 @@ class _InterestsUpdateScreenState extends State<InterestsUpdateScreen> {
                               color: Colors.black,
 
                               value: 0.87, // Set the progress to 10%
-                            )),
+                            )
+                        ),
                         SizedBox(
                           width: 8,
                         ),
@@ -448,13 +460,13 @@ class _InterestsUpdateScreenState extends State<InterestsUpdateScreen> {
                       child: ElevatedButton(
                         onPressed: isButtonEnabled
                             ? () {
-                          widget.params?.interests = Interests(weekendListString,
+                          widget.params.updateParams?.interests = Interests(weekendListString,
                               petsListString,
                               selfCareListString,
                               foodNDrinkListString,
                               sportsListString);
                           context.read<UpdateProfileBloc>().add(
-                              OnUpdateProfileRequested(widget.params ?? UpdateProfileParams()));
+                              OnUpdateProfileRequested(widget.params.updateParams ?? UpdateProfileParams()));
 
                         }
                             : null,

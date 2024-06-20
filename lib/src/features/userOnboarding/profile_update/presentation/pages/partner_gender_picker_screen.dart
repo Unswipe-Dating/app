@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:unswipe/src/features/settings/domain/repository/user_settings_repository.dart';
 
 import '../../../../../core/router/app_router.dart';
 import '../../domain/repository/update_profile_repository.dart';
@@ -200,7 +201,10 @@ class _PartnerGenderUpdateScreenState extends State<PartnerGenderUpdateScreen> {
                       widget.params?.datingPreference = _character?.name;
                       CustomNavigationHelper.router.push(
                         CustomNavigationHelper.onboardingInterestPath,
-                          extra: UpdateProfileParams().getUpdatedParams(widget.params)
+                          extra: SettingProfileParams(
+                              updateParams:UpdateProfileParams()
+                                  .getUpdatedParams(widget.params),
+                              profileParams: null)
                       );
                     } : null,
                     style: ElevatedButton.styleFrom(
