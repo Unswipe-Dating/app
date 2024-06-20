@@ -259,7 +259,7 @@ class _SwipeCard extends State<SwipeCard> {
                                 .add(OnRejectRequest(widget.requestId!));
                           }
 
-                          controller.jumpTo(0);
+                         controller.jumpTo(0);
                         },
                         backgroundColor: Colors.black,
                         child: const Icon(

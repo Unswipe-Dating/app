@@ -195,6 +195,7 @@ class ProfileSwipeBloc extends Bloc<ProfileSwipeEvent, ProfileSwipeState> {
       } else if (responseData is api_response.OperationFailure) {
         return state.copyWith(status: ProfileSwipeStatus.errorSwipe);
       } else if (responseData is api_response.Success) {
+        state.responseProfileSwipe?.browseProfiles?.profiles.removeAt(0);
         return state.copyWith(
             status: ProfileSwipeStatus.loadedReject);
       } else {
@@ -218,8 +219,9 @@ class ProfileSwipeBloc extends Bloc<ProfileSwipeEvent, ProfileSwipeState> {
           } else if (responseData is api_response.OperationFailure) {
             return state.copyWith(status: ProfileSwipeStatus.errorSwipe);
           } else if (responseData is api_response.Success) {
+            state.responseProfileSwipe?.browseProfiles?.profiles.removeAt(0);
             return state.copyWith(
-                status: ProfileSwipeStatus.loadedReject);
+                status: ProfileSwipeStatus.loadedSkip);
           } else {
             return state.copyWith(status: ProfileSwipeStatus.errorSwipe);
           }
