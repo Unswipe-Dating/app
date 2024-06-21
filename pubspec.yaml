@@ -75,6 +75,7 @@ dependencies:
   # Make Pages Responsive To All Devices
 
   built_value: ^8.4.2
+  geocode: ^1.0.3
 
 
   # Dependency Injection

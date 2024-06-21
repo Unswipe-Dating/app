@@ -276,7 +276,7 @@ class CustomNavigationHelper {
           UpdateProfileParams params =
           state.extra as UpdateProfileParams;
           return getPage(
-            child: GenderUpdateScreen(params: params),
+            child: GenderUpdateScreen(params: SettingProfileParams(updateParams: params)),
             state: state,
           );
         },
@@ -288,7 +288,8 @@ class CustomNavigationHelper {
           UpdateProfileParams params =
           state.extra as UpdateProfileParams;
           return getPage(
-            child: PronounUpdateScreen(params: params),
+            child: PronounUpdateScreen(params:
+            SettingProfileParams(updateParams: params)),
             state: state,
           );
         },
@@ -301,7 +302,7 @@ class CustomNavigationHelper {
           UpdateProfileParams params =
           state.extra as UpdateProfileParams;
           return getPage(
-            child: PartnerGenderUpdateScreen(params: params,),
+            child: PartnerGenderUpdateScreen(params: SettingProfileParams(updateParams: params),),
             state: state,
           );
         },
@@ -310,11 +311,11 @@ class CustomNavigationHelper {
         parentNavigatorKey: parentNavigatorKey,
         path: onboardingInterestPath,
         pageBuilder: (context, state) {
-          SettingProfileParams params =
-          state.extra as SettingProfileParams;
+          UpdateProfileParams params =
+          state.extra as UpdateProfileParams;
 
           return getPage(
-            child: InterestsUpdateScreen(params: params,),
+            child: InterestsUpdateScreen(params: SettingProfileParams(updateParams: params),),
             state: state,
           );
         },

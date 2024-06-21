@@ -69,6 +69,9 @@ ResponseProfileList _$ResponseProfileListFromJson(Map<String, dynamic> json) =>
               json['request'] as Map<String, dynamic>),
       json['pronouns'] as String?,
       json['gender'] as String?,
+      (json['locationCoordinates'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
       json['showTruncatedName'] as bool?,
     );
 
@@ -88,6 +91,7 @@ Map<String, dynamic> _$ResponseProfileListToJson(
       'zodiac': instance.zodiac,
       'pronouns': instance.pronouns,
       'gender': instance.gender,
+      'locationCoordinates': instance.locationCoordinates,
       'showTruncatedName': instance.showTruncatedName,
       'languages': instance.languages,
       'request': instance.request,

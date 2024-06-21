@@ -6,6 +6,7 @@ import 'package:get_it/get_it.dart';
 import 'package:unswipe/src/features/login/domain/usecases/update_login_state_stream_usecase.dart';
 import 'package:unswipe/src/features/settings/domain/repository/user_settings_repository.dart';
 import 'package:unswipe/src/features/settings/domain/usecases/get_settings_profile_usecase.dart';
+import 'package:unswipe/src/features/settings/presentation/pages/edit_profile_screen_basic.dart';
 import 'package:unswipe/src/features/userOnboarding/profile_update/data/models/update_profile_response.dart';
 import 'package:unswipe/src/features/userOnboarding/profile_update/domain/usecases/create_user_use_case.dart';
 import 'package:unswipe/src/features/userOnboarding/profile_update/domain/usecases/update_user_use_case.dart';
@@ -28,67 +29,67 @@ class InterestsUpdateScreen extends StatefulWidget {
 
 class _InterestsUpdateScreenState extends State<InterestsUpdateScreen> {
   bool isButtonEnabled = true;
-  List<ChipValues> weekendList = [
-    ChipValues("Takeaway"),
-    ChipValues("Outdoors"),
-    ChipValues("Party"),
-    ChipValues("Club hop"),
-    ChipValues("Sleep in"),
-    ChipValues("Cook"),
-    ChipValues("Brunch"),
-    ChipValues("Music"),
-    ChipValues("Long Drive"),
-    ChipValues("Fancy restaurants")
-  ];
+  Map<String,ChipValues> weekendMap = {
+    "takeaway": ChipValues("Takeaway"),
+    "Outdoors":ChipValues("Outdoors"),
+    "Party":ChipValues("Party"),
+    "Club hop":ChipValues("Club hop"),
+    "Sleep in":ChipValues("Sleep in"),
+    "Cook":ChipValues("Cook"),
+    "Brunch":ChipValues("Brunch"),
+    "Music":ChipValues("Music"),
+    "Long Drive":ChipValues("Long Drive"),
+    "":ChipValues("Fancy restaurants")
+  };
 
-  List<ChipValues> petsList = [
-    ChipValues("Dogs"),
-    ChipValues("Cats"),
-    ChipValues("Birds"),
-    ChipValues("Fish"),
-    ChipValues("Rabbits"),
-    ChipValues("Turtle"),
-  ];
+  Map<String,ChipValues> petsMap = {
+    "Dogs": ChipValues("Dogs"),
+    "Cats": ChipValues("Cats"),
+    "Birds": ChipValues("Birds"),
+    "Fish": ChipValues("Fish"),
+    "Rabbits": ChipValues("Rabbits"),
+    "Turtle": ChipValues("Turtle"),
+  };
 
-  List<ChipValues> selfCareList = [
-    ChipValues("Yoga"),
-    ChipValues("Run"),
-    ChipValues("Meditate"),
-    ChipValues("Spa days"),
-    ChipValues("Travel"),
-    ChipValues("Gardening"),
-    ChipValues("Cycling"),
-    ChipValues("Journal"),
-    ChipValues("Dance"),
-    ChipValues("Photography"),
-    ChipValues("Music"),
-    ChipValues("Sing"),
-  ];
+  Map<String,ChipValues> selfCareMap = {
+    "Yoga": ChipValues("Yoga"),
+    "Run": ChipValues("Run"),
+    "Meditate": ChipValues("Meditate"),
+    "Spa days": ChipValues("Spa days"),
+    "Travel": ChipValues("Travel"),
+    "Gardening": ChipValues("Gardening"),
+    "Cycling": ChipValues("Cycling"),
+    "Journal": ChipValues("Journal"),
+    "Dance": ChipValues("Dance"),
+    "Photography": ChipValues("Photography"),
+    "Music": ChipValues("Music"),
+    "Sing": ChipValues("Sing"),
+  };
 
-  List<ChipValues> foodNDrinkList = [
-    ChipValues("Chinese"),
-    ChipValues("Thai"),
-    ChipValues("Greek"),
-    ChipValues("Korean"),
-    ChipValues("Mexican"),
-    ChipValues("Japanese"),
-    ChipValues("Italian"),
-    ChipValues("Vegan"),
-  ];
+  Map<String,ChipValues> foodNDrinkMap = {
+    "Chinese":ChipValues("Chinese"),
+    "Thai":ChipValues("Thai"),
+    "Greek":ChipValues("Greek"),
+    "Korean":ChipValues("Korean"),
+    "Mexican":ChipValues("Mexican"),
+    "Japanese":ChipValues("Japanese"),
+    "Italian":ChipValues("Italian"),
+    "Vegan":ChipValues("Vegan"),
+};
 
-  List<ChipValues> sportsList = [
-    ChipValues("Pilates"),
-    ChipValues("Gym"),
-    ChipValues("Football"),
-    ChipValues("Boxing"),
-    ChipValues("Cricket"),
-    ChipValues("Tennis"),
-    ChipValues("Badminton"),
-    ChipValues("Go kart"),
-    ChipValues("Basketball"),
-    ChipValues("Baseball"),
-    ChipValues("Hockey"),
-  ];
+  Map<String,ChipValues> sportsMap = {
+    "Pilates": ChipValues("Pilates"),
+    "Gym": ChipValues("Gym"),
+    "Football": ChipValues("Football"),
+    "Boxing": ChipValues("Boxing"),
+    "Cricket": ChipValues("Cricket"),
+    "Tennis": ChipValues("Tennis"),
+    "Badminton": ChipValues("Badminton"),
+    "Go kart": ChipValues("Go kart"),
+    "Basketball": ChipValues("Basketball"),
+    "Baseball": ChipValues("Baseball"),
+    "Hockey": ChipValues("Hockey"),
+  };
 
   List<String> weekendListString = [];
   List<String> petsListString = [];
@@ -100,7 +101,36 @@ class _InterestsUpdateScreenState extends State<InterestsUpdateScreen> {
   @override
   void initState() {
     super.initState();
+    if(widget.params.profileParams != null) {
+      weekendListString.addAll(
+          widget.params.profileParams?.interests.weekendActivities ?? []);
+      petsListString.addAll(widget.params.profileParams?.interests.pets ?? []);
+      foodNDrinkListString.addAll(
+          widget.params.profileParams?.interests.fnd ?? []);
+      sportsListString.addAll(
+          widget.params.profileParams?.interests.sports ?? []);
+      selfCareListString.addAll(
+          widget.params.profileParams?.interests.selfCare ?? []);
 
+      updateSelectionState();
+
+
+      for(var weekends in weekendListString) {
+        weekendMap[weekends]?.isSelected = true;
+      }
+      for(var pets in petsListString) {
+        petsMap[pets]?.isSelected = true;
+      }
+      for(var fnd in foodNDrinkListString) {
+        foodNDrinkMap[fnd]?.isSelected = true;
+      }
+      for(var sports in sportsListString) {
+        sportsMap[sports]?.isSelected = true;
+      }
+      for(var sc in selfCareListString) {
+        selfCareMap[sc]?.isSelected = true;
+      }
+    }
   }
 
   void updateSelectionState() {
@@ -117,7 +147,7 @@ class _InterestsUpdateScreenState extends State<InterestsUpdateScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext mContext) {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
@@ -226,7 +256,7 @@ class _InterestsUpdateScreenState extends State<InterestsUpdateScreen> {
                           Wrap(
                             spacing: 8.0,
                             // Adjust spacing between chips as desired
-                            children: weekendList
+                            children: weekendMap.values
                                 .map((label) => ActionChip(
                                 side:
                                 const BorderSide(color: Colors.transparent),
@@ -246,6 +276,7 @@ class _InterestsUpdateScreenState extends State<InterestsUpdateScreen> {
                                 label: Text(label.val),
                                 onPressed: () {
                                   setState(() {
+
                                     label.isSelected = !label.isSelected;
                                     label.isSelected
                                         ? weekendListString.add(label.val)
@@ -269,7 +300,7 @@ class _InterestsUpdateScreenState extends State<InterestsUpdateScreen> {
                           Wrap(
                             spacing: 8.0,
                             // Adjust spacing between chips as desired
-                            children: petsList
+                            children: petsMap.values
                                 .map((label) => ActionChip(
                                 side:
                                 const BorderSide(color: Colors.transparent),
@@ -312,7 +343,7 @@ class _InterestsUpdateScreenState extends State<InterestsUpdateScreen> {
                           Wrap(
                             spacing: 8.0,
                             // Adjust spacing between chips as desired
-                            children: selfCareList
+                            children: selfCareMap.values
                                 .map((label) => ActionChip(
                                 side:
                                 const BorderSide(color: Colors.transparent),
@@ -355,7 +386,7 @@ class _InterestsUpdateScreenState extends State<InterestsUpdateScreen> {
                           Wrap(
                             spacing: 8.0,
                             // Adjust spacing between chips as desired
-                            children: foodNDrinkList
+                            children: foodNDrinkMap.values
                                 .map((label) => ActionChip(
                                 side:
                                 const BorderSide(color: Colors.transparent),
@@ -399,7 +430,7 @@ class _InterestsUpdateScreenState extends State<InterestsUpdateScreen> {
                           Wrap(
                             spacing: 8.0,
                             // Adjust spacing between chips as desired
-                            children: sportsList
+                            children: sportsMap.values
                                 .map((label) => ActionChip(
                                 side:
                                 const BorderSide(color: Colors.transparent),
@@ -465,9 +496,21 @@ class _InterestsUpdateScreenState extends State<InterestsUpdateScreen> {
                               selfCareListString,
                               foodNDrinkListString,
                               sportsListString);
-                          context.read<UpdateProfileBloc>().add(
-                              OnUpdateProfileRequested(widget.params.updateParams ?? UpdateProfileParams()));
+                          if(widget.params.profileParams != null) {
+                            Navigator.pop(mContext, ResponseProfileSwipeInterests(
+                                weekendListString,
+                                petsListString,
+                                selfCareListString,
+                                foodNDrinkListString,
+                                sportsListString
+                            ));
 
+                          } else {
+                            context.read<UpdateProfileBloc>().add(
+                                OnUpdateProfileRequested(
+                                    widget.params.updateParams ??
+                                        UpdateProfileParams()));
+                          }
                         }
                             : null,
                         style: ElevatedButton.styleFrom(

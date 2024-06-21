@@ -21,6 +21,7 @@ class ResponseProfileList {
       this.request,
       this.pronouns,
       this.gender,
+      this.locationCoordinates,
       this.showTruncatedName,
       );
 
@@ -40,6 +41,7 @@ class ResponseProfileList {
   String? zodiac;
   String? pronouns;
   String? gender;
+  List<String>? locationCoordinates;
   bool? showTruncatedName;
   List<String>? languages;
   ResponseProfileRequestBody? request;

@@ -58,13 +58,13 @@ class EditProfileScreen extends StatelessWidget {
                             crossAxisCount: 2,
                             children: [
                               GridItem(icon: Icons.photo, text: 'Photos', onClick: () {
-                                CustomNavigationHelper.router.go(
+                                CustomNavigationHelper.router.push(
                                     CustomNavigationHelper.uploadImagePath,
                                     extra: state.responseProfileList
                                 );
                               }),
                               GridItem(icon: Icons.contacts, text: 'Basics', onClick: () {
-                                CustomNavigationHelper.router.go(
+                                CustomNavigationHelper.router.push(
                                   CustomNavigationHelper.settingsPathBasic,
                                   extra: state.responseProfileList
                                 );

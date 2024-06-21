@@ -50,7 +50,7 @@ class ImageUploadBloc extends Bloc<ImageUploadEvent, ImageUploadState> {
       List<ImageFile> files = [];
 
       for (final uri in event.s3Params!) {
-        var val = await imageFileFromImageUrl(uri, uri.substring(0, 5));
+        var val = await imageFileFromImageUrl(uri, uri.substring(uri.length - 13 , uri.length - 4));
         files.add(val);
       }
 

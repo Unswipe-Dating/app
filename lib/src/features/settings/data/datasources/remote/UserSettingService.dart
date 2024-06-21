@@ -27,6 +27,7 @@ class UserSettingService {
        interests
        photoURLs
        location
+       locationCoordinates
        dob
        datingPreference
        height

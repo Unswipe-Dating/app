@@ -3,12 +3,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import '../../../../../core/router/app_router.dart';
+import '../../../../settings/domain/repository/user_settings_repository.dart';
 import '../../domain/repository/update_profile_repository.dart';
 
 
 class PronounUpdateScreen extends StatefulWidget {
-  final UpdateProfileParams? params;
-  const PronounUpdateScreen({super.key, this.params});
+  final SettingProfileParams params;
+  const PronounUpdateScreen({super.key, required this.params});
 
   @override
   _PronounUpdateScreenState createState() => _PronounUpdateScreenState();
@@ -26,8 +27,15 @@ class _PronounUpdateScreenState extends State<PronounUpdateScreen> {
     super.dispose();
   }
 
+
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
+    _character = getCharactedFromName(widget.params.profileParams?.pronouns);
+  }
+
+  @override
+  Widget build(BuildContext mContext) {
     return MaterialApp(
       home: Scaffold(
           appBar: AppBar(
@@ -197,13 +205,19 @@ class _PronounUpdateScreenState extends State<PronounUpdateScreen> {
                   padding: EdgeInsets.all(16),
                   child: ElevatedButton(
                     onPressed: isButtonEnabled ? () {
-                      widget.params?.pronouns = getNameFromCharacter(_character);
-                      CustomNavigationHelper.router.push(
-                        CustomNavigationHelper.onboardingPartnerGenderPath,
-                          extra: UpdateProfileParams().getUpdatedParams(widget.params)
+                      if(widget.params.profileParams != null) {
+                        Navigator.pop(mContext, getNameFromCharacter(_character));
 
-                      );
+                      } else {
+                        widget.params.updateParams?.pronouns =
+                            getNameFromCharacter(_character);
+                        CustomNavigationHelper.router.push(
+                            CustomNavigationHelper.onboardingPartnerGenderPath,
+                            extra: UpdateProfileParams().getUpdatedParams(widget
+                                .params.updateParams)
 
+                        );
+                      }
                     } : null,
                     style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
@@ -239,6 +253,16 @@ class _PronounUpdateScreenState extends State<PronounUpdateScreen> {
       case SingingCharacter.Woman: return "She/Her";
       case SingingCharacter.Nonbinary: return "They/Them";
       default: return null;
+    }
+  }
+
+  SingingCharacter getCharactedFromName(String? name) {
+    switch(name?.toLowerCase()) {
+      case "he/him": return SingingCharacter.Man;
+      case "she/her": return SingingCharacter.Woman;
+      case "they/them": return SingingCharacter.Nonbinary;
+      default: return SingingCharacter.Man;
+
     }
   }
 }

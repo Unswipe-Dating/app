@@ -27,6 +27,7 @@ class ProfileSwipeService {
             interests
             photoURLs
             location
+            locationCoordinates
             dob
             datingPreference
             height
@@ -79,12 +80,20 @@ class ProfileSwipeService {
     const query = '''
     query GetRequestedProfilesForUser(\$data: UserIdPaginatedArgs!) {
     getRequestedProfilesForUser(data: \$data){
-        id
-        userId
-        name
-        interests
-        photoURLs
-        location
+           id
+            userId
+            name
+            interests
+            photoURLs
+            location
+            locationCoordinates
+            dob
+            datingPreference
+            height
+            hometown
+            location
+            zodiac
+            languages
         request {
             id
         }
@@ -134,8 +143,7 @@ class ProfileSwipeService {
     type
     requesteeUserId
     userProfileImage
-requesteeProfileImage
-
+    requesteeProfileImage
     userId
     expiry
     status
@@ -192,9 +200,8 @@ requesteeProfileImage
     id
     type
     userId
-userProfileImage
-requesteeProfileImage
-
+    userProfileImage
+    requesteeProfileImage
     requesteeUserId
     expiry
     status
