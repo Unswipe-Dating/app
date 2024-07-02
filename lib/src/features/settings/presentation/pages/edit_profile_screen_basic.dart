@@ -40,7 +40,7 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
   double longitude = 0.0;
   bool isLoadingLocation = false;
   bool toLoadLocationFuture = false;
-  bool isLocationRequested  = false;
+  bool isLocationRequested = false;
 
   List<String> interestString = [];
 
@@ -95,25 +95,26 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
     super.initState();
     updateInterestString();
     if (widget.profile?.locationCoordinates != null) {
-      latitude = double.parse(widget.profile?.locationCoordinates?[0] ??"0");
-      longitude = double.parse(widget.profile?.locationCoordinates?[1] ??"0");
-
-
+      latitude = double.parse(widget.profile?.locationCoordinates?[0] ?? "0");
+      longitude = double.parse(widget.profile?.locationCoordinates?[1] ?? "0");
     }
-
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: (widget.profile?.location == null && latitude != 0.0 && longitude != 0.0 && !isLocationRequested)
-                ? GeoCode().reverseGeocoding(latitude: latitude, longitude: longitude)
+        future: (widget.profile?.location == null &&
+                latitude != 0.0 &&
+                longitude != 0.0 &&
+                !isLocationRequested)
+            ? GeoCode()
+                .reverseGeocoding(latitude: latitude, longitude: longitude)
             : Future<Address>.value(Address(region: widget.profile?.location)),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             isLoadingLocation = true;
           } else {
-            if(snapshot.hasData) {
+            if (snapshot.hasData) {
               widget.profile?.location = snapshot.data?.region;
             }
             isLoadingLocation = false;
@@ -436,7 +437,8 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                                                   updateParams:
                                                                       UpdateProfileParams(),
                                                                   profileParams:
-                                                                      widget.profile))));
+                                                                      widget
+                                                                          .profile))));
                                               if (gender != null) {
                                                 widget.profile?.gender = gender;
                                                 setState(() {});
@@ -626,58 +628,72 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                           const SizedBox(
                                             height: 16,
                                           ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              RichText(
-                                                text: TextSpan(
-                                                  children: [
-                                                    const WidgetSpan(
-                                                      child: Icon(Icons.sunny,
-                                                          size: 14),
+                                          InkWell(
+                                            child: Padding(
+                                              padding: EdgeInsets.all(8),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  RichText(
+                                                    text: TextSpan(
+                                                      children: [
+                                                        const WidgetSpan(
+                                                          child: Icon(
+                                                              Icons.sunny,
+                                                              size: 14),
+                                                        ),
+                                                        const WidgetSpan(
+                                                            child: SizedBox(
+                                                          width: 8,
+                                                        )),
+                                                        TextSpan(
+                                                          text: "Zodiac ",
+                                                          style: TextStyle(
+                                                              color: Colors
+                                                                  .grey[900],
+                                                              fontFamily:
+                                                                  'lato',
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                              fontSize: 16.0),
+                                                        ),
+                                                      ],
                                                     ),
-                                                    const WidgetSpan(
-                                                        child: SizedBox(
-                                                      width: 8,
-                                                    )),
-                                                    TextSpan(
-                                                      text: "Zodiac ",
-                                                      style: TextStyle(
-                                                          color:
-                                                              Colors.grey[900],
-                                                          fontFamily: 'lato',
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          fontSize: 16.0),
+                                                  ),
+                                                  RichText(
+                                                    text: TextSpan(
+                                                      children: [
+                                                        TextSpan(
+                                                          text: widget.profile
+                                                                  ?.zodiac ??
+                                                              "Add",
+                                                          style:
+                                                              const TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontFamily:
+                                                                      'lato',
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  fontSize:
+                                                                      14.0),
+                                                        ),
+                                                        const WidgetSpan(
+                                                          child: Icon(
+                                                              Icons
+                                                                  .keyboard_arrow_right,
+                                                              size: 14),
+                                                        ),
+                                                      ],
                                                     ),
-                                                  ],
-                                                ),
+                                                  ),
+                                                ],
                                               ),
-                                              RichText(
-                                                text: TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                      text: widget.profile
-                                                              ?.zodiac ??
-                                                          "Add",
-                                                      style: const TextStyle(
-                                                          color: Colors.black,
-                                                          fontFamily: 'lato',
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          fontSize: 14.0),
-                                                    ),
-                                                    const WidgetSpan(
-                                                      child: Icon(
-                                                          Icons
-                                                              .keyboard_arrow_right,
-                                                          size: 14),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
+                                            ),
                                           ),
                                           const SizedBox(
                                             height: 16,
@@ -752,79 +768,94 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                               ),
                                             ),
                                             onTap: () async {
-                                              if (isLoadingLocation || isLocationRequested) {
+                                              if (isLoadingLocation ||
+                                                  isLocationRequested) {
                                               } else {
                                                 isLoadingLocation = true;
-                                                var pos = await _determinePosition();
-                                                  longitude = pos.longitude;
-                                                  latitude = pos.latitude;
-                                                  widget.profile
-                                                      ?.locationCoordinates = [
-                                                    pos.latitude.toString(),
-                                                    pos.longitude.toString()
-                                                  ];
-                                                  widget.profile?.location = null;
-                                                  setState(() {
-                                                  });
-                                                  isLocationRequested = true;
+                                                var pos =
+                                                    await _determinePosition();
+                                                longitude = pos.longitude;
+                                                latitude = pos.latitude;
+                                                widget.profile
+                                                    ?.locationCoordinates = [
+                                                  pos.latitude.toString(),
+                                                  pos.longitude.toString()
+                                                ];
+                                                widget.profile?.location = null;
+                                                setState(() {});
+                                                isLocationRequested = true;
                                               }
                                             },
                                           ),
                                           const SizedBox(
                                             height: 16,
                                           ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              RichText(
-                                                text: TextSpan(
-                                                  children: [
-                                                    const WidgetSpan(
-                                                      child: Icon(Icons.home,
-                                                          size: 14),
+                                          InkWell(
+                                            child: Padding(
+                                              padding: EdgeInsets.all(8),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  RichText(
+                                                    text: TextSpan(
+                                                      children: [
+                                                        const WidgetSpan(
+                                                          child: Icon(
+                                                              Icons.home,
+                                                              size: 14),
+                                                        ),
+                                                        const WidgetSpan(
+                                                            child: SizedBox(
+                                                          width: 8,
+                                                        )),
+                                                        TextSpan(
+                                                          text: "Hometown ",
+                                                          style: TextStyle(
+                                                              color: Colors
+                                                                  .grey[900],
+                                                              fontFamily:
+                                                                  'lato',
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                              fontSize: 16.0),
+                                                        ),
+                                                      ],
                                                     ),
-                                                    const WidgetSpan(
-                                                        child: SizedBox(
-                                                      width: 8,
-                                                    )),
-                                                    TextSpan(
-                                                      text: "Hometown ",
-                                                      style: TextStyle(
-                                                          color:
-                                                              Colors.grey[900],
-                                                          fontFamily: 'lato',
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          fontSize: 16.0),
+                                                  ),
+                                                  RichText(
+                                                    text: TextSpan(
+                                                      children: [
+                                                        TextSpan(
+                                                          text: widget.profile
+                                                                  ?.hometown ??
+                                                              "Add",
+                                                          style:
+                                                              const TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontFamily:
+                                                                      'lato',
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  fontSize:
+                                                                      14.0),
+                                                        ),
+                                                        const WidgetSpan(
+                                                          child: Icon(
+                                                              Icons
+                                                                  .keyboard_arrow_right,
+                                                              size: 14),
+                                                        ),
+                                                      ],
                                                     ),
-                                                  ],
-                                                ),
+                                                  ),
+                                                ],
                                               ),
-                                              RichText(
-                                                text: TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                      text: widget.profile
-                                                              ?.hometown ??
-                                                          "Add",
-                                                      style: const TextStyle(
-                                                          color: Colors.black,
-                                                          fontFamily: 'lato',
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          fontSize: 14.0),
-                                                    ),
-                                                    const WidgetSpan(
-                                                      child: Icon(
-                                                          Icons
-                                                              .keyboard_arrow_right,
-                                                          size: 14),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
+                                            ),
                                           ),
                                           const SizedBox(
                                             height: 8,
