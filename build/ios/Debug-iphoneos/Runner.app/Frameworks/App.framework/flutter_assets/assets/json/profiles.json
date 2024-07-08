@@ -1,0 +1,56 @@
+[
+    {
+        "id": "1234",
+        "userName": "Peter",
+        "userAge": 27,
+        "isVerified": true,
+        "pronouns": "she/her",
+        "userDescription": "No pain no gain!",
+        "profileImageSrc": "assets/images/profilePictures/profile_1.jpg"
+    },
+    {
+        "id": "2345",
+        "userName": "Greta",
+        "userAge": 24,
+        "isVerified": true,
+        "pronouns": "she/her",
+        "userDescription": "I enjoy long walks to the fridge",
+        "profileImageSrc": "assets/images/profilePictures/profile_2.jpg"
+    },
+    {
+        "id": "3456",
+        "userName": "Alex",
+        "userAge": 33,
+        "isVerified": false,
+        "pronouns": "she/her",
+        "userDescription": "Let's connect and chat!",
+        "profileImageSrc": "assets/images/profilePictures/profile_3.jpg"
+    },
+    {
+        "id": "4567",
+        "userName": "Sophie",
+        "userAge": 26,
+        "pronouns": "she/her",
+        "isVerified": true,
+        "userDescription": "Please be patient, not often on this app",
+        "profileImageSrc": "assets/images/profilePictures/profile_4.jpg"
+    },
+    {
+        "id": "5678",
+        "userName": "Karen",
+        "userAge": 27,
+        "pronouns": "she/her",
+        "isVerified": true,
+        "userDescription": "Just ask!",
+        "profileImageSrc": "assets/images/profilePictures/profile_5.jpg"
+    },
+    {
+        "id": "6789",
+        "userName": "Daniel",
+        "userAge": 29,
+        "isVerified": false,
+        "pronouns": "she/her",
+        "userDescription": "Hiking & Travelling",
+        "profileImageSrc": "assets/images/profilePictures/profile_6.jpg"
+    }
+]
