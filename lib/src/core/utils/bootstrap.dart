@@ -16,6 +16,8 @@ import 'app_bloc_observer.dart';
 import 'injections.dart';
 import 'log/app_logger.dart';
 
+import '../../../firebase_options.dart';
+
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // If you're going to use other Firebase services in the background, such as Firestore,
@@ -27,7 +29,9 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder, String env) async {
   await runZonedGuarded(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
-      await Firebase.initializeApp();
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
       FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
       CustomNavigationHelper.instance;
 
