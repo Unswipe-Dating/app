@@ -87,6 +87,7 @@ class _NameUpdateScreenState extends State<NameUpdateScreen> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(title: const Text(""),),
         body: Padding(
@@ -121,14 +122,15 @@ class _NameUpdateScreenState extends State<NameUpdateScreen> {
               ),
               const Padding(
                 padding: EdgeInsets.all(8.0),
-                child: Text(
-                  textAlign: TextAlign.start,
-                  'Your Name ?',
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontFamily: 'Playfair',
-                      fontWeight: FontWeight.w600,
-                      fontSize: 24.0),
+                child: Align(alignment: Alignment.topLeft,
+                  child: Text(
+                    'Your Name',
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontFamily: 'Playfair',
+                        fontWeight: FontWeight.w600,
+                        fontSize: 24.0),
+                  ),
                 ),
               ),
               const Padding(
@@ -211,7 +213,7 @@ class _NameUpdateScreenState extends State<NameUpdateScreen> {
                       const Size.fromHeight(48) // Set button text color
                   ),
                   child: const Text(
-                    'Upload',
+                    'Next',
                     style: TextStyle(
                         color: Colors.white,
                         fontFamily: 'Lato',
