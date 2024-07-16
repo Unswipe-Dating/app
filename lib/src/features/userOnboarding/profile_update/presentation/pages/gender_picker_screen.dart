@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:unswipe/src/features/login/presentation/pages/Login.dart';
 import 'package:unswipe/src/features/settings/domain/repository/user_settings_repository.dart';
 import 'package:unswipe/src/features/userOnboarding/profile_update/domain/repository/update_profile_repository.dart';
 
@@ -108,8 +109,8 @@ class _GenderUpdateScreenState extends State<GenderUpdateScreen> {
                         leading: Radio<SingingCharacter>(
                           value: SingingCharacter.Man,
                           groupValue: _character,
-                          fillColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
-                            if (states.contains(MaterialState.disabled)) {
+                          fillColor: WidgetStateProperty.resolveWith<Color>((Set<WidgetState> states) {
+                            if (states.contains(WidgetState.disabled)) {
                               return Colors.black.withOpacity(.32);
                             }
                             return Colors.black;
@@ -176,8 +177,8 @@ class _GenderUpdateScreenState extends State<GenderUpdateScreen> {
                 ),
                 Padding(
                   padding: EdgeInsets.all(16),
-                  child: ElevatedButton(
-                    onPressed: isButtonEnabled ? () {
+                  child: CustomButton(
+                    onPressed: () {
                       if(widget.params.profileParams != null) {
                         Navigator.pop(mContext, getNameFromCharacter(_character));
 
@@ -191,27 +192,9 @@ class _GenderUpdateScreenState extends State<GenderUpdateScreen> {
                                 .params.updateParams)
                         );
                       }
-                    } : null,
-                    style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: Colors.black,
-                        disabledBackgroundColor: Colors.black.withOpacity(0.6),
-                        disabledForegroundColor: Colors.white.withOpacity(0.6),
-                        shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(2.0), // Rounded corners
-                        ),
-                        minimumSize:
-                            const Size.fromHeight(48) // Set button text color
-                        ),
-                    child: const Text(
-                      'Upload',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: 'Lato',
-                          fontWeight: FontWeight.w600,
-                          fontSize: 18.0),
-                    ),
+                    },
+                    text: 'Next',
+                    isEnabled: isButtonEnabled,
                   ),
                 ),
               ],
