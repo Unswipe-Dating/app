@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:unswipe/src/features/login/presentation/pages/Login.dart';
 import 'package:unswipe/src/features/userOnboarding/profile_update/data/models/update_profile_response.dart';
 import 'package:unswipe/src/features/userOnboarding/profile_update/domain/repository/update_profile_repository.dart';
 
@@ -25,6 +26,8 @@ class _NameUpdateScreenState extends State<NameUpdateScreen> {
   String emailError = "";
   bool isTrue = false;
   bool isButtonEnabled = false;
+  bool isButtonLoading = false;
+
 
   var request = [];
 
@@ -185,41 +188,29 @@ class _NameUpdateScreenState extends State<NameUpdateScreen> {
 
               Padding(
                 padding: const EdgeInsets.all(16),
-                child: ElevatedButton(
-                  onPressed: isButtonEnabled ? () async {
+                child: CustomButton(
+                  onPressed: () async {
                     isButtonEnabled = false;
+                    isButtonLoading = true;
                     setState(() {
 
                     });
                     var pos = await _determinePosition();
+                    isButtonEnabled = true;
+                    isButtonLoading = false;
+                    setState(() {
+
+                    });
                     CustomNavigationHelper.router.push(
                       CustomNavigationHelper.onboardingDOBPath,
                         extra: UpdateProfileParams(name: contactController.text,
                             showTruncatedName: isTrue, locationCoordinates: [pos.latitude.toString(),
                               pos.longitude.toString()])
                     );
-                    isButtonEnabled = true;
-                  }: null,
-                  style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: Colors.black,
-                      disabledBackgroundColor: Colors.black.withOpacity(0.6),
-                      disabledForegroundColor: Colors.white.withOpacity(0.6),
-                      shape: RoundedRectangleBorder(
-                        borderRadius:
-                        BorderRadius.circular(2.0), // Rounded corners
-                      ),
-                      minimumSize:
-                      const Size.fromHeight(48) // Set button text color
-                  ),
-                  child: const Text(
-                    'Next',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'Lato',
-                        fontWeight: FontWeight.w600,
-                        fontSize: 18.0),
-                  ),
+                  },
+                  text: 'Next',
+                  isEnabled: isButtonEnabled,
+                  isLoading: isButtonLoading,
                 ),
               ),
             ],
