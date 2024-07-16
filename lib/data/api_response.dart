@@ -24,6 +24,10 @@ class TimeOutFailure<T> extends ApiResponse<T> {
   TimeOutFailure();
 }
 
+class NoNetworkFailure<T> extends ApiResponse<T> {
+  NoNetworkFailure();
+}
+
 class AuthorizationFailure<T> extends ApiResponse<T> {
   OperationException? error;
 

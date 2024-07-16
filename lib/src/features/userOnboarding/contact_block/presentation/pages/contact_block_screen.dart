@@ -218,7 +218,7 @@ class _BlockContactState extends State<BlockContactScreen> {
                                       48) // Set button text color
                                   ),
                               child: const Text(
-                                'Import Contacts',
+                                'Block Contacts',
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontFamily: 'Lato',

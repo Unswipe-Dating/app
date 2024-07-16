@@ -31,6 +31,8 @@ class LoginRepositoryImpl implements LoginRepository {
           error: (response as AuthorizationFailure).error);
     } else if (response is OperationFailure) {
       return OperationFailure(error: (response as OperationFailure).error);
+    } else if (response is NoNetworkFailure) {
+      return NoNetworkFailure();
     } else {
       return Failure(error: (response as Failure).error);
     }

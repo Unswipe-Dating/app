@@ -44,7 +44,9 @@ class OtpService {
         }
         return Success(data: info);
       } else {
-        if (response.exception?.graphqlErrors[0].extensions?['code'] ==
+        if(response.source?.name == "network") {
+          return NoNetworkFailure();
+        } else if (response.exception?.graphqlErrors[0].extensions?['code'] ==
             "UNAUTHENTICATED") {
           return AuthorizationFailure(error: response.exception);
         }

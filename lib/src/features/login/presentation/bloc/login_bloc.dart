@@ -64,7 +64,6 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
     if (event.profileId != null) {
       onBoardingStatus = OnBoardingStatus.profile;
     }
-
     await emitter
         .forEach(updateOnboardingStateStreamUseCase.call(onBoardingStatus),
             onData: (event) {
@@ -128,6 +127,8 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
         return state.copyWith(status: LoginStatus.errorAuth);
       } else if (responseData is api_response.TimeOutFailure) {
         return state.copyWith(status: LoginStatus.errorTimeOut);
+      } else if (responseData is api_response.NoNetworkFailure) {
+        return state.copyWith(status: LoginStatus.errorNetwork);
       } else if (responseData is api_response.OperationFailure) {
         return state.copyWith(status: LoginStatus.error);
       } else if (responseData is api_response.Success) {

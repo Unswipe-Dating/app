@@ -16,6 +16,7 @@ import 'package:unswipe/src/features/onBoarding/domain/entities/onbaording_state
 import 'package:unswipe/src/features/onBoarding/domain/usecases/get_onboarding_state_stream_use_case.dart';
 import 'package:unswipe/src/features/onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart';
 import 'package:unswipe/src/features/splash/domain/usecases/meta_usecase.dart';
+import 'package:unswipe/widgets/app/platform_dialog.dart';
 import 'package:unswipe/widgets/login/icon_text.dart';
 import 'package:unswipe/widgets/login/rounded_text_field.dart';
 
@@ -29,7 +30,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-
+  bool isOtpLoaded = false;
 
   _selectScreen() async {
     if (await Permission.contacts.isGranted) {
@@ -38,45 +39,36 @@ class _LoginScreenState extends State<LoginScreen> {
       );
     } else {
       CustomNavigationHelper.router.go(
-        CustomNavigationHelper.blockContactPermissionPath,);
+        CustomNavigationHelper.blockContactPermissionPath,
+      );
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery
-          .of(context)
-          .size
-          .width,
-      height: MediaQuery
-          .of(context)
-          .size
-          .height,
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
       decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage(
-              'assets/images/crowd_bkgd.jpg',
-            ),
-            fit: BoxFit.fill,
-          )),
+        image: AssetImage(
+          'assets/images/crowd_bkgd.jpg',
+        ),
+        fit: BoxFit.fill,
+      )),
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: BlocProvider(
-          create: (BuildContext context) =>
-              LoginBloc(
-                  updateUserStateStreamUseCase:
-                  GetIt.I.get<UpdateUserStateStreamUseCase>(),
-                  requestOtpUseCase: GetIt.I.get<RequestOtpUseCase>(),
-                  verifyOtpUseCase: GetIt.I.get<VerifyOtpUseCase>(),
-                  updateOnboardingStateStreamUseCase: GetIt.I.get<
-                      UpdateOnboardingStateStreamUseCase>(),
-                  signUpUseCase: GetIt.I.get<SignUpUseCase>(),
-                metaUseCase: GetIt.I.get<MetaUseCase>(),
-
-              ),
-
+          create: (BuildContext context) => LoginBloc(
+            updateUserStateStreamUseCase:
+                GetIt.I.get<UpdateUserStateStreamUseCase>(),
+            requestOtpUseCase: GetIt.I.get<RequestOtpUseCase>(),
+            verifyOtpUseCase: GetIt.I.get<VerifyOtpUseCase>(),
+            updateOnboardingStateStreamUseCase:
+                GetIt.I.get<UpdateOnboardingStateStreamUseCase>(),
+            signUpUseCase: GetIt.I.get<SignUpUseCase>(),
+            metaUseCase: GetIt.I.get<MetaUseCase>(),
+          ),
           child: BlocConsumer<LoginBloc, LoginState>(
             listener: (context, state) {
               if (state.status == LoginStatus.loaded) {
@@ -84,47 +76,61 @@ class _LoginScreenState extends State<LoginScreen> {
                   CustomNavigationHelper.router.go(
                     CustomNavigationHelper.profilePath,
                   );
-                }  else {
+                } else {
                   _selectScreen();
                 }
-
-              }
-              else if(state.status == LoginStatus.loadedChat) {
-                CustomNavigationHelper.router
-                    .go(CustomNavigationHelper.startChatPath, extra: state.chatParams);
-              } else if(state.status == LoginStatus.loadedExpiryTimer) {
-                CustomNavigationHelper.router
-                    .go(CustomNavigationHelper.profilePathHyperEx, extra:  state.profileMatchDuration);
-
-              } else if(state.status == LoginStatus.errorAuth) {
+              } else if (state.status == LoginStatus.loadedChat) {
+                CustomNavigationHelper.router.go(
+                    CustomNavigationHelper.startChatPath,
+                    extra: state.chatParams);
+              } else if (state.status == LoginStatus.loadedExpiryTimer) {
+                CustomNavigationHelper.router.go(
+                    CustomNavigationHelper.profilePathHyperEx,
+                    extra: state.profileMatchDuration);
+              } else if (state.status == LoginStatus.errorAuth) {
                 CustomNavigationHelper.router.go(
                   CustomNavigationHelper.loginPath,
                 );
-              }
+              } else if (state.status == LoginStatus.errorNetwork) {
+                showAlertDialog(
+                    context: context,
+                    title: "Error",
+                    content: "No Internet Available",
+                    defaultActionText: "Okay");
+              } else if (state.status == LoginStatus.loadedOtp) {
+                isOtpLoaded = true;
+              } else if (state.status == LoginStatus.loadingResend) {
+              } else if (state.status == LoginStatus.loadedResend) {}
             },
             builder: (context, state) {
-              return state.status == (LoginStatus.loadingVerification )
+              return state.status == (LoginStatus.loadingVerification)
                   ? const Center(child: CircularProgressIndicator())
-                  : const Stack(
-                children: [
-                  Center(
-                    child: MyForm(),
-                  )
-                ],
-              );
+                  : Stack(
+                      children: [
+                        Center(
+                          child: MyForm(
+                            status: state.status,
+                            isOtpLoaded: isOtpLoaded,
+                          ),
+                        )
+                      ],
+                    );
             },
           ),
         ),
       ),
     );
   }
-
 }
 
 class MyForm extends StatefulWidget {
+  final LoginStatus status;
+  final bool isOtpLoaded;
 
   const MyForm({
     super.key,
+    required this.status,
+    required this.isOtpLoaded,
   });
 
   @override
@@ -138,7 +144,6 @@ class _MyFormState extends State<MyForm> {
   TextEditingController codeController = TextEditingController();
 
   TextEditingController otpController = TextEditingController();
-  late CustomButtonState buttonState;
 
   bool isCodeRequested = false;
   bool isButtonEnabled = false;
@@ -152,16 +157,20 @@ class _MyFormState extends State<MyForm> {
   int _start = 9;
 
   @override
+  void didUpdateWidget(MyForm oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    validateFields();
+  }
+
+  @override
   void initState() {
     super.initState();
-
     services.requestNotificationPermission();
-    services.getDeviceToken().then((onValue){
+    services.getDeviceToken().then((onValue) {
       fcmToken = onValue ?? "";
     });
 
     // Add listeners to the controllers to track changes in text fields
-    buttonState = CustomButtonState.code;
     codeController.text = "+91";
 
     contactController.addListener(validateFields);
@@ -185,7 +194,7 @@ class _MyFormState extends State<MyForm> {
 
     // Enable or disable the button based on the validation status
     setState(() {
-      isResendEnabled = !toShowTimer && contactController.text.isEmpty;
+      isResendEnabled = !toShowTimer && contactController.text.isNotEmpty;
       isButtonEnabled = isButtonEnabledState(isEmailValid, isPasswordValid);
       isOtpEnabled = isEmailValid && isCodeRequested;
     });
@@ -202,61 +211,80 @@ class _MyFormState extends State<MyForm> {
   }
 
   bool isButtonEnabledState(bool email, bool password) {
-    switch (buttonState) {
-      case CustomButtonState.loading:
-        return true; // we need to change it according to start api and update it on api response
-      case CustomButtonState.code:
-        return email;
-      case CustomButtonState.signup:
+    switch (widget.status) {
+      case LoginStatus.loadedOtp:
+      case LoginStatus.loadedResend:
         return email && password && isCodeRequested;
+      case LoginStatus.initial:
+        return email;
+      case LoginStatus.loadingVerification:
+      case LoginStatus.loadingOTP:
+      case LoginStatus.loadingResend:
+        return false;
+      default:
+        return email;
     }
   }
 
-  void onButtonClick(
+  void onLoginClick(
     String email,
     String code,
   ) async {
-    switch (buttonState) {
-      case CustomButtonState.loading:
-        {}
-      case CustomButtonState.code:
+    switch (widget.status) {
+      case LoginStatus.initial:
         {
-          buttonState = CustomButtonState.signup;
           startTimer();
           context.read<LoginBloc>().add(OnOtpRequested(OtpParams(
               phone: "${codeController.text}${contactController.text}",
               id: "${codeController.text}${contactController.text}")));
         }
-      case CustomButtonState.signup:
+      case LoginStatus.loadedOtp:
         {
-            context.read<LoginBloc>().add(
-                OnOtpVerificationRequest(
-                    OtpParams(phone: "${codeController.text}${contactController.text}",
-                        id: "${codeController.text}${contactController.text}",
-                        otp: otpController.text,
-                        fcmRegisterationToken: fcmToken,
-                    )));
-
+          context.read<LoginBloc>().add(OnOtpVerificationRequest(OtpParams(
+                phone: "${codeController.text}${contactController.text}",
+                id: "${codeController.text}${contactController.text}",
+                otp: otpController.text,
+                fcmRegisterationToken: fcmToken,
+              )));
         }
+      case LoginStatus.error:
+      case LoginStatus.errorNetwork:
+      case LoginStatus.errorAuth:
+      case LoginStatus.errorTimeOut:
+        {
+          if (!widget.isOtpLoaded) {
+            startTimer();
+            context.read<LoginBloc>().add(OnOtpRequested(OtpParams(
+                phone: "${codeController.text}${contactController.text}",
+                id: "${codeController.text}${contactController.text}")));
+          } else {
+            context.read<LoginBloc>().add(OnOtpVerificationRequest(OtpParams(
+                  phone: "${codeController.text}${contactController.text}",
+                  id: "${codeController.text}${contactController.text}",
+                  otp: otpController.text,
+                  fcmRegisterationToken: fcmToken,
+                )));
+          }
+        }
+      default:
+        {}
     }
     validateFields();
   }
 
   void startTimer() {
     isCodeRequested = true;
-    buttonState = CustomButtonState.signup;
     const oneSec = Duration(seconds: 1);
     toShowTimer = true;
     timer = Timer.periodic(
       oneSec,
       (Timer timer) {
         if (_start == 0) {
-
           setState(() {
             timer.cancel();
             toShowTimer = false;
-            isResendVisible = true;
-            isResendEnabled = true;
+            isResendVisible = widget.isOtpLoaded ? true : false;
+            isResendEnabled = widget.isOtpLoaded ? true : false;
             _start = 9;
           });
         } else {
@@ -281,7 +309,7 @@ class _MyFormState extends State<MyForm> {
       color: Colors.white,
       surfaceTintColor: Colors.white,
       margin: const EdgeInsets.all(16.0),
-      child:  Padding(
+      child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -350,32 +378,34 @@ class _MyFormState extends State<MyForm> {
                 color: const Color.fromARGB(97, 97, 97, 1),
               ),
             const SizedBox(height: 16.0),
-            if (isResendVisible )
+            if (isResendVisible)
               CustomButton(
                   text: "Resend",
                   onPressed: () {
-
                     setState(() {
                       isResendEnabled = false;
                       startTimer();
+                      validateFields();
                     });
                     context.read<LoginBloc>().add(OnOtpResendRequested(OtpParams(
-                        phone: contactController.text, id: contactController.text)));
+                        phone:
+                            "${codeController.text}${contactController.text}",
+                        id: "${codeController.text}${contactController.text}")));
                   },
-                  isLoading: context.watch<LoginBloc>().state.status == LoginStatus.loadingResend,
+                  isLoading: context.watch<LoginBloc>().state.status ==
+                      LoginStatus.loadingResend,
                   isEnabled: isResendEnabled),
             const SizedBox(height: 8.0),
             CustomButton(
-              text: buttonState.text,
-              onPressed: () {
-                onButtonClick(contactController.text, otpController.text);
-                setState(() {
-                  isButtonEnabled = false;
-                });
-              },
-              isEnabled: isButtonEnabled,
-              isLoading: context.watch<LoginBloc>().state.status == LoginStatus.loadingOTP
-            ),
+                text: widget.status.text,
+                onPressed: () {
+                  onLoginClick(contactController.text, otpController.text);
+                  setState(() {
+                    isButtonEnabled = false;
+                  });
+                },
+                isEnabled: isButtonEnabled,
+                isLoading: widget.status == LoginStatus.loadingOTP),
             const SizedBox(height: 8.0),
           ],
         ),
@@ -433,17 +463,17 @@ class _CustomButtonState extends State<CustomButton> {
   }
 }
 
-enum CustomButtonState { code, signup, loading }
-
-extension CustomButtonStateText on CustomButtonState {
+extension CustomButtonStateText on LoginStatus {
   String get text {
     switch (this) {
-      case CustomButtonState.code:
+      case LoginStatus.initial:
         return "Send code";
-      case CustomButtonState.signup:
+      case LoginStatus.loadedOtp:
         return "Signup/Login";
-      case CustomButtonState.loading:
+      case LoginStatus.loadingOTP:
         return "Loading ...";
+      default:
+        return "Signup/Login";
     }
   }
 }
