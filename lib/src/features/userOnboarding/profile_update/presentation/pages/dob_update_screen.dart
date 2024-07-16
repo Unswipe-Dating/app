@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:unswipe/src/features/login/presentation/pages/Login.dart';
 import 'package:unswipe/src/features/userOnboarding/profile_update/data/models/update_profile_response.dart';
 import 'package:unswipe/src/features/userOnboarding/profile_update/domain/repository/update_profile_repository.dart';
 
@@ -106,9 +107,10 @@ class _DOBUpdateScreenState extends State<DOBUpdateScreen> {
                     ),
                   ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Align(alignment: Alignment.topLeft,
+                    child: Text(
                     textAlign: TextAlign.start,
                     'You were born on',
                     style: TextStyle(
@@ -117,9 +119,10 @@ class _DOBUpdateScreenState extends State<DOBUpdateScreen> {
                         fontWeight: FontWeight.w600,
                         fontSize: 24.0),
                   ),
+                  ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
                   child: Text(
                     "We display only your age to potential matches.",
                     style: TextStyle(
@@ -178,8 +181,8 @@ class _DOBUpdateScreenState extends State<DOBUpdateScreen> {
 
                 Padding(
                   padding: EdgeInsets.all(16),
-                  child: ElevatedButton(
-                    onPressed: isButtonEnabled ? () {
+                  child: CustomButton(
+                    onPressed: () {
                       widget.params?.dob = getDOB(yearController.text,
                           monthController.text,
                           dateController.text
@@ -191,27 +194,9 @@ class _DOBUpdateScreenState extends State<DOBUpdateScreen> {
                       );
 
 
-                    } : null,
-                    style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: Colors.black,
-                        disabledBackgroundColor: Colors.black.withOpacity(0.6),
-                        disabledForegroundColor: Colors.white.withOpacity(0.6),
-                        shape: RoundedRectangleBorder(
-                          borderRadius:
-                          BorderRadius.circular(2.0), // Rounded corners
-                        ),
-                        minimumSize:
-                        const Size.fromHeight(48) // Set button text color
-                    ),
-                    child: const Text(
-                      'Upload',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: 'Lato',
-                          fontWeight: FontWeight.w600,
-                          fontSize: 18.0),
-                    ),
+                    },
+                    text: 'Next',
+                    isEnabled: isButtonEnabled,
                   ),
                 ),
               ],
