@@ -26,7 +26,7 @@ class _SwipeImageGalleryState extends State<SwipeImageGallery> {
               onPageChanged: (value) => setState(() => currentIndex = value),
               itemCount: widget.imageUrls.length,
               itemBuilder: (context, index) {
-                return Image.network(
+                var image =  Image.network(
                   widget.imageUrls[index],
                   height: MediaQuery.of(context).size.height * 0.6,
                   width: double.infinity,
@@ -34,6 +34,13 @@ class _SwipeImageGalleryState extends State<SwipeImageGallery> {
                   errorBuilder: (context, error, stackTrace) =>
                       const Center(child: Icon(Icons.error)),
                 );
+                    return FadeInImage.assetNetwork(
+                      placeholder:'assets/run_heart.gif',
+                      image: widget.imageUrls[index],
+                        height: MediaQuery.of(context).size.height * 0.6,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                    );
               },
             ),
           ),

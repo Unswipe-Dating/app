@@ -218,7 +218,7 @@ class _BlockContactState extends State<BlockContactScreen> {
                                       48) // Set button text color
                                   ),
                               child: const Text(
-                                'Block Contacts',
+                                'Block Selected Contacts',
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontFamily: 'Lato',

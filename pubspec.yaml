@@ -209,6 +209,7 @@ flutter:
     - assets/images/
     - assets/json/
     - assets/images/profilePictures/
+    - assets/run_heart.gif
 
   fonts:
     - family: Playfair
