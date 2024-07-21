@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:unswipe/src/features/community/statistics_community_page.dart';
+import 'package:unswipe/src/features/community/statistics_contribute_page.dart';
 
 
 class RoundTabBarPage extends StatefulWidget {
@@ -21,7 +22,7 @@ class _RoundTabBarPageState extends State<RoundTabBarPage> {
   Widget build(BuildContext context) {
     return Container(color: Colors.white,
       child: DefaultTabController(
-        length: 2,
+        length: 1,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -40,9 +41,6 @@ class _RoundTabBarPageState extends State<RoundTabBarPage> {
               ),
               tabs: const [
                 Tab(
-                  text: "Statistics",
-                ),
-                Tab(
                   text: "Contribute",
                 ),
               ],
@@ -50,8 +48,7 @@ class _RoundTabBarPageState extends State<RoundTabBarPage> {
             const Expanded(
               child: TabBarView(
                 children: [
-                  StatisticsCommunityPage(),
-                  StatisticsCommunityPage(),
+                  StatisticsContributePage(),
                 ],
               ),
             )

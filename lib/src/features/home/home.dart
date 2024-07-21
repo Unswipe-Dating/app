@@ -43,7 +43,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
           ),
         ),
-        body: SafeArea(
+        body: Container(
           child: widget.child,
         ),
         bottomNavigationBar: BottomNavigationBar(

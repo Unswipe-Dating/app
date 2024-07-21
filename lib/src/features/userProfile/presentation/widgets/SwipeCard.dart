@@ -141,7 +141,7 @@ class _SwipeCard extends State<SwipeCard> {
                     height: 16,
                   ),
                   InterestsCard(
-                      header: "Interests", chipLabels: interestString),
+                      header: "Interests", chipLabels: interestString, isFilled: false,),
                   const SizedBox(
                     height: 16,
                   ),
@@ -156,7 +156,7 @@ class _SwipeCard extends State<SwipeCard> {
                   // ),
                   if (widget.languages?.isNotEmpty == true)
                     InterestsCard(
-                        header: "Languages", chipLabels: widget.languages!),
+                        header: "Languages", chipLabels: widget.languages!, isFilled: false,),
                   if (widget.languages?.isNotEmpty == true)
                   const SizedBox(
                     height: 16,

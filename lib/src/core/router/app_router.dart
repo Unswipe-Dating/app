@@ -13,6 +13,8 @@ import 'package:unswipe/src/features/onBoarding/presentation/pages/OnBoarding.da
 import 'package:unswipe/src/features/settings/domain/repository/user_settings_repository.dart';
 import 'package:unswipe/src/features/settings/presentation/pages/edit_profile_screen.dart';
 import 'package:unswipe/src/features/settings/presentation/pages/edit_profile_screen_basic.dart';
+import 'package:unswipe/src/features/settings/presentation/pages/edit_profile_screen_lifestyle.dart';
+import 'package:unswipe/src/features/settings/presentation/pages/edit_profile_screen_values.dart';
 import 'package:unswipe/src/features/splash/presentation/pages/splash_page.dart';
 import 'package:unswipe/src/features/userOnboarding/profile_update/data/models/update_profile_response.dart';
 import 'package:unswipe/src/features/userOnboarding/profile_update/domain/repository/update_profile_repository.dart';
@@ -22,6 +24,7 @@ import 'package:unswipe/src/features/userProfile/presentation/pages/profile_view
 
 import '../../chat/chat.dart';
 import '../../features/chat/chat_request_screen.dart';
+import '../../features/settings/presentation/pages/edit_profile_screen_work.dart';
 import '../../features/userOnboarding/contact_block/presentation/pages/contact_block_init_screen.dart';
 import '../../features/userOnboarding/contact_block/presentation/pages/contact_block_screen.dart';
 import '../../features/userOnboarding/image_upload/presentation/pages/multi_image_picker_screen.dart';
@@ -77,19 +80,17 @@ class CustomNavigationHelper {
   static const String onboardingPronounPath = '/onboardPronoun';
   static const String onboardingPartnerGenderPath = '/onboardPartnerGender';
   static const String onboardingInterestPath = '/onboardInterest';
-
-
-
-
-
   static const String chatRequestPath = '/chat/chatRequest';
-
   static const String startChatPath = '/startChat';
-
   static const String chatPath = '/chat';
   static const String communityPath = '/community';
   static const String settingsPath = '/settings';
   static const String settingsPathBasic = '/settings/basic';
+  static const String settingsPathLifeStyle = '/settings/lifestyle';
+  static const String settingsPathWork = '/settings/work';
+  static const String settingsPathValues = '/settings/value';
+
+
   static const String chatScreen = '/chatScreen';
 
 
@@ -219,6 +220,36 @@ class CustomNavigationHelper {
           ResponseProfileList profile = state.extra as ResponseProfileList;
           return getPage(
             child: EditProfileScreenBasic(profile: profile),
+            state: state,
+          );
+        },
+      ),
+      GoRoute(
+        path: settingsPathLifeStyle,
+        pageBuilder: (context, state) {
+          ResponseProfileList profile = state.extra as ResponseProfileList;
+          return getPage(
+            child: EditProfileScreenLifestyle(profile: profile),
+            state: state,
+          );
+        },
+      ),
+      GoRoute(
+        path: settingsPathWork,
+        pageBuilder: (context, state) {
+          ResponseProfileList profile = state.extra as ResponseProfileList;
+          return getPage(
+            child: EditProfileScreenWork(profile: profile),
+            state: state,
+          );
+        },
+      ),
+      GoRoute(
+        path: settingsPathValues,
+        pageBuilder: (context, state) {
+          ResponseProfileList profile = state.extra as ResponseProfileList;
+          return getPage(
+            child: EditProfileScreenValue(profile: profile),
             state: state,
           );
         },

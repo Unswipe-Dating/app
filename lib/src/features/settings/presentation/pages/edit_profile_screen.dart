@@ -11,8 +11,17 @@ import '../../../userOnboarding/profile_update/domain/usecases/update_user_use_c
 import '../../../userOnboarding/profile_update/presentation/bloc/profile_update_bloc.dart';
 import '../../domain/usecases/get_settings_profile_usecase.dart';
 
-class EditProfileScreen extends StatelessWidget {
+class EditProfileScreen extends StatefulWidget {
+
   const EditProfileScreen({super.key});
+
+  @override
+  State<EditProfileScreen> createState() => _EditProfileScreenState();
+}
+
+class _EditProfileScreenState extends State<EditProfileScreen> {
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +48,7 @@ class EditProfileScreen extends StatelessWidget {
                     GetIt.I.get<UpdateUserStateStreamUseCase>(),
                 getSettingsProfileUseCase:
                     GetIt.I.get<GetSettingsProfileUseCase>())
-            ..add(OnStartGettingProfile()),
+            ,
             child: BlocConsumer<UpdateProfileBloc, UpdateProfileState>(
               listener: (context, state) {
                 if (state.status == UpdateProfileStatus.loadedProfile) {
@@ -68,12 +77,28 @@ class EditProfileScreen extends StatelessWidget {
                                   CustomNavigationHelper.settingsPathBasic,
                                   extra: state.responseProfileList
                                 );
-                              }, ),
-                              GridItem(icon: Icons.work, text: 'Work', onClick: () {}),
+                              },
+                              ),
+                              GridItem(icon: Icons.work, text: 'Work', onClick: () {
+                                CustomNavigationHelper.router.push(
+                                    CustomNavigationHelper.settingsPathWork,
+                                    extra: state.responseProfileList
+                                );
+                              }),
                               GridItem(
-                                  icon: Icons.remove_red_eye, text: 'Values', onClick: () {}),
+                                  icon: Icons.remove_red_eye, text: 'Values', onClick: () {
+                                CustomNavigationHelper.router.push(
+                                    CustomNavigationHelper.settingsPathValues,
+                                    extra: state.responseProfileList
+                                );
+                              }),
                               GridItem(
-                                  icon: Icons.nightlife, text: 'Lifestyle', onClick: () {}),
+                                  icon: Icons.nightlife, text: 'Lifestyle', onClick: () {
+                                CustomNavigationHelper.router.push(
+                                    CustomNavigationHelper.settingsPathLifeStyle,
+                                    extra: state.responseProfileList
+                                );
+                              }),
                               GridItem(icon: Icons.message, text: 'Prompt', onClick: () {}),
                             ],
                           ),
@@ -84,6 +109,11 @@ class EditProfileScreen extends StatelessWidget {
             )),
       ),
     );
+  }
+
+  @override
+  void setState(VoidCallback fn) {
+    super.setState(fn);
   }
 }
 

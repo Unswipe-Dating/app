@@ -25,23 +25,22 @@ import '../../../onBoarding/domain/usecases/update_onboarding_state_stream_useca
 import '../../../userOnboarding/profile_update/domain/repository/update_profile_repository.dart';
 import '../../../userOnboarding/profile_update/presentation/bloc/profile_update_bloc.dart';
 
-class EditProfileScreenBasic extends StatefulWidget {
+class EditProfileScreenWork extends StatefulWidget {
   final ResponseProfileList? profile;
 
-  const EditProfileScreenBasic({super.key, this.profile});
+  const EditProfileScreenWork({super.key, this.profile});
 
   @override
-  State<EditProfileScreenBasic> createState() => _EditProfileScreenBasicState();
+  State<EditProfileScreenWork> createState() => _EditProfileScreenWorkState();
 }
 
-class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
+class _EditProfileScreenWorkState extends State<EditProfileScreenWork> {
   bool isButtonEnabled = true;
   double latitude = 0.0;
   double longitude = 0.0;
   bool isLoadingLocation = false;
   bool toLoadLocationFuture = false;
   bool isLocationRequested = false;
-  bool isLoadingValues = true;
 
   List<String> interestString = [];
 
@@ -105,11 +104,11 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
   Widget build(BuildContext context) {
     return FutureBuilder(
         future: (widget.profile?.location == null &&
-                latitude != 0.0 &&
-                longitude != 0.0 &&
-                !isLocationRequested)
+            latitude != 0.0 &&
+            longitude != 0.0 &&
+            !isLocationRequested)
             ? GeoCode()
-                .reverseGeocoding(latitude: latitude, longitude: longitude)
+            .reverseGeocoding(latitude: latitude, longitude: longitude)
             : Future<Address>.value(Address(region: widget.profile?.location)),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -124,8 +123,7 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
             appBar: AppBar(
               backgroundColor: Colors.white,
               shadowColor: Colors.black,
-              elevation: 4.0,
-              title: const Text(
+              elevation: 4.0,              title: const Text(
                 "Basics",
                 style: TextStyle(
                     color: Colors.black,
@@ -139,37 +137,31 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
               height: MediaQuery.of(context).size.height,
               decoration: const BoxDecoration(
                   image: DecorationImage(
-                image: AssetImage(
-                  'assets/images/permission_bg.png',
-                ),
-                fit: BoxFit.fill,
-              )),
+                    image: AssetImage(
+                      'assets/images/permission_bg.png',
+                    ),
+                    fit: BoxFit.fill,
+                  )),
               child: BlocProvider(
                   create: (BuildContext context) => UpdateProfileBloc(
                       updateOnboardingStateStreamUseCase:
-                          GetIt.I.get<UpdateOnboardingStateStreamUseCase>(),
+                      GetIt.I.get<UpdateOnboardingStateStreamUseCase>(),
                       getAuthStateStreamUseCase:
-                          GetIt.I.get<GetAuthStateStreamUseCase>(),
+                      GetIt.I.get<GetAuthStateStreamUseCase>(),
                       updateProfileUseCase: GetIt.I.get<UpdateProfileUseCase>(),
                       createProfileUseCase: GetIt.I.get<CreateProfileUseCase>(),
                       updateUserStateStreamUseCase:
-                          GetIt.I.get<UpdateUserStateStreamUseCase>(),
+                      GetIt.I.get<UpdateUserStateStreamUseCase>(),
                       getSettingsProfileUseCase:
-                          GetIt.I.get<GetSettingsProfileUseCase>())
-                    ..add(OnStartGettingProfile()),
+                      GetIt.I.get<GetSettingsProfileUseCase>()),
                   child: BlocConsumer<UpdateProfileBloc, UpdateProfileState>(
                     listener: (context, state) {
                       if (state.status == UpdateProfileStatus.loaded) {
-                        isLoadingValues = false;
                       } else if (state.status ==
                           UpdateProfileStatus.errorAuth) {
                         CustomNavigationHelper.router.go(
                           CustomNavigationHelper.loginPath,
                         );
-                      }
-                      else if (state.status == UpdateProfileStatus.loadedProfile) {
-                        isLoadingValues = false;
-
                       }
                     },
                     builder: (context, state) {
@@ -203,36 +195,31 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                 const SizedBox(
                                   height: 16,
                                 ),
-                                interestString.isNotEmpty
-                                    ? InkWell(
-                                        child: InterestsCard(
-                                          header: null,
-                                          chipLabels: interestString,
-                                          elevation: 4,
-                                        ),
-                                        onTap: () async {
-                                          final interests = await Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      InterestsUpdateScreen(
-                                                          params: SettingProfileParams(
-                                                              updateParams:
-                                                                  UpdateProfileParams(),
-                                                              profileParams: widget
-                                                                  .profile))));
-                                          if (interests != null) {
-                                            widget.profile?.interests =
-                                                interests;
-                                            setState(() {
-                                              updateInterestString();
-                                            });
-                                          }
-                                        },
-                                      )
-                                    : const SizedBox(
-                                        height: 32,
-                                      ),
+                                InkWell(
+                                  child: InterestsCard(
+                                    header: null,
+                                    chipLabels: interestString,
+                                    elevation: 4,
+                                  ),
+                                  onTap: () async {
+                                    final interests = await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                InterestsUpdateScreen(
+                                                    params: SettingProfileParams(
+                                                        updateParams:
+                                                        UpdateProfileParams(),
+                                                        profileParams:
+                                                        widget.profile))));
+                                    if (interests != null) {
+                                      widget.profile?.interests = interests;
+                                      setState(() {
+                                        updateInterestString();
+                                      });
+                                    }
+                                  },
+                                ),
                                 const SizedBox(
                                   height: 32,
                                 ),
@@ -268,7 +255,7 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                       padding: const EdgeInsets.all(16.0),
                                       child: Row(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                        MainAxisAlignment.spaceBetween,
                                         children: [
                                           RichText(
                                             text: TextSpan(
@@ -279,15 +266,15 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                                 ),
                                                 const WidgetSpan(
                                                     child: SizedBox(
-                                                  width: 8,
-                                                )),
+                                                      width: 8,
+                                                    )),
                                                 TextSpan(
                                                   text: "Pronoun ",
                                                   style: TextStyle(
                                                       color: Colors.grey[900],
                                                       fontFamily: 'lato',
                                                       fontWeight:
-                                                          FontWeight.w600,
+                                                      FontWeight.w600,
                                                       fontSize: 16.0),
                                                 ),
                                               ],
@@ -298,13 +285,13 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                               children: [
                                                 TextSpan(
                                                   text: widget
-                                                          .profile?.pronouns ??
+                                                      .profile?.pronouns ??
                                                       "not set",
                                                   style: const TextStyle(
                                                       color: Colors.black,
                                                       fontFamily: 'lato',
                                                       fontWeight:
-                                                          FontWeight.w500,
+                                                      FontWeight.w500,
                                                       fontSize: 14.0),
                                                 ),
                                                 const WidgetSpan(
@@ -328,9 +315,9 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                                 PronounUpdateScreen(
                                                     params: SettingProfileParams(
                                                         updateParams:
-                                                            UpdateProfileParams(),
+                                                        UpdateProfileParams(),
                                                         profileParams:
-                                                            widget.profile))));
+                                                        widget.profile))));
                                     if (pronouns != null) {
                                       widget.profile?.pronouns = pronouns;
                                       setState(() {});
@@ -379,8 +366,8 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                               padding: EdgeInsets.all(8),
                                               child: Row(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
+                                                MainAxisAlignment
+                                                    .spaceBetween,
                                                 children: [
                                                   RichText(
                                                     text: TextSpan(
@@ -392,18 +379,18 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                                         ),
                                                         const WidgetSpan(
                                                             child: SizedBox(
-                                                          width: 8,
-                                                        )),
+                                                              width: 8,
+                                                            )),
                                                         TextSpan(
                                                           text: "Gender ",
                                                           style: TextStyle(
                                                               color: Colors
                                                                   .grey[900],
                                                               fontFamily:
-                                                                  'lato',
+                                                              'lato',
                                                               fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
+                                                              FontWeight
+                                                                  .w600,
                                                               fontSize: 16.0),
                                                         ),
                                                       ],
@@ -414,19 +401,19 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                                       children: [
                                                         TextSpan(
                                                           text: widget.profile
-                                                                  ?.gender ??
+                                                              ?.gender ??
                                                               "not set",
                                                           style:
-                                                              const TextStyle(
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontFamily:
-                                                                      'lato',
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                  fontSize:
-                                                                      14.0),
+                                                          const TextStyle(
+                                                              color: Colors
+                                                                  .black,
+                                                              fontFamily:
+                                                              'lato',
+                                                              fontWeight:
+                                                              FontWeight
+                                                                  .w500,
+                                                              fontSize:
+                                                              14.0),
                                                         ),
                                                         const WidgetSpan(
                                                           child: Icon(
@@ -448,10 +435,10 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                                           GenderUpdateScreen(
                                                               params: SettingProfileParams(
                                                                   updateParams:
-                                                                      UpdateProfileParams(),
+                                                                  UpdateProfileParams(),
                                                                   profileParams:
-                                                                      widget
-                                                                          .profile))));
+                                                                  widget
+                                                                      .profile))));
                                               if (gender != null) {
                                                 widget.profile?.gender = gender;
                                                 setState(() {});
@@ -466,8 +453,8 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                               padding: EdgeInsets.all(8),
                                               child: Row(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
+                                                MainAxisAlignment
+                                                    .spaceBetween,
                                                 children: [
                                                   RichText(
                                                     text: TextSpan(
@@ -479,19 +466,19 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                                         ),
                                                         const WidgetSpan(
                                                             child: SizedBox(
-                                                          width: 8,
-                                                        )),
+                                                              width: 8,
+                                                            )),
                                                         TextSpan(
                                                           text:
-                                                              "Prefer to date ",
+                                                          "Prefer to date ",
                                                           style: TextStyle(
                                                               color: Colors
                                                                   .grey[900],
                                                               fontFamily:
-                                                                  'lato',
+                                                              'lato',
                                                               fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
+                                                              FontWeight
+                                                                  .w600,
                                                               fontSize: 16.0),
                                                         ),
                                                       ],
@@ -502,19 +489,19 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                                       children: [
                                                         TextSpan(
                                                           text: widget.profile
-                                                                  ?.datingPreference ??
+                                                              ?.datingPreference ??
                                                               "not set",
                                                           style:
-                                                              const TextStyle(
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontFamily:
-                                                                      'lato',
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                  fontSize:
-                                                                      14.0),
+                                                          const TextStyle(
+                                                              color: Colors
+                                                                  .black,
+                                                              fontFamily:
+                                                              'lato',
+                                                              fontWeight:
+                                                              FontWeight
+                                                                  .w500,
+                                                              fontSize:
+                                                              14.0),
                                                         ),
                                                         const WidgetSpan(
                                                           child: Icon(
@@ -536,13 +523,13 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                                           PartnerGenderUpdateScreen(
                                                               params: SettingProfileParams(
                                                                   updateParams:
-                                                                      UpdateProfileParams(),
+                                                                  UpdateProfileParams(),
                                                                   profileParams:
-                                                                      widget
-                                                                          .profile))));
+                                                                  widget
+                                                                      .profile))));
                                               if (datePreference != null) {
                                                 widget.profile
-                                                        ?.datingPreference =
+                                                    ?.datingPreference =
                                                     datePreference;
                                                 setState(() {});
                                               }
@@ -556,8 +543,8 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                               padding: EdgeInsets.all(8),
                                               child: Row(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
+                                                MainAxisAlignment
+                                                    .spaceBetween,
                                                 children: [
                                                   RichText(
                                                     text: TextSpan(
@@ -570,18 +557,18 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                                         ),
                                                         const WidgetSpan(
                                                             child: SizedBox(
-                                                          width: 8,
-                                                        )),
+                                                              width: 8,
+                                                            )),
                                                         TextSpan(
                                                           text: "Height ",
                                                           style: TextStyle(
                                                               color: Colors
                                                                   .grey[900],
                                                               fontFamily:
-                                                                  'lato',
+                                                              'lato',
                                                               fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
+                                                              FontWeight
+                                                                  .w600,
                                                               fontSize: 16.0),
                                                         ),
                                                       ],
@@ -592,19 +579,19 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                                       children: [
                                                         TextSpan(
                                                           text: widget.profile
-                                                                  ?.height ??
+                                                              ?.height ??
                                                               "not set",
                                                           style:
-                                                              const TextStyle(
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontFamily:
-                                                                      'lato',
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                  fontSize:
-                                                                      14.0),
+                                                          const TextStyle(
+                                                              color: Colors
+                                                                  .black,
+                                                              fontFamily:
+                                                              'lato',
+                                                              fontWeight:
+                                                              FontWeight
+                                                                  .w500,
+                                                              fontSize:
+                                                              14.0),
                                                         ),
                                                         const WidgetSpan(
                                                           child: Icon(
@@ -626,13 +613,13 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                                           PartnerGenderUpdateScreen(
                                                               params: SettingProfileParams(
                                                                   updateParams:
-                                                                      UpdateProfileParams(),
+                                                                  UpdateProfileParams(),
                                                                   profileParams:
-                                                                      widget
-                                                                          .profile))));
+                                                                  widget
+                                                                      .profile))));
                                               if (datePreference != null) {
                                                 widget.profile
-                                                        ?.datingPreference =
+                                                    ?.datingPreference =
                                                     datePreference;
                                                 setState(() {});
                                               }
@@ -646,8 +633,8 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                               padding: EdgeInsets.all(8),
                                               child: Row(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
+                                                MainAxisAlignment
+                                                    .spaceBetween,
                                                 children: [
                                                   RichText(
                                                     text: TextSpan(
@@ -659,18 +646,18 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                                         ),
                                                         const WidgetSpan(
                                                             child: SizedBox(
-                                                          width: 8,
-                                                        )),
+                                                              width: 8,
+                                                            )),
                                                         TextSpan(
                                                           text: "Zodiac ",
                                                           style: TextStyle(
                                                               color: Colors
                                                                   .grey[900],
                                                               fontFamily:
-                                                                  'lato',
+                                                              'lato',
                                                               fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
+                                                              FontWeight
+                                                                  .w600,
                                                               fontSize: 16.0),
                                                         ),
                                                       ],
@@ -681,19 +668,19 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                                       children: [
                                                         TextSpan(
                                                           text: widget.profile
-                                                                  ?.zodiac ??
+                                                              ?.zodiac ??
                                                               "Add",
                                                           style:
-                                                              const TextStyle(
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontFamily:
-                                                                      'lato',
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                  fontSize:
-                                                                      14.0),
+                                                          const TextStyle(
+                                                              color: Colors
+                                                                  .black,
+                                                              fontFamily:
+                                                              'lato',
+                                                              fontWeight:
+                                                              FontWeight
+                                                                  .w500,
+                                                              fontSize:
+                                                              14.0),
                                                         ),
                                                         const WidgetSpan(
                                                           child: Icon(
@@ -716,8 +703,8 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                               padding: EdgeInsets.all(8),
                                               child: Row(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
+                                                MainAxisAlignment
+                                                    .spaceBetween,
                                                 children: [
                                                   RichText(
                                                     text: TextSpan(
@@ -730,18 +717,18 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                                         ),
                                                         const WidgetSpan(
                                                             child: SizedBox(
-                                                          width: 8,
-                                                        )),
+                                                              width: 8,
+                                                            )),
                                                         TextSpan(
                                                           text: "Location ",
                                                           style: TextStyle(
                                                               color: Colors
                                                                   .grey[900],
                                                               fontFamily:
-                                                                  'lato',
+                                                              'lato',
                                                               fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
+                                                              FontWeight
+                                                                  .w600,
                                                               fontSize: 16.0),
                                                         ),
                                                       ],
@@ -752,21 +739,21 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                                       children: [
                                                         TextSpan(
                                                           text: widget.profile
-                                                                  ?.location ??
+                                                              ?.location ??
                                                               (isLoadingLocation
                                                                   ? "Loading.."
                                                                   : "Add"),
                                                           style:
-                                                              const TextStyle(
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontFamily:
-                                                                      'lato',
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                  fontSize:
-                                                                      14.0),
+                                                          const TextStyle(
+                                                              color: Colors
+                                                                  .black,
+                                                              fontFamily:
+                                                              'lato',
+                                                              fontWeight:
+                                                              FontWeight
+                                                                  .w500,
+                                                              fontSize:
+                                                              14.0),
                                                         ),
                                                         const WidgetSpan(
                                                           child: Icon(
@@ -786,7 +773,7 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                               } else {
                                                 isLoadingLocation = true;
                                                 var pos =
-                                                    await _determinePosition();
+                                                await _determinePosition();
                                                 longitude = pos.longitude;
                                                 latitude = pos.latitude;
                                                 widget.profile
@@ -808,8 +795,8 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                               padding: EdgeInsets.all(8),
                                               child: Row(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
+                                                MainAxisAlignment
+                                                    .spaceBetween,
                                                 children: [
                                                   RichText(
                                                     text: TextSpan(
@@ -821,18 +808,18 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                                         ),
                                                         const WidgetSpan(
                                                             child: SizedBox(
-                                                          width: 8,
-                                                        )),
+                                                              width: 8,
+                                                            )),
                                                         TextSpan(
                                                           text: "Hometown ",
                                                           style: TextStyle(
                                                               color: Colors
                                                                   .grey[900],
                                                               fontFamily:
-                                                                  'lato',
+                                                              'lato',
                                                               fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
+                                                              FontWeight
+                                                                  .w600,
                                                               fontSize: 16.0),
                                                         ),
                                                       ],
@@ -843,19 +830,19 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                                       children: [
                                                         TextSpan(
                                                           text: widget.profile
-                                                                  ?.hometown ??
+                                                              ?.hometown ??
                                                               "Add",
                                                           style:
-                                                              const TextStyle(
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontFamily:
-                                                                      'lato',
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                  fontSize:
-                                                                      14.0),
+                                                          const TextStyle(
+                                                              color: Colors
+                                                                  .black,
+                                                              fontFamily:
+                                                              'lato',
+                                                              fontWeight:
+                                                              FontWeight
+                                                                  .w500,
+                                                              fontSize:
+                                                              14.0),
                                                         ),
                                                         const WidgetSpan(
                                                           child: Icon(
@@ -910,7 +897,7 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                     padding: const EdgeInsets.all(16.0),
                                     child: Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                       children: [
                                         RichText(
                                           text: TextSpan(
@@ -921,8 +908,8 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                               ),
                                               const WidgetSpan(
                                                   child: SizedBox(
-                                                width: 8,
-                                              )),
+                                                    width: 8,
+                                                  )),
                                               TextSpan(
                                                 text: "Languages ",
                                                 style: TextStyle(
@@ -974,7 +961,7 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                         ),
                                         minimumSize: const Size.fromHeight(
                                             48) // Set button text color
-                                        ),
+                                    ),
                                     child: const Text(
                                       'Save',
                                       style: TextStyle(
