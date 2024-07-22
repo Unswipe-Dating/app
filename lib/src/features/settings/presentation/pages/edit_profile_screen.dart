@@ -74,9 +74,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               }),
                               GridItem(icon: Icons.contacts, text: 'Basics', onClick: () {
                                 CustomNavigationHelper.router.push(
-                                  CustomNavigationHelper.settingsPathBasic,
-                                  extra: state.responseProfileList
-                                );
+                                  CustomNavigationHelper.settingsPathBasic);
                               },
                               ),
                               GridItem(icon: Icons.work, text: 'Work', onClick: () {

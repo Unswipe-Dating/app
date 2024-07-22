@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geocode/geocode.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:unswipe/src/features/login/domain/usecases/update_login_state_stream_usecase.dart';
 import 'package:unswipe/src/features/settings/domain/repository/user_settings_repository.dart';
 import 'package:unswipe/src/features/settings/domain/usecases/get_settings_profile_usecase.dart';
@@ -19,6 +20,8 @@ import 'package:unswipe/src/features/userOnboarding/profile_update/presentation/
 import 'package:unswipe/src/features/userProfile/data/model/get_profile/response_profile_swipe.dart';
 import 'package:unswipe/src/features/userProfile/presentation/widgets/swipeViewCards/interests_card.dart';
 import 'package:unswipe/src/shared/domain/usecases/get_auth_state_stream_use_case.dart';
+import 'package:unswipe/src/shared/presentation/widgets/RichTextWithLoader.dart';
+import 'package:unswipe/src/shared/presentation/widgets/shimmer.dart';
 
 import '../../../../core/router/app_router.dart';
 import '../../../onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart';
@@ -26,9 +29,7 @@ import '../../../userOnboarding/profile_update/domain/repository/update_profile_
 import '../../../userOnboarding/profile_update/presentation/bloc/profile_update_bloc.dart';
 
 class EditProfileScreenBasic extends StatefulWidget {
-  final ResponseProfileList? profile;
-
-  const EditProfileScreenBasic({super.key, this.profile});
+  const EditProfileScreenBasic({super.key});
 
   @override
   State<EditProfileScreenBasic> createState() => _EditProfileScreenBasicState();
@@ -38,12 +39,17 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
   bool isButtonEnabled = true;
   double latitude = 0.0;
   double longitude = 0.0;
-  bool isLoadingLocation = false;
-  bool toLoadLocationFuture = false;
+  bool isLoadingLocation = true;
   bool isLocationRequested = false;
   bool isLoadingValues = true;
+  ResponseProfileList? profile;
 
   List<String> interestString = [];
+
+  Future<Address?> getAddressFromLatLng() async {
+    return await GeoCode()
+        .reverseGeocoding(latitude: latitude, longitude: longitude);
+  }
 
   Future<Position> _determinePosition() async {
     bool serviceEnabled;
@@ -84,43 +90,17 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
 
   void updateInterestString() {
     interestString =
-        (widget.profile?.interests.weekendActivities ?? [] as List<String>) +
-            (widget.profile?.interests.sports ?? [] as List<String>) +
-            (widget.profile?.interests.selfCare ?? [] as List<String>) +
-            (widget.profile?.interests.pets ?? [] as List<String>) +
-            (widget.profile?.interests.fnd ?? [] as List<String>);
+        (profile?.interests.weekendActivities ?? [] as List<String>) +
+            (profile?.interests.sports ?? [] as List<String>) +
+            (profile?.interests.selfCare ?? [] as List<String>) +
+            (profile?.interests.pets ?? [] as List<String>) +
+            (profile?.interests.fnd ?? [] as List<String>);
   }
 
-  @override
-  void initState() {
-    super.initState();
-    updateInterestString();
-    if (widget.profile?.locationCoordinates != null) {
-      latitude = double.parse(widget.profile?.locationCoordinates?[0] ?? "0");
-      longitude = double.parse(widget.profile?.locationCoordinates?[1] ?? "0");
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: (widget.profile?.location == null &&
-                latitude != 0.0 &&
-                longitude != 0.0 &&
-                !isLocationRequested)
-            ? GeoCode()
-                .reverseGeocoding(latitude: latitude, longitude: longitude)
-            : Future<Address>.value(Address(region: widget.profile?.location)),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            isLoadingLocation = true;
-          } else {
-            if (snapshot.hasData) {
-              widget.profile?.location = snapshot.data?.region;
-            }
-            isLoadingLocation = false;
-          }
-          return Scaffold(
+    return Scaffold(
             appBar: AppBar(
               backgroundColor: Colors.white,
               shadowColor: Colors.black,
@@ -158,7 +138,7 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                           GetIt.I.get<GetSettingsProfileUseCase>())
                     ..add(OnStartGettingProfile()),
                   child: BlocConsumer<UpdateProfileBloc, UpdateProfileState>(
-                    listener: (context, state) {
+                    listener: (context, state) async {
                       if (state.status == UpdateProfileStatus.loaded) {
                         isLoadingValues = false;
                       } else if (state.status ==
@@ -166,10 +146,21 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                         CustomNavigationHelper.router.go(
                           CustomNavigationHelper.loginPath,
                         );
-                      }
-                      else if (state.status == UpdateProfileStatus.loadedProfile) {
+                      } else if (state.status ==
+                          UpdateProfileStatus.loadedProfile) {
+                        profile = state.responseProfileList;
+                        updateInterestString();
+                        if (profile?.locationCoordinates != null) {
+                          latitude = double.parse(profile?.locationCoordinates?[0] ?? "0");
+                          longitude = double.parse(profile?.locationCoordinates?[1] ?? "0");
+                        }
+                        var data = await getAddressFromLatLng();
+                        profile?.location = data?.region;
                         isLoadingValues = false;
+                        isLoadingLocation = false;
+                        setState(() {
 
+                        });
                       }
                     },
                     builder: (context, state) {
@@ -203,7 +194,7 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                 const SizedBox(
                                   height: 16,
                                 ),
-                                interestString.isNotEmpty
+                                !isLoadingValues
                                     ? InkWell(
                                         child: InterestsCard(
                                           header: null,
@@ -219,20 +210,17 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                                           params: SettingProfileParams(
                                                               updateParams:
                                                                   UpdateProfileParams(),
-                                                              profileParams: widget
-                                                                  .profile))));
+                                                              profileParams:
+                                                                  profile))));
                                           if (interests != null) {
-                                            widget.profile?.interests =
-                                                interests;
+                                            profile?.interests = interests;
                                             setState(() {
                                               updateInterestString();
                                             });
                                           }
                                         },
                                       )
-                                    : const SizedBox(
-                                        height: 32,
-                                      ),
+                                    : const ShimmerLoader(),
                                 const SizedBox(
                                   height: 32,
                                 ),
@@ -293,29 +281,11 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                               ],
                                             ),
                                           ),
-                                          RichText(
-                                            text: TextSpan(
-                                              children: [
-                                                TextSpan(
-                                                  text: widget
-                                                          .profile?.pronouns ??
-                                                      "not set",
-                                                  style: const TextStyle(
-                                                      color: Colors.black,
-                                                      fontFamily: 'lato',
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      fontSize: 14.0),
-                                                ),
-                                                const WidgetSpan(
-                                                  child: Icon(
-                                                      Icons
-                                                          .keyboard_arrow_right,
-                                                      size: 14),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
+                                          RichTextWithLoader(
+                                            text:
+                                                profile?.pronouns ?? "not set",
+                                            isLoading: isLoadingValues,
+                                          )
                                         ],
                                       ),
                                     ),
@@ -330,9 +300,9 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                                         updateParams:
                                                             UpdateProfileParams(),
                                                         profileParams:
-                                                            widget.profile))));
+                                                            profile))));
                                     if (pronouns != null) {
-                                      widget.profile?.pronouns = pronouns;
+                                      profile?.pronouns = pronouns;
                                       setState(() {});
                                     }
                                   },
@@ -409,34 +379,9 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                                       ],
                                                     ),
                                                   ),
-                                                  RichText(
-                                                    text: TextSpan(
-                                                      children: [
-                                                        TextSpan(
-                                                          text: widget.profile
-                                                                  ?.gender ??
-                                                              "not set",
-                                                          style:
-                                                              const TextStyle(
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontFamily:
-                                                                      'lato',
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                  fontSize:
-                                                                      14.0),
-                                                        ),
-                                                        const WidgetSpan(
-                                                          child: Icon(
-                                                              Icons
-                                                                  .keyboard_arrow_right,
-                                                              size: 14),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
+                                                  RichTextWithLoader(
+                                                      text: profile?.gender ??
+                                                          "not set"),
                                                 ],
                                               ),
                                             ),
@@ -450,10 +395,9 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                                                   updateParams:
                                                                       UpdateProfileParams(),
                                                                   profileParams:
-                                                                      widget
-                                                                          .profile))));
+                                                                      profile))));
                                               if (gender != null) {
-                                                widget.profile?.gender = gender;
+                                                profile?.gender = gender;
                                                 setState(() {});
                                               }
                                             },
@@ -497,34 +441,10 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                                       ],
                                                     ),
                                                   ),
-                                                  RichText(
-                                                    text: TextSpan(
-                                                      children: [
-                                                        TextSpan(
-                                                          text: widget.profile
-                                                                  ?.datingPreference ??
-                                                              "not set",
-                                                          style:
-                                                              const TextStyle(
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontFamily:
-                                                                      'lato',
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                  fontSize:
-                                                                      14.0),
-                                                        ),
-                                                        const WidgetSpan(
-                                                          child: Icon(
-                                                              Icons
-                                                                  .keyboard_arrow_right,
-                                                              size: 14),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
+                                                  RichTextWithLoader(
+                                                      text: profile
+                                                              ?.datingPreference ??
+                                                          "not set"),
                                                 ],
                                               ),
                                             ),
@@ -537,12 +457,9 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                                               params: SettingProfileParams(
                                                                   updateParams:
                                                                       UpdateProfileParams(),
-                                                                  profileParams:
-                                                                      widget
-                                                                          .profile))));
+                                                                  profileParams: profile))));
                                               if (datePreference != null) {
-                                                widget.profile
-                                                        ?.datingPreference =
+                                                profile?.datingPreference =
                                                     datePreference;
                                                 setState(() {});
                                               }
@@ -587,34 +504,8 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                                       ],
                                                     ),
                                                   ),
-                                                  RichText(
-                                                    text: TextSpan(
-                                                      children: [
-                                                        TextSpan(
-                                                          text: widget.profile
-                                                                  ?.height ??
-                                                              "not set",
-                                                          style:
-                                                              const TextStyle(
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontFamily:
-                                                                      'lato',
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                  fontSize:
-                                                                      14.0),
-                                                        ),
-                                                        const WidgetSpan(
-                                                          child: Icon(
-                                                              Icons
-                                                                  .keyboard_arrow_right,
-                                                              size: 14),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
+                                                  RichTextWithLoader(text: profile?.height ??
+                                                      "Add", isLoading: isLoadingValues,),
                                                 ],
                                               ),
                                             ),
@@ -627,12 +518,9 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                                               params: SettingProfileParams(
                                                                   updateParams:
                                                                       UpdateProfileParams(),
-                                                                  profileParams:
-                                                                      widget
-                                                                          .profile))));
+                                                                  profileParams:profile))));
                                               if (datePreference != null) {
-                                                widget.profile
-                                                        ?.datingPreference =
+                                                profile?.datingPreference =
                                                     datePreference;
                                                 setState(() {});
                                               }
@@ -676,34 +564,8 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                                       ],
                                                     ),
                                                   ),
-                                                  RichText(
-                                                    text: TextSpan(
-                                                      children: [
-                                                        TextSpan(
-                                                          text: widget.profile
-                                                                  ?.zodiac ??
-                                                              "Add",
-                                                          style:
-                                                              const TextStyle(
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontFamily:
-                                                                      'lato',
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                  fontSize:
-                                                                      14.0),
-                                                        ),
-                                                        const WidgetSpan(
-                                                          child: Icon(
-                                                              Icons
-                                                                  .keyboard_arrow_right,
-                                                              size: 14),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
+                                                  RichTextWithLoader(text: profile?.zodiac ??
+                                                      "Add", isLoading: isLoadingValues),
                                                 ],
                                               ),
                                             ),
@@ -747,36 +609,8 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                                       ],
                                                     ),
                                                   ),
-                                                  RichText(
-                                                    text: TextSpan(
-                                                      children: [
-                                                        TextSpan(
-                                                          text: widget.profile
-                                                                  ?.location ??
-                                                              (isLoadingLocation
-                                                                  ? "Loading.."
-                                                                  : "Add"),
-                                                          style:
-                                                              const TextStyle(
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontFamily:
-                                                                      'lato',
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                  fontSize:
-                                                                      14.0),
-                                                        ),
-                                                        const WidgetSpan(
-                                                          child: Icon(
-                                                              Icons
-                                                                  .keyboard_arrow_right,
-                                                              size: 14),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
+                                                  RichTextWithLoader(text: profile?.location ??
+                                                      "Add", isLoading: isLoadingLocation),
                                                 ],
                                               ),
                                             ),
@@ -789,12 +623,12 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                                     await _determinePosition();
                                                 longitude = pos.longitude;
                                                 latitude = pos.latitude;
-                                                widget.profile
-                                                    ?.locationCoordinates = [
+                                                profile?.locationCoordinates = [
                                                   pos.latitude.toString(),
                                                   pos.longitude.toString()
                                                 ];
-                                                widget.profile?.location = null;
+                                                Address? data =  await getAddressFromLatLng();
+                                                profile?.location = data?.region;
                                                 setState(() {});
                                                 isLocationRequested = true;
                                               }
@@ -838,34 +672,8 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                                       ],
                                                     ),
                                                   ),
-                                                  RichText(
-                                                    text: TextSpan(
-                                                      children: [
-                                                        TextSpan(
-                                                          text: widget.profile
-                                                                  ?.hometown ??
-                                                              "Add",
-                                                          style:
-                                                              const TextStyle(
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontFamily:
-                                                                      'lato',
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                  fontSize:
-                                                                      14.0),
-                                                        ),
-                                                        const WidgetSpan(
-                                                          child: Icon(
-                                                              Icons
-                                                                  .keyboard_arrow_right,
-                                                              size: 14),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
+                                                  RichTextWithLoader(text: profile?.hometown ??
+                                                      "Add", isLoading: isLoadingValues,),
                                                 ],
                                               ),
                                             ),
@@ -902,7 +710,8 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                 const SizedBox(
                                   height: 16,
                                 ),
-                                Card(
+                                !isLoadingValues
+                                    ? profile?.languages?.isNotEmpty == false  ?                                 Card(
                                   elevation: 4,
                                   color: Colors.white,
                                   surfaceTintColor: Colors.white,
@@ -910,7 +719,7 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                     padding: const EdgeInsets.all(16.0),
                                     child: Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                       children: [
                                         RichText(
                                           text: TextSpan(
@@ -921,8 +730,8 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                               ),
                                               const WidgetSpan(
                                                   child: SizedBox(
-                                                width: 8,
-                                              )),
+                                                    width: 8,
+                                                  )),
                                               TextSpan(
                                                 text: "Languages ",
                                                 style: TextStyle(
@@ -934,29 +743,37 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                             ],
                                           ),
                                         ),
-                                        RichText(
-                                          text: const TextSpan(
-                                            children: [
-                                              TextSpan(
-                                                text: "Add",
-                                                style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontFamily: 'lato',
-                                                    fontWeight: FontWeight.w500,
-                                                    fontSize: 14.0),
-                                              ),
-                                              WidgetSpan(
-                                                child: Icon(
-                                                    Icons.keyboard_arrow_right,
-                                                    size: 14),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
+                                        RichTextWithLoader(text: "Add", isLoading: isLoadingValues),
                                       ],
                                     ),
                                   ),
-                                ),
+                                ):
+                                InkWell(
+                                  child: InterestsCard(
+                                    header: null,
+                                    chipLabels: interestString,
+                                    elevation: 4,
+                                  ),
+                                  onTap: () async {
+                                    final interests = await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                InterestsUpdateScreen(
+                                                    params: SettingProfileParams(
+                                                        updateParams:
+                                                        UpdateProfileParams(),
+                                                        profileParams:
+                                                        profile))));
+                                    if (interests != null) {
+                                      profile?.interests = interests;
+                                      setState(() {
+                                        updateInterestString();
+                                      });
+                                    }
+                                  },
+                                )
+                                    : const ShimmerLoader(),
                                 const SizedBox(
                                   height: 32,
                                 ),
@@ -992,7 +809,6 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                   )),
             ),
           );
-        });
   }
 }
 
