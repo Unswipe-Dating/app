@@ -171,7 +171,7 @@ class _HeightUpdateScreenState extends State<HeightUpdateScreen> {
                       //
                       // CustomNavigationHelper.router.push(
                       //     CustomNavigationHelper.onboardingGenderPath,
-                      //     extra: UpdateProfileParams().getUpdatedParams(widget.params)
+                      //     extra: UpdateProfileParams.getUpdatedParams(widget.params)
                       // );
 
 

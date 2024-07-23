@@ -17,7 +17,8 @@ import '../repository/profile_swipe_repository.dart';
 @Injectable()
 class ProfileRejectUseCase {
   final ProfileSwipeRepository _repository;
-  BehaviorSubject<GetProfileRejectUseCaseResponse> controller = BehaviorSubject<GetProfileRejectUseCaseResponse>();
+  BehaviorSubject<GetProfileRejectUseCaseResponse> controller =
+  BehaviorSubject<GetProfileRejectUseCaseResponse>();
 
   ProfileRejectUseCase(this._repository);
 

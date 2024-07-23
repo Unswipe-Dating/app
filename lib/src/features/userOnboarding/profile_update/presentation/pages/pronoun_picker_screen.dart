@@ -10,7 +10,11 @@ import '../../domain/repository/update_profile_repository.dart';
 
 class PronounUpdateScreen extends StatefulWidget {
   final SettingProfileParams params;
-  const PronounUpdateScreen({super.key, required this.params});
+  final bool toShowLoader;
+  const PronounUpdateScreen({super.key,
+    required this.params,
+    this.toShowLoader = true,
+  });
 
   @override
   _PronounUpdateScreenState createState() => _PronounUpdateScreenState();
@@ -46,6 +50,7 @@ class _PronounUpdateScreenState extends State<PronounUpdateScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Column(
               children: [
+                if (widget.toShowLoader)
                 const Row(
                   children: [
                     Expanded(
@@ -214,7 +219,7 @@ class _PronounUpdateScreenState extends State<PronounUpdateScreen> {
                             getNameFromCharacter(_character);
                         CustomNavigationHelper.router.push(
                             CustomNavigationHelper.onboardingPartnerGenderPath,
-                            extra: UpdateProfileParams().getUpdatedParams(widget
+                            extra: UpdateProfileParams.getUpdatedParams(widget
                                 .params.updateParams)
 
                         );

@@ -6,7 +6,8 @@ part of 'response_profile_swipe.dart';
 
 @JsonSerializable()
 class ResponseProfileList {
-  ResponseProfileList(this.id,
+  ResponseProfileList(
+      this.id,
       this.userId,
       this.name,
       this.interests,
@@ -23,6 +24,12 @@ class ResponseProfileList {
       this.gender,
       this.locationCoordinates,
       this.showTruncatedName,
+      this.showPronoun,
+      this.showDatingPreference,
+      this.showGender,
+      this.work,
+      this.lifeStyle,
+      this.values
       );
 
   factory ResponseProfileList.fromJson(Map<String, dynamic> json) =>
@@ -43,7 +50,14 @@ class ResponseProfileList {
   String? gender;
   List<String>? locationCoordinates;
   bool? showTruncatedName;
+  bool? showPronoun;
+  bool? showDatingPreference;
+  bool? showGender;
   List<String>? languages;
+  ResponseProfileWork? work;
+  ResponseProfileValues? values;
+  ResponseProfileLifeStyle? lifeStyle;
+
   ResponseProfileRequestBody? request;
   Map<String, dynamic> toJson() => _$ResponseProfileListToJson(this);
 }

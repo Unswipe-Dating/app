@@ -226,9 +226,8 @@ class CustomNavigationHelper {
       GoRoute(
         path: settingsPathLifeStyle,
         pageBuilder: (context, state) {
-          ResponseProfileList profile = state.extra as ResponseProfileList;
           return getPage(
-            child: EditProfileScreenLifestyle(profile: profile),
+            child: EditProfileScreenLifestyle(),
             state: state,
           );
         },

@@ -36,27 +36,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ),
       home: Scaffold(
         backgroundColor: const Color(0xffFFDEC6),
-        body: BlocProvider(
-            create: (BuildContext context) => UpdateProfileBloc(
-                updateOnboardingStateStreamUseCase:
-                    GetIt.I.get<UpdateOnboardingStateStreamUseCase>(),
-                getAuthStateStreamUseCase:
-                    GetIt.I.get<GetAuthStateStreamUseCase>(),
-                updateProfileUseCase: GetIt.I.get<UpdateProfileUseCase>(),
-                createProfileUseCase: GetIt.I.get<CreateProfileUseCase>(),
-                updateUserStateStreamUseCase:
-                    GetIt.I.get<UpdateUserStateStreamUseCase>(),
-                getSettingsProfileUseCase:
-                    GetIt.I.get<GetSettingsProfileUseCase>())
-            ,
-            child: BlocConsumer<UpdateProfileBloc, UpdateProfileState>(
-              listener: (context, state) {
-                if (state.status == UpdateProfileStatus.loadedProfile) {
-
-                }
-              },
-              builder: (context, state) {
-                return Padding(
+        body:  Padding(
                   padding: const EdgeInsets.only(
                       left: 24, right: 24, top: 60, bottom: 0),
                   child: Column(
@@ -69,7 +49,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               GridItem(icon: Icons.photo, text: 'Photos', onClick: () {
                                 CustomNavigationHelper.router.push(
                                     CustomNavigationHelper.uploadImagePath,
-                                    extra: state.responseProfileList
                                 );
                               }),
                               GridItem(icon: Icons.contacts, text: 'Basics', onClick: () {
@@ -80,21 +59,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               GridItem(icon: Icons.work, text: 'Work', onClick: () {
                                 CustomNavigationHelper.router.push(
                                     CustomNavigationHelper.settingsPathWork,
-                                    extra: state.responseProfileList
                                 );
                               }),
                               GridItem(
                                   icon: Icons.remove_red_eye, text: 'Values', onClick: () {
                                 CustomNavigationHelper.router.push(
                                     CustomNavigationHelper.settingsPathValues,
-                                    extra: state.responseProfileList
                                 );
                               }),
                               GridItem(
                                   icon: Icons.nightlife, text: 'Lifestyle', onClick: () {
                                 CustomNavigationHelper.router.push(
                                     CustomNavigationHelper.settingsPathLifeStyle,
-                                    extra: state.responseProfileList
                                 );
                               }),
                               GridItem(icon: Icons.message, text: 'Prompt', onClick: () {}),
@@ -102,10 +78,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           ),
                         )
                       ]),
-                );
-              },
-            )),
-      ),
+                ),
+
+            ),
     );
   }
 

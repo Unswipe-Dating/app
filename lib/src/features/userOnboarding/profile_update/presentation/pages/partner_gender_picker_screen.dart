@@ -10,7 +10,12 @@ import '../../domain/repository/update_profile_repository.dart';
 
 class PartnerGenderUpdateScreen extends StatefulWidget {
   final SettingProfileParams params;
-  const PartnerGenderUpdateScreen({super.key, required this.params});
+  final bool toShowLoader;
+
+  const PartnerGenderUpdateScreen({super.key,
+    required this.params,
+    this.toShowLoader = true,
+  });
 
   @override
   _PartnerGenderUpdateScreenState createState() => _PartnerGenderUpdateScreenState();
@@ -45,7 +50,8 @@ class _PartnerGenderUpdateScreenState extends State<PartnerGenderUpdateScreen> {
             padding: EdgeInsets.symmetric(horizontal: 24),
             child: Column(
               children: [
-                const Row(
+                if (widget.toShowLoader)
+                  const Row(
                   children: [
                     Expanded(
                         flex: 9,
@@ -214,8 +220,7 @@ class _PartnerGenderUpdateScreenState extends State<PartnerGenderUpdateScreen> {
                             getNameFromCharacter(_character);
                         CustomNavigationHelper.router.push(
                             CustomNavigationHelper.onboardingInterestPath,
-                            extra: UpdateProfileParams()
-                                .getUpdatedParams(widget.params.updateParams)
+                            extra: UpdateProfileParams.getUpdatedParams(widget.params.updateParams)
                         );
                       }
                     },

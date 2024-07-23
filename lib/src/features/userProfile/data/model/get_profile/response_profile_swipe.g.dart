@@ -73,6 +73,20 @@ ResponseProfileList _$ResponseProfileListFromJson(Map<String, dynamic> json) =>
           ?.map((e) => e as String)
           .toList(),
       json['showTruncatedName'] as bool?,
+      json['showPronoun'] as bool?,
+      json['showDatingPreference'] as bool?,
+      json['showGender'] as bool?,
+      json['work'] == null
+          ? null
+          : ResponseProfileWork.fromJson(json['work'] as Map<String, dynamic>),
+      json['lifeStyle'] == null
+          ? null
+          : ResponseProfileLifeStyle.fromJson(
+              json['lifeStyle'] as Map<String, dynamic>),
+      json['values'] == null
+          ? null
+          : ResponseProfileValues.fromJson(
+              json['values'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$ResponseProfileListToJson(
@@ -93,8 +107,73 @@ Map<String, dynamic> _$ResponseProfileListToJson(
       'gender': instance.gender,
       'locationCoordinates': instance.locationCoordinates,
       'showTruncatedName': instance.showTruncatedName,
+      'showPronoun': instance.showPronoun,
+      'showDatingPreference': instance.showDatingPreference,
+      'showGender': instance.showGender,
       'languages': instance.languages,
+      'work': instance.work,
+      'values': instance.values,
+      'lifeStyle': instance.lifeStyle,
       'request': instance.request,
+    };
+
+ResponseProfileWork _$ResponseProfileWorkFromJson(Map<String, dynamic> json) =>
+    ResponseProfileWork(
+      json['jobTitle'] as String?,
+      json['companyName'] as String?,
+      json['educationLevel'] as String?,
+      json['institution'] as String?,
+      json['isVerified'] as bool?,
+    );
+
+Map<String, dynamic> _$ResponseProfileWorkToJson(
+        ResponseProfileWork instance) =>
+    <String, dynamic>{
+      'jobTitle': instance.jobTitle,
+      'companyName': instance.companyName,
+      'educationLevel': instance.educationLevel,
+      'institution': instance.institution,
+      'isVerified': instance.isVerified,
+    };
+
+ResponseProfileLifeStyle _$ResponseProfileLifeStyleFromJson(
+        Map<String, dynamic> json) =>
+    ResponseProfileLifeStyle(
+      json['drink'] as String?,
+      json['smoke'] as String?,
+      json['exercise'] as String?,
+      json['cook'] as String?,
+      json['householdChores'] as String?,
+    );
+
+Map<String, dynamic> _$ResponseProfileLifeStyleToJson(
+        ResponseProfileLifeStyle instance) =>
+    <String, dynamic>{
+      'drink': instance.drink,
+      'smoke': instance.smoke,
+      'exercise': instance.exercise,
+      'cook': instance.cook,
+      'householdChores': instance.householdChores,
+    };
+
+ResponseProfileValues _$ResponseProfileValuesFromJson(
+        Map<String, dynamic> json) =>
+    ResponseProfileValues(
+      json['religion'] as String?,
+      json['politicalViews'] as String?,
+      json['loveLanguage'] as String?,
+      json['children'] as String?,
+      (json['coreValues'] as List<dynamic>?)?.map((e) => e as String).toList(),
+    );
+
+Map<String, dynamic> _$ResponseProfileValuesToJson(
+        ResponseProfileValues instance) =>
+    <String, dynamic>{
+      'religion': instance.religion,
+      'politicalViews': instance.politicalViews,
+      'loveLanguage': instance.loveLanguage,
+      'children': instance.children,
+      'coreValues': instance.coreValues,
     };
 
 ResponseProfileSwipeInterests _$ResponseProfileSwipeInterestsFromJson(

@@ -18,10 +18,14 @@ import '../../../../userProfile/data/model/get_profile/response_profile_swipe.da
 import '../../domain/repository/update_profile_repository.dart';
 import '../bloc/profile_update_bloc.dart';
 class InterestsUpdateScreen extends StatefulWidget {
+  final bool toShowLoader;
   final SettingProfileParams params;
 
 
-  const InterestsUpdateScreen({super.key, required this.params});
+  const InterestsUpdateScreen({super.key,
+    required this.params,
+    this.toShowLoader = true,
+  });
 
   @override
   _InterestsUpdateScreenState createState() => _InterestsUpdateScreenState();
@@ -162,9 +166,7 @@ class _InterestsUpdateScreenState extends State<InterestsUpdateScreen> {
             createProfileUseCase: GetIt.I.get<CreateProfileUseCase>(),
             updateUserStateStreamUseCase: GetIt.I.get<UpdateUserStateStreamUseCase>(),
             getSettingsProfileUseCase: GetIt.I.get<GetSettingsProfileUseCase>()
-
-
-          ),
+          )..add(OnGetTokenEvent()),
           child: BlocConsumer<UpdateProfileBloc, UpdateProfileState>(
             listener: (context, state) {
               if (state.status == UpdateProfileStatus.loaded) {
@@ -188,7 +190,7 @@ class _InterestsUpdateScreenState extends State<InterestsUpdateScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: Column(
                   children: [
-                    if (widget.params.profileParams == null)
+                    if (widget.toShowLoader)
                       const Row(
                       children: [
                         Expanded(
@@ -507,7 +509,7 @@ class _InterestsUpdateScreenState extends State<InterestsUpdateScreen> {
 
                           } else {
                             context.read<UpdateProfileBloc>().add(
-                                OnUpdateProfileRequested(
+                                OnRequestApiCallCreate(
                                     widget.params.updateParams ??
                                         UpdateProfileParams()));
                           }

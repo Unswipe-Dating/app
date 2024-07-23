@@ -6,6 +6,9 @@ import 'package:json_annotation/json_annotation.dart';
 part 'response_profile_swipe.g.dart';
 part 'response_profile_swipe_browse.dart';
 part 'response_profile_list.dart';
+part 'response_profile_work.dart';
+part 'response_profile_lifestyle.dart';
+part 'response_profile_values.dart';
 part 'response_profile_swipe_interests.dart';
 part 'response_profile_request_body.dart';
 

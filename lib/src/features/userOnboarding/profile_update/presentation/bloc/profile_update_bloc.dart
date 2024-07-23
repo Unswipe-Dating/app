@@ -35,20 +35,24 @@ class UpdateProfileBloc extends Bloc<UpdateProfileEvent, UpdateProfileState> {
   final UpdateProfileUseCase updateProfileUseCase;
   final GetSettingsProfileUseCase getSettingsProfileUseCase;
 
+  String token = "";
+  String id = "";
+  String? userId;
+
   // List of splash
 
-  UpdateProfileBloc({
-    required this.updateOnboardingStateStreamUseCase,
-    required this.getAuthStateStreamUseCase,
-    required this.createProfileUseCase,
-    required this.updateProfileUseCase,
-    required this.updateUserStateStreamUseCase,
-    required this.getSettingsProfileUseCase
-  }) : super(UpdateProfileState()) {
+  UpdateProfileBloc(
+      {required this.updateOnboardingStateStreamUseCase,
+      required this.getAuthStateStreamUseCase,
+      required this.createProfileUseCase,
+      required this.updateProfileUseCase,
+      required this.updateUserStateStreamUseCase,
+      required this.getSettingsProfileUseCase})
+      : super(UpdateProfileState()) {
     on<OnUpdateOnBoardingUserEvent>(_onUpdatingOnBoardingEvent);
-    on<OnUpdateProfileRequested>(_onStartUpdateProfile);
-    on<OnRequestApiCallUpdate>(_onStartUpdateProfileApi);
-    on<OnRequestApiCallCreate>(_onStartCreateProfileApi);
+    on<OnGetTokenEvent>(_onGetAuthToken);
+    on<OnRequestApiCallUpdate>(_onUpdateProfileApi);
+    on<OnRequestApiCallCreate>(_onCreateProfileApi);
     on<OnUpdateUserState>(_onProfileCreateSuccess);
     on<OnStartGettingProfile>(_onStartSettingProfileUseCase);
     on<OnGetUserProfile>(_onGetUserProfile);
@@ -63,8 +67,8 @@ class UpdateProfileBloc extends Bloc<UpdateProfileEvent, UpdateProfileState> {
         imageUrl: '',
       ),
     );
-    Stream<Either<AppError, void>> stream =
-         updateUserStateStreamUseCase.call(event.token, event.id, event.response.id);
+    Stream<Either<AppError, void>> stream = updateUserStateStreamUseCase.call(
+        event.token, event.id, event.response.id);
 
     emitter.forEach(stream, onData: (event) {
       return event.fold(ifLeft: (l) {
@@ -85,11 +89,10 @@ class UpdateProfileBloc extends Bloc<UpdateProfileEvent, UpdateProfileState> {
   _onUpdatingOnBoardingEvent(OnUpdateOnBoardingUserEvent event,
       Emitter<UpdateProfileState> emitter) async {
     OnBoardingStatus status = OnBoardingStatus.profile;
-    if(event.isUnAuthorized) {
+    if (event.isUnAuthorized) {
       status = OnBoardingStatus.init;
     }
-    await emitter.forEach(
-        updateOnboardingStateStreamUseCase.call(status),
+    await emitter.forEach(updateOnboardingStateStreamUseCase.call(status),
         onData: (event) {
       return event.fold(ifLeft: (l) {
         if (l is CancelTokenFailure) {
@@ -98,7 +101,7 @@ class UpdateProfileBloc extends Bloc<UpdateProfileEvent, UpdateProfileState> {
           return state.copyWith(status: UpdateProfileStatus.error);
         }
       }, ifRight: (r) {
-        if(status == OnBoardingStatus.init) {
+        if (status == OnBoardingStatus.init) {
           return state.copyWith(status: UpdateProfileStatus.errorAuth);
         }
         return state.copyWith(status: UpdateProfileStatus.loaded);
@@ -108,15 +111,15 @@ class UpdateProfileBloc extends Bloc<UpdateProfileEvent, UpdateProfileState> {
     });
   }
 
-  _onStartUpdateProfileApi(
+  _onUpdateProfileApi(
       OnRequestApiCallUpdate event, Emitter<UpdateProfileState> emitter) async {
     UpdateProfileParams params =
-        UpdateProfileParams().getUpdatedParams(event.params);
-    params.id = event.id;
-    params.userId = event.id;
+        UpdateProfileParams.getUpdatedParams(event.params);
+    params.id = id;
+    params.userId = id;
 
     Stream<GetUpdateUserResponse> stream =
-        await updateProfileUseCase.buildUseCaseStream(event.token, params);
+        await updateProfileUseCase.buildUseCaseStream(token, params);
 
     await emitter.forEach(stream, onData: (response) {
       final responseData = response.val;
@@ -138,16 +141,16 @@ class UpdateProfileBloc extends Bloc<UpdateProfileEvent, UpdateProfileState> {
     });
   }
 
-  _onStartCreateProfileApi(
+  _onCreateProfileApi(
       OnRequestApiCallCreate event, Emitter<UpdateProfileState> emitter) async {
     UpdateProfileParams params =
-        UpdateProfileParams().getUpdatedParams(event.params);
-    params.id = event.id;
-    params.userId = event.id;
+        UpdateProfileParams.getUpdatedParams(event.params);
+    params.id = id;
+    params.userId = id;
     UpsertProfile profile;
 
     Stream<GetCreateUserResponse> stream =
-        await createProfileUseCase.buildUseCaseStream(event.token, params);
+        await createProfileUseCase.buildUseCaseStream(token, params);
 
     await emitter.forEach(stream, onData: (response) {
       final responseData = response.val;
@@ -163,7 +166,7 @@ class UpdateProfileBloc extends Bloc<UpdateProfileEvent, UpdateProfileState> {
         profile = (((responseData as api_response.Success).data)
                 as CreateProfileResponse)
             .createProfile;
-        add(OnUpdateUserState(profile , event.token, event.id));
+        add(OnUpdateUserState(profile, token, id));
         return state.copyWith(status: UpdateProfileStatus.loading);
       } else {
         return state.copyWith(status: UpdateProfileStatus.error);
@@ -171,8 +174,8 @@ class UpdateProfileBloc extends Bloc<UpdateProfileEvent, UpdateProfileState> {
     });
   }
 
-  _onStartUpdateProfile(OnUpdateProfileRequested event,
-      Emitter<UpdateProfileState> emitter) async {
+  _onGetAuthToken(
+      OnGetTokenEvent event, Emitter<UpdateProfileState> emitter) async {
     emitter(state.copyWith(status: UpdateProfileStatus.loading));
 
     await emitter.forEach(
@@ -186,13 +189,9 @@ class UpdateProfileBloc extends Bloc<UpdateProfileEvent, UpdateProfileState> {
           }
         }, ifRight: (r) {
           if (r.userAndToken?.token != null && r.userAndToken?.id != null) {
-            if (r.userAndToken?.userId != null) {
-              add(OnRequestApiCallUpdate(
-                  event.params, r.userAndToken!.token, r.userAndToken!.id));
-            } else {
-              add(OnRequestApiCallCreate(
-                  event.params, r.userAndToken!.token, r.userAndToken!.id));
-            }
+            token = r.userAndToken!.token;
+            id = r.userAndToken!.id;
+            userId = r.userAndToken!.userId;
             return state.copyWith(status: UpdateProfileStatus.loading);
           } else {
             return state.copyWith(status: UpdateProfileStatus.error);
@@ -202,8 +201,8 @@ class UpdateProfileBloc extends Bloc<UpdateProfileEvent, UpdateProfileState> {
     );
   }
 
-  _onStartSettingProfileUseCase(OnStartGettingProfile event,
-      Emitter<UpdateProfileState> emitter) async {
+  _onStartSettingProfileUseCase(
+      OnStartGettingProfile event, Emitter<UpdateProfileState> emitter) async {
     emitter(state.copyWith(status: UpdateProfileStatus.loading));
 
     await emitter.forEach(
@@ -217,8 +216,10 @@ class UpdateProfileBloc extends Bloc<UpdateProfileEvent, UpdateProfileState> {
           }
         }, ifRight: (r) {
           if (r.userAndToken?.token != null && r.userAndToken?.id != null) {
-              add(OnGetUserProfile(r.userAndToken!.token, r.userAndToken!.id)
-              );
+            token = r.userAndToken!.token;
+            id = r.userAndToken!.id;
+            userId = r.userAndToken!.userId;
+            add(OnGetUserProfile(r.userAndToken!.token, r.userAndToken!.id));
             return state.copyWith(status: UpdateProfileStatus.loading);
           } else {
             return state.copyWith(status: UpdateProfileStatus.error);
@@ -228,11 +229,11 @@ class UpdateProfileBloc extends Bloc<UpdateProfileEvent, UpdateProfileState> {
     );
   }
 
-  _onGetUserProfile(OnGetUserProfile event,
-      Emitter<UpdateProfileState> emitter) async {
-
+  _onGetUserProfile(
+      OnGetUserProfile event, Emitter<UpdateProfileState> emitter) async {
     Stream<GetSettingsProfileUseCaseResponse> stream =
-    await getSettingsProfileUseCase.buildUseCaseStream(event.token, event.id);
+        await getSettingsProfileUseCase.buildUseCaseStream(
+            event.token, event.id);
 
     await emitter.forEach(stream, onData: (response) {
       final responseData = response.val;
@@ -246,9 +247,10 @@ class UpdateProfileBloc extends Bloc<UpdateProfileEvent, UpdateProfileState> {
         return state.copyWith(status: UpdateProfileStatus.error);
       } else if (responseData is api_response.Success) {
         var profile = (((responseData as api_response.Success).data)
-        as ResponseProfileSwipe)
+                as ResponseProfileSwipe)
             .userProfile;
-        return state.copyWith(status: UpdateProfileStatus.loadedProfile,
+        return state.copyWith(
+            status: UpdateProfileStatus.loadedProfile,
             responseProfileList: profile);
       } else {
         return state.copyWith(status: UpdateProfileStatus.error);

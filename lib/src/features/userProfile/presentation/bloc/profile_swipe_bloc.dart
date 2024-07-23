@@ -173,7 +173,7 @@ class ProfileSwipeBloc extends Bloc<ProfileSwipeEvent, ProfileSwipeState> {
   _onStartChatIntent(
       onStartChatIntent event, Emitter<ProfileSwipeState> emitter) async {
     var roomId =  await FirebaseChatCore.instance.createRoom(types.User(id:
-    event.request.requesteeUserId == event.userId ? event.request.userId : event.request.requesteeUserId));
+    event.request.requesteeUserId == event.userId ? event.request.userId: event.request.requesteeUserId));
     emitter.call(state.copyWith(status: ProfileSwipeStatus.loadedChat,
       chatParams: ChatPageParams(room: roomId, request: event.request),
     ));

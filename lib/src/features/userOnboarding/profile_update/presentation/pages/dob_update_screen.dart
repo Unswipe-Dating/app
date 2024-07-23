@@ -190,7 +190,7 @@ class _DOBUpdateScreenState extends State<DOBUpdateScreen> {
 
                       CustomNavigationHelper.router.push(
                         CustomNavigationHelper.onboardingGenderPath,
-                          extra: UpdateProfileParams().getUpdatedParams(widget.params)
+                          extra: UpdateProfileParams.getUpdatedParams(widget.params)
                       );
 
 

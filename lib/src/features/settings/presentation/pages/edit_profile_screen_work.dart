@@ -121,9 +121,11 @@ class _EditProfileScreenWorkState extends State<EditProfileScreenWork> {
           }
           return Scaffold(
             appBar: AppBar(
+              surfaceTintColor: Colors.white,
               backgroundColor: Colors.white,
               shadowColor: Colors.black,
-              elevation: 4.0,              title: const Text(
+              elevation: 4.0,
+              title: const Text(
                 "Basics",
                 style: TextStyle(
                     color: Colors.black,

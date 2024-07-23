@@ -15,7 +15,10 @@ import '../../../../../core/router/app_router.dart';
 
 
 class NameUpdateScreen extends StatefulWidget {
-  const NameUpdateScreen({super.key});
+  final bool toShowLoader;
+
+  const NameUpdateScreen({super.key,
+    this.toShowLoader = true});
 
   @override
   _NameUpdateScreenState createState() => _NameUpdateScreenState();
@@ -97,7 +100,8 @@ class _NameUpdateScreenState extends State<NameUpdateScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Column(
             children: [
-              const Row(
+              if (widget.toShowLoader)
+                const Row(
                 children: [
                   Expanded(
                     flex: 9,

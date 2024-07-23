@@ -10,7 +10,12 @@ import '../../../../../core/router/app_router.dart';
 
 class GenderUpdateScreen extends StatefulWidget {
   final SettingProfileParams params;
-  const GenderUpdateScreen({super.key, required this.params});
+  final bool toShowLoader;
+
+  const GenderUpdateScreen({super.key,
+    required this.params,
+    this.toShowLoader = true,
+  });
 
   @override
   _GenderUpdateScreenState createState() => _GenderUpdateScreenState();
@@ -44,7 +49,8 @@ class _GenderUpdateScreenState extends State<GenderUpdateScreen> {
             padding: EdgeInsets.symmetric(horizontal: 24),
             child: Column(
               children: [
-                const Row(
+                if (widget.toShowLoader)
+                  const Row(
                   children: [
                     Expanded(
                         flex: 9,
@@ -188,7 +194,7 @@ class _GenderUpdateScreenState extends State<GenderUpdateScreen> {
                             getNameFromCharacter(_character);
                         CustomNavigationHelper.router.push(
                             CustomNavigationHelper.onboardingPronounPath,
-                            extra: UpdateProfileParams().getUpdatedParams(widget
+                            extra: UpdateProfileParams.getUpdatedParams(widget
                                 .params.updateParams)
                         );
                       }

@@ -21,7 +21,7 @@ class _RichTextWithLoaderState extends State<RichTextWithLoader> {
   Widget build(BuildContext context) {
     return widget.isLoading?LoadingAnimationWidget.prograssiveDots(
       color: Colors.black,
-      size: 32,
+      size: 18,
     ):RichText(
       text: TextSpan(
         children: [

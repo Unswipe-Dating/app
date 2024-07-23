@@ -12,10 +12,9 @@ class OnBlockContactsSuccess extends UpdateProfileEvent {
   OnBlockContactsSuccess();
 }
 
-class OnUpdateProfileRequested extends UpdateProfileEvent {
-  final UpdateProfileParams params;
+class OnGetTokenEvent extends UpdateProfileEvent {
 
-  OnUpdateProfileRequested(this.params);
+  OnGetTokenEvent();
 }
 
 
@@ -26,9 +25,7 @@ class OnUpdateOnBoardingUserEvent extends UpdateProfileEvent {
 
 class OnRequestApiCallUpdate extends UpdateProfileEvent {
   final UpdateProfileParams params;
-  final String id;
-  final String token;
-  OnRequestApiCallUpdate(this.params, this.token, this.id);
+  OnRequestApiCallUpdate(this.params);
 }
 
 class OnUpdateUserState extends UpdateProfileEvent {
@@ -52,7 +49,5 @@ class OnGetUserProfile extends UpdateProfileEvent {
 
 class OnRequestApiCallCreate extends UpdateProfileEvent {
   final UpdateProfileParams params;
-  final String id;
-  final String token;
-  OnRequestApiCallCreate(this.params, this.token, this.id);
+  OnRequestApiCallCreate(this.params);
 }
