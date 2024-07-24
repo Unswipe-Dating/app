@@ -35,7 +35,7 @@ class _SwipeImageGalleryState extends State<SwipeImageGallery> {
                       const Center(child: Icon(Icons.error)),
                 );
                     return FadeInImage.assetNetwork(
-                      placeholder:'assets/run_heart.gif',
+                      placeholder:'assets/profile_pic_loader.png',
                       image: widget.imageUrls[index],
                         height: MediaQuery.of(context).size.height * 0.6,
                         width: double.infinity,
