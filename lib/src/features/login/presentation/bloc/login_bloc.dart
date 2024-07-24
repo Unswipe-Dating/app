@@ -17,6 +17,7 @@ import 'package:unswipe/src/features/login/domain/usecases/request_otp_use_case.
 import 'package:unswipe/src/features/login/domain/usecases/signup_login_usecase.dart';
 import 'package:unswipe/src/features/login/domain/usecases/verify_otp_use_case.dart';
 import 'package:unswipe/src/features/onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart';
+import 'package:unswipe/src/features/userOnboarding/profile_update/presentation/bloc/profile_update_bloc.dart';
 
 import '../../../../../data/api_response.dart' as api_response;
 import '../../../../../data/api_response.dart';
@@ -56,6 +57,7 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
     on<OnLoginSuccess>(_onLoginSuccess);
     on<OnGetMetaEvent>(_onGettingMetaEvent);
     on<onStartChatIntent>(_onStartChatIntent);
+    on<OnUpdateErrorType>(_updateEvent);
   }
 
   _onUpdatingOnBoardingEvent(
@@ -135,7 +137,7 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
         otpId = (((responseData as api_response.Success).data) as OtpResponse)
             .requestOTP
             .orderId;
-        return state.copyWith(status: LoginStatus.loadedOtp);
+        return state.copyWith(isOtpLoaded: true, status: LoginStatus.loadedOtp);
       } else {
         return state.copyWith(status: LoginStatus.error);
       }
@@ -161,7 +163,8 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
   _onSignUp(OnSignupRequest event, Emitter<LoginState> emitter) async {
     Stream<SignUpUseCaseResponse> stream =
         await signUpUseCase.buildUseCaseStream(
-            OtpParams(phone: event.params.phone, id: event.params.id));
+            OtpParams(token: event.token,
+                phone: event.params.phone, id: event.params.id));
 
     await emitter.forEach(stream, onData: (response) {
       final responseData = response.val;
@@ -189,12 +192,13 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
                 .user
                 .firebaseCustomToken;
 
-        add(OnGetMetaEvent(token: token,
+        add(OnGetMetaEvent(
+            token: token,
             id: event.params.id,
             userId: profile,
           fcmCustomToken: firebaseCustomToken
         ));
-        return state.copyWith(status: LoginStatus.loadingVerification);
+        return state.copyWith(status: LoginStatus.loadingSignup);
       } else {
         return state.copyWith(status: LoginStatus.error);
       }
@@ -229,8 +233,13 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
                     .validateOTP
                     .accessToken ??
                 "";
-        add(OnSignupRequest(event.params));
-        return state.copyWith(status: LoginStatus.loadingVerification);
+        if(token.isEmpty) {
+          return state.copyWith(status: LoginStatus.error,
+              errorType: ErrorType.verifyOtp );
+        } else {
+          add(OnSignupRequest(event.params, token));
+          return state.copyWith(status: LoginStatus.loadingSignup);
+        }
       } else {
         return state.copyWith(status: LoginStatus.error);
       }
@@ -262,8 +271,7 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
         return state.copyWith(status: LoginStatus.error);
       } else if (responseData is api_response.Success) {
         add(OnLoginSuccess(event.token, event.id, event.userId));
-        var res =
-            (((responseData as api_response.Success).data) as ResponseMeta);
+        var res = (((responseData as api_response.Success).data) as ResponseMeta);
         if (res.getConfig.status == "MATCHED") {
           if (res.getConfig.request != null) {
             // if(res.getConfig.chat?.status == "ACTIVE") {
@@ -282,17 +290,24 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
         } else {
           add(OnUpdateOnBoardingUserEvent(profileId: event.userId));
           return state.copyWith(
-            status: LoginStatus.loadingVerification,
+            status: LoginStatus.loadingSignup,
           );
         }
 
         return state.copyWith(
-          status: LoginStatus.loadingVerification,
+          status: LoginStatus.loadingSignup,
         );
       } else {
         return state.copyWith(status: LoginStatus.error);
       }
     });
+  }
+
+  _updateEvent(
+      OnUpdateErrorType event, Emitter<LoginState> emitter)  {
+    emitter(state.copyWith(status: LoginStatus.loadedOtp, errorType: ErrorType.none));
+
+
   }
 
   _onStartChatIntent(

@@ -18,6 +18,12 @@ class OnOtpRequested extends LogInEvent {
   OnOtpRequested(this.params);
 }
 
+class OnUpdateErrorType extends LogInEvent {
+
+  OnUpdateErrorType();
+}
+
+
 class OnOtpResendRequested extends LogInEvent {
   final OtpParams params;
 
@@ -55,6 +61,7 @@ class OnOtpVerificationRequest extends LogInEvent {
 
 class OnSignupRequest extends LogInEvent {
   final OtpParams params;
+  final String token;
 
-  OnSignupRequest(this.params);
+  OnSignupRequest(this.params, this.token);
 }

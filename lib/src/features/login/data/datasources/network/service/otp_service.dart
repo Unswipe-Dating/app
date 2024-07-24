@@ -138,9 +138,10 @@ class OtpService {
     ''';
 
     try {
-      final response = await service.performMutation(query, variables: {
+      final response = await service.performMutationWithHeader(params.token, query, variables: {
         "id": params.phone,
         "phone": params.phone,
+
       });
       log('$response');
 

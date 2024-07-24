@@ -30,8 +30,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  bool isOtpLoaded = false;
-
   _selectScreen() async {
     if (await Permission.contacts.isGranted) {
       CustomNavigationHelper.router.go(
@@ -98,20 +96,18 @@ class _LoginScreenState extends State<LoginScreen> {
                     content: "No Internet Available",
                     defaultActionText: "Okay");
               } else if (state.status == LoginStatus.loadedOtp) {
-                isOtpLoaded = true;
               } else if (state.status == LoginStatus.loadingResend) {
-              } else if (state.status == LoginStatus.loadedResend) {}
+              } else if (state.status == LoginStatus.loadedResend) {
+              } else if (state.status == LoginStatus.error &&
+                  state.errorType == ErrorType.verifyOtp) {}
             },
             builder: (context, state) {
-              return state.status == (LoginStatus.loadingVerification)
+              return state.status == (LoginStatus.loadingSignup)
                   ? const Center(child: CircularProgressIndicator())
                   : Stack(
                       children: [
                         Center(
-                          child: MyForm(
-                            status: state.status,
-                            isOtpLoaded: isOtpLoaded,
-                          ),
+                          child: MyForm(),
                         )
                       ],
                     );
@@ -124,13 +120,8 @@ class _LoginScreenState extends State<LoginScreen> {
 }
 
 class MyForm extends StatefulWidget {
-  final LoginStatus status;
-  final bool isOtpLoaded;
-
   const MyForm({
     super.key,
-    required this.status,
-    required this.isOtpLoaded,
   });
 
   @override
@@ -145,20 +136,23 @@ class _MyFormState extends State<MyForm> {
 
   TextEditingController otpController = TextEditingController();
 
-  bool isCodeRequested = false;
   bool isButtonEnabled = false;
   bool isResendEnabled = false;
   bool isResendVisible = false;
   bool isOtpEnabled = false;
   bool toShowTimer = false;
   String emailError = "";
-  String codeError = "";
   Timer? timer;
   int _start = 9;
 
   @override
   void didUpdateWidget(MyForm oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if(context.read<LoginBloc>().state.status == LoginStatus.loadedOtp
+        || context.read<LoginBloc>().state.status == LoginStatus.loadingResend
+            && toShowTimer ) {
+      startTimer();
+    }
     validateFields();
   }
 
@@ -180,9 +174,7 @@ class _MyFormState extends State<MyForm> {
       });
     });
     otpController.addListener(() {
-      setState(() {
-        codeError = "";
-      });
+      context.read<LoginBloc>().add(OnUpdateErrorType());
     });
     otpController.addListener(validateFields);
   }
@@ -196,7 +188,8 @@ class _MyFormState extends State<MyForm> {
     setState(() {
       isResendEnabled = !toShowTimer && contactController.text.isNotEmpty;
       isButtonEnabled = isButtonEnabledState(isEmailValid, isPasswordValid);
-      isOtpEnabled = isEmailValid && isCodeRequested;
+      isOtpEnabled =
+          isEmailValid && context.read<LoginBloc>().state.isOtpLoaded;
     });
   }
 
@@ -211,10 +204,11 @@ class _MyFormState extends State<MyForm> {
   }
 
   bool isButtonEnabledState(bool email, bool password) {
-    switch (widget.status) {
+    var status = context.read<LoginBloc>().state.status;
+    switch (status) {
       case LoginStatus.loadedOtp:
       case LoginStatus.loadedResend:
-        return email && password && isCodeRequested;
+        return email && password && context.read<LoginBloc>().state.isOtpLoaded;
       case LoginStatus.initial:
         return email;
       case LoginStatus.loadingVerification:
@@ -230,52 +224,24 @@ class _MyFormState extends State<MyForm> {
     String email,
     String code,
   ) async {
-    switch (widget.status) {
-      case LoginStatus.initial:
-        {
-          startTimer();
-          context.read<LoginBloc>().add(OnOtpRequested(OtpParams(
-              phone: "${codeController.text}${contactController.text}",
-              id: "${codeController.text}${contactController.text}")));
-        }
-      case LoginStatus.loadedOtp:
-        {
-          context.read<LoginBloc>().add(OnOtpVerificationRequest(OtpParams(
-                phone: "${codeController.text}${contactController.text}",
-                id: "${codeController.text}${contactController.text}",
-                otp: otpController.text,
-                fcmRegisterationToken: fcmToken,
-              )));
-        }
-      case LoginStatus.error:
-      case LoginStatus.errorNetwork:
-      case LoginStatus.errorAuth:
-      case LoginStatus.errorTimeOut:
-        {
-          if (!widget.isOtpLoaded) {
-            startTimer();
-            context.read<LoginBloc>().add(OnOtpRequested(OtpParams(
-                phone: "${codeController.text}${contactController.text}",
-                id: "${codeController.text}${contactController.text}")));
-          } else {
-            context.read<LoginBloc>().add(OnOtpVerificationRequest(OtpParams(
-                  phone: "${codeController.text}${contactController.text}",
-                  id: "${codeController.text}${contactController.text}",
-                  otp: otpController.text,
-                  fcmRegisterationToken: fcmToken,
-                )));
-          }
-        }
-      default:
-        {}
+    var isOtpLoaded = context.read<LoginBloc>().state.isOtpLoaded;
+    if (!isOtpLoaded) {
+      context.read<LoginBloc>().add(OnOtpRequested(OtpParams(
+          phone: "${codeController.text}${contactController.text}",
+          id: "${codeController.text}${contactController.text}")));
+    } else {
+      context.read<LoginBloc>().add(OnOtpVerificationRequest(OtpParams(
+            phone: "${codeController.text}${contactController.text}",
+            id: "${codeController.text}${contactController.text}",
+            otp: otpController.text,
+            fcmRegisterationToken: fcmToken,
+          )));
     }
     validateFields();
   }
 
   void startTimer() {
-    isCodeRequested = true;
     const oneSec = Duration(seconds: 1);
-    toShowTimer = true;
     timer = Timer.periodic(
       oneSec,
       (Timer timer) {
@@ -283,8 +249,8 @@ class _MyFormState extends State<MyForm> {
           setState(() {
             timer.cancel();
             toShowTimer = false;
-            isResendVisible = widget.isOtpLoaded ? true : false;
-            isResendEnabled = widget.isOtpLoaded ? true : false;
+            isResendVisible = true;
+            isResendEnabled = true;
             _start = 9;
           });
         } else {
@@ -368,7 +334,8 @@ class _MyFormState extends State<MyForm> {
                 controller: otpController,
                 keyboardType: TextInputType.visiblePassword,
                 isEnabled: isOtpEnabled,
-                errorString: codeError,
+                errorString:  (context.read<LoginBloc>().state.status == LoginStatus.error
+                    && context.read<LoginBloc>().state.errorType == ErrorType.verifyOtp) ? "Incorrect verification code": "",
               ),
             ),
             if (toShowTimer)
@@ -384,7 +351,7 @@ class _MyFormState extends State<MyForm> {
                   onPressed: () {
                     setState(() {
                       isResendEnabled = false;
-                      startTimer();
+                      toShowTimer = true;
                       validateFields();
                     });
                     context.read<LoginBloc>().add(OnOtpResendRequested(OtpParams(
@@ -397,15 +364,17 @@ class _MyFormState extends State<MyForm> {
                   isEnabled: isResendEnabled),
             const SizedBox(height: 8.0),
             CustomButton(
-                text: widget.status.text,
+                text: context.read<LoginBloc>().state.status.text,
                 onPressed: () {
                   onLoginClick(contactController.text, otpController.text);
+                  toShowTimer = !context.read<LoginBloc>().state.isOtpLoaded;
                   setState(() {
                     isButtonEnabled = false;
                   });
                 },
                 isEnabled: isButtonEnabled,
-                isLoading: widget.status == LoginStatus.loadingOTP),
+                isLoading: context.read<LoginBloc>().state.status == LoginStatus.loadingOTP
+                    || context.read<LoginBloc>().state.status == LoginStatus.loadingVerification),
             const SizedBox(height: 8.0),
           ],
         ),

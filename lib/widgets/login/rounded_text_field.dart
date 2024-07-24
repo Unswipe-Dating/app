@@ -86,7 +86,7 @@ class _RoundedTextFieldState extends State<RoundedTextInput> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12.0),
                     border: value
-                        ? Border.all(color: Colors.black, width: 3)
+                        ? Border.all(color: widget.errorString == "" ? Colors.black : Colors.red, width: 3)
                         : Border.all(color: Colors.transparent),
                     color: Colors.grey[200],
                   ),

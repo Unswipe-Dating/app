@@ -20,11 +20,13 @@ class OtpParams {
    final String otp;
    final String otpOrderId;
    final String fcmRegisterationToken;
+   final String token;
 
   OtpParams({
     required this.phone,
     required this.id,
     this.otp = "",
+    this.token = "",
     this.otpOrderId = "",
     this.fcmRegisterationToken = ""
   });
