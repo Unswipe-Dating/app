@@ -21,23 +21,26 @@ class UserSettingService {
     final query = '''
      query userProfile(\$userId: String!) {
     userProfile(userId: \$userId){
-       id
-       userId
-       name
-       interests
-       photoURLs
-       location
-       locationCoordinates
-       dob
-       datingPreference
-       height
-       hometown
-       location
-       zodiac
-       languages
-       pronouns
-       gender
-       showTruncatedName
+       id,
+      userId,
+      name,
+      interests,
+      photoURLs,
+      location,
+      dob,
+      datingPreference,
+      height,
+      hometown,
+      zodiac,
+      languages,
+      pronouns,
+      gender,
+      locationCoordinates,
+      showTruncatedName,
+      work,
+      lifestyle,
+      values
+       
     }
 }
     ''';

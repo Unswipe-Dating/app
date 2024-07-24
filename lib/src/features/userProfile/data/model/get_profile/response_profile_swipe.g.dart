@@ -79,10 +79,10 @@ ResponseProfileList _$ResponseProfileListFromJson(Map<String, dynamic> json) =>
       json['work'] == null
           ? null
           : ResponseProfileWork.fromJson(json['work'] as Map<String, dynamic>),
-      json['lifeStyle'] == null
+      json['lifestyle'] == null
           ? null
           : ResponseProfileLifeStyle.fromJson(
-              json['lifeStyle'] as Map<String, dynamic>),
+              json['lifestyle'] as Map<String, dynamic>),
       json['values'] == null
           ? null
           : ResponseProfileValues.fromJson(
@@ -113,7 +113,7 @@ Map<String, dynamic> _$ResponseProfileListToJson(
       'languages': instance.languages,
       'work': instance.work,
       'values': instance.values,
-      'lifeStyle': instance.lifeStyle,
+      'lifestyle': instance.lifestyle,
       'request': instance.request,
     };
 

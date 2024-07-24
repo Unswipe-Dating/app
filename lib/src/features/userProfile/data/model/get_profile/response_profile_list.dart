@@ -28,7 +28,7 @@ class ResponseProfileList {
       this.showDatingPreference,
       this.showGender,
       this.work,
-      this.lifeStyle,
+      this.lifestyle,
       this.values
       );
 
@@ -56,7 +56,7 @@ class ResponseProfileList {
   List<String>? languages;
   ResponseProfileWork? work;
   ResponseProfileValues? values;
-  ResponseProfileLifeStyle? lifeStyle;
+  ResponseProfileLifeStyle? lifestyle;
 
   ResponseProfileRequestBody? request;
   Map<String, dynamic> toJson() => _$ResponseProfileListToJson(this);

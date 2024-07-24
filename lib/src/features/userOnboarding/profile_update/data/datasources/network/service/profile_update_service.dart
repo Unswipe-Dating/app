@@ -75,7 +75,29 @@ class UpdateUserService {
 
     try {
       final response =
-          await service.performMutationWithHeader(token, query, variables: {});
+          await service.performMutationWithHeader(token, query, variables: {
+            "userId": params.userId,
+            "datingPreference": params.datingPreference,
+            "dob": params.dob,
+            "gender": params.gender,
+            "id": params.id,
+            "interests": params.interests,
+            "name": params.name,
+            "pronouns": params.pronouns,
+            "showTruncatedName": params.showTruncatedName,
+            "locationCoordinates": params.locationCoordinates,
+            "showPronoun": params.showPronoun,
+            "showDatingPreference": params.showDatingPreference,
+            "showGender": params.showGender,
+            "height": params.height,
+            "homeTown": params.hometown,
+            "zodiac": params.zodiac,
+            "languages": params.languages,
+            "work": params.work,
+            "lifestyle": params.lifestyle,
+            "values": params.values,
+
+          });
       log('$response');
 
       if (!response.hasException) {
@@ -170,7 +192,18 @@ class UpdateUserService {
         "interests": params.interests,
         "name": params.name,
         "pronouns": params.pronouns,
-        "showTruncatedName": params.showTruncatedName
+        "showTruncatedName": params.showTruncatedName,
+        "locationCoordinates": params.locationCoordinates,
+        "showPronoun": params.showPronoun,
+        "showDatingPreference": params.showDatingPreference,
+        "showGender": params.showGender,
+        "height": params.height,
+        "homeTown": params.hometown,
+        "zodiac": params.zodiac,
+        "languages": params.languages,
+        "work": params.work,
+        "lifestyle": params.lifestyle,
+        "values": params.values,
       });
       log('$response');
 

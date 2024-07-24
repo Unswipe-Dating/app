@@ -1,9 +1,11 @@
 part of 'profile_update_bloc.dart';
 
 
-enum UpdateProfileStatus { initial,
+enum UpdateProfileStatus {
+  initial,
   fetchedToken,
   loading,
+  loadingSave,
   loaded,
   error,
   errorAuth,

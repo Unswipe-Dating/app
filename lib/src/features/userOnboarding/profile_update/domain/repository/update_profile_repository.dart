@@ -29,7 +29,7 @@ class UpdateProfileParams {
   List<String>? languages;
   ResponseProfileWork? work;
   ResponseProfileValues? values;
-  ResponseProfileLifeStyle? lifeStyle;
+  ResponseProfileLifeStyle? lifestyle;
   bool? showTruncatedName;
   bool? showPronoun;
   bool? showGender;
@@ -56,7 +56,7 @@ class UpdateProfileParams {
     this.zodiac,
     this.languages,
     this.work,
-    this.lifeStyle,
+    this.lifestyle,
     this.values
   });
 
@@ -80,7 +80,7 @@ class UpdateProfileParams {
       zodiac: params?.zodiac,
       languages: params?.languages,
       work: params?.work,
-      lifeStyle: params?.lifeStyle,
+      lifestyle: params?.lifestyle,
       values: params?.values,
     );
   }
@@ -111,7 +111,7 @@ class UpdateProfileParams {
       zodiac: params?.zodiac,
       languages: params?.languages,
       work: params?.work,
-      lifeStyle: params?.lifeStyle,
+      lifestyle: params?.lifestyle,
       values: params?.values,
     );
   }

@@ -44,7 +44,7 @@ class _EditProfileScreenLifestyleState
     extends State<EditProfileScreenLifestyle> {
   bool isButtonEnabled = false;
   bool isButtonLoading = false;
-  ResponseProfileLifeStyle? lifeStyle;
+  ResponseProfileLifeStyle? lifestyle;
   bool isLoadingValues = true;
   ResponseProfileList? profile;
   List<String> interestString = [];
@@ -98,17 +98,18 @@ class _EditProfileScreenLifestyleState
               ..add(OnStartGettingProfile()),
             child: BlocConsumer<UpdateProfileBloc, UpdateProfileState>(
               listener: (context, state) {
-                if (state.status == UpdateProfileStatus.loaded) {
+                if (state.status == UpdateProfileStatus.loaded
+                    || state.status == UpdateProfileStatus.error
+                    || state.status == UpdateProfileStatus.errorTimeOut) {
                   isButtonLoading = false;
                   isButtonEnabled = true;
-                } else
-                if (state.status == UpdateProfileStatus.errorAuth) {
+                } else if (state.status == UpdateProfileStatus.errorAuth) {
                   CustomNavigationHelper.router.go(
                     CustomNavigationHelper.loginPath,
                   );
                 } else if (state.status == UpdateProfileStatus.loadedProfile) {
                   profile = state.responseProfileList;
-                  lifeStyle = profile?.lifeStyle ??
+                  lifestyle = profile?.lifestyle ??
                       ResponseProfileLifeStyle(null, null, null, null, null);
                   isLoadingValues = false;
                 }
@@ -186,7 +187,7 @@ class _EditProfileScreenLifestyleState
                                               ),
                                             ),
                                             RichTextWithLoader(
-                                                text: lifeStyle?.drink ?? "Add",
+                                                text: lifestyle?.drink ?? "Add",
                                                 isLoading: isLoadingValues),
                                           ],
                                         ),
@@ -204,7 +205,7 @@ class _EditProfileScreenLifestyleState
                                                             profileParams:
                                                             profile))));
                                         if (drink != null) {
-                                          lifeStyle?.drink = drink;
+                                          lifestyle?.drink = drink;
                                           isButtonEnabled = true;
                                           setState(() {});
                                         }
@@ -245,7 +246,7 @@ class _EditProfileScreenLifestyleState
                                               ),
                                             ),
                                             RichTextWithLoader(
-                                                text: lifeStyle?.smoke ?? "Add",
+                                                text: lifestyle?.smoke ?? "Add",
                                                 isLoading: isLoadingValues),
                                           ],
                                         ),
@@ -262,7 +263,7 @@ class _EditProfileScreenLifestyleState
                                                             UpdateProfileParams(),
                                                             profileParams: profile))));
                                         if (smoke != null) {
-                                          lifeStyle?.smoke = smoke;
+                                          lifestyle?.smoke = smoke;
                                           isButtonEnabled = true;
                                           setState(() {});
                                         }
@@ -303,7 +304,7 @@ class _EditProfileScreenLifestyleState
                                               ),
                                             ),
                                             RichTextWithLoader(
-                                                text: lifeStyle?.exercise ??
+                                                text: lifestyle?.exercise ??
                                                     "Add",
                                                 isLoading: isLoadingValues),
                                           ],
@@ -321,7 +322,7 @@ class _EditProfileScreenLifestyleState
                                                             UpdateProfileParams(),
                                                             profileParams: profile))));
                                         if (exercise != null) {
-                                          lifeStyle?.exercise = exercise;
+                                          lifestyle?.exercise = exercise;
                                           isButtonEnabled = true;
                                           setState(() {});
                                         }
@@ -361,7 +362,7 @@ class _EditProfileScreenLifestyleState
                                               ),
                                             ),
                                             RichTextWithLoader(
-                                                text: lifeStyle?.cook ?? "Add",
+                                                text: lifestyle?.cook ?? "Add",
                                                 isLoading: isLoadingValues),
                                           ],
                                         ),
@@ -378,7 +379,7 @@ class _EditProfileScreenLifestyleState
                                                             UpdateProfileParams(),
                                                             profileParams: profile))));
                                         if (cook != null) {
-                                          lifeStyle?.cook = cook;
+                                          lifestyle?.cook = cook;
                                           isButtonEnabled = true;
                                           setState(() {});
                                         }
@@ -418,7 +419,7 @@ class _EditProfileScreenLifestyleState
                                               ),
                                             ),
                                             RichTextWithLoader(
-                                                text: lifeStyle
+                                                text: lifestyle
                                                     ?.householdChores ?? "Add",
                                                 isLoading: isLoadingValues),
                                           ],
@@ -436,7 +437,7 @@ class _EditProfileScreenLifestyleState
                                                             UpdateProfileParams(),
                                                             profileParams: profile))));
                                         if (household != null) {
-                                          lifeStyle?.householdChores = household;
+                                          lifestyle?.householdChores = household;
                                           isButtonEnabled = true;
                                           setState(() {});
                                         }
@@ -459,6 +460,7 @@ class _EditProfileScreenLifestyleState
                                   isButtonEnabled = false;
                                   isButtonLoading = true;
                                 });
+                                profile?.lifestyle = lifestyle;
                                 context.read<UpdateProfileBloc>()
                                     .add(OnRequestApiCallUpdate(
                                     UpdateProfileParams
