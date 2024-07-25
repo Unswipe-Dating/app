@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geocode/geocode.dart';
@@ -26,6 +27,7 @@ import 'package:unswipe/src/features/userProfile/data/model/get_profile/response
 import 'package:unswipe/src/features/userProfile/presentation/widgets/swipeViewCards/interests_card.dart';
 import 'package:unswipe/src/shared/domain/usecases/get_auth_state_stream_use_case.dart';
 import 'package:unswipe/src/shared/presentation/widgets/RichTextWithLoader.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../../../core/router/app_router.dart';
 import '../../../onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart';
@@ -42,17 +44,29 @@ class EditProfileScreenLifestyle extends StatefulWidget {
 
 class _EditProfileScreenLifestyleState
     extends State<EditProfileScreenLifestyle> {
+  late FToast fToast;
+
   bool isButtonEnabled = false;
   bool isButtonLoading = false;
   ResponseProfileLifeStyle? lifestyle;
   bool isLoadingValues = true;
   ResponseProfileList? profile;
-  List<String> interestString = [];
+
+
+  @override
+  void initState() {
+    super.initState();
+    fToast = FToast();
+    fToast.init(context);  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
+          statusBarBrightness: Brightness.light, // For iOS (dark icons)
+        ),
         surfaceTintColor: Colors.white,
         backgroundColor: Colors.white,
         shadowColor: Colors.black,
@@ -103,6 +117,27 @@ class _EditProfileScreenLifestyleState
                     || state.status == UpdateProfileStatus.errorTimeOut) {
                   isButtonLoading = false;
                   isButtonEnabled = true;
+                  fToast.showToast(
+                    toastDuration: Duration(milliseconds: 5000),
+                    child: Material(
+                      color: Colors.white,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.face),
+                          Text(
+                            "Press and hold to send Alert!",
+                            style: TextStyle(color: Colors.black87, fontSize: 16.0),
+                          )
+                        ],
+                      ),
+                    ),
+                    gravity: ToastGravity.CENTER,
+                  );
+                } else if (state.status == UpdateProfileStatus.loadedSave) {
+                  isButtonLoading = false;
+                  isButtonEnabled = true;
+
                 } else if (state.status == UpdateProfileStatus.errorAuth) {
                   CustomNavigationHelper.router.go(
                     CustomNavigationHelper.loginPath,
@@ -483,13 +518,3 @@ class _EditProfileScreenLifestyleState
   }
 }
 
-class ChipValues {
-  final String val;
-  bool isSelected = false;
-
-  ChipValues(this.val);
-
-  void setSelection(bool isSelected) {
-    this.isSelected = isSelected;
-  }
-}

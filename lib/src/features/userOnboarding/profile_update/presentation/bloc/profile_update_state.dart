@@ -6,6 +6,7 @@ enum UpdateProfileStatus {
   fetchedToken,
   loading,
   loadingSave,
+  loadedSave,
   loaded,
   error,
   errorAuth,

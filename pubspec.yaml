@@ -153,6 +153,8 @@ dependencies:
   reclaim_sdk: ^1.1.0
   app_settings: ^5.1.1
   firebase_auth: ^4.19.6
+  fluttertoast: ^8.2.6
+
 
 
 dev_dependencies:
@@ -165,8 +167,6 @@ dev_dependencies:
   built_value_generator: ^8.4.2
   flutter_lints: ^4.0.0
   dependency_validator: ^3.0.0
-
-
 
   # Localization config
   flutter_localizations:

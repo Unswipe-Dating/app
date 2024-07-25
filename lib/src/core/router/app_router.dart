@@ -235,9 +235,8 @@ class CustomNavigationHelper {
       GoRoute(
         path: settingsPathWork,
         pageBuilder: (context, state) {
-          ResponseProfileList profile = state.extra as ResponseProfileList;
           return getPage(
-            child: EditProfileScreenWork(profile: profile),
+            child: const EditProfileScreenWork(),
             state: state,
           );
         },
@@ -245,9 +244,8 @@ class CustomNavigationHelper {
       GoRoute(
         path: settingsPathValues,
         pageBuilder: (context, state) {
-          ResponseProfileList profile = state.extra as ResponseProfileList;
           return getPage(
-            child: EditProfileScreenValue(profile: profile),
+            child: const EditProfileScreenValue(),
             state: state,
           );
         },

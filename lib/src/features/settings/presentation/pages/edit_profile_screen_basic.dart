@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geocode/geocode.dart';
@@ -10,6 +11,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:unswipe/src/features/login/domain/usecases/update_login_state_stream_usecase.dart';
 import 'package:unswipe/src/features/settings/domain/repository/user_settings_repository.dart';
 import 'package:unswipe/src/features/settings/domain/usecases/get_settings_profile_usecase.dart';
+import 'package:unswipe/src/features/settings/presentation/pages/height_selector_screen.dart';
 import 'package:unswipe/src/features/userOnboarding/profile_update/data/models/update_profile_response.dart';
 import 'package:unswipe/src/features/userOnboarding/profile_update/domain/usecases/create_user_use_case.dart';
 import 'package:unswipe/src/features/userOnboarding/profile_update/domain/usecases/update_user_use_case.dart';
@@ -90,6 +92,10 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
   Widget build(BuildContext context) {
     return Scaffold(
             appBar: AppBar(
+              systemOverlayStyle: const SystemUiOverlayStyle(
+                statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
+                statusBarBrightness: Brightness.light, // For iOS (dark icons)
+              ),
               surfaceTintColor: Colors.white,
               backgroundColor: Colors.white,
               shadowColor: Colors.black,
@@ -499,18 +505,18 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                               ),
                                             ),
                                             onTap: () async {
-                                              final datePreference = await Navigator.push(
+                                              final height = await Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
                                                       builder: (context) =>
-                                                          PartnerGenderUpdateScreen(
+                                                          HeightUpdateScreen(
                                                               params: SettingProfileParams(
                                                                   updateParams:
                                                                       UpdateProfileParams(),
                                                                   profileParams:profile))));
-                                              if (datePreference != null) {
-                                                profile?.datingPreference =
-                                                    datePreference;
+                                              if (height != null) {
+                                                profile?.height =
+                                                    height;
                                                 setState(() {});
                                               }
                                             },
@@ -607,7 +613,11 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                               if (isLoadingLocation ||
                                                   isLocationRequested) {
                                               } else {
-                                                isLoadingLocation = true;
+                                                setState(() {
+                                                  isLoadingLocation = true;
+                                                  isLocationRequested = true;
+                                                });
+
                                                 var pos =
                                                     await _determinePosition();
                                                 longitude = pos.longitude;
@@ -618,8 +628,10 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                                 ];
                                                 Address? data =  await getAddressFromLatLng();
                                                 profile?.location = data?.region;
-                                                setState(() {});
-                                                isLocationRequested = true;
+                                                setState(() {
+                                                  isLoadingLocation = false;
+                                                  isLocationRequested = false;
+                                                });
                                               }
                                             },
                                           ),

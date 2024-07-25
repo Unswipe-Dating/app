@@ -6,13 +6,16 @@ import 'package:unswipe/src/features/userOnboarding/profile_update/domain/reposi
 
 import '../../../../../../widgets/login/rounded_text_field.dart';
 import '../../../../core/router/app_router.dart';
-
-
-
+import '../../../login/presentation/pages/Login.dart';
+import '../../domain/repository/user_settings_repository.dart';
 
 class HeightUpdateScreen extends StatefulWidget {
-  final UpdateProfileParams? params;
-  const HeightUpdateScreen({super.key, this.params});
+  final SettingProfileParams params;
+
+  const HeightUpdateScreen({
+    super.key,
+    required this.params,
+  });
 
   @override
   State<HeightUpdateScreen> createState() => _HeightUpdateScreenState();
@@ -26,10 +29,15 @@ class _HeightUpdateScreenState extends State<HeightUpdateScreen> {
 
   var request = [];
 
-
   @override
   void initState() {
     super.initState();
+    if (widget.params.profileParams?.height?.isNotEmpty == true) {
+      List<String> heightText =
+          widget.params.profileParams?.height?.split(" ") ?? ["", "", "", ""];
+      feetController.text = heightText[0];
+      inchController.text = heightText[3];
+    }
     feetController.addListener(validateFields);
     inchController.addListener(validateFields);
   }
@@ -37,30 +45,30 @@ class _HeightUpdateScreenState extends State<HeightUpdateScreen> {
   void validateFields() {
     // Enable or disable the button based on the validation status
     setState(() {
-      isButtonEnabled = isValidDate(feetController.text)
-          && isValidMonth(inchController.text);
+      isButtonEnabled =
+          isValidFeet(feetController.text) && isValidInch(inchController.text);
     });
   }
 
-  bool isValidDate(String text) {
+  bool isValidFeet(String text) {
     if (text.isEmpty) return false;
-    int val = int.parse(text);
-    return val > 0 && val <= 31;
+    try {
+      int val = int.parse(text);
+      return val > 0 && val <= 7;
+    } on Exception catch (_) {
+      return false;
+    }
   }
 
-  bool isValidMonth(text) {
+  bool isValidInch(text) {
     if (text.isEmpty) return false;
-
-    int val = int.parse(text);
-    return val > 0 && val <= 12;
+    try {
+      int val = int.parse(text);
+      return val > 0 && val <= 11;
+    } on Exception catch (_) {
+      return false;
+    }
   }
-
-  bool isValidYear(text) {
-    if (text.isEmpty) return false;
-    int val = int.parse(text);
-    return val > 1950 && val <= 2024;
-  }
-
 
   @override
   void dispose() {
@@ -68,10 +76,11 @@ class _HeightUpdateScreenState extends State<HeightUpdateScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-          appBar: AppBar(title: Text(""),),
+  Widget build(BuildContext mContext) {
+    return Scaffold(
+          appBar: AppBar(
+            title: Text(""),
+          ),
           body: Padding(
             padding: EdgeInsets.symmetric(horizontal: 24),
             child: Column(
@@ -84,8 +93,7 @@ class _HeightUpdateScreenState extends State<HeightUpdateScreen> {
                           color: Colors.black,
 
                           value: 0.35, // Set the progress to 10%
-                        )
-                    ),
+                        )),
                     SizedBox(
                       width: 8,
                     ),
@@ -134,7 +142,7 @@ class _HeightUpdateScreenState extends State<HeightUpdateScreen> {
                         flex: 1,
                         child: RoundedTextInput(
                           titleText: '',
-                          hintText: '01',
+                          hintText: 'ft',
                           controller: feetController,
                           keyboardType: TextInputType.number,
                         ),
@@ -146,7 +154,7 @@ class _HeightUpdateScreenState extends State<HeightUpdateScreen> {
                         flex: 1,
                         child: RoundedTextInput(
                           titleText: '',
-                          hintText: '01',
+                          hintText: 'in',
                           controller: inchController,
                           keyboardType: const TextInputType.numberWithOptions(
                               signed: false, decimal: false),
@@ -156,59 +164,25 @@ class _HeightUpdateScreenState extends State<HeightUpdateScreen> {
                   ),
                 ),
                 Expanded(
-                  child: Container(
-                  ),
+                  child: Container(),
                 ),
-
                 Padding(
                   padding: EdgeInsets.all(16),
-                  child: ElevatedButton(
-                    onPressed: isButtonEnabled ? () {
-                      // widget.params?.height = getHeight(
-                      //     inchController.text,
-                      //     feetController.text
-                      // );
-                      //
-                      // CustomNavigationHelper.router.push(
-                      //     CustomNavigationHelper.onboardingGenderPath,
-                      //     extra: UpdateProfileParams.getUpdatedParams(widget.params)
-                      // );
-
-
-                    } : null,
-                    style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: Colors.black,
-                        disabledBackgroundColor: Colors.black.withOpacity(0.6),
-                        disabledForegroundColor: Colors.white.withOpacity(0.6),
-                        shape: RoundedRectangleBorder(
-                          borderRadius:
-                          BorderRadius.circular(2.0), // Rounded corners
-                        ),
-                        minimumSize:
-                        const Size.fromHeight(48) // Set button text color
-                    ),
-                    child: const Text(
-                      'Upload',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: 'Lato',
-                          fontWeight: FontWeight.w600,
-                          fontSize: 18.0),
-                    ),
+                  child: CustomButton(
+                    onPressed: () {
+                      Navigator.pop(mContext,
+                          "${feetController.text} ft  ${inchController.text} in");
+                    },
+                    text: 'Next',
+                    isEnabled: isButtonEnabled,
                   ),
                 ),
               ],
-            )
-            ,)
-      ),
-    );
+            ),
+          ));
   }
 
   String? getHeight(String yearText, String monthText, String dateText) {
-
     return "$yearText-$monthText-$dateText";
   }
-
-
 }
