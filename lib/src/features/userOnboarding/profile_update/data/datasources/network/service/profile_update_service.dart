@@ -36,6 +36,9 @@ class UpdateUserService {
   \$location: String,
   \$locationCoordinates: [String!],
   \$zodiac: ZodiacSign,
+  \$work: JSONObject,
+  \$values: JSONObject,
+  \$lifestyle: JSONObject,
   \$showTruncatedName: Boolean){
   updateProfile(data: {
     userId: \$userId,
@@ -52,7 +55,11 @@ class UpdateUserService {
     height: \$height,
     location: \$location,
     locationCoordinates:\$locationCoordinates,
-    zodiac: \$zodiac
+    zodiac: \$zodiac,
+    work: \$work,
+    values: \$values,
+    lifestyle: \$lifestyle,
+
   }) {
     userId
     completed
@@ -69,6 +76,9 @@ class UpdateUserService {
     location
     locationCoordinates
     zodiac
+    work
+    values
+    lifestyle
   }
 }
     ''';
@@ -76,28 +86,27 @@ class UpdateUserService {
     try {
       final response =
           await service.performMutationWithHeader(token, query, variables: {
-            "userId": params.userId,
-            "datingPreference": params.datingPreference,
-            "dob": params.dob,
-            "gender": params.gender,
-            "id": params.id,
-            "interests": params.interests,
-            "name": params.name,
-            "pronouns": params.pronouns,
-            "showTruncatedName": params.showTruncatedName,
-            "locationCoordinates": params.locationCoordinates,
-            "showPronoun": params.showPronoun,
-            "showDatingPreference": params.showDatingPreference,
-            "showGender": params.showGender,
-            "height": params.height,
-            "homeTown": params.hometown,
-            "zodiac": params.zodiac,
-            "languages": params.languages,
-            "work": params.work,
-            "lifestyle": params.lifestyle,
-            "values": params.values,
-
-          });
+        "userId": params.userId,
+        "datingPreference": params.datingPreference,
+        "dob": params.dob,
+        "gender": params.gender,
+        "id": params.id,
+        "interests": params.interests,
+        "name": params.name,
+        "pronouns": params.pronouns,
+        "showTruncatedName": params.showTruncatedName,
+        "locationCoordinates": params.locationCoordinates,
+        "showPronoun": params.showPronoun,
+        "showDatingPreference": params.showDatingPreference,
+        "showGender": params.showGender,
+        "height": params.height,
+        "homeTown": params.hometown,
+        "zodiac": params.zodiac,
+        "languages": params.languages,
+        "work": params.work?.toJson(),
+        "lifestyle": params.lifestyle,
+        "values": params.values,
+      });
       log('$response');
 
       if (!response.hasException) {

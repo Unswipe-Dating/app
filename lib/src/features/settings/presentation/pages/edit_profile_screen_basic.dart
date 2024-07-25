@@ -774,7 +774,7 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                     elevation: 4,
                                   ),
                                   onTap: () async {
-                                    final interests = await Navigator.push(
+                                    final languages = await Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
@@ -784,10 +784,9 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                                         UpdateProfileParams(),
                                                         profileParams:
                                                         profile))));
-                                    if (interests != null) {
-                                      profile?.interests = interests;
+                                    if (languages != null) {
+                                      profile?.languages = languages;
                                       setState(() {
-                                        updateInterestString();
                                       });
                                     }
                                   },
