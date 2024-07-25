@@ -246,16 +246,17 @@ class _MyFormState extends State<MyForm> {
       oneSec,
       (Timer timer) {
         if (_start == 0) {
+          timer.cancel();
           setState(() {
-            timer.cancel();
             toShowTimer = false;
             isResendVisible = true;
             isResendEnabled = true;
             _start = 9;
           });
+
         } else {
+          _start--;
           setState(() {
-            _start--;
           });
         }
       },

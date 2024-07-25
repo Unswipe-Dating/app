@@ -11,6 +11,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:unswipe/src/features/login/domain/usecases/update_login_state_stream_usecase.dart';
 import 'package:unswipe/src/features/settings/domain/repository/user_settings_repository.dart';
 import 'package:unswipe/src/features/settings/domain/usecases/get_settings_profile_usecase.dart';
+import 'package:unswipe/src/features/settings/presentation/pages/edit_language_list_screen.dart';
 import 'package:unswipe/src/features/settings/presentation/pages/height_selector_screen.dart';
 import 'package:unswipe/src/features/settings/presentation/pages/zodiac_update_screen.dart';
 import 'package:unswipe/src/features/userOnboarding/profile_update/data/models/update_profile_response.dart';
@@ -730,7 +731,8 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                 ),
                                 !isLoadingValues
                                     ? profile?.languages?.isNotEmpty == false  ?
-                                Card(
+                                InkWell(
+                                  child: Card(
                                   elevation: 4,
                                   color: Colors.white,
                                   surfaceTintColor: Colors.white,
@@ -766,11 +768,29 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                       ],
                                     ),
                                   ),
-                                ):
+                                ),
+                                  onTap: () async {
+                                    final languages = await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                LanguageListScreen(
+                                                    params: SettingProfileParams(
+                                                        updateParams:
+                                                        UpdateProfileParams(),
+                                                        profileParams: profile)
+                                                )));
+                                    if (languages != null) {
+                                      profile?.languages = languages;
+                                      setState(() {
+                                      });
+                                    }
+                                  },
+                                ) :
                                 InkWell(
                                   child: InterestsCard(
                                     header: null,
-                                    chipLabels: interestString,
+                                    chipLabels: profile?.languages ?? [],
                                     elevation: 4,
                                   ),
                                   onTap: () async {
@@ -778,12 +798,12 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                InterestsUpdateScreen(
+                                                LanguageListScreen(
                                                     params: SettingProfileParams(
                                                         updateParams:
                                                         UpdateProfileParams(),
-                                                        profileParams:
-                                                        profile))));
+                                                        profileParams: profile)
+                                                )));
                                     if (languages != null) {
                                       profile?.languages = languages;
                                       setState(() {
@@ -798,7 +818,10 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                 Padding(
                                   padding: const EdgeInsets.all(32),
                                   child: ElevatedButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      context.read<UpdateProfileBloc>().add(
+                                          OnRequestApiCallUpdate(UpdateProfileParams
+                                              .getUpdatedParamsFromProfile(profile)));                                    },
                                     style: ElevatedButton.styleFrom(
                                         backgroundColor: Colors.black,
                                         // Set button background color

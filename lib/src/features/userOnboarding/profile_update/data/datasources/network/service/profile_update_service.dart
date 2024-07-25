@@ -34,6 +34,7 @@ class UpdateUserService {
   \$hometown: String,
   \$height: String,
   \$location: String,
+  \$languages: [String!]
   \$locationCoordinates: [String!],
   \$zodiac: ZodiacSign,
   \$work: JSONObject,
@@ -54,6 +55,7 @@ class UpdateUserService {
     hometown:  \$hometown,
     height: \$height,
     location: \$location,
+    languages: \$languages,
     locationCoordinates:\$locationCoordinates,
     zodiac: \$zodiac,
     work: \$work,
@@ -75,6 +77,7 @@ class UpdateUserService {
     height
     location
     locationCoordinates
+    languages
     zodiac
     work
     values
