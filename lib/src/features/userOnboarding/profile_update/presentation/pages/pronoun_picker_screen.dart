@@ -17,7 +17,7 @@ class PronounUpdateScreen extends StatefulWidget {
   });
 
   @override
-  _PronounUpdateScreenState createState() => _PronounUpdateScreenState();
+  State<PronounUpdateScreen> createState() => _PronounUpdateScreenState();
 }
 
 enum SingingCharacter { Man, Woman, Nonbinary }

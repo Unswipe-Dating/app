@@ -12,6 +12,7 @@ import 'package:unswipe/src/features/login/domain/usecases/update_login_state_st
 import 'package:unswipe/src/features/settings/domain/repository/user_settings_repository.dart';
 import 'package:unswipe/src/features/settings/domain/usecases/get_settings_profile_usecase.dart';
 import 'package:unswipe/src/features/settings/presentation/pages/height_selector_screen.dart';
+import 'package:unswipe/src/features/settings/presentation/pages/zodiac_update_screen.dart';
 import 'package:unswipe/src/features/userOnboarding/profile_update/data/models/update_profile_response.dart';
 import 'package:unswipe/src/features/userOnboarding/profile_update/domain/usecases/create_user_use_case.dart';
 import 'package:unswipe/src/features/userOnboarding/profile_update/domain/usecases/update_user_use_case.dart';
@@ -564,6 +565,22 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                                                 ],
                                               ),
                                             ),
+                                            onTap: () async {
+                                              final zodiac = await Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          ZodiacUpdateScreen(
+                                                              params: SettingProfileParams(
+                                                                  updateParams:
+                                                                  UpdateProfileParams(),
+                                                                  profileParams:profile))));
+                                              if (zodiac != null) {
+                                                profile?.zodiac =
+                                                    zodiac;
+                                                setState(() {});
+                                              }
+                                            },
                                           ),
                                           const SizedBox(
                                             height: 16,
