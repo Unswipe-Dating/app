@@ -113,21 +113,23 @@ class _EditProfileScreenWorkState extends State<EditProfileScreenWork> {
                   isButtonEnabled = true;
                   fToast.showToast(
                     toastDuration: const Duration(milliseconds: 5000),
-                    child: const Material(
+                    child:  Container(
+
                       color: Colors.white,
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(Icons.face),
                           Text(
-                            "Press and hold to send Alert!",
+                            state.status == UpdateProfileStatus.loaded ? "Updates saved": "Some error occurred"
+                            ,
                             style: TextStyle(
                                 color: Colors.black87, fontSize: 16.0),
                           )
                         ],
                       ),
                     ),
-                    gravity: ToastGravity.CENTER,
+                    gravity: ToastGravity.BOTTOM,
                   );
                 } else if (state.status == UpdateProfileStatus.loadedSave) {
                   isButtonLoading = false;

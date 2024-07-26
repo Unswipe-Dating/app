@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:unswipe/src/features/login/presentation/pages/Login.dart';
 
 import '../../domain/repository/user_settings_repository.dart';
@@ -45,15 +46,29 @@ class _ZodiacUpdateScreenState extends State<ZodiacUpdateScreen> {
   @override
   void initState() {
     super.initState();
-    _character = getCharactedFromName(widget.params.profileParams?.pronouns);
+    _character = getCharactedFromName(widget.params.profileParams?.zodiac);
   }
 
   @override
   Widget build(BuildContext mContext) {
     return Scaffold(
           appBar: AppBar(
+            systemOverlayStyle: const SystemUiOverlayStyle(
+              statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
+              statusBarBrightness: Brightness.light, // For iOS (dark icons)
+            ),
             surfaceTintColor: Colors.white,
-            title: const Text(""),
+            backgroundColor: Colors.white,
+            shadowColor: Colors.black,
+            elevation: 4.0,
+            title: const Text(
+              "Zodiac",
+              style: TextStyle(
+                  color: Colors.black,
+                  fontFamily: 'Playfair',
+                  fontWeight: FontWeight.w600,
+                  fontSize: 24.0),
+            ),
           ),
           body: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),

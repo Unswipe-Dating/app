@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geocode/geocode.dart';
 import 'package:geolocator/geolocator.dart';
@@ -28,6 +29,7 @@ import 'package:unswipe/src/shared/presentation/widgets/RichTextWithLoader.dart'
 import 'package:unswipe/src/shared/presentation/widgets/shimmer.dart';
 
 import '../../../../core/router/app_router.dart';
+import '../../../login/presentation/pages/Login.dart';
 import '../../../onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart';
 import '../../../userOnboarding/profile_update/domain/repository/update_profile_repository.dart';
 import '../../../userOnboarding/profile_update/presentation/bloc/profile_update_bloc.dart';
@@ -47,9 +49,15 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
   bool isLocationRequested = false;
   bool isLoadingValues = true;
   ResponseProfileList? profile;
+  late FToast fToast;
 
   List<String> interestString = [];
-
+  @override
+  void initState() {
+    super.initState();
+    fToast = FToast();
+    fToast.init(context);
+  }
   Future<Address?> getAddressFromLatLng() async {
     return await GeoCode()
         .reverseGeocoding(latitude: latitude, longitude: longitude);
@@ -89,767 +97,754 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
             (profile?.interests.fnd ?? [] as List<String>);
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-            appBar: AppBar(
-              systemOverlayStyle: const SystemUiOverlayStyle(
-                statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
-                statusBarBrightness: Brightness.light, // For iOS (dark icons)
-              ),
-              surfaceTintColor: Colors.white,
-              backgroundColor: Colors.white,
-              shadowColor: Colors.black,
-              elevation: 4.0,
-              title: const Text(
-                "Basics",
-                style: TextStyle(
-                    color: Colors.black,
-                    fontFamily: 'Playfair',
-                    fontWeight: FontWeight.w600,
-                    fontSize: 24.0),
-              ),
-            ),
-            body: Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              decoration: const BoxDecoration(
-                  image: DecorationImage(
-                image: AssetImage(
-                  'assets/images/permission_bg.png',
-                ),
-                fit: BoxFit.fill,
-              )),
-              child: BlocProvider(
-                  create: (BuildContext context) => UpdateProfileBloc(
-                      updateOnboardingStateStreamUseCase:
-                          GetIt.I.get<UpdateOnboardingStateStreamUseCase>(),
-                      getAuthStateStreamUseCase:
-                          GetIt.I.get<GetAuthStateStreamUseCase>(),
-                      updateProfileUseCase: GetIt.I.get<UpdateProfileUseCase>(),
-                      createProfileUseCase: GetIt.I.get<CreateProfileUseCase>(),
-                      updateUserStateStreamUseCase:
-                          GetIt.I.get<UpdateUserStateStreamUseCase>(),
-                      getSettingsProfileUseCase:
-                          GetIt.I.get<GetSettingsProfileUseCase>())
-                    ..add(OnStartGettingProfile()),
-                  child: BlocConsumer<UpdateProfileBloc, UpdateProfileState>(
-                    listener: (context, state) async {
-                      if (state.status == UpdateProfileStatus.loaded) {
-                        isLoadingValues = false;
-                      } else if (state.status ==
-                          UpdateProfileStatus.errorAuth) {
-                        CustomNavigationHelper.router.go(
-                          CustomNavigationHelper.loginPath,
-                        );
-                      } else if (state.status ==
-                          UpdateProfileStatus.loadedProfile) {
-                        profile = state.responseProfileList;
-                        updateInterestString();
-                        if (profile?.locationCoordinates != null) {
-                          latitude = double.parse(profile?.locationCoordinates?[0] ?? "0");
-                          longitude = double.parse(profile?.locationCoordinates?[1] ?? "0");
-                        }
-                        var data = await getAddressFromLatLng();
-                        profile?.location = data?.region;
-                        isLoadingValues = false;
-                        isLoadingLocation = false;
-                        setState(() {
+      appBar: AppBar(
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
+          statusBarBrightness: Brightness.light, // For iOS (dark icons)
+        ),
+        surfaceTintColor: Colors.white,
+        backgroundColor: Colors.white,
+        shadowColor: Colors.black,
+        elevation: 4.0,
+        title: const Text(
+          "Basics",
+          style: TextStyle(
+              color: Colors.black,
+              fontFamily: 'Playfair',
+              fontWeight: FontWeight.w600,
+              fontSize: 24.0),
+        ),
+      ),
+      body: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        decoration: const BoxDecoration(
+            image: DecorationImage(
+          image: AssetImage(
+            'assets/images/permission_bg.png',
+          ),
+          fit: BoxFit.fill,
+        )),
+        child: BlocProvider(
+            create: (BuildContext context) => UpdateProfileBloc(
+                updateOnboardingStateStreamUseCase:
+                    GetIt.I.get<UpdateOnboardingStateStreamUseCase>(),
+                getAuthStateStreamUseCase:
+                    GetIt.I.get<GetAuthStateStreamUseCase>(),
+                updateProfileUseCase: GetIt.I.get<UpdateProfileUseCase>(),
+                createProfileUseCase: GetIt.I.get<CreateProfileUseCase>(),
+                updateUserStateStreamUseCase:
+                    GetIt.I.get<UpdateUserStateStreamUseCase>(),
+                getSettingsProfileUseCase:
+                    GetIt.I.get<GetSettingsProfileUseCase>())
+              ..add(OnStartGettingProfile()),
+            child: BlocConsumer<UpdateProfileBloc, UpdateProfileState>(
+              listener: (context, state) async {
+                if (state.status == UpdateProfileStatus.loaded) {
+                  isButtonEnabled = true;
+                  isLoadingValues = false;
+                  fToast.showToast(
+                    toastDuration: const Duration(milliseconds: 5000),
+                    child:  Container(
 
-                        });
-                      }
-                    },
-                    builder: (context, state) {
-                      return SingleChildScrollView(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 24, vertical: 24),
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  textAlign: TextAlign.start,
-                                  'My Interests',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontFamily: 'lato',
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 18.0),
-                                ),
-                                const SizedBox(
-                                  height: 8,
-                                ),
-                                const Text(
-                                  "Tell us about all the things you love <3",
-                                  style: TextStyle(
-                                      color: Colors.grey,
-                                      fontFamily: 'lato',
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 16.0),
-                                ),
-                                const SizedBox(
-                                  height: 16,
-                                ),
-                                !isLoadingValues
-                                    ? InkWell(
-                                        child: InterestsCard(
-                                          header: null,
-                                          chipLabels: interestString,
-                                          elevation: 4,
-                                        ),
-                                        onTap: () async {
-                                          final interests = await Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      InterestsUpdateScreen(
-                                                          params: SettingProfileParams(
-                                                              updateParams:
-                                                                  UpdateProfileParams(),
-                                                              profileParams:
-                                                                  profile))));
-                                          if (interests != null) {
-                                            profile?.interests = interests;
-                                            setState(() {
-                                              updateInterestString();
-                                            });
-                                          }
-                                        },
-                                      )
-                                    : const ShimmerLoader(),
-                                const SizedBox(
-                                  height: 32,
-                                ),
-                                const Text(
-                                  textAlign: TextAlign.start,
-                                  'My Pronouns',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontFamily: 'lato',
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 18.0),
-                                ),
-                                const SizedBox(
-                                  height: 8,
-                                ),
-                                const Text(
-                                  "Be Unapologetically yourself",
-                                  style: TextStyle(
-                                      color: Colors.grey,
-                                      fontFamily: 'lato',
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 16.0),
-                                ),
-                                const SizedBox(
-                                  height: 16,
-                                ),
-                                InkWell(
-                                  child: Card(
+                      color: Colors.white,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.face),
+                          Text(
+                            state.status == UpdateProfileStatus.loaded ? "Updates saved": "Some error occurred"
+                            ,
+                            style: TextStyle(
+                                color: Colors.black87, fontSize: 16.0),
+                          )
+                        ],
+                      ),
+                    ),
+                    gravity: ToastGravity.BOTTOM,
+                  );
+                } else if (state.status == UpdateProfileStatus.errorAuth) {
+                  CustomNavigationHelper.router.go(
+                    CustomNavigationHelper.loginPath,
+                  );
+                } else if (state.status == UpdateProfileStatus.loadedProfile) {
+                  profile = state.responseProfileList;
+                  updateInterestString();
+                  if (profile?.locationCoordinates != null) {
+                    latitude =
+                        double.parse(profile?.locationCoordinates?[0] ?? "0");
+                    longitude =
+                        double.parse(profile?.locationCoordinates?[1] ?? "0");
+                  }
+                  var data = await getAddressFromLatLng();
+                  profile?.location = data?.region;
+                  isLoadingValues = false;
+                  isLoadingLocation = false;
+                  setState(() {});
+                } else if (state.status == UpdateProfileStatus.error|| state.status == UpdateProfileStatus.errorTimeOut) {
+                  isButtonEnabled = true;
+                  isLoadingValues = false;
+
+                }
+              },
+              builder: (context, state) {
+                return SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 24),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            textAlign: TextAlign.start,
+                            'My Interests',
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontFamily: 'lato',
+                                fontWeight: FontWeight.w600,
+                                fontSize: 18.0),
+                          ),
+                          const SizedBox(
+                            height: 8,
+                          ),
+                          const Text(
+                            "Tell us about all the things you love <3",
+                            style: TextStyle(
+                                color: Colors.grey,
+                                fontFamily: 'lato',
+                                fontWeight: FontWeight.w400,
+                                fontSize: 16.0),
+                          ),
+                          const SizedBox(
+                            height: 16,
+                          ),
+                          !isLoadingValues
+                              ? InkWell(
+                                  child: InterestsCard(
+                                    header: null,
+                                    chipLabels: interestString,
                                     elevation: 4,
-                                    color: Colors.white,
-                                    surfaceTintColor: Colors.white,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(16.0),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          RichText(
-                                            text: TextSpan(
-                                              children: [
-                                                const WidgetSpan(
-                                                  child: Icon(Icons.person,
-                                                      size: 14),
-                                                ),
-                                                const WidgetSpan(
-                                                    child: SizedBox(
-                                                  width: 8,
-                                                )),
-                                                TextSpan(
-                                                  text: "Pronoun ",
-                                                  style: TextStyle(
-                                                      color: Colors.grey[900],
-                                                      fontFamily: 'lato',
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      fontSize: 16.0),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          RichTextWithLoader(
-                                            text:
-                                                profile?.pronouns ?? "Add",
-                                            isLoading: isLoadingValues,
-                                          )
-                                        ],
-                                      ),
-                                    ),
                                   ),
                                   onTap: () async {
-                                    final pronouns = await Navigator.push(
+                                    final interests = await Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                PronounUpdateScreen(
+                                                InterestsUpdateScreen(
                                                     params: SettingProfileParams(
                                                         updateParams:
                                                             UpdateProfileParams(),
                                                         profileParams:
                                                             profile))));
-                                    if (pronouns != null) {
-                                      profile?.pronouns = pronouns;
-                                      setState(() {});
+                                    if (interests != null) {
+                                      profile?.interests = interests;
+                                      setState(() {
+                                        updateInterestString();
+                                      });
                                     }
                                   },
-                                ),
-                                const SizedBox(
-                                  height: 32,
-                                ),
-                                const Text(
-                                  textAlign: TextAlign.start,
-                                  'Basic Information',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontFamily: 'lato',
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 18.0),
-                                ),
-                                const SizedBox(
-                                  height: 8,
-                                ),
-                                const Text(
-                                  "Tell us more about you. Everyone is curious too",
-                                  style: TextStyle(
-                                      color: Colors.grey,
-                                      fontFamily: 'lato',
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 16.0),
-                                ),
-                                const SizedBox(
-                                  height: 16,
-                                ),
-                                Card(
-                                  elevation: 4,
-                                  color: Colors.white,
-                                  surfaceTintColor: Colors.white,
-                                  child: Padding(
-                                      padding: const EdgeInsets.all(16.0),
-                                      child: Column(
+                                )
+                              : const ShimmerLoader(),
+                          const SizedBox(
+                            height: 32,
+                          ),
+                          const Text(
+                            textAlign: TextAlign.start,
+                            'My Pronouns',
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontFamily: 'lato',
+                                fontWeight: FontWeight.w600,
+                                fontSize: 18.0),
+                          ),
+                          const SizedBox(
+                            height: 8,
+                          ),
+                          const Text(
+                            "Be Unapologetically yourself",
+                            style: TextStyle(
+                                color: Colors.grey,
+                                fontFamily: 'lato',
+                                fontWeight: FontWeight.w400,
+                                fontSize: 16.0),
+                          ),
+                          const SizedBox(
+                            height: 16,
+                          ),
+                          InkWell(
+                            child: Card(
+                              elevation: 4,
+                              color: Colors.white,
+                              surfaceTintColor: Colors.white,
+                              child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    RichText(
+                                      text: TextSpan(
                                         children: [
-                                          const SizedBox(
-                                            height: 8,
+                                          const WidgetSpan(
+                                            child: Icon(Icons.person, size: 14),
                                           ),
-                                          InkWell(
-                                            child: Padding(
-                                              padding: EdgeInsets.all(8),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  RichText(
-                                                    text: TextSpan(
-                                                      children: [
-                                                        const WidgetSpan(
-                                                          child: Icon(
-                                                              Icons.male,
-                                                              size: 14),
-                                                        ),
-                                                        const WidgetSpan(
-                                                            child: SizedBox(
-                                                          width: 8,
-                                                        )),
-                                                        TextSpan(
-                                                          text: "Gender ",
-                                                          style: TextStyle(
-                                                              color: Colors
-                                                                  .grey[900],
-                                                              fontFamily:
-                                                                  'lato',
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontSize: 16.0),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  RichTextWithLoader(
-                                                      text: profile?.gender ??
-                                                          "Add", isLoading:isLoadingValues),
-                                                ],
-                                              ),
-                                            ),
-                                            onTap: () async {
-                                              final gender = await Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          GenderUpdateScreen(
-                                                              params: SettingProfileParams(
-                                                                  updateParams:
-                                                                      UpdateProfileParams(),
-                                                                  profileParams:
-                                                                      profile))));
-                                              if (gender != null) {
-                                                profile?.gender = gender;
-                                                setState(() {});
-                                              }
-                                            },
-                                          ),
-                                          const SizedBox(
-                                            height: 16,
-                                          ),
-                                          InkWell(
-                                            child: Padding(
-                                              padding: EdgeInsets.all(8),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  RichText(
-                                                    text: TextSpan(
-                                                      children: [
-                                                        const WidgetSpan(
-                                                          child: Icon(
-                                                              Icons.how_to_reg,
-                                                              size: 14),
-                                                        ),
-                                                        const WidgetSpan(
-                                                            child: SizedBox(
-                                                          width: 8,
-                                                        )),
-                                                        TextSpan(
-                                                          text:
-                                                              "Prefer to date ",
-                                                          style: TextStyle(
-                                                              color: Colors
-                                                                  .grey[900],
-                                                              fontFamily:
-                                                                  'lato',
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontSize: 16.0),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  RichTextWithLoader(
-                                                      text: profile
-                                                              ?.datingPreference ??
-                                                          "Add", isLoading:isLoadingValues),
-                                                ],
-                                              ),
-                                            ),
-                                            onTap: () async {
-                                              final datePreference = await Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          PartnerGenderUpdateScreen(
-                                                              params: SettingProfileParams(
-                                                                  updateParams:
-                                                                      UpdateProfileParams(),
-                                                                  profileParams: profile))));
-                                              if (datePreference != null) {
-                                                profile?.datingPreference =
-                                                    datePreference;
-                                                setState(() {});
-                                              }
-                                            },
-                                          ),
-                                          const SizedBox(
-                                            height: 16,
-                                          ),
-                                          InkWell(
-                                            child: Padding(
-                                              padding: EdgeInsets.all(8),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  RichText(
-                                                    text: TextSpan(
-                                                      children: [
-                                                        const WidgetSpan(
-                                                          child: Icon(
-                                                              Icons
-                                                                  .vertical_split,
-                                                              size: 14),
-                                                        ),
-                                                        const WidgetSpan(
-                                                            child: SizedBox(
-                                                          width: 8,
-                                                        )),
-                                                        TextSpan(
-                                                          text: "Height ",
-                                                          style: TextStyle(
-                                                              color: Colors
-                                                                  .grey[900],
-                                                              fontFamily:
-                                                                  'lato',
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontSize: 16.0),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  RichTextWithLoader(text: profile?.height ??
-                                                      "Add", isLoading: isLoadingValues,),
-                                                ],
-                                              ),
-                                            ),
-                                            onTap: () async {
-                                              final height = await Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          HeightUpdateScreen(
-                                                              params: SettingProfileParams(
-                                                                  updateParams:
-                                                                      UpdateProfileParams(),
-                                                                  profileParams:profile))));
-                                              if (height != null) {
-                                                profile?.height =
-                                                    height;
-                                                setState(() {});
-                                              }
-                                            },
-                                          ),
-                                          const SizedBox(
-                                            height: 16,
-                                          ),
-                                          InkWell(
-                                            child: Padding(
-                                              padding: EdgeInsets.all(8),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  RichText(
-                                                    text: TextSpan(
-                                                      children: [
-                                                        const WidgetSpan(
-                                                          child: Icon(
-                                                              Icons.sunny,
-                                                              size: 14),
-                                                        ),
-                                                        const WidgetSpan(
-                                                            child: SizedBox(
-                                                          width: 8,
-                                                        )),
-                                                        TextSpan(
-                                                          text: "Zodiac ",
-                                                          style: TextStyle(
-                                                              color: Colors
-                                                                  .grey[900],
-                                                              fontFamily:
-                                                                  'lato',
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontSize: 16.0),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  RichTextWithLoader(text: profile?.zodiac ??
-                                                      "Add", isLoading: isLoadingValues),
-                                                ],
-                                              ),
-                                            ),
-                                            onTap: () async {
-                                              final zodiac = await Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          ZodiacUpdateScreen(
-                                                              params: SettingProfileParams(
-                                                                  updateParams:
-                                                                  UpdateProfileParams(),
-                                                                  profileParams:profile))));
-                                              if (zodiac != null) {
-                                                profile?.zodiac =
-                                                    zodiac;
-                                                setState(() {});
-                                              }
-                                            },
-                                          ),
-                                          const SizedBox(
-                                            height: 16,
-                                          ),
-                                          InkWell(
-                                            child: Padding(
-                                              padding: EdgeInsets.all(8),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  RichText(
-                                                    text: TextSpan(
-                                                      children: [
-                                                        const WidgetSpan(
-                                                          child: Icon(
-                                                              Icons
-                                                                  .pin_drop_outlined,
-                                                              size: 14),
-                                                        ),
-                                                        const WidgetSpan(
-                                                            child: SizedBox(
-                                                          width: 8,
-                                                        )),
-                                                        TextSpan(
-                                                          text: "Location ",
-                                                          style: TextStyle(
-                                                              color: Colors
-                                                                  .grey[900],
-                                                              fontFamily:
-                                                                  'lato',
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontSize: 16.0),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  RichTextWithLoader(text: profile?.location ??
-                                                      "Add", isLoading: isLoadingLocation),
-                                                ],
-                                              ),
-                                            ),
-                                            onTap: () async {
-                                              if (isLoadingLocation ||
-                                                  isLocationRequested) {
-                                              } else {
-                                                setState(() {
-                                                  isLoadingLocation = true;
-                                                  isLocationRequested = true;
-                                                });
-
-                                                var pos =
-                                                    await _determinePosition();
-                                                longitude = pos.longitude;
-                                                latitude = pos.latitude;
-                                                profile?.locationCoordinates = [
-                                                  pos.latitude.toString(),
-                                                  pos.longitude.toString()
-                                                ];
-                                                Address? data =  await getAddressFromLatLng();
-                                                profile?.location = data?.region;
-                                                setState(() {
-                                                  isLoadingLocation = false;
-                                                  isLocationRequested = false;
-                                                });
-                                              }
-                                            },
-                                          ),
-                                          const SizedBox(
-                                            height: 16,
-                                          ),
-                                          InkWell(
-                                            child: Padding(
-                                              padding: EdgeInsets.all(8),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  RichText(
-                                                    text: TextSpan(
-                                                      children: [
-                                                        const WidgetSpan(
-                                                          child: Icon(
-                                                              Icons.home,
-                                                              size: 14),
-                                                        ),
-                                                        const WidgetSpan(
-                                                            child: SizedBox(
-                                                          width: 8,
-                                                        )),
-                                                        TextSpan(
-                                                          text: "Hometown ",
-                                                          style: TextStyle(
-                                                              color: Colors
-                                                                  .grey[900],
-                                                              fontFamily:
-                                                                  'lato',
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontSize: 16.0),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  RichTextWithLoader(text: profile?.hometown ??
-                                                      "Add", isLoading: isLoadingValues,),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            height: 8,
+                                          const WidgetSpan(
+                                              child: SizedBox(
+                                            width: 8,
+                                          )),
+                                          TextSpan(
+                                            text: "Pronoun ",
+                                            style: TextStyle(
+                                                color: Colors.grey[900],
+                                                fontFamily: 'lato',
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 16.0),
                                           ),
                                         ],
-                                      )),
+                                      ),
+                                    ),
+                                    RichTextWithLoader(
+                                      text: profile?.pronouns ?? "Add",
+                                      isLoading: isLoadingValues,
+                                    )
+                                  ],
                                 ),
-                                const SizedBox(
-                                  height: 32,
-                                ),
-                                const Text(
-                                  textAlign: TextAlign.start,
-                                  'My Languages',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontFamily: 'lato',
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 18.0),
-                                ),
-                                const SizedBox(
-                                  height: 8,
-                                ),
-                                const Text(
-                                  "In how many languages can you place an order in a restaurant?",
-                                  style: TextStyle(
-                                      color: Colors.grey,
-                                      fontFamily: 'lato',
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 16.0),
-                                ),
-                                const SizedBox(
-                                  height: 16,
-                                ),
-                                !isLoadingValues
-                                    ? profile?.languages?.isNotEmpty == false  ?
-                                InkWell(
-                                  child: Card(
-                                  elevation: 4,
-                                  color: Colors.white,
-                                  surfaceTintColor: Colors.white,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(16.0),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        RichText(
-                                          text: TextSpan(
-                                            children: [
-                                              const WidgetSpan(
-                                                child: Icon(Icons.person,
-                                                    size: 14),
-                                              ),
-                                              const WidgetSpan(
-                                                  child: SizedBox(
+                              ),
+                            ),
+                            onTap: () async {
+                              final pronouns = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => PronounUpdateScreen(
+                                          params: SettingProfileParams(
+                                              updateParams:
+                                                  UpdateProfileParams(),
+                                              profileParams: profile))));
+                              if (pronouns != null) {
+                                profile?.pronouns = pronouns;
+                                setState(() {});
+                              }
+                            },
+                          ),
+                          const SizedBox(
+                            height: 32,
+                          ),
+                          const Text(
+                            textAlign: TextAlign.start,
+                            'Basic Information',
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontFamily: 'lato',
+                                fontWeight: FontWeight.w600,
+                                fontSize: 18.0),
+                          ),
+                          const SizedBox(
+                            height: 8,
+                          ),
+                          const Text(
+                            "Tell us more about you. Everyone is curious too",
+                            style: TextStyle(
+                                color: Colors.grey,
+                                fontFamily: 'lato',
+                                fontWeight: FontWeight.w400,
+                                fontSize: 16.0),
+                          ),
+                          const SizedBox(
+                            height: 16,
+                          ),
+                          Card(
+                            elevation: 4,
+                            color: Colors.white,
+                            surfaceTintColor: Colors.white,
+                            child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Column(
+                                  children: [
+                                    const SizedBox(
+                                      height: 8,
+                                    ),
+                                    InkWell(
+                                      child: Padding(
+                                        padding: EdgeInsets.all(8),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            RichText(
+                                              text: TextSpan(
+                                                children: [
+                                                  const WidgetSpan(
+                                                    child: Icon(Icons.male,
+                                                        size: 14),
+                                                  ),
+                                                  const WidgetSpan(
+                                                      child: SizedBox(
                                                     width: 8,
                                                   )),
-                                              TextSpan(
-                                                text: "Languages ",
-                                                style: TextStyle(
-                                                    color: Colors.grey[900],
-                                                    fontFamily: 'lato',
-                                                    fontWeight: FontWeight.w600,
-                                                    fontSize: 16.0),
+                                                  TextSpan(
+                                                    text: "Gender ",
+                                                    style: TextStyle(
+                                                        color: Colors.grey[900],
+                                                        fontFamily: 'lato',
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontSize: 16.0),
+                                                  ),
+                                                ],
                                               ),
+                                            ),
+                                            RichTextWithLoader(
+                                                text: profile?.gender ?? "Add",
+                                                isLoading: isLoadingValues),
+                                          ],
+                                        ),
+                                      ),
+                                      onTap: () async {
+                                        final gender = await Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    GenderUpdateScreen(
+                                                        params: SettingProfileParams(
+                                                            updateParams:
+                                                                UpdateProfileParams(),
+                                                            profileParams:
+                                                                profile))));
+                                        if (gender != null) {
+                                          profile?.gender = gender;
+                                          setState(() {});
+                                        }
+                                      },
+                                    ),
+                                    const SizedBox(
+                                      height: 16,
+                                    ),
+                                    InkWell(
+                                      child: Padding(
+                                        padding: EdgeInsets.all(8),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            RichText(
+                                              text: TextSpan(
+                                                children: [
+                                                  const WidgetSpan(
+                                                    child: Icon(
+                                                        Icons.how_to_reg,
+                                                        size: 14),
+                                                  ),
+                                                  const WidgetSpan(
+                                                      child: SizedBox(
+                                                    width: 8,
+                                                  )),
+                                                  TextSpan(
+                                                    text: "Prefer to date ",
+                                                    style: TextStyle(
+                                                        color: Colors.grey[900],
+                                                        fontFamily: 'lato',
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontSize: 16.0),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            RichTextWithLoader(
+                                                text:
+                                                    profile?.datingPreference ??
+                                                        "Add",
+                                                isLoading: isLoadingValues),
+                                          ],
+                                        ),
+                                      ),
+                                      onTap: () async {
+                                        final datePreference = await Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    PartnerGenderUpdateScreen(
+                                                        params: SettingProfileParams(
+                                                            updateParams:
+                                                                UpdateProfileParams(),
+                                                            profileParams:
+                                                                profile))));
+                                        if (datePreference != null) {
+                                          profile?.datingPreference =
+                                              datePreference;
+                                          setState(() {});
+                                        }
+                                      },
+                                    ),
+                                    const SizedBox(
+                                      height: 16,
+                                    ),
+                                    InkWell(
+                                      child: Padding(
+                                        padding: EdgeInsets.all(8),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            RichText(
+                                              text: TextSpan(
+                                                children: [
+                                                  const WidgetSpan(
+                                                    child: Icon(
+                                                        Icons.vertical_split,
+                                                        size: 14),
+                                                  ),
+                                                  const WidgetSpan(
+                                                      child: SizedBox(
+                                                    width: 8,
+                                                  )),
+                                                  TextSpan(
+                                                    text: "Height ",
+                                                    style: TextStyle(
+                                                        color: Colors.grey[900],
+                                                        fontFamily: 'lato',
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontSize: 16.0),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            RichTextWithLoader(
+                                              text: profile?.height ?? "Add",
+                                              isLoading: isLoadingValues,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      onTap: () async {
+                                        final height = await Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    HeightUpdateScreen(
+                                                        params: SettingProfileParams(
+                                                            updateParams:
+                                                                UpdateProfileParams(),
+                                                            profileParams:
+                                                                profile))));
+                                        if (height != null) {
+                                          profile?.height = height;
+                                          setState(() {});
+                                        }
+                                      },
+                                    ),
+                                    const SizedBox(
+                                      height: 16,
+                                    ),
+                                    InkWell(
+                                      child: Padding(
+                                        padding: EdgeInsets.all(8),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            RichText(
+                                              text: TextSpan(
+                                                children: [
+                                                  const WidgetSpan(
+                                                    child: Icon(Icons.sunny,
+                                                        size: 14),
+                                                  ),
+                                                  const WidgetSpan(
+                                                      child: SizedBox(
+                                                    width: 8,
+                                                  )),
+                                                  TextSpan(
+                                                    text: "Zodiac ",
+                                                    style: TextStyle(
+                                                        color: Colors.grey[900],
+                                                        fontFamily: 'lato',
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontSize: 16.0),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            RichTextWithLoader(
+                                                text: profile?.zodiac ?? "Add",
+                                                isLoading: isLoadingValues),
+                                          ],
+                                        ),
+                                      ),
+                                      onTap: () async {
+                                        final zodiac = await Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ZodiacUpdateScreen(
+                                                        params: SettingProfileParams(
+                                                            updateParams:
+                                                                UpdateProfileParams(),
+                                                            profileParams:
+                                                                profile))));
+                                        if (zodiac != null) {
+                                          profile?.zodiac = zodiac;
+                                          setState(() {});
+                                        }
+                                      },
+                                    ),
+                                    const SizedBox(
+                                      height: 16,
+                                    ),
+                                    InkWell(
+                                      child: Padding(
+                                        padding: EdgeInsets.all(8),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            RichText(
+                                              text: TextSpan(
+                                                children: [
+                                                  const WidgetSpan(
+                                                    child: Icon(
+                                                        Icons.pin_drop_outlined,
+                                                        size: 14),
+                                                  ),
+                                                  const WidgetSpan(
+                                                      child: SizedBox(
+                                                    width: 8,
+                                                  )),
+                                                  TextSpan(
+                                                    text: "Location ",
+                                                    style: TextStyle(
+                                                        color: Colors.grey[900],
+                                                        fontFamily: 'lato',
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontSize: 16.0),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            RichTextWithLoader(
+                                                text:
+                                                    profile?.location ?? "Add",
+                                                isLoading: isLoadingLocation),
+                                          ],
+                                        ),
+                                      ),
+                                      onTap: () async {
+                                        if (isLoadingLocation ||
+                                            isLocationRequested) {
+                                        } else {
+                                          setState(() {
+                                            isLoadingLocation = true;
+                                            isLocationRequested = true;
+                                          });
+
+                                          var pos = await _determinePosition();
+                                          longitude = pos.longitude;
+                                          latitude = pos.latitude;
+                                          profile?.locationCoordinates = [
+                                            pos.latitude.toString(),
+                                            pos.longitude.toString()
+                                          ];
+                                          Address? data =
+                                              await getAddressFromLatLng();
+                                          profile?.location = data?.region;
+                                          setState(() {
+                                            isLoadingLocation = false;
+                                            isLocationRequested = false;
+                                          });
+                                        }
+                                      },
+                                    ),
+                                    const SizedBox(
+                                      height: 16,
+                                    ),
+                                    InkWell(
+                                      child: Padding(
+                                        padding: EdgeInsets.all(8),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            RichText(
+                                              text: TextSpan(
+                                                children: [
+                                                  const WidgetSpan(
+                                                    child: Icon(Icons.home,
+                                                        size: 14),
+                                                  ),
+                                                  const WidgetSpan(
+                                                      child: SizedBox(
+                                                    width: 8,
+                                                  )),
+                                                  TextSpan(
+                                                    text: "Hometown ",
+                                                    style: TextStyle(
+                                                        color: Colors.grey[900],
+                                                        fontFamily: 'lato',
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontSize: 16.0),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            RichTextWithLoader(
+                                              text: profile?.hometown ?? "Add",
+                                              isLoading: isLoadingValues,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 8,
+                                    ),
+                                  ],
+                                )),
+                          ),
+                          const SizedBox(
+                            height: 32,
+                          ),
+                          const Text(
+                            textAlign: TextAlign.start,
+                            'My Languages',
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontFamily: 'lato',
+                                fontWeight: FontWeight.w600,
+                                fontSize: 18.0),
+                          ),
+                          const SizedBox(
+                            height: 8,
+                          ),
+                          const Text(
+                            "In how many languages can you place an order in a restaurant?",
+                            style: TextStyle(
+                                color: Colors.grey,
+                                fontFamily: 'lato',
+                                fontWeight: FontWeight.w400,
+                                fontSize: 16.0),
+                          ),
+                          const SizedBox(
+                            height: 16,
+                          ),
+                          !isLoadingValues
+                              ? profile?.languages?.isNotEmpty == false
+                                  ? InkWell(
+                                      child: Card(
+                                        elevation: 4,
+                                        color: Colors.white,
+                                        surfaceTintColor: Colors.white,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(16.0),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              RichText(
+                                                text: TextSpan(
+                                                  children: [
+                                                    const WidgetSpan(
+                                                      child: Icon(Icons.person,
+                                                          size: 14),
+                                                    ),
+                                                    const WidgetSpan(
+                                                        child: SizedBox(
+                                                      width: 8,
+                                                    )),
+                                                    TextSpan(
+                                                      text: "Languages ",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.grey[900],
+                                                          fontFamily: 'lato',
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontSize: 16.0),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              RichTextWithLoader(
+                                                  text: "Add",
+                                                  isLoading: isLoadingValues),
                                             ],
                                           ),
                                         ),
-                                        RichTextWithLoader(text: "Add", isLoading: isLoadingValues),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                  onTap: () async {
-                                    final languages = await Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                LanguageListScreen(
-                                                    params: SettingProfileParams(
-                                                        updateParams:
-                                                        UpdateProfileParams(),
-                                                        profileParams: profile)
-                                                )));
-                                    if (languages != null) {
-                                      profile?.languages = languages;
-                                      setState(() {
-                                      });
-                                    }
-                                  },
-                                ) :
-                                InkWell(
-                                  child: InterestsCard(
-                                    header: null,
-                                    chipLabels: profile?.languages ?? [],
-                                    elevation: 4,
-                                  ),
-                                  onTap: () async {
-                                    final languages = await Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                LanguageListScreen(
-                                                    params: SettingProfileParams(
-                                                        updateParams:
-                                                        UpdateProfileParams(),
-                                                        profileParams: profile)
-                                                )));
-                                    if (languages != null) {
-                                      profile?.languages = languages;
-                                      setState(() {
-                                      });
-                                    }
-                                  },
-                                )
-                                    : const ShimmerLoader(),
-                                const SizedBox(
-                                  height: 32,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(32),
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      context.read<UpdateProfileBloc>().add(
-                                          OnRequestApiCallUpdate(UpdateProfileParams
-                                              .getUpdatedParamsFromProfile(profile)));                                    },
-                                    style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.black,
-                                        // Set button background color
-                                        foregroundColor: Colors.black,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                              2.0), // Rounded corners
-                                        ),
-                                        minimumSize: const Size.fromHeight(
-                                            48) // Set button text color
-                                        ),
-                                    child: const Text(
-                                      'Save',
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontFamily: 'Lato',
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 18.0),
-                                    ),
-                                  ),
-                                )
-                              ]),
-                        ),
-                      );
-                    },
-                  )),
-            ),
-          );
+                                      ),
+                                      onTap: () async {
+                                        final languages = await Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    LanguageListScreen(
+                                                        params: SettingProfileParams(
+                                                            updateParams:
+                                                                UpdateProfileParams(),
+                                                            profileParams:
+                                                                profile))));
+                                        if (languages != null) {
+                                          profile?.languages = languages;
+                                          setState(() {});
+                                        }
+                                      },
+                                    )
+                                  : InkWell(
+                                      child: InterestsCard(
+                                        header: null,
+                                        chipLabels: profile?.languages ?? [],
+                                        elevation: 4,
+                                      ),
+                                      onTap: () async {
+                                        final languages = await Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    LanguageListScreen(
+                                                        params: SettingProfileParams(
+                                                            updateParams:
+                                                                UpdateProfileParams(),
+                                                            profileParams:
+                                                                profile))));
+                                        if (languages != null) {
+                                          profile?.languages = languages;
+                                          setState(() {});
+                                        }
+                                      },
+                                    )
+                              : const ShimmerLoader(),
+                          const SizedBox(
+                            height: 32,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(16),
+                            child: CustomButton(
+                              onPressed: () {
+                                setState(() {
+                                  isButtonEnabled = false;
+                                  isLoadingValues = true;
+                                });
+                                context.read<UpdateProfileBloc>().add(
+                                    OnRequestApiCallUpdate(UpdateProfileParams
+                                        .getUpdatedParamsFromProfile(profile)));
+                              },
+                              text: 'Next',
+                              isEnabled: isButtonEnabled,
+                              isLoading: isLoadingValues,
+                            ),
+                          ),
+                        ]),
+                  ),
+                );
+              },
+            )),
+      ),
+    );
   }
 }
 

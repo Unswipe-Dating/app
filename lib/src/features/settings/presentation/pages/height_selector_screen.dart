@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:unswipe/src/features/userOnboarding/profile_update/data/models/update_profile_response.dart';
 import 'package:unswipe/src/features/userOnboarding/profile_update/domain/repository/update_profile_repository.dart';
 
@@ -79,7 +80,22 @@ class _HeightUpdateScreenState extends State<HeightUpdateScreen> {
   Widget build(BuildContext mContext) {
     return Scaffold(
           appBar: AppBar(
-            title: Text(""),
+            systemOverlayStyle: const SystemUiOverlayStyle(
+              statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
+              statusBarBrightness: Brightness.light, // For iOS (dark icons)
+            ),
+            surfaceTintColor: Colors.white,
+            backgroundColor: Colors.white,
+            shadowColor: Colors.black,
+            elevation: 4.0,
+            title: const Text(
+              "Height",
+              style: TextStyle(
+                  color: Colors.black,
+                  fontFamily: 'Playfair',
+                  fontWeight: FontWeight.w600,
+                  fontSize: 24.0),
+            ),
           ),
           body: Padding(
             padding: EdgeInsets.symmetric(horizontal: 24),

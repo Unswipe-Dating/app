@@ -118,21 +118,24 @@ class _EditProfileScreenLifestyleState
                   isButtonLoading = false;
                   isButtonEnabled = true;
                   fToast.showToast(
-                    toastDuration: Duration(milliseconds: 5000),
-                    child: Material(
+                    toastDuration: const Duration(milliseconds: 5000),
+                    child:  Container(
+
                       color: Colors.white,
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(Icons.face),
                           Text(
-                            "Press and hold to send Alert!",
-                            style: TextStyle(color: Colors.black87, fontSize: 16.0),
+                            state.status == UpdateProfileStatus.loaded ? "Updates saved": "Some error occurred"
+                            ,
+                            style: TextStyle(
+                                color: Colors.black87, fontSize: 16.0),
                           )
                         ],
                       ),
                     ),
-                    gravity: ToastGravity.CENTER,
+                    gravity: ToastGravity.BOTTOM,
                   );
                 } else if (state.status == UpdateProfileStatus.loadedSave) {
                   isButtonLoading = false;
