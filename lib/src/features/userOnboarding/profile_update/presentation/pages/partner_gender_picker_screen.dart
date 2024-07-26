@@ -220,7 +220,7 @@ class _PartnerGenderUpdateScreenState extends State<PartnerGenderUpdateScreen> {
                             getNameFromCharacter(_character);
                         CustomNavigationHelper.router.push(
                             CustomNavigationHelper.onboardingInterestPath,
-                            extra: UpdateProfileParams.getUpdatedParams(widget.params.updateParams)
+                            extra: SettingProfileParams(updateParams: UpdateProfileParams.getUpdatedParams(widget.params.updateParams), profileParams: null )
                         );
                       }
                     },

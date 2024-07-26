@@ -13,6 +13,7 @@ import 'package:unswipe/src/features/userOnboarding/profile_update/domain/usecas
 import 'package:unswipe/src/shared/domain/usecases/get_auth_state_stream_use_case.dart';
 
 import '../../../../../core/router/app_router.dart';
+import '../../../../login/presentation/pages/Login.dart';
 import '../../../../onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart';
 import '../../../../userProfile/data/model/get_profile/response_profile_swipe.dart';
 import '../../domain/repository/update_profile_repository.dart';
@@ -33,6 +34,7 @@ class InterestsUpdateScreen extends StatefulWidget {
 
 class _InterestsUpdateScreenState extends State<InterestsUpdateScreen> {
   bool isButtonEnabled = true;
+  bool isLoadingValues = false;
   Map<String,ChipValues> weekendMap = {
     "Takeaway": ChipValues("Takeaway"),
     "Outdoors":ChipValues("Outdoors"),
@@ -169,16 +171,16 @@ class _InterestsUpdateScreenState extends State<InterestsUpdateScreen> {
           )..add(OnGetTokenEvent()),
           child: BlocConsumer<UpdateProfileBloc, UpdateProfileState>(
             listener: (context, state) {
+              if (state.status == UpdateProfileStatus.error ||
+                  state.status == UpdateProfileStatus.errorTimeOut) {
+                isLoadingValues = false;
+                isButtonEnabled = true;
+              }
               if (state.status == UpdateProfileStatus.loaded) {
-                if(widget.params.profileParams == null) {
                   CustomNavigationHelper.router.go(
                     CustomNavigationHelper.profilePath,
                   );
-                } else {
-                  CustomNavigationHelper.router.go(
-                    CustomNavigationHelper.settingsPath,
-                  );
-                }
+
               } else if (state.status == UpdateProfileStatus.errorAuth) {
                 CustomNavigationHelper.router.go(
                   CustomNavigationHelper.loginPath,
@@ -488,11 +490,12 @@ class _InterestsUpdateScreenState extends State<InterestsUpdateScreen> {
                         ],
                       ),
                     ),
+
                     Padding(
                       padding: EdgeInsets.all(16),
-                      child: ElevatedButton(
-                        onPressed: isButtonEnabled
-                            ? () {
+                      child: CustomButton(
+                        onPressed: () {
+
                           widget.params.updateParams?.interests = Interests(weekendListString,
                               petsListString,
                               selfCareListString,
@@ -508,33 +511,20 @@ class _InterestsUpdateScreenState extends State<InterestsUpdateScreen> {
                             ));
 
                           } else {
+                            isButtonEnabled = false;
+                            isLoadingValues = true;
                             context.read<UpdateProfileBloc>().add(
                                 OnRequestApiCallCreate(
                                     widget.params.updateParams ??
                                         UpdateProfileParams()));
+                            setState(() {
+
+                            });
                           }
-                        }
-                            : null,
-                        style: ElevatedButton.styleFrom(
-                            foregroundColor: Colors.white,
-                            backgroundColor: Colors.black,
-                            disabledBackgroundColor: Colors.black.withOpacity(0.6),
-                            disabledForegroundColor: Colors.white.withOpacity(0.6),
-                            shape: RoundedRectangleBorder(
-                              borderRadius:
-                              BorderRadius.circular(2.0), // Rounded corners
-                            ),
-                            minimumSize:
-                            const Size.fromHeight(48) // Set button text color
-                        ),
-                        child: const Text(
-                          'Upload',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'Lato',
-                              fontWeight: FontWeight.w600,
-                              fontSize: 18.0),
-                        ),
+                        },
+                        text: 'Next',
+                        isEnabled: isButtonEnabled,
+                        isLoading: isLoadingValues
                       ),
                     ),
                   ],

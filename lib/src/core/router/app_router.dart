@@ -338,11 +338,11 @@ class CustomNavigationHelper {
         parentNavigatorKey: parentNavigatorKey,
         path: onboardingInterestPath,
         pageBuilder: (context, state) {
-          UpdateProfileParams params =
-          state.extra as UpdateProfileParams;
+          SettingProfileParams params =
+          state.extra as SettingProfileParams;
 
           return getPage(
-            child: InterestsUpdateScreen(params: SettingProfileParams(updateParams: params),),
+            child: InterestsUpdateScreen(params: params,),
             state: state,
           );
         },
