@@ -35,116 +35,61 @@ class CoreValuesUpdateScreen extends StatefulWidget {
 
 class _CoreValuesUpdateScreenState extends State<CoreValuesUpdateScreen> {
   bool isButtonEnabled = true;
-  Map<String,ChipValues> weekendMap = {
-    "takeaway": ChipValues("Takeaway"),
-    "Outdoors":ChipValues("Outdoors"),
-    "Party":ChipValues("Party"),
-    "Club hop":ChipValues("Club hop"),
-    "Sleep in":ChipValues("Sleep in"),
-    "Cook":ChipValues("Cook"),
-    "Brunch":ChipValues("Brunch"),
-    "Music":ChipValues("Music"),
-    "Long Drive":ChipValues("Long Drive"),
-    "":ChipValues("Fancy restaurants")
+  Map<String,ChipValues> coreMap = {
+    "Loyalty": ChipValues("Loyalty"),
+    "Spirituality":ChipValues("Spirituality"),
+    "Humility":ChipValues("Humility"),
+    "Compassion":ChipValues("Compassion"),
+    "Honesty":ChipValues("Honesty"),
+    "Kindness":ChipValues("Kindness"),
+    "Integrity":ChipValues("Integrity"),
+    "Selflessness":ChipValues("Selflessness"),
+    "Determination":ChipValues("Determination"),
+    "Generosity":ChipValues("Generosity"),
+    "Courage":ChipValues("Courage"),
+    "Tolerance":ChipValues("Tolerance"),
+    "Trust":ChipValues("Trust"),
+    "Equity":ChipValues("Equity"),
+    "Equality":ChipValues("Equality"),
+    "Empathy":ChipValues("Empathy"),
+    "Independence":ChipValues("Independence"),
+    "Gratitude":ChipValues("Gratitude"),
+    "Friendship":ChipValues("Friendship"),
+    "Family":ChipValues("Family"),
+    "Justice":ChipValues("Justice"),
+    "Knowledge":ChipValues("Knowledge"),
+    "Patience":ChipValues("Patience"),
+    "Self-respect":ChipValues("Self-respect"),
+    "Security":ChipValues("Security"),
+    "Adventure":ChipValues("Adventure"),
+    "Fun":ChipValues("Fun"),
+    "":ChipValues("Loyalty")
   };
 
-  Map<String,ChipValues> petsMap = {
-    "Dogs": ChipValues("Dogs"),
-    "Cats": ChipValues("Cats"),
-    "Birds": ChipValues("Birds"),
-    "Fish": ChipValues("Fish"),
-    "Rabbits": ChipValues("Rabbits"),
-    "Turtle": ChipValues("Turtle"),
-  };
 
-  Map<String,ChipValues> selfCareMap = {
-    "Yoga": ChipValues("Yoga"),
-    "Run": ChipValues("Run"),
-    "Meditate": ChipValues("Meditate"),
-    "Spa days": ChipValues("Spa days"),
-    "Travel": ChipValues("Travel"),
-    "Gardening": ChipValues("Gardening"),
-    "Cycling": ChipValues("Cycling"),
-    "Journal": ChipValues("Journal"),
-    "Dance": ChipValues("Dance"),
-    "Photography": ChipValues("Photography"),
-    "Music": ChipValues("Music"),
-    "Sing": ChipValues("Sing"),
-  };
+  List<String> coreListString = [];
 
-  Map<String,ChipValues> foodNDrinkMap = {
-    "Chinese":ChipValues("Chinese"),
-    "Thai":ChipValues("Thai"),
-    "Greek":ChipValues("Greek"),
-    "Korean":ChipValues("Korean"),
-    "Mexican":ChipValues("Mexican"),
-    "Japanese":ChipValues("Japanese"),
-    "Italian":ChipValues("Italian"),
-    "Vegan":ChipValues("Vegan"),
-  };
 
-  Map<String,ChipValues> sportsMap = {
-    "Pilates": ChipValues("Pilates"),
-    "Gym": ChipValues("Gym"),
-    "Football": ChipValues("Football"),
-    "Boxing": ChipValues("Boxing"),
-    "Cricket": ChipValues("Cricket"),
-    "Tennis": ChipValues("Tennis"),
-    "Badminton": ChipValues("Badminton"),
-    "Go kart": ChipValues("Go kart"),
-    "Basketball": ChipValues("Basketball"),
-    "Baseball": ChipValues("Baseball"),
-    "Hockey": ChipValues("Hockey"),
-  };
-
-  List<String> weekendListString = [];
-  List<String> petsListString = [];
-  List<String> foodNDrinkListString = [];
-  List<String> sportsListString = [];
-  List<String> selfCareListString = [];
   int selectedLength = 0;
 
   @override
   void initState() {
     super.initState();
     if(widget.params.profileParams != null) {
-      weekendListString.addAll(
-          widget.params.profileParams?.interests.weekendActivities ?? []);
-      petsListString.addAll(widget.params.profileParams?.interests.pets ?? []);
-      foodNDrinkListString.addAll(
-          widget.params.profileParams?.interests.fnd ?? []);
-      sportsListString.addAll(
-          widget.params.profileParams?.interests.sports ?? []);
-      selfCareListString.addAll(
-          widget.params.profileParams?.interests.selfCare ?? []);
+       coreListString.addAll(
+          widget.params.profileParams?.values?.coreValues ?? []);
 
       updateSelectionState();
 
 
-      for(var weekends in weekendListString) {
-        weekendMap[weekends]?.isSelected = true;
-      }
-      for(var pets in petsListString) {
-        petsMap[pets]?.isSelected = true;
-      }
-      for(var fnd in foodNDrinkListString) {
-        foodNDrinkMap[fnd]?.isSelected = true;
-      }
-      for(var sports in sportsListString) {
-        sportsMap[sports]?.isSelected = true;
-      }
-      for(var sc in selfCareListString) {
-        selfCareMap[sc]?.isSelected = true;
+      for(var core in coreListString) {
+        coreMap[core]?.isSelected = true;
       }
     }
   }
 
   void updateSelectionState() {
-    selectedLength = weekendListString.length +
-        petsListString.length +
-        foodNDrinkListString.length +
-        sportsListString.length +
-        selfCareListString.length;
+    selectedLength = coreListString.length;
   }
 
   @override
@@ -233,7 +178,7 @@ class _CoreValuesUpdateScreenState extends State<CoreValuesUpdateScreen> {
                             Wrap(
                               spacing: 8.0,
                               // Adjust spacing between chips as desired
-                              children: weekendMap.values
+                              children: coreMap.values
                                   .map((label) => ActionChip(
                                   side:
                                   const BorderSide(color: Colors.transparent),
@@ -256,8 +201,8 @@ class _CoreValuesUpdateScreenState extends State<CoreValuesUpdateScreen> {
 
                                       label.isSelected = !label.isSelected;
                                       label.isSelected
-                                          ? weekendListString.add(label.val)
-                                          : weekendListString.remove(label.val);
+                                          ? coreListString.add(label.val)
+                                          : coreListString.remove(label.val);
                                       updateSelectionState();
                                     });
                                   }))
@@ -294,7 +239,7 @@ class _CoreValuesUpdateScreenState extends State<CoreValuesUpdateScreen> {
                         padding: EdgeInsets.all(16),
                         child: CustomButton(
                           onPressed: () {
-                            Navigator.pop(mContext, weekendListString);
+                            Navigator.pop(mContext, coreListString);
                           },
                           text: 'Next',
                           isEnabled: isButtonEnabled,

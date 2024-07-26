@@ -34,7 +34,7 @@ class InterestsUpdateScreen extends StatefulWidget {
 class _InterestsUpdateScreenState extends State<InterestsUpdateScreen> {
   bool isButtonEnabled = true;
   Map<String,ChipValues> weekendMap = {
-    "takeaway": ChipValues("Takeaway"),
+    "Takeaway": ChipValues("Takeaway"),
     "Outdoors":ChipValues("Outdoors"),
     "Party":ChipValues("Party"),
     "Club hop":ChipValues("Club hop"),

@@ -143,7 +143,7 @@ class _MyFormState extends State<MyForm> {
   bool toShowTimer = false;
   String emailError = "";
   Timer? timer;
-  int _start = 9;
+  int _start = 60;
 
   @override
   void didUpdateWidget(MyForm oldWidget) {
@@ -251,7 +251,7 @@ class _MyFormState extends State<MyForm> {
             toShowTimer = false;
             isResendVisible = true;
             isResendEnabled = true;
-            _start = 9;
+            _start = 60;
           });
 
         } else {
