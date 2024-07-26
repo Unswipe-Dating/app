@@ -103,7 +103,7 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
                       onEnd: () {
                         context
                             .read<ProfileSwipeBloc>()
-                            .add(OnRequestApiCall("", ""));
+                            .add(OnRequestApiCall());
                       },
                       numberOfCardsDisplayed: cards.length > 1 ? 2 : 1,
                       padding: const EdgeInsets.all(0.0),

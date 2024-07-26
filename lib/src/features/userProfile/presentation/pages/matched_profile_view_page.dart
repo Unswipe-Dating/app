@@ -105,7 +105,15 @@ class _MatchedSwipeInterfaceState extends State<MatchedSwipeInterface> {
                         cards[index],
                   );
                 } else {
-                  return NoRequestScreen();
+                  return RefreshIndicator(
+                    onRefresh: () async {
+                      context.read<ProfileSwipeBloc>().add(OnGetRequestedProfile());
+                    },
+                    child: const SingleChildScrollView(
+                      physics: AlwaysScrollableScrollPhysics(),
+                      child: NoRequestScreen(),
+                    ),
+                  );
                 }
               } else
                 return const Center(child: CircularProgressIndicator());

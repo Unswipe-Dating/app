@@ -309,18 +309,15 @@ class ProfileSwipeBloc extends Bloc<ProfileSwipeEvent, ProfileSwipeState> {
           }
         }, ifRight: (r) {
           if (r.userAndToken?.token != null && r.userAndToken?.id != null) {
-            if (event.route == 0) {
-              token = r.userAndToken!.token;
-              id = r.userAndToken!.id;
-              userId = r.userAndToken!.userId!;
-              add(OnRequestApiCall(r.userAndToken!.token, r.userAndToken!.id));
-            } else {
-              add(OnGetRequestedProfile(
-                  r.userAndToken!.token, r.userAndToken!.id));
-            }
             token = r.userAndToken!.token;
             id = r.userAndToken!.id;
             userId = r.userAndToken!.userId!;
+            if (event.route == 0) {
+              add(OnRequestApiCall());
+            } else {
+              add(OnGetRequestedProfile());
+            }
+
 
             return state.copyWith(status: ProfileSwipeStatus.loading);
           } else {

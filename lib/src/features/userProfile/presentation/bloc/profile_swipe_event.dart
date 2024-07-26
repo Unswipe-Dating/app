@@ -14,12 +14,10 @@ class OnProfileSwipeRequested extends ProfileSwipeEvent {
 }
 
 class OnGetRequestedProfile extends ProfileSwipeEvent {
-  final String id;
-  final String token;
+
 
   OnGetRequestedProfile(
-      this.token,
-      this.id,
+
       );}
 
 class OnUpdateOnBoardingUserEvent extends ProfileSwipeEvent {
@@ -60,12 +58,8 @@ class OnInitiateMatchSubject extends ProfileSwipeEvent {
 
 
 class OnRequestApiCall extends ProfileSwipeEvent {
-  final String id;
-  final String token;
 
   OnRequestApiCall(
-    this.token,
-    this.id,
   );
 }
 
