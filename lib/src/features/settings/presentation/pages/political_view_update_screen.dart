@@ -69,43 +69,16 @@ class _PoliticalViewUpdateScreenState extends State<PoliticalViewUpdateScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Column(
             children: [
-              if (widget.toShowLoader)
-                const Row(
-                  children: [
-                    Expanded(
-                        flex: 9,
-                        child: LinearProgressIndicator(
-                          color: Colors.black,
-
-                          value: 0.61, // Set the progress to 10%
-                        )),
-                    SizedBox(
-                      width: 8,
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Text(
-                        textAlign: TextAlign.start,
-                        '61%',
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontFamily: 'Lato',
-                            fontWeight: FontWeight.w700,
-                            fontSize: 14.0),
-                      ),
-                    ),
-                  ],
-                ),
               const Padding(
-                padding: EdgeInsets.all(8.0),
+                padding: EdgeInsets.all(16.0),
                 child: Text(
                   textAlign: TextAlign.start,
-                  'What are your political view',
+                  'What are your political view?',
                   style: TextStyle(
                       color: Colors.black,
-                      fontFamily: 'Playfair',
+                      fontFamily: 'lato',
                       fontWeight: FontWeight.w600,
-                      fontSize: 24.0),
+                      fontSize: 18.0),
                 ),
               ),
               Expanded(

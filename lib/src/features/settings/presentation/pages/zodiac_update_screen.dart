@@ -74,38 +74,11 @@ class _ZodiacUpdateScreenState extends State<ZodiacUpdateScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Column(
               children: [
-                if (widget.toShowLoader)
-                  const Row(
-                    children: [
-                      Expanded(
-                          flex: 9,
-                          child: LinearProgressIndicator(
-                            color: Colors.black,
-
-                            value: 0.61, // Set the progress to 10%
-                          )),
-                      SizedBox(
-                        width: 8,
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Text(
-                          textAlign: TextAlign.start,
-                          '61%',
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontFamily: 'Lato',
-                              fontWeight: FontWeight.w700,
-                              fontSize: 14.0),
-                        ),
-                      ),
-                    ],
-                  ),
                 const Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Text(
                     textAlign: TextAlign.start,
-                    'Your Preferred pronouns',
+                    'There is no fault in your stars',
                     style: TextStyle(
                         color: Colors.black,
                         fontFamily: 'Playfair',
@@ -114,9 +87,9 @@ class _ZodiacUpdateScreenState extends State<ZodiacUpdateScreen> {
                   ),
                 ),
                 const Padding(
-                  padding: EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(16.0),
                   child: Text(
-                    "This will be shown on your profile. You can change this later.",
+                    "May the stars align in your favor forever",
                     style: TextStyle(
                         color: Colors.black,
                         fontFamily: 'lato',

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:unswipe/src/features/login/presentation/pages/Login.dart';
 import 'package:unswipe/src/features/settings/domain/repository/user_settings_repository.dart';
 import 'package:unswipe/src/features/userOnboarding/profile_update/domain/repository/update_profile_repository.dart';
@@ -43,49 +44,37 @@ class _ExerciseUpdateScreenState extends State<ExerciseUpdateScreen> {
     return MaterialApp(
       home: Scaffold(
           appBar: AppBar(
-            title: Text(""),
+            systemOverlayStyle: const SystemUiOverlayStyle(
+              statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
+              statusBarBrightness: Brightness.light, // For iOS (dark icons)
+            ),
+            surfaceTintColor: Colors.white,
+            backgroundColor: Colors.white,
+            shadowColor: Colors.black,
+            elevation: 4.0,
+            title: const Text(
+              "Exercise",
+              style: TextStyle(
+                  color: Colors.black,
+                  fontFamily: 'Playfair',
+                  fontWeight: FontWeight.w600,
+                  fontSize: 24.0),
+            ),
           ),
           body: Padding(
             padding: EdgeInsets.symmetric(horizontal: 24),
             child: Column(
               children: [
-                if (widget.toShowLoader)
-                  const Row(
-                    children: [
-                      Expanded(
-                          flex: 9,
-                          child: LinearProgressIndicator(
-                            color: Colors.black,
-
-                            value: 0.48, // Set the progress to 10%
-                          )),
-                      SizedBox(
-                        width: 8,
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Text(
-                          textAlign: TextAlign.start,
-                          '48%',
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontFamily: 'Lato',
-                              fontWeight: FontWeight.w700,
-                              fontSize: 14.0),
-                        ),
-                      ),
-                    ],
-                  ),
                 const Padding(
-                  padding: EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(16.0),
                   child: Text(
                     textAlign: TextAlign.start,
-                    'Which gender do you associate yourself with ?',
+                    'How often do you exercise?',
                     style: TextStyle(
                         color: Colors.black,
-                        fontFamily: 'Playfair',
+                        fontFamily: 'lato',
                         fontWeight: FontWeight.w600,
-                        fontSize: 24.0),
+                        fontSize: 18.0),
                   ),
                 ),
                 const Padding(

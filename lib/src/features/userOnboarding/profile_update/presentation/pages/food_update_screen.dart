@@ -49,53 +49,15 @@ class _CookUpdateScreenState extends State<CookUpdateScreen> {
             padding: EdgeInsets.symmetric(horizontal: 24),
             child: Column(
               children: [
-                if (widget.toShowLoader)
-                  const Row(
-                    children: [
-                      Expanded(
-                          flex: 9,
-                          child: LinearProgressIndicator(
-                            color: Colors.black,
-
-                            value: 0.48, // Set the progress to 10%
-                          )),
-                      SizedBox(
-                        width: 8,
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Text(
-                          textAlign: TextAlign.start,
-                          '48%',
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontFamily: 'Lato',
-                              fontWeight: FontWeight.w700,
-                              fontSize: 14.0),
-                        ),
-                      ),
-                    ],
-                  ),
                 const Padding(
-                  padding: EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(16.0),
                   child: Text(
                     textAlign: TextAlign.start,
-                    'Which gender do you associate yourself with ?',
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: 'Playfair',
-                        fontWeight: FontWeight.w600,
-                        fontSize: 24.0),
-                  ),
-                ),
-                const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text(
-                    "This will be shown on your profile. You can change this later.",
+                    'Do you know how to cook?',
                     style: TextStyle(
                         color: Colors.black,
                         fontFamily: 'lato',
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w600,
                         fontSize: 18.0),
                   ),
                 ),

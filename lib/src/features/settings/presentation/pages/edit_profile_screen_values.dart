@@ -512,7 +512,7 @@ class _EditProfileScreenValueState extends State<EditProfileScreenValue> {
                             height: 16,
                           ),
                           InkWell(
-                            child: Card(
+                            child: values?.coreValues == null ? Card(
                               elevation: 4,
                               color: Colors.white,
                               surfaceTintColor: Colors.white,
@@ -565,6 +565,10 @@ class _EditProfileScreenValueState extends State<EditProfileScreenValue> {
                                   ],
                                 ),
                               ),
+                            ) : InterestsCard(
+                              header: null,
+                              chipLabels: values?.coreValues ?? [],
+                              elevation: 4,
                             ),
                             onTap: () async {
                               final core = await Navigator.push(
@@ -585,7 +589,7 @@ class _EditProfileScreenValueState extends State<EditProfileScreenValue> {
                             },
                           ),
                           Padding(
-                            padding: const EdgeInsets.all(0),
+                            padding: const EdgeInsets.only(top: 24),
                             child: CustomButton(
                               onPressed: () {
                                 setState(() {

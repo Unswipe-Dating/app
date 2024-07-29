@@ -122,42 +122,14 @@ class _CoreValuesUpdateScreenState extends State<CoreValuesUpdateScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 24),
                   child: Column(
                     children: [
-                      if (widget.toShowLoader)
-                        const Row(
-                          children: [
-                            Expanded(
-                                flex: 9,
-                                child: LinearProgressIndicator(
-                                  color: Colors.black,
-
-                                  value: 0.87, // Set the progress to 10%
-                                )
-                            ),
-                            SizedBox(
-                              width: 8,
-                            ),
-                            Expanded(
-                              flex: 1,
-                              child: Text(
-                                textAlign: TextAlign.start,
-                                '87%',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontFamily: 'Lato',
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 14.0),
-                              ),
-                            ),
-                          ],
-                        ),
                       const Padding(
-                        padding: EdgeInsets.all(8.0),
+                        padding: EdgeInsets.all(24.0),
                         child: Text(
                           "What are your top 3 core values?",
                           style: TextStyle(
                               color: Colors.black,
                               fontFamily: 'lato',
-                              fontWeight: FontWeight.w500,
+                              fontWeight: FontWeight.w600,
                               fontSize: 18.0),
                         ),
                       ),

@@ -87,7 +87,7 @@ class _HeightUpdateScreenState extends State<HeightUpdateScreen> {
             surfaceTintColor: Colors.white,
             backgroundColor: Colors.white,
             shadowColor: Colors.black,
-            elevation: 4.0,
+            elevation: 2.0,
             title: const Text(
               "Height",
               style: TextStyle(
@@ -101,52 +101,15 @@ class _HeightUpdateScreenState extends State<HeightUpdateScreen> {
             padding: EdgeInsets.symmetric(horizontal: 24),
             child: Column(
               children: [
-                const Row(
-                  children: [
-                    Expanded(
-                        flex: 9,
-                        child: LinearProgressIndicator(
-                          color: Colors.black,
-
-                          value: 0.35, // Set the progress to 10%
-                        )),
-                    SizedBox(
-                      width: 8,
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Text(
-                        textAlign: TextAlign.start,
-                        '35%',
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontFamily: 'Lato',
-                            fontWeight: FontWeight.w700,
-                            fontSize: 14.0),
-                      ),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
+                const Padding(
+                  padding: EdgeInsets.all(16.0),
                   child: Text(
                     textAlign: TextAlign.start,
-                    'You were born on',
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: 'Playfair',
-                        fontWeight: FontWeight.w600,
-                        fontSize: 24.0),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    "We display only your age to potential matches.",
+                    'How tall are you?',
                     style: TextStyle(
                         color: Colors.black,
                         fontFamily: 'lato',
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w600,
                         fontSize: 18.0),
                   ),
                 ),
