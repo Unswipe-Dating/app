@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
 import 'package:multi_image_picker_view/multi_image_picker_view.dart';
 import 'package:unswipe/src/features/userOnboarding/image_upload/domain/usecase/image_upload_usecase.dart';
@@ -9,15 +10,17 @@ import 'package:unswipe/src/shared/domain/usecases/get_auth_state_stream_use_cas
 
 import '../../../../../../widgets/dialogs/ScrollingListDialog.dart';
 import '../../../../../core/router/app_router.dart';
+import '../../../../login/presentation/pages/Login.dart';
 import '../../../../onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart';
+import '../../../../settings/domain/usecases/get_settings_profile_usecase.dart';
 import '../../../../userProfile/data/model/get_profile/response_profile_swipe.dart';
 import '../bloc/image_upload_bloc.dart';
 import '../widgets/picker.dart';
 
 class ProfileImagePickerScreen extends StatefulWidget {
-  final ResponseProfileList? profile;
+  final bool? isSetting;
 
-  const ProfileImagePickerScreen({super.key, this.profile});
+  const ProfileImagePickerScreen({super.key, this.isSetting});
 
   @override
   State<ProfileImagePickerScreen> createState() =>
@@ -30,13 +33,18 @@ class _ProfileImagePickerScreenState extends State<ProfileImagePickerScreen> {
       picker: (allowMultiple) async {
         return await pickImagesUsingImagePicker(allowMultiple);
       });
-  bool isButtonEnabled = false;
+  late FToast fToast;
 
+  bool isButtonEnabled = false;
+  bool isButtonLoading = true;
   var request = [];
 
   @override
   void initState() {
     super.initState();
+    fToast = FToast();
+    fToast.init(context);
+    isButtonLoading = widget.isSetting == true;
     controller.addListener(() {
       isButtonEnabled = controller.images.length >= 3;
       setState(() {});
@@ -63,21 +71,52 @@ class _ProfileImagePickerScreenState extends State<ProfileImagePickerScreen> {
                   GetIt.I.get<UpdateOnboardingStateStreamUseCase>(),
               getAuthStateStreamUseCase:
                   GetIt.I.get<GetAuthStateStreamUseCase>(),
-              imageUploadUseCase: GetIt.I.get<ImageUploadUseCase>())
-            ..add(OnConvertS3ToImageFileEvent(widget.profile?.photoURLs)),
+              imageUploadUseCase: GetIt.I.get<ImageUploadUseCase>(),
+              getSettingsProfileUseCase:
+                  GetIt.I.get<GetSettingsProfileUseCase>())
+            ..add(OnInitiateUploadSubject())
+            ..add(OnStartGettingProfile()),
           child: BlocConsumer<ImageUploadBloc, ImageUploadState>(
               listener: (context, state) {
             if (state.status == ImageUploadStatus.loaded) {
-              if (widget.profile?.photoURLs != null) {
-                CustomNavigationHelper.router.go(
-                  CustomNavigationHelper.settingsPath,
-                );
+              isButtonEnabled = true;
+              isButtonLoading = false;
+            }
+
+            if (state.status == ImageUploadStatus.loaded) {
+              isButtonLoading = false;
+              isButtonEnabled = true;
+              fToast.showToast(
+                toastDuration: const Duration(milliseconds: 5000),
+                child: Container(
+                  color: Colors.white,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.face),
+                      Text(
+                        state.status == ImageUploadStatus.loaded
+                            ? "Updates saved"
+                            : "Some error occurred",
+                        style: TextStyle(color: Colors.black87, fontSize: 16.0),
+                      )
+                    ],
+                  ),
+                ),
+                gravity: ToastGravity.BOTTOM,
+              );
+
+              isButtonLoading = false;
+              isButtonEnabled = true;
+              if (widget.isSetting == true) {
               } else {
                 CustomNavigationHelper.router.push(
                   CustomNavigationHelper.onboardingNamePath,
                 );
               }
             } else if (state.status == ImageUploadStatus.loadedS3Images) {
+              isButtonLoading = false;
+              isButtonEnabled = true;
               controller = MultiImagePickerController(
                   maxImages: 6,
                   picker: (allowMultiple) async {
@@ -91,6 +130,33 @@ class _ProfileImagePickerScreenState extends State<ProfileImagePickerScreen> {
             } else if (state.status == ImageUploadStatus.errorAuth) {
               CustomNavigationHelper.router.go(
                 CustomNavigationHelper.loginPath,
+              );
+            } else if (state.status == ImageUploadStatus.loadedProfile ||
+                state.status == ImageUploadStatus.errorTimeOut ||
+                state.status == ImageUploadStatus.error) {
+              isButtonLoading = false;
+              isButtonEnabled = true;
+
+              isButtonLoading = false;
+              isButtonEnabled = true;
+              fToast.showToast(
+                toastDuration: const Duration(milliseconds: 5000),
+                child: Container(
+                  color: Colors.white,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.face),
+                      Text(
+                        state.status == ImageUploadStatus.loaded
+                            ? "Updates saved"
+                            : "Some error occurred",
+                        style: TextStyle(color: Colors.black87, fontSize: 16.0),
+                      )
+                    ],
+                  ),
+                ),
+                gravity: ToastGravity.BOTTOM,
               );
             }
           }, builder: (context, state) {
@@ -259,37 +325,18 @@ class _ProfileImagePickerScreenState extends State<ProfileImagePickerScreen> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(bottom: 32),
-                          child: ElevatedButton(
-                            onPressed: isButtonEnabled
-                                ? () {
-                                    context.read<ImageUploadBloc>().add(
-                                        OnImageUploadRequested(
-                                            controller.images.toList()));
-                                  }
-                                : null,
-                            style: ElevatedButton.styleFrom(
-                                foregroundColor: Colors.white,
-                                backgroundColor: Colors.black,
-                                disabledBackgroundColor:
-                                    Colors.black.withOpacity(0.6),
-                                disabledForegroundColor:
-                                    Colors.white.withOpacity(0.6),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      2.0), // Rounded corners
-                                ),
-                                minimumSize: const Size.fromHeight(
-                                    48) // Set button text color
-                                ),
-                            child: const Text(
-                              'Upload',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: 'Lato',
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 18.0),
-                            ),
+                          padding: EdgeInsets.only(bottom: 32),
+                          child: CustomButton(
+                            onPressed: () {
+                              context.read<ImageUploadBloc>().add(
+                                  OnRequestApiCall(controller.images.toList()));
+                              isButtonEnabled = false;
+                              isButtonLoading = true;
+                              setState(() {});
+                            },
+                            text: 'Next',
+                            isEnabled: isButtonEnabled,
+                            isLoading: isButtonLoading,
                           ),
                         ),
                       ],

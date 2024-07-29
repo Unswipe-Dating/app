@@ -12,6 +12,8 @@ import '../../../../../shared/domain/usecases/get_auth_state_stream_use_case.dar
 import '../../../../onBoarding/domain/entities/onbaording_state/onboarding_state.dart';
 import '../../../../onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart';
 import '../../../../onBoarding/presentation/bloc/onboarding_bloc.dart';
+import '../../../../settings/domain/usecases/get_settings_profile_usecase.dart';
+import '../../../../userProfile/data/model/get_profile/response_profile_swipe.dart';
 import '../../domain/usecase/image_upload_usecase.dart';
 import '../../../../../shared/utils/file_utils.dart';
 part 'image_upload_event.dart';
@@ -22,22 +24,103 @@ class ImageUploadBloc extends Bloc<ImageUploadEvent, ImageUploadState> {
   final GetAuthStateStreamUseCase getAuthStateStreamUseCase;
   final ImageUploadUseCase imageUploadUseCase;
   bool isS3FilesAvailable = false;
+  final GetSettingsProfileUseCase getSettingsProfileUseCase;
+  String id = "";
+  String? userId = "";
+  String token = "";
+
 
   // List of splash
 
   ImageUploadBloc({
     required this.updateOnboardingStateStreamUseCase,
     required this.getAuthStateStreamUseCase,
-    required this.imageUploadUseCase
+    required this.imageUploadUseCase,
+    required this.getSettingsProfileUseCase
     
   })
-      : super(ImageUploadState()) {
-    on<OnImageUploadRequested>(_onStartImageUpload);
-    on<OnRequestApiCall>(_onStartImageUploadApi);
+      : super(const ImageUploadState()) {
+    on<OnInitiateUploadSubject>(_onStartImageUploadApi);
+    on<OnRequestApiCall>(_onStartUploadApi);
     on<OnUpdateOnBoardingUserEvent>(_onUpdatingOnBoardingEvent);
     on<OnConvertS3ToImageFileEvent>(_onConvertS3ToImageFIleEvent);
+    on<OnStartGettingProfile>(_onStartSettingProfileUseCase);
+    on<OnGetUserProfile>(_onGetUserProfile);
 
   }
+
+  _onGetUserProfile(
+      OnGetUserProfile event, Emitter<ImageUploadState> emitter) async {
+    Stream<GetSettingsProfileUseCaseResponse> stream =
+    await getSettingsProfileUseCase.buildUseCaseStream(
+        event.token, event.id);
+
+    await emitter.forEach(stream, onData: (response) {
+      final responseData = response.val;
+      if (responseData is api_response.Failure) {
+        return state.copyWith(status: ImageUploadStatus.error);
+      } else if (responseData is api_response.AuthorizationFailure) {
+        return state.copyWith(status: ImageUploadStatus.errorAuth);
+      } else if (responseData is api_response.TimeOutFailure) {
+        return state.copyWith(status: ImageUploadStatus.errorTimeOut);
+      } else if (responseData is api_response.OperationFailure) {
+        return state.copyWith(status: ImageUploadStatus.error);
+      } else if (responseData is api_response.Success) {
+        var profile = (((responseData as api_response.Success).data)
+        as ResponseProfileSwipe)
+            .userProfile;
+        add(OnConvertS3ToImageFileEvent(profile?.photoURLs));
+
+        return state.copyWith(
+            status: ImageUploadStatus.loading);
+      } else {
+        return state.copyWith(status: ImageUploadStatus.error);
+      }
+    });
+  }
+
+
+
+  _onStartSettingProfileUseCase(
+      OnStartGettingProfile event, Emitter<ImageUploadState> emitter) async {
+    emitter(state.copyWith(status: ImageUploadStatus.loading));
+
+    await emitter.forEach(
+      getAuthStateStreamUseCase.call(),
+      onData: (response) {
+        return response.fold(ifLeft: (l) {
+          if (l is CancelTokenFailure) {
+            return state.copyWith(status: ImageUploadStatus.error);
+          } else {
+            return state.copyWith(status: ImageUploadStatus.error);
+          }
+        }, ifRight: (r) {
+          if (r.userAndToken?.token != null && r.userAndToken?.id != null) {
+            token = r.userAndToken!.token;
+            id = r.userAndToken!.id;
+            userId = r.userAndToken!.userId;
+            if(userId?.isNotEmpty == true) {
+              add(OnGetUserProfile(r.userAndToken!.token, r.userAndToken!.id));
+              return state.copyWith(status: ImageUploadStatus.loading);
+            }
+            return state.copyWith(status: ImageUploadStatus.loadedAuth);
+          } else {
+            return state.copyWith(status: ImageUploadStatus.error);
+          }
+        });
+      },
+    );
+  }
+
+  _onStartUploadApi(
+      OnRequestApiCall event, Emitter<ImageUploadState> emitter) async {
+    emitter(state.copyWith(status: ImageUploadStatus.loading));
+    await imageUploadUseCase.buildUseCaseStream(
+        token, getFilesForUpload(event.params));
+    emitter(state.copyWith(status: ImageUploadStatus.loaded));
+
+  }
+
 
   _onConvertS3ToImageFIleEvent(OnConvertS3ToImageFileEvent event,
       Emitter<ImageUploadState> emitter) async{
@@ -65,7 +148,6 @@ class ImageUploadBloc extends Bloc<ImageUploadEvent, ImageUploadState> {
 
   _onUpdatingOnBoardingEvent(OnUpdateOnBoardingUserEvent event,
       Emitter<ImageUploadState> emitter) async{
-
 
     OnBoardingStatus status = OnBoardingStatus.update;
     if(event.isUnAuthorized) {
@@ -97,15 +179,11 @@ class ImageUploadBloc extends Bloc<ImageUploadEvent, ImageUploadState> {
 
   }
 
-  _onStartImageUploadApi(OnRequestApiCall event,
+  _onStartImageUploadApi(OnInitiateUploadSubject event,
       Emitter<ImageUploadState> emitter) async {
 
-
-    Stream<UploadImageUseCaseResponse> stream =
-    await imageUploadUseCase.buildUseCaseStream(event.token,
-        event.params);
-
-    await emitter.forEach(stream, onData: (response) {
+    await emitter.forEach(imageUploadUseCase.controller.stream,
+        onData: (response)  {
       final responseData = response.val;
       if (responseData is api_response.Failure) {
         return state.copyWith(status: ImageUploadStatus.error);
@@ -128,43 +206,6 @@ class ImageUploadBloc extends Bloc<ImageUploadEvent, ImageUploadState> {
     });
   }
 
-
-  _onStartImageUpload(OnImageUploadRequested event,
-      Emitter<ImageUploadState> emitter) async {
-
-    emitter(state.copyWith(
-        status: ImageUploadStatus.loading));
-
-    await emitter.forEach(getAuthStateStreamUseCase.call(), onData: (response) {
-      return response.fold(
-          ifLeft: (l) {
-            if (l is CancelTokenFailure) {
-              return state.copyWith(status: ImageUploadStatus.error);
-
-            } else {
-              return state.copyWith(status: ImageUploadStatus.error);
-
-            }
-          },
-          ifRight: (r) {
-
-            if(r.userAndToken?.token != null && r.userAndToken?.id != null)  {
-              add(OnRequestApiCall(getFilesForUpload(event.params),
-                  r.userAndToken!.token,
-                  r.userAndToken!.id)
-              );
-              return state.copyWith(status: ImageUploadStatus.loading);
-
-            }else {
-              return state.copyWith(status: ImageUploadStatus.error);
-            }
-
-          }
-      );
-    },
-    );
-
-  }
 
   List<MultipartFile> getFilesForUpload(List<ImageFile> images) {
     List<MultipartFile> listFiles = [];

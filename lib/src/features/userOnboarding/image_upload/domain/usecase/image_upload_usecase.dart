@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:http/http.dart';
 import 'package:injectable/injectable.dart';
 import 'package:mime/mime.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:unswipe/src/features/login/domain/repository/login_repository.dart';
 import 'package:unswipe/src/features/login/presentation/bloc/login_bloc.dart';
 import 'package:unswipe/src/features/userOnboarding/contact_block/data/model/response_contact_block.dart';
@@ -19,9 +20,13 @@ class ImageUploadUseCase {
 
   ImageUploadUseCase(this._repository);
 
+  BehaviorSubject<UploadImageUseCaseResponse> controller =
+  BehaviorSubject<UploadImageUseCaseResponse>();
 
-  Future<Stream<UploadImageUseCaseResponse>> buildUseCaseStream(String token,
-      List<MultipartFile> files) async {
+
+
+  FutureOr<void> buildUseCaseStream(String token,
+      List<MultipartFile>? files) async {
     final controller = StreamController<UploadImageUseCaseResponse>();
     try{
       if(files != null) {
@@ -34,7 +39,6 @@ class ImageUploadUseCase {
       controller.addError(e);
     }
 
-    return controller.stream;
   }
 
 }

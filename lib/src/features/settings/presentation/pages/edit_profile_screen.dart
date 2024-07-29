@@ -49,6 +49,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               GridItem(icon: Icons.photo, text: 'Photos', onClick: () {
                                 CustomNavigationHelper.router.push(
                                   CustomNavigationHelper.uploadImagePath,
+                                  extra: true
                                 );
                               }),
                               GridItem(icon: Icons.contacts, text: 'Basics', onClick: () {

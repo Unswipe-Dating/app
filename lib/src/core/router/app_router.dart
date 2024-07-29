@@ -267,9 +267,9 @@ class CustomNavigationHelper {
         parentNavigatorKey: parentNavigatorKey,
         path: uploadImagePath,
         pageBuilder: (context, state) {
-          ResponseProfileList? profile = state.extra as ResponseProfileList?;
+          bool? profile = state.extra as bool?;
           return getPage(
-            child: ProfileImagePickerScreen(profile:profile),
+            child: ProfileImagePickerScreen(isSetting:profile),
             state: state,
           );
         },

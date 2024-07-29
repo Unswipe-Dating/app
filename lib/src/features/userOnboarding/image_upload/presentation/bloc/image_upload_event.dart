@@ -10,6 +10,16 @@ class OnBlockContactsSuccess extends ImageUploadEvent {
   OnBlockContactsSuccess();
 }
 
+class OnStartGettingProfile extends ImageUploadEvent {
+  OnStartGettingProfile();
+}
+
+class OnGetUserProfile extends ImageUploadEvent {
+  final String id;
+  final String token;
+  OnGetUserProfile(this.token, this.id);
+}
+
 class OnImageUploadRequested extends ImageUploadEvent {
   final List<ImageFile> params;
 
@@ -27,10 +37,12 @@ class OnUpdateOnBoardingUserEvent extends ImageUploadEvent {
   OnUpdateOnBoardingUserEvent({required this.isUnAuthorized});
 }
 
+class OnInitiateUploadSubject extends ImageUploadEvent {
+  OnInitiateUploadSubject();
+}
+
 class OnRequestApiCall extends ImageUploadEvent {
-  final List<MultipartFile> params;
-  final String id;
-  final String token;
-  OnRequestApiCall(this.params, this.token, this.id);
+  final List<ImageFile> params;
+  OnRequestApiCall(this.params);
 }
 
