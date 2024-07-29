@@ -20,7 +20,7 @@ class ProfileImagePickerScreen extends StatefulWidget {
   const ProfileImagePickerScreen({super.key, this.profile});
 
   @override
-  _ProfileImagePickerScreenState createState() =>
+  State<ProfileImagePickerScreen> createState() =>
       _ProfileImagePickerScreenState();
 }
 

@@ -75,8 +75,6 @@ class _NameUpdateScreenState extends State<NameUpdateScreen> {
   @override
   void initState() {
     super.initState();
-
-
     contactController.addListener(() {
       setState(() {
         emailError = "";

@@ -58,6 +58,7 @@ class UpdateProfileBloc extends Bloc<UpdateProfileEvent, UpdateProfileState> {
     on<OnGetUserProfile>(_onGetUserProfile);
   }
 
+
   _onProfileCreateSuccess(
       OnUpdateUserState event, Emitter<UpdateProfileState> emitter) async {
     await FirebaseChatCore.instance.createUserInFirestore(
@@ -67,23 +68,18 @@ class UpdateProfileBloc extends Bloc<UpdateProfileEvent, UpdateProfileState> {
         imageUrl: '',
       ),
     );
-    Stream<Either<AppError, void>> stream = updateUserStateStreamUseCase.call(
-        event.token, event.id, event.response.id);
-
-    emitter.forEach(stream, onData: (event) {
-      return event.fold(ifLeft: (l) {
-        if (l is CancelTokenFailure) {
-          return state.copyWith(status: UpdateProfileStatus.error);
-        } else {
-          return state.copyWith(status: UpdateProfileStatus.error);
-        }
-      }, ifRight: (r) {
-        add(OnUpdateOnBoardingUserEvent(isUnAuthorized: false));
-        return state.copyWith(status: UpdateProfileStatus.loaded);
-      });
-    }, onError: (error, stacktrace) {
-      return state.copyWith(status: UpdateProfileStatus.error);
+    updateUserStateStreamUseCase
+        .call(event.token, event.id, event.response.id)
+        .listen((event) {
+      event.fold(
+          ifLeft: (l) {
+            if (l is CancelTokenFailure) {
+            } else {}
+          },
+          ifRight: (r) {});
     });
+
+    add(OnUpdateOnBoardingUserEvent(isUnAuthorized: false));
   }
 
   _onUpdatingOnBoardingEvent(OnUpdateOnBoardingUserEvent event,
@@ -167,6 +163,8 @@ class UpdateProfileBloc extends Bloc<UpdateProfileEvent, UpdateProfileState> {
                 as CreateProfileResponse)
             .createProfile;
         add(OnUpdateUserState(profile, token, id));
+//        add(event)
+
         return state.copyWith(status: UpdateProfileStatus.loading);
       } else {
         return state.copyWith(status: UpdateProfileStatus.error);

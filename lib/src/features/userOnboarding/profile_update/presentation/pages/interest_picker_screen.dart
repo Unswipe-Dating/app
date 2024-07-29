@@ -180,7 +180,6 @@ class _InterestsUpdateScreenState extends State<InterestsUpdateScreen> {
                   CustomNavigationHelper.router.go(
                     CustomNavigationHelper.profilePath,
                   );
-
               } else if (state.status == UpdateProfileStatus.errorAuth) {
                 CustomNavigationHelper.router.go(
                   CustomNavigationHelper.loginPath,
@@ -509,7 +508,6 @@ class _InterestsUpdateScreenState extends State<InterestsUpdateScreen> {
                                 foodNDrinkListString,
                                 sportsListString
                             ));
-
                           } else {
                             isButtonEnabled = false;
                             isLoadingValues = true;
