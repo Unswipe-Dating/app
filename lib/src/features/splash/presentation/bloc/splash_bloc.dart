@@ -217,7 +217,7 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
               isFirstTime: false,
               isAuthenticated: true,
               isProfileMatchRequested: true,
-              profileMatchDuration: res.getConfig.timeLeftForExpiry
+              profileMatchDuration: [res.getConfig.timeLeftForExpiry ?? "", res.getConfig.request?.userProfileImage ?? ""]
           );
         } else {
           add(onFirstTimeUserEvent());

@@ -361,7 +361,7 @@ class CustomNavigationHelper {
         parentNavigatorKey: parentNavigatorKey,
         path: profilePathHyperEx,
         pageBuilder: (context, state) {
-          String uri = state.extra as String;
+          List<String>? uri = state.extra as List<String>?;
           return getPage(
             child: HyperExclusiveRequestPage(uri: uri),
             state: state,

@@ -67,7 +67,7 @@ class _SwipeInterfaceState extends State<SwipeInterface> {
           } else if (state.status == ProfileSwipeStatus.loadedCreate) {
             CustomNavigationHelper.router.push(
                 CustomNavigationHelper.profilePathHyperEx,
-                extra: imageUri);
+                extra: ["", state.request?.createRequest?.userProfileImage ?? ""]);
           } else if (state.status == ProfileSwipeStatus.loadedReject) {
           } else if (state.status == ProfileSwipeStatus.errorSwipe) {
             controller.undo();

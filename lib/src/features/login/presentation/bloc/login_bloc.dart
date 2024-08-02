@@ -286,7 +286,7 @@ class LoginBloc extends Bloc<LogInEvent, LoginState> {
         } else if (res.getConfig.timeLeftForExpiry != null) {
           return state.copyWith(
               status: LoginStatus.loadedExpiryTimer,
-              profileMatchDuration: res.getConfig.timeLeftForExpiry);
+              profileMatchDuration: [res.getConfig.timeLeftForExpiry ?? "", res.getConfig.request?.userProfileImage ?? ""]);
         } else {
           add(OnUpdateOnBoardingUserEvent(profileId: event.userId));
           return state.copyWith(

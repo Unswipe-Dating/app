@@ -84,7 +84,7 @@ class SplashScreen extends StatelessWidget {
                 }
                 else if (state.isProfileMatchRequested) {
                   CustomNavigationHelper.router
-                      .go(CustomNavigationHelper.profilePathHyperEx, extra: "" );
+                      .go(CustomNavigationHelper.profilePathHyperEx, extra: state.profileMatchDuration );
                 }
                 else {
                   _selectScreen();

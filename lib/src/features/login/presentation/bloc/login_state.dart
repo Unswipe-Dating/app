@@ -30,7 +30,7 @@ class LoginState extends Equatable {
   final ErrorType errorType;
   final bool isOtpLoaded;
   final OnBoardingStatus onBoardingStatus;
-  final String? profileMatchDuration;
+  final List<String>? profileMatchDuration;
   final ChatPageParams? chatParams;
 
   const LoginState({
@@ -49,7 +49,7 @@ class LoginState extends Equatable {
     ErrorType? errorType,
     int? token,
     OnBoardingStatus? onBoardingStatus,
-    String? profileMatchDuration,
+    List<String>? profileMatchDuration,
     ChatPageParams? chatParams,
   }) {
     return LoginState(

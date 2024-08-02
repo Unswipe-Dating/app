@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:unswipe/src/core/router/app_router.dart';
 
 class HyperExclusiveRequestPage extends StatelessWidget {
-  String? uri;
+  List<String>? uri;
 
   HyperExclusiveRequestPage({super.key, this.uri});
 
@@ -16,7 +16,7 @@ class HyperExclusiveRequestPage extends StatelessWidget {
         children: [
           if (uri != null)
             Image.network(
-              uri!,
+              uri![1],
               height: MediaQuery.of(context).size.height * 0.5,
               width: double.infinity,
               fit: BoxFit.cover,

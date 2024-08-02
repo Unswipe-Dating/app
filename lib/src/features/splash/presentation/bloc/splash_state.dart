@@ -12,7 +12,7 @@ class SplashState extends Equatable {
   final bool isContactsBlocked;
   final bool isProfileUpdated;
   final bool isProfileMatchRequested;
-  final String profileMatchDuration;
+  final List<String>? profileMatchDuration;
   final ChatPageParams? chatParams;
 
 
@@ -26,7 +26,7 @@ class SplashState extends Equatable {
     this.isContactsBlocked = false,
     this.isProfileUpdated = false,
     this.isProfileMatchRequested = false,
-    this.profileMatchDuration = "",
+    this.profileMatchDuration,
     this.chatParams,
 
   });
@@ -42,7 +42,7 @@ class SplashState extends Equatable {
     bool? isContactsBlocked,
     bool? isProfileUpdated,
     bool? isProfileMatchRequested,
-    String? profileMatchDuration,
+    List<String>? profileMatchDuration,
     ChatPageParams? chatParams,
 
   }) {
