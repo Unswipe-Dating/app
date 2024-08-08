@@ -73,8 +73,7 @@ class _DOBUpdateScreenState extends State<DOBUpdateScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
+    return Scaffold(
           appBar: AppBar(title: Text(""),),
           body: Padding(
             padding: EdgeInsets.symmetric(horizontal: 24),
@@ -202,7 +201,6 @@ class _DOBUpdateScreenState extends State<DOBUpdateScreen> {
               ],
             )
             ,)
-      ),
     );
   }
 

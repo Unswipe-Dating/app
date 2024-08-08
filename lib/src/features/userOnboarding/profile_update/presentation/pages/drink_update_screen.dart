@@ -10,12 +10,10 @@ import '../../../../../core/router/app_router.dart';
 
 class DrinkUpdateScreen extends StatefulWidget {
   final SettingProfileParams params;
-  final bool toShowLoader;
 
   const DrinkUpdateScreen({
     super.key,
     required this.params,
-    this.toShowLoader = true,
 
   });
 
@@ -41,8 +39,7 @@ class _DrinkUpdateScreenState extends State<DrinkUpdateScreen> {
 
   @override
   Widget build(BuildContext mContext) {
-    return MaterialApp(
-      home: Scaffold(
+    return Scaffold(
           appBar: AppBar(
             systemOverlayStyle: const SystemUiOverlayStyle(
               statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
@@ -275,16 +272,8 @@ class _DrinkUpdateScreenState extends State<DrinkUpdateScreen> {
                   padding: EdgeInsets.all(16),
                   child: CustomButton(
                     onPressed: () {
-                      if (!widget.toShowLoader) {
                         Navigator.pop(
                             mContext, getNameFromCharacter(_character));
-                      } else {
-                        widget.params.updateParams?.gender =
-                            getNameFromCharacter(_character);
-                        CustomNavigationHelper.router.push(
-                            CustomNavigationHelper.onboardingPronounPath,
-                            extra: UpdateProfileParams.getUpdatedParams(widget.params.updateParams));
-                      }
                     },
                     text: 'Next',
                     isEnabled: isButtonEnabled,
@@ -292,7 +281,7 @@ class _DrinkUpdateScreenState extends State<DrinkUpdateScreen> {
                 ),
               ],
             ),
-          )),
+          ),
     );
   }
 

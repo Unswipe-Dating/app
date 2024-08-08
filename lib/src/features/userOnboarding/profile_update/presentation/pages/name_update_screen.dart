@@ -15,10 +15,8 @@ import '../../../../../core/router/app_router.dart';
 
 
 class NameUpdateScreen extends StatefulWidget {
-  final bool toShowLoader;
 
-  const NameUpdateScreen({super.key,
-    this.toShowLoader = true});
+  const NameUpdateScreen({super.key});
 
   @override
   _NameUpdateScreenState createState() => _NameUpdateScreenState();
@@ -90,15 +88,12 @@ class _NameUpdateScreenState extends State<NameUpdateScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
+    return Scaffold(
         appBar: AppBar(title: const Text(""),),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Column(
             children: [
-              if (widget.toShowLoader)
                 const Row(
                 children: [
                   Expanded(
@@ -218,7 +213,6 @@ class _NameUpdateScreenState extends State<NameUpdateScreen> {
             ],
           )
           ,)
-      ),
     );
   }
 }

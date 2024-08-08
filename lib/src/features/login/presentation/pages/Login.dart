@@ -247,12 +247,14 @@ class _MyFormState extends State<MyForm> {
       (Timer timer) {
         if (_start == 0) {
           timer.cancel();
-          setState(() {
+          if(mounted) {
+            setState(() {
             toShowTimer = false;
             isResendVisible = true;
             isResendEnabled = true;
             _start = 60;
           });
+          }
 
         } else {
           _start--;

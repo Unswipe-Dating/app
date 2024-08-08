@@ -8,12 +8,10 @@ import 'package:unswipe/src/features/userOnboarding/profile_update/domain/reposi
 
 class ReligionUpdateScreen extends StatefulWidget {
   final SettingProfileParams params;
-  final bool toShowLoader;
 
   const ReligionUpdateScreen({
     super.key,
     required this.params,
-    this.toShowLoader = true,
   });
 
   @override

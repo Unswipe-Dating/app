@@ -236,7 +236,6 @@ class _EditProfileScreenLifestyleState
                                             MaterialPageRoute(
                                                 builder: (context) =>
                                                     DrinkUpdateScreen(
-                                                        toShowLoader: false,
                                                         params: SettingProfileParams(
                                                             updateParams:
                                                             UpdateProfileParams(),
@@ -295,7 +294,6 @@ class _EditProfileScreenLifestyleState
                                             MaterialPageRoute(
                                                 builder: (context) =>
                                                     SmokeUpdateScreen(
-                                                        toShowLoader: false,
                                                         params: SettingProfileParams(
                                                             updateParams:
                                                             UpdateProfileParams(),
@@ -354,7 +352,6 @@ class _EditProfileScreenLifestyleState
                                             MaterialPageRoute(
                                                 builder: (context) =>
                                                     ExerciseUpdateScreen(
-                                                        toShowLoader: false,
                                                         params: SettingProfileParams(
                                                             updateParams:
                                                             UpdateProfileParams(),
@@ -411,7 +408,6 @@ class _EditProfileScreenLifestyleState
                                             MaterialPageRoute(
                                                 builder: (context) =>
                                                     CookUpdateScreen(
-                                                        toShowLoader: false,
                                                         params: SettingProfileParams(
                                                             updateParams:
                                                             UpdateProfileParams(),
@@ -469,7 +465,6 @@ class _EditProfileScreenLifestyleState
                                             MaterialPageRoute(
                                                 builder: (context) =>
                                                     HouseholdUpdateScreen(
-                                                        toShowLoader: false,
                                                         params: SettingProfileParams(
                                                             updateParams:
                                                             UpdateProfileParams(),

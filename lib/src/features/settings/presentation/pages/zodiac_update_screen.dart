@@ -6,12 +6,10 @@ import '../../domain/repository/user_settings_repository.dart';
 
 class ZodiacUpdateScreen extends StatefulWidget {
   final SettingProfileParams params;
-  final bool toShowLoader;
 
   const ZodiacUpdateScreen({
     super.key,
     required this.params,
-    this.toShowLoader = true,
   });
 
   @override

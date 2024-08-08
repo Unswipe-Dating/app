@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:unswipe/src/features/login/presentation/pages/Login.dart';
 import 'package:unswipe/src/features/settings/domain/repository/user_settings_repository.dart';
 import 'package:unswipe/src/features/userOnboarding/profile_update/domain/repository/update_profile_repository.dart';
@@ -10,11 +11,9 @@ import '../../../../../core/router/app_router.dart';
 
 class GenderUpdateScreen extends StatefulWidget {
   final SettingProfileParams params;
-  final bool toShowLoader;
 
   const GenderUpdateScreen({super.key,
     required this.params,
-    this.toShowLoader = true,
   });
 
   @override
@@ -40,16 +39,30 @@ class _GenderUpdateScreenState extends State<GenderUpdateScreen> {
 
   @override
   Widget build(BuildContext mContext) {
-    return MaterialApp(
-      home: Scaffold(
+    return Scaffold(
           appBar: AppBar(
-            title: Text(""),
+            systemOverlayStyle: const SystemUiOverlayStyle(
+              statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
+              statusBarBrightness: Brightness.light, // For iOS (dark icons)
+            ),
+            surfaceTintColor: Colors.white,
+            backgroundColor: Colors.white,
+            shadowColor: Colors.black,
+            elevation: 4.0,
+            title: const Text(
+              "Gender",
+              style: TextStyle(
+                  color: Colors.black,
+                  fontFamily: 'Playfair',
+                  fontWeight: FontWeight.w600,
+                  fontSize: 24.0),
+            ),
           ),
           body: Padding(
             padding: EdgeInsets.symmetric(horizontal: 24),
             child: Column(
               children: [
-                if (widget.toShowLoader)
+                if (widget.params.profileParams == null)
                   const Row(
                   children: [
                     Expanded(
@@ -77,7 +90,9 @@ class _GenderUpdateScreenState extends State<GenderUpdateScreen> {
                     ),
                   ],
                 ),
-                const Padding(
+                if (widget.params.profileParams != null)
+                  const SizedBox(height: 8,),
+                  const Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Text(
                     textAlign: TextAlign.start,
@@ -205,7 +220,7 @@ class _GenderUpdateScreenState extends State<GenderUpdateScreen> {
                 ),
               ],
             ),
-          )),
+          ),
     );
   }
 

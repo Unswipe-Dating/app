@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
@@ -60,12 +61,28 @@ class _ProfileImagePickerScreenState extends State<ProfileImagePickerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text(""),
-        ),
+    return Scaffold(
+        appBar: widget.isSetting == true
+            ? AppBar(
+                systemOverlayStyle: const SystemUiOverlayStyle(
+                  statusBarIconBrightness: Brightness.dark,
+                  // For Android (dark icons)
+                  statusBarBrightness: Brightness.light, // For iOS (dark icons)
+                ),
+                surfaceTintColor: Colors.white,
+                backgroundColor: Colors.white,
+                shadowColor: Colors.black,
+                elevation: 4.0,
+                title: const Text(
+                  "Upload photos",
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontFamily: 'Playfair',
+                      fontWeight: FontWeight.w600,
+                      fontSize: 24.0),
+                ),
+              )
+            : null,
         body: BlocProvider(
           create: (BuildContext context) => ImageUploadBloc(
               updateOnboardingStateStreamUseCase:
@@ -168,6 +185,7 @@ class _ProfileImagePickerScreenState extends State<ProfileImagePickerScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        if(widget.isSetting != true)
                         const Row(
                           children: [
                             Expanded(
@@ -194,7 +212,8 @@ class _ProfileImagePickerScreenState extends State<ProfileImagePickerScreen> {
                             ),
                           ],
                         ),
-                        const Padding(
+                        if(widget.isSetting != true)
+                          const Padding(
                           padding: EdgeInsets.all(8.0),
                           child: Text(
                             'Upload Photos',
@@ -206,7 +225,7 @@ class _ProfileImagePickerScreenState extends State<ProfileImagePickerScreen> {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.symmetric(vertical: 32),
+                          padding: const EdgeInsets.symmetric(vertical: 32),
                           child: ElevatedButton(
                             onPressed: () {},
                             style: ElevatedButton.styleFrom(
@@ -229,7 +248,7 @@ class _ProfileImagePickerScreenState extends State<ProfileImagePickerScreen> {
                                   color: Colors.white,
                                   fontFamily: 'Lato',
                                   fontWeight: FontWeight.w600,
-                                  fontSize: 18.0),
+                                  fontSize: 16.0),
                             ),
                           ),
                         ),
@@ -345,7 +364,6 @@ class _ProfileImagePickerScreenState extends State<ProfileImagePickerScreen> {
                   );
           }),
         ),
-      ),
     );
   }
 }

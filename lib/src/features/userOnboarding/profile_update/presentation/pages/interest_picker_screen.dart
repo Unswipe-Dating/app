@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:unswipe/src/features/login/domain/usecases/update_login_state_stream_usecase.dart';
@@ -19,14 +20,11 @@ import '../../../../userProfile/data/model/get_profile/response_profile_swipe.da
 import '../../domain/repository/update_profile_repository.dart';
 import '../bloc/profile_update_bloc.dart';
 class InterestsUpdateScreen extends StatefulWidget {
-  final bool toShowLoader;
   final SettingProfileParams params;
 
 
   const InterestsUpdateScreen({super.key,
-    required this.params,
-    this.toShowLoader = true,
-  });
+    required this.params});
 
   @override
   _InterestsUpdateScreenState createState() => _InterestsUpdateScreenState();
@@ -154,11 +152,27 @@ class _InterestsUpdateScreenState extends State<InterestsUpdateScreen> {
 
   @override
   Widget build(BuildContext mContext) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text(""),
-        ),
+    return Scaffold(
+        appBar:  widget.params.profileParams != null
+            ? AppBar(
+          systemOverlayStyle: const SystemUiOverlayStyle(
+            statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
+            statusBarBrightness: Brightness.light, // For iOS (dark icons)
+          ),
+          surfaceTintColor: Colors.white,
+          backgroundColor: Colors.white,
+          shadowColor: Colors.black,
+          elevation: 4.0,
+          title: const Text(
+            "Interests",
+            style: TextStyle(
+                color: Colors.black,
+                fontFamily: 'Playfair',
+                fontWeight: FontWeight.w600,
+                fontSize: 24.0),
+          ),
+        )
+            : null,
         body: BlocProvider(
           create: (BuildContext context) => UpdateProfileBloc(
               updateOnboardingStateStreamUseCase:
@@ -191,7 +205,7 @@ class _InterestsUpdateScreenState extends State<InterestsUpdateScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: Column(
                   children: [
-                    if (widget.toShowLoader)
+                    if (widget.params.profileParams == null)
                       const Row(
                       children: [
                         Expanded(
@@ -219,7 +233,8 @@ class _InterestsUpdateScreenState extends State<InterestsUpdateScreen> {
                         ),
                       ],
                     ),
-                    const Padding(
+                    if (widget.params.profileParams == null)
+                      const Padding(
                       padding: EdgeInsets.all(8.0),
                       child: Text(
                         textAlign: TextAlign.start,
@@ -231,7 +246,9 @@ class _InterestsUpdateScreenState extends State<InterestsUpdateScreen> {
                             fontSize: 24.0),
                       ),
                     ),
-                    const Padding(
+                    if (widget.params.profileParams != null)
+                      const SizedBox(height: 8,),
+                      const Padding(
                       padding: EdgeInsets.all(8.0),
                       child: Text(
                         "Select upto 8 things you love to do. They will be displayed on your profile.",
@@ -531,7 +548,6 @@ class _InterestsUpdateScreenState extends State<InterestsUpdateScreen> {
             },
           )
         ),
-      ),
     );
   }
 }

@@ -10,12 +10,10 @@ import '../../../../../core/router/app_router.dart';
 
 class HouseholdUpdateScreen extends StatefulWidget {
   final SettingProfileParams params;
-  final bool toShowLoader;
 
   const HouseholdUpdateScreen({
     super.key,
     required this.params,
-    this.toShowLoader = true,
 
   });
 
@@ -41,8 +39,7 @@ class _HouseholdUpdateScreenState extends State<HouseholdUpdateScreen> {
 
   @override
   Widget build(BuildContext mContext) {
-    return MaterialApp(
-      home: Scaffold(
+    return Scaffold(
           appBar: AppBar(
             systemOverlayStyle: const SystemUiOverlayStyle(
               statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
@@ -213,16 +210,8 @@ class _HouseholdUpdateScreenState extends State<HouseholdUpdateScreen> {
                   padding: EdgeInsets.all(16),
                   child: CustomButton(
                     onPressed: () {
-                      if (!widget.toShowLoader) {
                         Navigator.pop(
                             mContext, getNameFromCharacter(_character));
-                      } else {
-                        widget.params.updateParams?.gender =
-                            getNameFromCharacter(_character);
-                        CustomNavigationHelper.router.push(
-                            CustomNavigationHelper.onboardingPronounPath,
-                            extra: UpdateProfileParams                                .getUpdatedParams(widget.params.updateParams));
-                      }
                     },
                     text: 'Next',
                     isEnabled: isButtonEnabled,
@@ -230,7 +219,7 @@ class _HouseholdUpdateScreenState extends State<HouseholdUpdateScreen> {
                 ),
               ],
             ),
-          )),
+          ),
     );
   }
 

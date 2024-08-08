@@ -20,13 +20,11 @@ import '../../../userOnboarding/profile_update/domain/repository/update_profile_
 import '../../../userOnboarding/profile_update/presentation/bloc/profile_update_bloc.dart';
 
 class CoreValuesUpdateScreen extends StatefulWidget {
-  final bool toShowLoader;
   final SettingProfileParams params;
 
 
   const CoreValuesUpdateScreen({super.key,
     required this.params,
-    this.toShowLoader = true,
   });
 
   @override

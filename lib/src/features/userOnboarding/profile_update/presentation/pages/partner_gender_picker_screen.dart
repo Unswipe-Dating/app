@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:unswipe/src/features/login/presentation/pages/Login.dart';
 import 'package:unswipe/src/features/settings/domain/repository/user_settings_repository.dart';
 
@@ -10,11 +11,9 @@ import '../../domain/repository/update_profile_repository.dart';
 
 class PartnerGenderUpdateScreen extends StatefulWidget {
   final SettingProfileParams params;
-  final bool toShowLoader;
 
   const PartnerGenderUpdateScreen({super.key,
     required this.params,
-    this.toShowLoader = true,
   });
 
   @override
@@ -41,16 +40,33 @@ class _PartnerGenderUpdateScreenState extends State<PartnerGenderUpdateScreen> {
 
   @override
   Widget build(BuildContext mContext) {
-    return MaterialApp(
-      home: Scaffold(
-          appBar: AppBar(
-            title: Text(""),
-          ),
+    return Scaffold(
+          appBar: widget.params.profileParams != null
+              ? AppBar(
+            systemOverlayStyle: const SystemUiOverlayStyle(
+              statusBarIconBrightness:
+              Brightness.dark, // For Android (dark icons)
+              statusBarBrightness: Brightness.light, // For iOS (dark icons)
+            ),
+            surfaceTintColor: Colors.white,
+            backgroundColor: Colors.white,
+            shadowColor: Colors.black,
+            elevation: 4.0,
+            title: const Text(
+              "Prefers to date",
+              style: TextStyle(
+                  color: Colors.black,
+                  fontFamily: 'Playfair',
+                  fontWeight: FontWeight.w600,
+                  fontSize: 24.0),
+            ),
+          )
+              : null,
           body: Padding(
             padding: EdgeInsets.symmetric(horizontal: 24),
             child: Column(
               children: [
-                if (widget.toShowLoader)
+                if (widget.params.profileParams == null)
                   const Row(
                   children: [
                     Expanded(
@@ -78,7 +94,9 @@ class _PartnerGenderUpdateScreenState extends State<PartnerGenderUpdateScreen> {
                     ),
                   ],
                 ),
-                const Padding(
+                if (widget.params.profileParams != null)
+                  const SizedBox(height: 8,),
+                  const Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Text(
                     textAlign: TextAlign.start,
@@ -230,7 +248,7 @@ class _PartnerGenderUpdateScreenState extends State<PartnerGenderUpdateScreen> {
                 ),
               ],
             ),
-          )),
+          ),
     );
   }
 
