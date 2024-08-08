@@ -256,8 +256,9 @@ class _MyFormState extends State<MyForm> {
 
         } else {
           _start--;
-          setState(() {
-          });
+          if (mounted) {
+            setState(() {});
+          }
         }
       },
     );

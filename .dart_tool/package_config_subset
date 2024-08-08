@@ -358,6 +358,10 @@ flutter_spinkit
 2.12
 file:///C:/Users/abhis/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_spinkit-5.2.1/
 file:///C:/Users/abhis/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_spinkit-5.2.1/lib/
+flutter_staggered_grid_view
+2.12
+file:///C:/Users/abhis/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_staggered_grid_view-0.7.0/
+file:///C:/Users/abhis/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_staggered_grid_view-0.7.0/lib/
 flutter_svg
 2.19
 file:///C:/Users/abhis/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_svg-2.0.10+1/
@@ -596,8 +600,8 @@ file:///C:/Users/abhis/AppData/Local/Pub/Cache/hosted/pub.dev/loading_animation_
 file:///C:/Users/abhis/AppData/Local/Pub/Cache/hosted/pub.dev/loading_animation_widget-1.2.1/lib/
 logger
 2.17
-file:///C:/Users/abhis/AppData/Local/Pub/Cache/hosted/pub.dev/logger-2.3.0/
-file:///C:/Users/abhis/AppData/Local/Pub/Cache/hosted/pub.dev/logger-2.3.0/lib/
+file:///C:/Users/abhis/AppData/Local/Pub/Cache/hosted/pub.dev/logger-2.4.0/
+file:///C:/Users/abhis/AppData/Local/Pub/Cache/hosted/pub.dev/logger-2.4.0/lib/
 logging
 2.19
 file:///C:/Users/abhis/AppData/Local/Pub/Cache/hosted/pub.dev/logging-1.2.0/
@@ -752,8 +756,12 @@ file:///C:/Users/abhis/AppData/Local/Pub/Cache/hosted/pub.dev/recase-4.1.0/
 file:///C:/Users/abhis/AppData/Local/Pub/Cache/hosted/pub.dev/recase-4.1.0/lib/
 reclaim_sdk
 3.3
-file:///C:/Users/abhis/AppData/Local/Pub/Cache/hosted/pub.dev/reclaim_sdk-1.8.2/
-file:///C:/Users/abhis/AppData/Local/Pub/Cache/hosted/pub.dev/reclaim_sdk-1.8.2/lib/
+file:///C:/Users/abhis/AppData/Local/Pub/Cache/hosted/pub.dev/reclaim_sdk-1.8.6/
+file:///C:/Users/abhis/AppData/Local/Pub/Cache/hosted/pub.dev/reclaim_sdk-1.8.6/lib/
+reorderable_staggered_scroll_view
+3.1
+file:///C:/Users/abhis/AppData/Local/Pub/Cache/hosted/pub.dev/reorderable_staggered_scroll_view-0.0.2/
+file:///C:/Users/abhis/AppData/Local/Pub/Cache/hosted/pub.dev/reorderable_staggered_scroll_view-0.0.2/lib/
 rx_shared_preferences
 2.17
 file:///C:/Users/abhis/AppData/Local/Pub/Cache/hosted/pub.dev/rx_shared_preferences-3.1.0/

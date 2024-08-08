@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -8,6 +9,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geocode/geocode.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get_it/get_it.dart';
+import 'package:reclaim_sdk/flutter_reclaim.dart';
+import 'package:reclaim_sdk/types.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:unswipe/src/features/login/domain/usecases/update_login_state_stream_usecase.dart';
 import 'package:unswipe/src/features/settings/domain/repository/user_settings_repository.dart';
@@ -31,6 +34,7 @@ import 'package:unswipe/src/shared/presentation/widgets/shimmer.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../login/presentation/pages/Login.dart';
 import '../../../onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart';
+import '../../../reclaim/reclaim_page.dart';
 import '../../../userOnboarding/profile_update/domain/repository/update_profile_repository.dart';
 import '../../../userOnboarding/profile_update/presentation/bloc/profile_update_bloc.dart';
 
@@ -42,6 +46,30 @@ class EditProfileScreenBasic extends StatefulWidget {
 }
 
 class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
+  String data = "";
+  ProofRequest proofRequest = ProofRequest(applicationId: '0x1DD4a325bD51B09C7f840D54de854266ECB4697A');
+  void startVerificationFlow() async {
+    final providerIds = [
+      '85de83e5-5635-4768-9f76-f9f04f7661a1', // Aadhar General Info
+    ];
+    proofRequest.setAppCallbackUrl(CustomNavigationHelper.settingsPathBasic);
+    await proofRequest
+        .buildProofRequest(providerIds[0]);
+    proofRequest.setSignature(proofRequest.generateSignature(
+        '0xf232d1bac6350a49fd5d86015c8a1191b2e724729560fb4a18638fa9f88436d2'));
+    final verificationRequest = await proofRequest.createVerificationRequest();
+    final startSessionParam = StartSessionParams(
+      onSuccessCallback: (proof) => setState(() {
+        data = jsonEncode(proof);
+      }),
+      onFailureCallback: (error) => {
+        setState(() {
+          data = 'Error: $error';
+        })
+      },
+    );
+    await proofRequest.startSession(startSessionParam);
+  }
   bool isButtonEnabled = true;
   double latitude = 0.0;
   double longitude = 0.0;
@@ -821,6 +849,39 @@ class _EditProfileScreenBasicState extends State<EditProfileScreenBasic> {
                           const SizedBox(
                             height: 32,
                           ),
+                          const Text(
+                            textAlign: TextAlign.start,
+                            'Verify details',
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontFamily: 'lato',
+                                fontWeight: FontWeight.w600,
+                                fontSize: 18.0),
+                          ),
+                          const SizedBox(
+                            height: 8,
+                          ),
+                          const Text(
+                            "We go to great lengths to ensure we only have genuine profiles on our app.",
+                            style: TextStyle(
+                                color: Colors.grey,
+                                fontFamily: 'lato',
+                                fontWeight: FontWeight.w400,
+                                fontSize: 16.0),
+                          ),
+
+                          Padding(
+                            padding: EdgeInsets.all(16),
+                            child: CustomButton(
+                              onPressed: () async {
+                                startVerificationFlow();
+                              },
+                              text: 'Verify Details',
+                              isEnabled: isButtonEnabled,
+                              isLoading: isLoadingValues,
+                            ),
+                          ),
+
                           Padding(
                             padding: EdgeInsets.all(16),
                             child: CustomButton(

@@ -1,56 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:reclaim_sdk/flutter_reclaim.dart';
 import 'package:reclaim_sdk/types.dart';
-import 'dart:convert'; // to use jsonEncode()
+import 'dart:convert';
 
-class ReclaimScreen extends StatefulWidget {
-  const ReclaimScreen({super.key, required this.title});
+import '../../core/router/app_router.dart';
+class ReclaimPage extends StatefulWidget {
+
+  const ReclaimPage({super.key, required this.title});
   final String title;
-
   @override
-  State<ReclaimScreen> createState() => _ReclaimScreenState();
-
+  State<ReclaimPage> createState() => _MyHomePageState();
 }
-
-class _ReclaimScreenState extends State<ReclaimScreen> {
+class _MyHomePageState extends State<ReclaimPage> {
   String data = "";
-  ProofRequest proofRequest = ProofRequest(applicationId: 'YOUR_APPLICATION_ID_HERE');
-
+  ProofRequest proofRequest = ProofRequest(applicationId: '0x1DD4a325bD51B09C7f840D54de854266ECB4697A');
   void startVerificationFlow() async {
-    final providerId = 'YOUR_PROVIDER_ID_HERE';
-
-    final appDeepLink = 'YOUR_APP_DEEP_LINK_HERE'; //TODO: replace with your app deep link
-    proofRequest.setAppCallbackUrl(appDeepLink);
-
-
-    await proofRequest.buildProofRequest(providerId);
-
-    proofRequest.setSignature(
-        proofRequest.generateSignature(
-            'YOUR_APP_SECRET_HERE'
-        )
-    );
-
+    final providerIds = [
+      '85de83e5-5635-4768-9f76-f9f04f7661a1', // Aadhar General Info
+    ];
+    proofRequest.setAppCallbackUrl(CustomNavigationHelper.settingsPathBasic);
+    await proofRequest
+        .buildProofRequest(providerIds[0]);
+    proofRequest.setSignature(proofRequest.generateSignature(
+        '0xf232d1bac6350a49fd5d86015c8a1191b2e724729560fb4a18638fa9f88436d2'));
     final verificationRequest = await proofRequest.createVerificationRequest();
-
     final startSessionParam = StartSessionParams(
-      onSuccessCallback: (proof) => {
-      setState(() {
-      //data = jsonEncode(proof.extractedParameterValues);
-      final jsonContext = jsonDecode(proof.claimData.context) as Map<String, dynamic>;
-      data = jsonContext["extractedParameters"];
-      })
-    },
+      onSuccessCallback: (proof) => setState(() {
+        data = jsonEncode(proof);
+      }),
       onFailureCallback: (error) => {
-      setState(() {
-      data = 'Error: $error';
-      })
-    },
+        setState(() {
+          data = 'Error: $error';
+        })
+      },
     );
-
     await proofRequest.startSession(startSessionParam);
   }
-
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
