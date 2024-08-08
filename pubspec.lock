@@ -711,10 +711,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_reorderable_grid_view
-      sha256: ac92a49a8411adfda40f75eff44d0958ee879b0f9d6776bb6154c74aa166aaf1
+      sha256: "40abcc5bff228ebff119326502e7357ee6399956b60b80b17385e9770b7458c0"
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.0"
+    version: "5.0.1"
   flutter_spinkit:
     dependency: "direct main"
     description:
@@ -1261,14 +1261,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.5"
-  multi_image_picker_view:
-    dependency: "direct main"
-    description:
-      name: multi_image_picker_view
-      sha256: "54c7ce5ffc5e3dc60ace7e315e6159f61c6e394b297c66231a9cb46e842da2a9"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.2"
   nested:
     dependency: transitive
     description:

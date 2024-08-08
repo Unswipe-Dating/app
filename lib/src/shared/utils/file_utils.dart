@@ -1,9 +1,11 @@
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
-import 'package:multi_image_picker_view/multi_image_picker_view.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+
+import '../presentation/widgets/multi_image_view/image_file.dart';
+import '../presentation/widgets/multi_image_view/picker_extension.dart';
 
 Future<ImageFile> imageFileFromImageUrl(String path, String name) async {
   final response = await http.get(Uri.parse(path));

@@ -4,12 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
-import 'package:multi_image_picker_view/multi_image_picker_view.dart';
 import 'package:unswipe/src/features/userOnboarding/image_upload/domain/usecase/image_upload_usecase.dart';
 import 'package:unswipe/src/shared/domain/usecases/get_auth_state_stream_use_case.dart';
 
 import '../../../../../../widgets/dialogs/ScrollingListDialog.dart';
 import '../../../../../core/router/app_router.dart';
+import '../../../../../shared/presentation/widgets/multi_image_view/multi_image_picker_controller.dart';
+import '../../../../../shared/presentation/widgets/multi_image_view/multi_image_picker_view.dart';
 import '../../../../login/presentation/pages/Login.dart';
 import '../../../../onBoarding/domain/usecases/update_onboarding_state_stream_usecase.dart';
 import '../../../../settings/domain/usecases/get_settings_profile_usecase.dart';

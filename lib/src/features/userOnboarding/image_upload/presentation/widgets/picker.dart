@@ -1,7 +1,9 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:multi_image_picker_view/multi_image_picker_view.dart';
+
+import '../../../../../shared/presentation/widgets/multi_image_view/image_file.dart';
+import '../../../../../shared/presentation/widgets/multi_image_view/picker_extension.dart';
 
 
 Future<List<ImageFile>> pickImagesUsingImagePicker(bool allowMultiple) async {
